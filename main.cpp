@@ -1,24 +1,45 @@
 #include <QtGui/QApplication>
-#include "mainwindow.h"
+#include "gui/mainwindow.h"
 #include <QDebug>
 #include <iostream>
+#include "core/scene.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    std::cout << "Brainiac V0.01" << std::endl;
+    std::cout << "Brainiac V0.01" << std::endl << std::flush;
     int num = qApp->argc() ;
+    bool batchMode=false;
+    QString sceneFileName;
+
+    Scene *theScene=new Scene();
+
     for ( int i = 0; i < num; i++ ) {
         QString s = qApp->argv()[i] ;
         if ( s.startsWith( "--batch" ) ) {
-            std::cout << "Running in batch mode" << std::endl;
-            return a.exec();
-        } else if ( s.startsWith( "-t" ) ) {
-            // do wat you want with t arg...
+            qDebug() << "Running in batch mode";
+            batchMode=true;
+        } else if ( s.startsWith( "--scene" ) ) {
+            if( i+1 < num )  { // do we have a next argument?
+                sceneFileName=qApp->argv()[i+1];
+                qDebug() << "loading scene file "<< sceneFileName;
+                if( !theScene->openConfig(sceneFileName) ) {
+                    qCritical() << "Error while opening scene file!";
+                    return 1;
+                }
+            } else {
+                qCritical() << "Error:Wrong arguments";
+                return 1;
+            }
         }
     }
-    MainWindow w;
-    w.show();
+
+
+    if(!batchMode) {
+        MainWindow w;
+        w.setScene(theScene);
+        w.show();
+    }
 
     return a.exec();
 }
