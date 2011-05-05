@@ -12,9 +12,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         gui/mainwindow.cpp \
-    core/scene.cpp
+    core/scene.cpp \
+    core/agent/brain/fuzzybase.cpp
 
 HEADERS  += gui/mainwindow.h \
-    core/scene.h
+    core/scene.h \
+    core/agent/brain/fuzzybase.h
 
 FORMS    += gui/mainwindow.ui
