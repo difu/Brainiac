@@ -2,12 +2,27 @@
 #include "gui/mainwindow.h"
 #include <QDebug>
 #include <iostream>
+#include <QFile>
+#include <QTextStream>
 #include "core/scene.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     std::cout << "Brainiac V0.01" << std::endl << std::flush;
+
+    // Apply stylesheet
+    QFile file(":/gui/brainiacStyleSheet.style");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return 1;
+    QTextStream in(&file);
+    QString styleSheet;
+    while (!in.atEnd()) {
+        styleSheet += in.readLine();
+    }
+    a.setStyleSheet(styleSheet);
+
+    // Parse parameters
     int num = qApp->argc() ;
     bool batchMode=false;
     QString sceneFileName;
@@ -36,9 +51,8 @@ int main(int argc, char *argv[])
 
 
     if(!batchMode) {
-        MainWindow w;
-        w.setScene(theScene);
-        w.show();
+        MainWindow *w = new MainWindow(theScene);
+        w->show();
     }
 
     return a.exec();

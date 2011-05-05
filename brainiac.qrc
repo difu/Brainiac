@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>gui/brainiacStyleSheet.style</file>
+        <file>gui/pics/editor_logo_and.png</file>
+        <file>gui/pics/editor_logo_defuzz.png</file>
+        <file>gui/pics/editor_logo_fuzz.png</file>
+        <file>gui/pics/editor_logo_input.png</file>
+        <file>gui/pics/editor_logo_noise.png</file>
+        <file>gui/pics/editor_logo_or.png</file>
+        <file>gui/pics/editor_logo_output.png</file>
+        <file>gui/pics/editor_logo_timer.png</file>
+    </qresource>
+</RCC>
