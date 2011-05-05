@@ -3,18 +3,24 @@
 
 #include <QObject>
 
-//class QString;
+#include <QXmlStreamWriter>
+#include <QXmlStreamReader>
+
+class Generator;
 
 class Scene : public QObject
 {
     Q_OBJECT
 public:
     explicit Scene(QObject *parent = 0);
-    bool openConfig( QString fileName );
-    bool saveConfig();
+    bool openConfig(const QString & fileName);
+    bool saveConfig(const QString & fileName);
 
 protected:
     QString m_fileName;
+    QXmlStreamWriter m_streamWriter;
+    QXmlStreamReader m_steamReader;
+    QList<Generator *> m_generators;
 
 signals:
 
