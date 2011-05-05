@@ -2,6 +2,7 @@
 #include <QVector4D>
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
+#include <QDebug>
 
 PointGenerator::PointGenerator():Generator(Generator::POINT)
 {
@@ -35,11 +36,11 @@ void PointGenerator::loadConfig(QXmlStreamReader *xml)
     while (xml->readNextStartElement()) {
         if(xml->name()=="Point") {
             QXmlStreamAttributes attribs = xml->attributes();
-            qreal x=attribs.value("x").string()->toDouble();
-            qreal y=attribs.value("y").string()->toDouble();
-            qreal z=attribs.value("z").string()->toDouble();
-            qreal w=attribs.value("w").string()->toDouble();
-            unsigned int groupId=attribs.value("group").string()->toInt();
+            qreal x=attribs.value("x").toString().toDouble();
+            qreal y=attribs.value("y").toString().toDouble();
+            qreal z=attribs.value("z").toString().toDouble();
+            qreal w=attribs.value("w").toString().toDouble();
+            unsigned int groupId=attribs.value("group").toString().toInt();
             QVector4D *vec=new QVector4D(x,y,z,w);
             Generator::locator loc;
             loc.locator=vec;
