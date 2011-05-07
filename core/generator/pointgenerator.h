@@ -10,8 +10,8 @@ class PointGenerator : public Generator
 {
 public:
     PointGenerator();
-    void addLocation(qreal x, qreal y, qreal z, qreal w, unsigned int groupId);
-    void addLocation(QVector4D *location, unsigned int groupId);
+    void addLocation(qreal x, qreal y, qreal z, qreal w, quint32 groupId);
+    void addLocation(QVector4D *location, quint32 groupId);
     void addLocation(locator loc);
     void loadConfig(QXmlStreamReader *xml);
     void saveConfig(QXmlStreamWriter *xml);

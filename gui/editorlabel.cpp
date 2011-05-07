@@ -3,34 +3,40 @@
 #include <QDebug>
 
 
-EditorLabel::EditorLabel(EditorLabelType labelType) :
+EditorLabel::EditorLabel(BrainiacGlobals::ItemType labelType) :
     QLabel()
 {
     m_type=labelType;
     switch(m_type) {
-    case EditorLabel::AND:
+    case BrainiacGlobals::AND:
         setPixmap(QPixmap(":/gui/pics/editor_logo_and.png"));
         break;
-    case EditorLabel::OR:
+    case BrainiacGlobals::OR:
         setPixmap(QPixmap(":/gui/pics/editor_logo_or.png"));
         break;
-    case EditorLabel::FUZZ:
+    case BrainiacGlobals::FUZZ:
         setPixmap(QPixmap(":/gui/pics/editor_logo_fuzz.png"));
         break;
-    case EditorLabel::DEFUZZ:
+    case BrainiacGlobals::DEFUZZ:
         setPixmap(QPixmap(":/gui/pics/editor_logo_defuzz.png"));
         break;
-    case EditorLabel::TIMER:
+    case BrainiacGlobals::TIMER:
         setPixmap(QPixmap(":/gui/pics/editor_logo_timer.png"));
         break;
-    case EditorLabel::NOISE:
+    case BrainiacGlobals::NOISE:
         setPixmap(QPixmap(":/gui/pics/editor_logo_noise.png"));
         break;
-    case EditorLabel::OUTPUT:
+    case BrainiacGlobals::OUTPUT:
         setPixmap(QPixmap(":/gui/pics/editor_logo_output.png"));
         break;
-    case EditorLabel::INPUT:
+    case BrainiacGlobals::INPUT:
         setPixmap(QPixmap(":/gui/pics/editor_logo_input.png"));
+        break;
+    case BrainiacGlobals::AGENT:
+        setPixmap(QPixmap(":/gui/pics/editor_logo_agent.png"));
+        break;
+    case BrainiacGlobals::GROUP:
+        setPixmap(QPixmap(":/gui/pics/editor_logo_group.png"));
         break;
     default:
         qDebug() << __PRETTY_FUNCTION__ << "Wrong label parameter or label not yet implemented!";
@@ -44,29 +50,35 @@ void EditorLabel::mousePressEvent(QMouseEvent *ev)
     QDrag *drag=new QDrag(this);
     QPixmap pixmap;
     switch(m_type) {
-    case EditorLabel::AND:
+    case BrainiacGlobals::AND:
         pixmap.load(":/gui/pics/editor_logo_and.png");
         break;
-    case EditorLabel::OR:
+    case BrainiacGlobals::OR:
         pixmap.load(":/gui/pics/editor_logo_or.png");
         break;
-    case EditorLabel::FUZZ:
+    case BrainiacGlobals::FUZZ:
         pixmap.load(":/gui/pics/editor_logo_fuzz.png");
         break;
-    case EditorLabel::DEFUZZ:
+    case BrainiacGlobals::DEFUZZ:
         pixmap.load(":/gui/pics/editor_logo_defuzz.png");
         break;
-    case EditorLabel::TIMER:
+    case BrainiacGlobals::TIMER:
         pixmap.load(":/gui/pics/editor_logo_timer.png");
         break;
-    case EditorLabel::NOISE:
+    case BrainiacGlobals::NOISE:
         pixmap.load(":/gui/pics/editor_logo_noise.png");
         break;
-    case EditorLabel::OUTPUT:
+    case BrainiacGlobals::OUTPUT:
         pixmap.load(":/gui/pics/editor_logo_output.png");
         break;
-    case EditorLabel::INPUT:
+    case BrainiacGlobals::INPUT:
         pixmap.load(":/gui/pics/editor_logo_input.png");
+        break;
+    case BrainiacGlobals::AGENT:
+        pixmap.load(":/gui/pics/editor_logo_agent.png");
+        break;
+    case BrainiacGlobals::GROUP:
+        pixmap.load(":/gui/pics/editor_logo_group.png");
         break;
     default:
         qDebug() << __PRETTY_FUNCTION__ << "Wrong label parameter or label not yet implemented!";

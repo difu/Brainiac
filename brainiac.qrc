@@ -9,5 +9,7 @@
         <file>gui/pics/editor_logo_or.png</file>
         <file>gui/pics/editor_logo_output.png</file>
         <file>gui/pics/editor_logo_timer.png</file>
+        <file>gui/pics/editor_logo_group.png</file>
+        <file>gui/pics/editor_logo_agent.png</file>
     </qresource>
 </RCC>

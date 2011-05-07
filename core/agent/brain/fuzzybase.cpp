@@ -9,3 +9,9 @@ FuzzyBase::FuzzyBase(LogicType logicType, quint32 id) :
     m_minValue=0.0;
     m_result=0.0;
 }
+
+void FuzzyBase::inputChanged(InputResult input)
+{
+
+}
+

@@ -2,14 +2,21 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "editorlabel.h"
+#include "core/brainiacglobals.h"
+#include "gui/itemeditorwidgetsbase.h"
 
 namespace Ui {
     class MainWindow;
 }
 
+
+class EditorGraphicsView;
 class MainWindowLayout;
 class Scene;
+class SceneEditor;
 class QComboBox;
+class GroupEditor;
 
 
 /** \brief  Main User Interface
@@ -32,11 +39,17 @@ public:
 
 protected:
     void changeEvent(QEvent *e);
+    void createActions();
+    void createEditors();
     void createEditModeWidgets();
     void createEditorItemBars();
+    void createEditorWidgets();
+    void createMenues();
     Scene *m_scene; //!< the scene to be handled
+    SceneEditor *m_sceneEditor;
     EditMode m_editMode;
     QComboBox *m_editModeComboBox;
+    EditorGraphicsView *m_editorView;
     MainWindowLayout *m_layout;
 
     QWidget *m_editorItems;
@@ -44,8 +57,19 @@ protected:
     QWidget *m_bodyEditorItems;
     QWidget *m_sceneEditorItems;
 
+    QWidget *m_logicElementEditWidget;
+
+    GroupEditor *m_groupEditor;
+
+    QAction *m_saveSceneAction;
+
+    QMenu *m_fileMenu;
+
 protected slots:
     void editModeComboChange(int index);
+    void editorNodeClick(ItemEditorWidgetsBase::editMessage msg);
+    void saveScene();
+
 private:
     Ui::MainWindow *ui;
 };

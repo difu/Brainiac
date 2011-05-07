@@ -18,12 +18,13 @@ public:
                       };
     struct locator {
         QVector4D *locator;
-        unsigned int groupId;
+        quint32 groupId;
     };
 
     Generator( GeneratorType genType);
-    QList <locator> getLocations();
+    QList <locator>* getLocations();
     GeneratorType getType() { return m_genType; }
+    virtual ~Generator();
 
 protected:
     GeneratorType m_genType;

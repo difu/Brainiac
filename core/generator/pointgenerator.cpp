@@ -8,7 +8,7 @@ PointGenerator::PointGenerator():Generator(Generator::POINT)
 {
 }
 
-void PointGenerator::addLocation(qreal x, qreal y, qreal z, qreal w, unsigned int groupId)
+void PointGenerator::addLocation(qreal x, qreal y, qreal z, qreal w, quint32 groupId)
 {
     QVector4D *vec=new QVector4D(x,y,z,w);
     Generator::locator loc;
@@ -17,7 +17,7 @@ void PointGenerator::addLocation(qreal x, qreal y, qreal z, qreal w, unsigned in
     this->addLocation(loc);
 }
 
-void PointGenerator::addLocation(QVector4D *location, unsigned int groupId)
+void PointGenerator::addLocation(QVector4D *location, quint32 groupId)
 {
     Generator::locator loc;
     loc.locator=location;
@@ -40,12 +40,13 @@ void PointGenerator::loadConfig(QXmlStreamReader *xml)
             qreal y=attribs.value("y").toString().toDouble();
             qreal z=attribs.value("z").toString().toDouble();
             qreal w=attribs.value("w").toString().toDouble();
-            unsigned int groupId=attribs.value("group").toString().toInt();
+            quint32 groupId=attribs.value("group").toString().toInt();
             QVector4D *vec=new QVector4D(x,y,z,w);
             Generator::locator loc;
             loc.locator=vec;
             loc.groupId=groupId;
             this->addLocation(loc);
+            xml->skipCurrentElement();
         }
     }
 
