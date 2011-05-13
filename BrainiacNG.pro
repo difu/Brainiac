@@ -25,7 +25,13 @@ SOURCES += main.cpp\
     gui/sceneeditor/sceneeditoritem.cpp \
     gui/sceneeditor/groupeditor.cpp \
     core/brainiacglobals.cpp \
-    gui/itemeditorwidgetsbase.cpp
+    gui/itemeditorwidgetsbase.cpp \
+    core/agent/agent.cpp \
+    core/agent/body/body.cpp \
+    core/agent/body/segment.cpp \
+    core/brainiaccolor.cpp \
+    core/agent/channel.cpp \
+    core/agent/body/sphere.cpp
 
 HEADERS  += gui/mainwindow.h \
     core/scene.h \
@@ -41,7 +47,13 @@ HEADERS  += gui/mainwindow.h \
     gui/sceneeditor/sceneeditoritem.h \
     gui/sceneeditor/groupeditor.h \
     core/brainiacglobals.h \
-    gui/itemeditorwidgetsbase.h
+    gui/itemeditorwidgetsbase.h \
+    core/agent/agent.h \
+    core/agent/body/body.h \
+    core/agent/body/segment.h \
+    core/brainiaccolor.h \
+    core/agent/channel.h \
+    core/agent/body/sphere.h
 
 FORMS    += gui/mainwindow.ui \
     gui/sceneeditor/groupeditor.ui
