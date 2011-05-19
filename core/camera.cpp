@@ -19,11 +19,19 @@ Camera::Camera(Scene *scene, qreal xPos, qreal yPos, qreal zPos, qreal xRot, qre
 /** \brief move camera forward
 
 **/
-void Camera::moveCamera(qreal offset)
+void Camera::moveCameraForward(qreal offset)
 {
-    setTranslationOffset(offset*BrainiacGlobals::sinGrad(-m_rotation.y()),offset*BrainiacGlobals::sinGrad(m_rotation.z()),offset*BrainiacGlobals::cosGrad(-m_rotation.y()));
+    setTranslationOffset(offset*BrainiacGlobals::sinGrad(-m_rotation.y()),offset*BrainiacGlobals::sinGrad(m_rotation.x()),offset*BrainiacGlobals::cosGrad(-m_rotation.y()));
 }
 
+
+/** \brief move camera sidewise
+
+**/
+void Camera::moveCameraSidewise(qreal offset)
+{
+    setTranslationOffset(offset*BrainiacGlobals::cosGrad(-m_rotation.y()),offset*BrainiacGlobals::sinGrad(-m_rotation.z()),offset*BrainiacGlobals::sinGrad(-m_rotation.y()));
+}
 
 /** \brief places camera in OpenGL context
 
@@ -38,20 +46,28 @@ void Camera::placeCameraGL() {
 
 
 /** \brief set camera´s rotation
+                set the rotation of the camera, the angles are also normalized
+                @param rot Rotation vector
+                @param preventHeadOver if true x rotation will be limited to -90 <=x <= 90 to prevent head over
 
 **/
-void Camera::setRotation(QVector3D rot)
+void Camera::setRotation(QVector3D rot, bool preventHeadOver)
 {
-    m_rotation=rot;
+    setRotation(rot.x(),rot.y(),rot.z(),preventHeadOver);
 }
 
 /** \brief set camera´s rotation
 
                  set the rotation of the camera, the angles are also normalized
+                 @param preventHeadOver if true x rotation will be limited to -90 <= x <= 90 to prevent head over
 **/
-void Camera::setRotation(qreal x, qreal y, qreal z)
+void Camera::setRotation(qreal x, qreal y, qreal z, bool preventHeadOver)
 {
-    BrainiacGlobals::normalizeAngle(&x);
+    if(preventHeadOver) {
+        x=qBound((qreal)-90.0f,x,(qreal)+90.0f); // Prevent "head over"
+    } else {
+        BrainiacGlobals::normalizeAngle(&x);
+    }
     BrainiacGlobals::normalizeAngle(&y);
     BrainiacGlobals::normalizeAngle(&z);
     m_rotation.setX(x);
@@ -61,17 +77,18 @@ void Camera::setRotation(qreal x, qreal y, qreal z)
 
 /** \brief set camera´s rotation offset
 
-                   the values are added and the angles are also normalized
+                   the values are added to the current rotation and the angles are also normalized
+                   @param preventHeadOver if true x rotation will be limited to -90 <= x <= 90 to prevent head over
 **/
-void Camera::setRotationOffset(qreal x, qreal y, qreal z)
+void Camera::setRotationOffset(qreal x, qreal y, qreal z, bool preventHeadOver)
 {
     qreal rotx=m_rotation.x()+x;
     qreal roty=m_rotation.y()+y;
     qreal rotz=m_rotation.z()+z;
-    this->setRotation(rotx, roty, rotz);
+    this->setRotation(rotx, roty, rotz, preventHeadOver);
 }
 
-/** \brief set camera´s translation
+/** \brief set camera´s translation offset
 
 **/
 void Camera::setTranslationOffset(qreal x, qreal y, qreal z)
@@ -79,4 +96,5 @@ void Camera::setTranslationOffset(qreal x, qreal y, qreal z)
     m_position.setX(m_position.x()+x);
     m_position.setY(m_position.y()+y);
     m_position.setZ(m_position.z()+z);
+    //qDebug() << __PRETTY_FUNCTION__ << m_position << m_rotation;
 }

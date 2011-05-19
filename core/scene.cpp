@@ -10,7 +10,7 @@ Scene::Scene(QObject *parent) :
     QObject(parent)
 {
     // add basic camera
-    m_cameras.append(new Camera(this,0,0,200)); //!< \todo handle (delete?) this camera when scene is loaded
+    m_cameras.append(new Camera(this,0,100,200)); //!< \todo handle (delete?) this camera when scene is loaded
 }
 
 void Scene::addGroup(Group *group)

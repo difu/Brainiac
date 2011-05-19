@@ -37,7 +37,6 @@ void SceneDisplay::keyPressEvent(QKeyEvent *event)
     if(event->key()==Qt::Key_Shift) {
         m_shiftPressed=true;
     }
-    qDebug()<< "Pressed";
 }
 
 void SceneDisplay::keyReleaseEvent(QKeyEvent *event)
@@ -53,17 +52,17 @@ void SceneDisplay::mouseMoveEvent(QMouseEvent *event)
     int dy = event->y() - m_lastPos.y();
     if (event->buttons() & Qt::MidButton) {
         if(m_camera) {
-            if(!m_shiftPressed) {
-                m_rotation.setX(m_rotation.x()-dy);
-                m_rotation.setY(m_rotation.y()-dx);
-            } else {
-                m_camera->setRotationOffset((qreal)-dy,(qreal)-dx,0.0f);
-            }
+            m_camera->setRotationOffset((qreal)dy,(qreal)-dx,0.0f);
         }
         updateGL();
     } else if (event->buttons() & Qt::RightButton)  {
         if(m_camera) {
-            m_camera->moveCamera((qreal)-dx);
+            if(!m_shiftPressed)
+                m_camera->moveCameraForward((qreal)-dx);
+            else {
+                m_camera->setTranslationOffset(0,dy,0);
+                m_camera->moveCameraSidewise((qreal)-dx);
+            }
         }
         updateGL();
     }
@@ -72,9 +71,6 @@ void SceneDisplay::mouseMoveEvent(QMouseEvent *event)
 
 void SceneDisplay::mousePressEvent(QMouseEvent *event)
 {
-//    if(m_camera) {
-//        m_camera->mousePressEvent(event);
-//    }
     m_lastPos = event->pos();
 }
 
@@ -116,6 +112,32 @@ void SceneDisplay::paintGL()
         glColor3f(0.0f,0.0f,1.0f); // z BLUE
         glVertex3f(  0.0f,  0.0f, 0.0f);
         glVertex3f(  0.0f, 0.0f, 20.0f);
+    glEnd();
+    glEnable(GL_DEPTH_TEST);
+    glBegin(GL_QUADS);
+        glColor3f(0.0f,0.3f,0.0f);
+        glVertex3f( -1000.0f, -1.0f, -1000.0f);
+        glVertex3f( -1000.0f,  -1.0f, 1000.0f);
+        glVertex3f(  1000.0f,  -1.0f, 1000.0f);
+        glVertex3f(  1000.0f, -1.0f, -1000.0f);
+    glEnd(); //
+    glEnable(GL_DEPTH_TEST);
+    glLineWidth(1.0f);
+    glBegin(GL_LINE_LOOP);
+        glColor3f(0.0f,0.5f,0.0f);
+        glVertex3f( -1000.0f, -1.5f, -1000.0f);
+        glVertex3f( -1000.0f, -1.5f, 1000.0f);
+        glVertex3f(  1000.0f, -1.5f, 1000.0f);
+        glVertex3f(  1000.0f, -1.5f, -1000.0f);
+    glEnd();
+    glEnable(GL_DEPTH_TEST);
+    glLineWidth(2.0f);
+    glBegin(GL_LINES);
+        glColor3f(0.0f,0.5f,0.0f);
+        glVertex3f( -1000.0f, -1.5f, 0.0f);
+        glVertex3f( 1000.0f,  -1.5f, 0.0f);
+        glVertex3f(  0.0f,  -1.5f, 1000.0f);
+        glVertex3f(  0.0f, -1.5f, -1000.0f);
     glEnd();
     glPopMatrix();
 }

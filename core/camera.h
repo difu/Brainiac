@@ -9,13 +9,14 @@ class Camera
 {
 public:
     Camera(Scene *scene, qreal xPos=0.0, qreal yPos=0.0, qreal zPos=0.0, qreal xRot=0.0, qreal yRot=0.0, qreal zRot=0.0);
-    void moveCamera( qreal offset );
+    void moveCameraForward( qreal offset );
+    void moveCameraSidewise( qreal offset );
     void placeCameraGL();
 //    void mousePressEvent(QMouseEvent *event);
 //    void mouseMoveEvent(QMouseEvent *event);
-    void setRotation( QVector3D rot );
-    void setRotation(qreal x, qreal y, qreal z);
-    void setRotationOffset(qreal x, qreal y, qreal z);
+    void setRotation( QVector3D rot, bool preventHeadOver=true );
+    void setRotation(qreal x, qreal y, qreal z, bool preventHeadOver=true);
+    void setRotationOffset(qreal x, qreal y, qreal z , bool preventHeadOver=true);
     void setTranslationOffset(qreal x, qreal y, qreal z);
 
 protected:
