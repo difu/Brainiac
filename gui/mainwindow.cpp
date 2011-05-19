@@ -4,6 +4,7 @@
 #include "gui/editorgraphicsview.h"
 #include "gui/sceneeditor/sceneeditor.h"
 #include "gui/sceneeditor/groupeditor.h"
+#include "gui/scenedisplay.h"
 #include "editorlabel.h"
 #include "core/scene.h"
 #include <QDebug>
@@ -41,6 +42,8 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
 
     widget->setLayout(m_layout);
     setCentralWidget(widget);
+
+    m_sceneDisplay=new SceneDisplay(this->m_scene,m_scene->getCameras().first());
 
     //connect(m_sceneEditor,SIGNAL(editorItemClicked(EditorLabel::EditorItemType)),this,SLOT(editorNodeClick(EditorLabel::EditorItemType)));
 }
@@ -198,7 +201,7 @@ void MainWindow::setEditMode(EditMode em)
     m_editMode=em;
     m_brainEditorItems->setVisible(em==MainWindow::BRAIN);
     m_bodyEditorItems->setVisible(em==MainWindow::BODY);
-    m_sceneEditorItems->setVisible(em=MainWindow::SCENE);
+    m_sceneEditorItems->setVisible(em==MainWindow::SCENE);
 
     int index=m_editModeComboBox->findData(QVariant(em));
     m_editModeComboBox->setCurrentIndex(index);

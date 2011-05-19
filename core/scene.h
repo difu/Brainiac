@@ -6,6 +6,7 @@
 #include <QXmlStreamWriter>
 #include <QXmlStreamReader>
 
+class Camera;
 class Generator;
 class Group;
 
@@ -16,6 +17,7 @@ public:
     explicit Scene(QObject *parent = 0);
     void addGroup(Group *group);
     void clear(); //!< deletes all contents from this scene
+    QList<Camera *> getCameras();
     QList<Group *> getGroups() { return m_groups; }
     bool openConfig(const QString & fileName);
     bool saveConfig(const QString & fileName);
@@ -25,6 +27,7 @@ protected:
     QString m_fileName;
     QXmlStreamWriter m_streamWriter;
     QXmlStreamReader m_streamReader;
+    QList<Camera *> m_cameras;
     QList<Generator *> m_generators;
     QList<Group *> m_groups;
 

@@ -24,11 +24,11 @@ public:
     void setName(const QString & name);
 
 protected:
-    void createSegmentChannels();
+    virtual void createSegmentChannels();
     quint32 m_id;
     Segment *m_parent;
     Body *m_body;
-    BrainiacColor *m_color;
+    qreal m_restColor; //!< color of rest pose
     SegmentType m_type;
     QList<Segment *> m_children;
     QString m_name;

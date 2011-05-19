@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui opengl
 
 TARGET = BrainiacNG
 TEMPLATE = app
@@ -31,7 +31,9 @@ SOURCES += main.cpp\
     core/agent/body/segment.cpp \
     core/brainiaccolor.cpp \
     core/agent/channel.cpp \
-    core/agent/body/sphere.cpp
+    core/agent/body/sphere.cpp \
+    gui/scenedisplay.cpp \
+    core/camera.cpp
 
 HEADERS  += gui/mainwindow.h \
     core/scene.h \
@@ -53,7 +55,9 @@ HEADERS  += gui/mainwindow.h \
     core/agent/body/segment.h \
     core/brainiaccolor.h \
     core/agent/channel.h \
-    core/agent/body/sphere.h
+    core/agent/body/sphere.h \
+    gui/scenedisplay.h \
+    core/camera.h
 
 FORMS    += gui/mainwindow.ui \
     gui/sceneeditor/groupeditor.ui

@@ -3,15 +3,14 @@
 #include "generator/generator.h"
 #include "generator/pointgenerator.h"
 #include "group/group.h"
+#include "camera.h"
 #include <QDebug>
 
 Scene::Scene(QObject *parent) :
     QObject(parent)
 {
-//    PointGenerator *pg=new PointGenerator();
-//    pg->addLocation(1,2,3,4,5);
-//    m_generators.append(pg);
-//    saveConfig("/tmp/blubber.xml");
+    // add basic camera
+    m_cameras.append(new Camera(this,0,0,200)); //!< \todo handle (delete?) this camera when scene is loaded
 }
 
 void Scene::addGroup(Group *group)
@@ -31,6 +30,11 @@ void Scene::clear()
         delete grp;
     }
     m_groups.clear();
+}
+
+QList<Camera *> Scene::getCameras()
+{
+    return m_cameras;
 }
 
 bool Scene::openConfig(const QString & fileName)

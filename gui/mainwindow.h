@@ -17,6 +17,7 @@ class Scene;
 class SceneEditor;
 class QComboBox;
 class GroupEditor;
+class SceneDisplay;
 
 
 /** \brief  Main User Interface
@@ -64,6 +65,8 @@ protected:
     QAction *m_saveSceneAction;
 
     QMenu *m_fileMenu;
+
+    SceneDisplay *m_sceneDisplay; //!< Window that shows the rendered gl scene
 
 protected slots:
     void editModeComboChange(int index);

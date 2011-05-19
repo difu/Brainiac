@@ -16,7 +16,8 @@ Segment::Segment(SegmentType type, quint32 id, Body *body, QString name, QVector
     m_name=name;
     m_restRotation=restRot;
     m_restTranslation=restTrans;
-    m_color=new BrainiacColor();
+    //m_color=new BrainiacColor();
+    //m_color=0.5; //!< \todo color management
     createSegmentChannels();
     if(parent) {
         parent->addChild(this);
@@ -74,7 +75,7 @@ void Segment::createSegmentChannels()
 
 /** \brief reset this segment
 
-                resets this segement´s rotation and translation to its rest pose
+                resets this segement´s rotation and translation etc. to its rest pose
 
 **/
 void Segment::reset()
