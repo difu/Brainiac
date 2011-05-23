@@ -52,7 +52,7 @@ void SceneDisplay::mouseMoveEvent(QMouseEvent *event)
     int dy = event->y() - m_lastPos.y();
     if (event->buttons() & Qt::MidButton) {
         if(m_camera) {
-            m_camera->setRotationOffset((qreal)dy,(qreal)-dx,0.0f);
+            m_camera->setRotationOffset((qreal)-dy,(qreal)-dx,0.0f);
         }
         updateGL();
     } else if (event->buttons() & Qt::RightButton)  {

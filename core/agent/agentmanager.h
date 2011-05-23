@@ -3,10 +3,15 @@
 
 #include <QtCore>
 
+class Agent;
+class QXmlStreamReader;
+class Scene;
+
 class AgentManager
 {
 public:
-    AgentManager();
+    AgentManager(Scene *scene);
+    Agent *cloneAgent(quint32 id);
     quint32 getId() { return m_id; }
     qint32 getEditorTranslationX() { return m_editX; }
     qint32 getEditorTranslationY() { return m_editY; }
@@ -19,10 +24,14 @@ public:
     void setFileName( QString fileName ) { m_fileName=fileName; }
 
 protected:
+    Agent *m_masterAgent;
     QString m_name;
     QString m_fileName;
     quint32 m_id;
     quint32 m_editX, m_editY;
+    Scene *m_scene;
+
+    void addSphereFromConfig( QXmlStreamReader *reader, quint32 id, QString name, quint32 parent );
 };
 
 #endif // AGENTMANAGER_H

@@ -1,13 +1,17 @@
 #include "agent.h"
 #include "body/body.h"
+#include "core/brainiacglobals.h"
 #include "channel.h"
+#include "core/scene.h"
 #include <QDebug>
 
-Agent::Agent(QObject *parent) :
+Agent::Agent(Scene *scene, quint32 id,  QObject *parent) :
     QObject(parent)
 {
+    m_id=id;
     createChannels();
     m_body=new Body(this);
+    m_scene=scene;
 }
 
 Agent::~Agent() {
@@ -49,7 +53,7 @@ bool Agent::addInputChannel(Channel *channel, QString name)
 **/
 bool Agent::addOutputChannel(Channel *channel, QString name)
 {
-    if(m_inputs.contains(name)) {
+    if(m_outputs.contains(name)) {
         qDebug() << __PRETTY_FUNCTION__ << "Channel " << name << "already exists!";
         return false;
     } else {
@@ -92,3 +96,40 @@ Body* Agent::getBody()
     return m_body;
 }
 
+quint32 Agent::getId() {
+    return m_id;
+}
+
+void Agent::setRotation(qreal x, qreal y, qreal z)
+{
+    BrainiacGlobals::normalizeAngle(&x);
+    BrainiacGlobals::normalizeAngle(&y);
+    BrainiacGlobals::normalizeAngle(&z);
+    m_rotation.setX(x);
+    m_rotation.setY(y);
+    m_rotation.setZ(z);
+}
+
+void Agent::setTranslation(qreal x, qreal y, qreal z)
+{
+    m_position.setX(x);
+    m_position.setY(y);
+    m_position.setZ(z);
+}
+
+void Agent::setRestRotation(qreal x, qreal y, qreal z)
+{
+    BrainiacGlobals::normalizeAngle(&x);
+    BrainiacGlobals::normalizeAngle(&y);
+    BrainiacGlobals::normalizeAngle(&z);
+    m_restRotation.setX(x);
+    m_restRotation.setY(y);
+    m_restRotation.setZ(z);
+}
+
+void Agent::setRestTranslation(qreal x, qreal y, qreal z)
+{
+    m_restPosition.setX(x);
+    m_restPosition.setY(y);
+    m_restPosition.setZ(z);
+}

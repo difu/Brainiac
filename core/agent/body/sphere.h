@@ -8,6 +8,8 @@ public:
     Sphere(quint32 id, Body *body, QString name, QVector3D *restRot, QVector3D *restTrans, qreal radius, Segment *parent=0) ;
     virtual ~Sphere();
 
+    qreal getRestRadius() ;
+
 protected:
     qreal m_restRadius;
     Channel *m_radius;

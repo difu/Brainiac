@@ -35,10 +35,27 @@ Segment::~Segment()
     m_body->getAgent()->deleteChannel(m_rz);
 }
 
+/** \brief add a segment to this sigment´s children
+
+**/
 void Segment::addChild(Segment *segment)
 {
     m_children.append(segment);
 }
+
+/** \brief add a segment to this sigment´s children
+
+**/
+void Segment::addChild(quint32 id)
+{
+    Segment *seg=m_body->getSegment(id);
+    if(seg)
+        addChild(seg);
+    else
+        qCritical() << __PRETTY_FUNCTION__ << "Error adding child with id " << id << "! No such id in list!";
+}
+
+
 
 void Segment::createSegmentChannels()
 {
@@ -73,6 +90,18 @@ void Segment::createSegmentChannels()
     m_body->getAgent()->addInputChannel(m_rz,name);
 }
 
+Segment* Segment::getParent() {
+    return m_parent;
+}
+
+quint32 Segment::getParentId()
+{
+    if(m_parent)
+        return m_body->getSegmentId(m_parent);
+    else
+        return 0;
+}
+
 /** \brief reset this segment
 
                 resets this segement´s rotation and translation etc. to its rest pose
@@ -89,6 +118,28 @@ void Segment::reset()
     m_rz->init(m_restRotation->z());
 }
 
+/** \brief set this segment´s name
+
+**/
 void Segment::setName(const QString &name) {
     m_name=name;
+}
+
+/** \brief set this segment´s parent
+
+**/
+void Segment::setParent(quint32 id)
+{
+    if(m_body->getSegment(id))
+        m_body->getSegment(id)->addChild(this);
+}
+
+/** \brief set this segment´s parent
+
+**/
+void Segment::setParent(Segment *segment)
+{
+    if(segment) {
+        segment->addChild(this);
+    }
 }

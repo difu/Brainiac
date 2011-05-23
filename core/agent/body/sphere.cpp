@@ -30,3 +30,8 @@ void Sphere::reset()
     Segment::reset();
     m_radius->init(m_restRadius);
 }
+
+qreal Sphere::getRestRadius()
+{
+    return m_restRadius;
+}

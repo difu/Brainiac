@@ -18,10 +18,18 @@ public:
     Segment(SegmentType type, quint32 id, Body *body, QString name, QVector3D *restRot, QVector3D *restTrans, Segment *parent=0);
     virtual ~Segment();
     void addChild(Segment *segment);
+    void addChild(quint32 id);
     SegmentType getType() { return m_type; }
     quint32 getId() { return m_id; }
+    QString getName() {return m_name; }
+    Segment* getParent();
+    quint32 getParentId();
+    QVector3D* getRestRotation() { return m_restRotation; }
+    QVector3D*  getRestTranslation() { return m_restTranslation; }
     virtual void reset();
     void setName(const QString & name);
+    void setParent(Segment *segment);
+    void setParent(quint32 id);
 
 protected:
     virtual void createSegmentChannels();

@@ -2,10 +2,28 @@
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 #include "core/agent/agentmanager.h"
+#include "core/agent/agent.h"
+#include "core/scene.h"
 
-Group::Group()
+Group::Group(Scene *scene)
 {
+    m_scene=scene;
     m_id=m_editX=m_editY=0;
+}
+
+void Group::addAgent(Agent *agent)
+{
+    m_agents.append(agent);
+}
+
+quint32 Group::getNextAgentId() {
+    quint32 highestId=0;
+    foreach(Agent *agent,m_agents) {
+        if(agent->getId()>highestId) {
+            highestId=agent->getId();
+        }
+    }
+    return ++highestId;
 }
 
 void Group::loadConfig(QXmlStreamReader *xml)
@@ -18,7 +36,7 @@ void Group::loadConfig(QXmlStreamReader *xml)
     setEditorTranslation(attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
     xml->skipCurrentElement();
 
-    m_agentManager=new AgentManager();
+    m_agentManager=new AgentManager(m_scene);
     m_agentManager->setFileName(m_agentFileName);
     if(m_agentManager->loadConfig()) {
 
