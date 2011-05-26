@@ -65,11 +65,17 @@ void Scene::createAgents(Generator *gen)
                 agent->setRestTranslation(trans->x(),trans->y(),trans->z()); //!< \todo add rest rotation
                 m_agents.append(agent);
                 grp->addAgent(agent);
+                agent->reset();
             }
         }
 
 
     }
+}
+
+QList<Agent *> Scene::getAgents()
+{
+    return m_agents;
 }
 
 QList<Camera *> Scene::getCameras()

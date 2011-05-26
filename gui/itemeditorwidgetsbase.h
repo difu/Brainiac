@@ -4,6 +4,11 @@
 #include "core/brainiacglobals.h"
 class Scene;
 
+/** \brief  Base class for all item editors
+
+        All itemeditors (these which appear in south region of the main window) must subclass this
+
+**/
 class ItemEditorWidgetsBase
 {
 public:

@@ -25,13 +25,20 @@ void Sphere::createSegmentChannels()
 
 }
 
-void Sphere::reset()
+Channel * Sphere::getRadius()
 {
-    Segment::reset();
-    m_radius->init(m_restRadius);
+    return m_radius;
 }
 
 qreal Sphere::getRestRadius()
 {
     return m_restRadius;
 }
+
+void Sphere::reset()
+{
+    Segment::reset();
+    m_radius->init(m_restRadius);
+}
+
+

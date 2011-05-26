@@ -1,8 +1,13 @@
 #include "agent.h"
 #include "body/body.h"
+#include "body/segment.h"
+#include "body/sphere.h"
 #include "core/brainiacglobals.h"
 #include "channel.h"
 #include "core/scene.h"
+#include <QtOpenGL>
+#include <glu.h>
+#include <GLUT/glut.h>
 #include <QDebug>
 
 Agent::Agent(Scene *scene, quint32 id,  QObject *parent) :
@@ -98,6 +103,48 @@ Body* Agent::getBody()
 
 quint32 Agent::getId() {
     return m_id;
+}
+
+
+void Agent::renderGL()
+{
+    foreach(Segment *seg, m_body->getSegments()) {
+        if(seg->isRootSegment()) {
+            glPushMatrix();
+            glTranslated(m_position.x(),m_position.y(),m_position.z());
+            renderSegment(seg);
+            glPopMatrix();
+        }
+    }
+
+//    glPushMatrix();
+//    glLineWidth( 3.0 );
+//    glColor3f( 0.5, 0.1, 1);
+//    glutSolidSphere(10,20,10);
+//    glPopMatrix();
+}
+
+void Agent::renderSegment(Segment *seg)
+{
+    glTranslated(seg->getTransX()->getValue(),seg->getTransY()->getValue(),seg->getTransZ()->getValue());
+    glLineWidth( 3.0 );
+    glColor3f( 0.5, 0.1, 1);
+    if(seg->getType()==Segment::SPHERE) {
+        Sphere *sphere=(Sphere*)seg;
+        glutSolidSphere(sphere->getRadius()->getValue(),20,10);
+    }
+    foreach(Segment *segChild,seg->getChildren()) {
+        renderSegment(segChild);
+    }
+
+}
+
+void Agent::reset()
+{
+    m_position.setX(m_restPosition.x());
+    m_position.setY(m_restPosition.y());
+    m_position.setZ(m_restPosition.z());
+
 }
 
 void Agent::setRotation(qreal x, qreal y, qreal z)

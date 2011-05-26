@@ -102,6 +102,18 @@ bool AgentManager::loadConfig()
                                         reader.skipCurrentElement();
                                     }
                                 }
+                            } else if(reader.name()=="Brain") {
+                                qDebug() << "parsing Brain";
+                                while(reader.readNextStartElement()) {
+                                    qDebug()<< "Tag Name "<< reader.name();
+                                    if(reader.name()=="Output") {
+                                        QXmlStreamAttributes attribs = reader.attributes();
+                                        qDebug() << attribs.value("name");
+                                        reader.skipCurrentElement();
+                                    }else {
+                                        reader.skipCurrentElement();
+                                    }
+                                }
                             } else {
                                 reader.skipCurrentElement();
                             }

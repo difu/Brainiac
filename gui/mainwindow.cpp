@@ -1,12 +1,14 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "mainwindowlayout.h"
+#include "gui/braineditor/braineditor.h"
 #include "gui/editorgraphicsview.h"
 #include "gui/sceneeditor/sceneeditor.h"
 #include "gui/sceneeditor/groupeditor.h"
 #include "gui/scenedisplay.h"
 #include "editorlabel.h"
 #include "core/scene.h"
+#include "core/group/group.h"
 #include <QDebug>
 #include <QComboBox>
 #include <QDialog>
@@ -48,6 +50,13 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
     //connect(m_sceneEditor,SIGNAL(editorItemClicked(EditorLabel::EditorItemType)),this,SLOT(editorNodeClick(EditorLabel::EditorItemType)));
 }
 
+void MainWindow::addAgentManager(AgentManager *agentManager)
+{
+    BrainEditor *editor=new BrainEditor(m_scene,agentManager);
+    m_brainEditors.insert(agentManager,editor);
+
+}
+
 void MainWindow::createActions()
 {
     // File Menu Actions
@@ -61,6 +70,13 @@ void MainWindow::createEditors()
     m_layout->addWidget(m_editorView,MainWindowLayout::Center);
 
     m_sceneEditor=new SceneEditor(m_scene);
+    m_activeAgentManager=0;
+    foreach(Group *grp,m_scene->getGroups()) {
+        AgentManager *mngr=grp->getAgentManager();
+        addAgentManager(mngr);
+        m_activeAgentManager=mngr;
+    }
+
 }
 
 void MainWindow::createEditModeWidgets()
@@ -172,9 +188,12 @@ void MainWindow::editModeComboChange(int index)
 void MainWindow::editorNodeClick(ItemEditorWidgetsBase::editMessage msg)
 {
     m_groupEditor->setVisible(msg.type==BrainiacGlobals::GROUP);
+    Group *grp;
     switch(msg.type) {
     case BrainiacGlobals::GROUP:
-        m_groupEditor->setGroup((Group *)msg.object);
+        grp=(Group *)msg.object;
+        m_groupEditor->setGroup(grp);
+        m_activeAgentManager=grp->getAgentManager();
         break;
     default:
     ;
@@ -211,6 +230,11 @@ void MainWindow::setEditMode(EditMode em)
         break;
     case MainWindow::BODY:
     case MainWindow::BRAIN:
+        if(m_brainEditors.contains(m_activeAgentManager))
+            m_editorView->setScene(m_brainEditors.value(m_activeAgentManager));
+        else {
+            m_editorView->setScene(0);
+        }
         break;
     }
     m_editorView->centerOn(m_editorView->scene()->width()/2,m_editorView->scene()->height()/2);

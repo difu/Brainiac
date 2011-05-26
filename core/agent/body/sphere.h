@@ -9,6 +9,7 @@ public:
     virtual ~Sphere();
 
     qreal getRestRadius() ;
+    Channel* getRadius();
 
 protected:
     qreal m_restRadius;

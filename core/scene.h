@@ -19,6 +19,7 @@ public:
     void addAgent(Agent *agent);
     void addGroup(Group *group);
     void clear(); //!< deletes all contents from this scene
+    QList<Agent *> getAgents();
     QList<Camera *> getCameras();
     Group *getGroup(quint32 id);
     QList<Group *> getGroups() { return m_groups; }

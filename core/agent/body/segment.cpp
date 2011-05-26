@@ -102,6 +102,15 @@ quint32 Segment::getParentId()
         return 0;
 }
 
+bool Segment::isRootSegment()
+{
+    if(m_parent==0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 /** \brief reset this segment
 
                 resets this segement´s rotation and translation etc. to its rest pose

@@ -8,10 +8,8 @@
 #include <QMimeData>
 #include "core/agent/agentmanager.h"
 
-SceneEditor::SceneEditor(Scene *scene)
+SceneEditor::SceneEditor(Scene *scene) : EditorBase(scene)
 {
-    m_scene=scene;
-    setSceneRect(0, 0, 4000, 4000);
     foreach(Group *grp,m_scene->getGroups()) {
         qDebug() << "Group in editor added" << grp->getId();
         SceneEditorItem *item=new SceneEditorItem(BrainiacGlobals::GROUP,grp);
@@ -24,27 +22,6 @@ SceneEditor::SceneEditor(Scene *scene)
             item->setPos(manager->getEditorTranslationX(),manager->getEditorTranslationY());
             addItem(item);
         }
-    }
-}
-
-
-void SceneEditor::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
-{
-    if (event->mimeData()->hasText()) {
-            event->acceptProposedAction();
-    } else {
-        event->ignore();
-    }
-}
-
-void SceneEditor::dragMoveEvent(QGraphicsSceneDragDropEvent *event)
-{
-    if (event->mimeData()->hasText()) {
-            event->setDropAction(Qt::MoveAction);
-            event->accept();
-            event->acceptProposedAction();
-    } else {
-        event->ignore();
     }
 }
 

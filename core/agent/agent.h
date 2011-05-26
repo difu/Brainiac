@@ -9,6 +9,7 @@
 class Body;
 class Channel;
 class Scene;
+class Segment;
 
 class Agent : public QObject
 {
@@ -20,6 +21,8 @@ public:
     void deleteChannel(Channel* channel);
     Body *getBody();
     quint32 getId();
+    void renderGL();
+    void reset();
     void setRotation(qreal x, qreal y, qreal z);
     void setTranslation(qreal x, qreal y, qreal z);
     void setRestRotation(qreal x, qreal y, qreal z);
@@ -32,6 +35,7 @@ protected:
     QHash<QString, Channel *> m_inputs; //!< List of all input channels of this agent
     QHash<QString, Channel *> m_outputs; //!< List of all output channels of this agent
     void createChannels();
+    void renderSegment(Segment *seg);
     Channel *m_tx; //!< x translation rate of agent (input and output)
     Channel *m_ty; //!< y translation rate of agent (input and output)
     Channel *m_tz; //!< z translation rate of agent (input and output)

@@ -9,6 +9,7 @@ Group::Group(Scene *scene)
 {
     m_scene=scene;
     m_id=m_editX=m_editY=0;
+    m_agentManager=0;
 }
 
 void Group::addAgent(Agent *agent)

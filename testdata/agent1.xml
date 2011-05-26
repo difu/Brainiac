@@ -1,16 +1,25 @@
 <Agentconfig>
 	<Agent name="agent1" editorx="2000" editory="2100">
 		<Body>
-			<Segment type="sphere" id="1" parent="-1" name="Sphere 1">
+			<Segment type="sphere" id="1" parent="-1" name="Sphere1">
 				<Translation x="0" y="0" z="0"/>
 				<Rotation x="0" y="0" z="0" />
 				<Radius r="10" />
 			</Segment>
-			<Segment type="sphere" id="2" parent="-1" name="Sphere 2">
+			<Segment type="sphere" id="2" parent="-1" name="Sphere2">
 				<Translation x="0" y="10" z="0"/>
 				<Rotation x="0" y="0" z="0" />
 				<Radius r="10" />
 			</Segment>
+			<Segment type="sphere" id="3" parent="1" name="Sphere3">
+				<Translation x="10" y="10" z="0"/>
+				<Rotation x="0" y="0" z="0" />
+				<Radius r="5" />
+			</Segment>
 		</Body>
+		<Brain>
+			<Output editorx="2000" editory="2000" id="1" name="Color" channel="color"/>
+			<Output editorx="2100" editory="2100" id="2" name="Radius" channel="sphere1:radius"/>
+		</Brain>
 	</Agent>
 </Agentconfig>

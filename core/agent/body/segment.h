@@ -19,6 +19,7 @@ public:
     virtual ~Segment();
     void addChild(Segment *segment);
     void addChild(quint32 id);
+    QList<Segment *> getChildren() { return m_children; }
     SegmentType getType() { return m_type; }
     quint32 getId() { return m_id; }
     QString getName() {return m_name; }
@@ -26,6 +27,10 @@ public:
     quint32 getParentId();
     QVector3D* getRestRotation() { return m_restRotation; }
     QVector3D*  getRestTranslation() { return m_restTranslation; }
+    Channel* getTransX() { return m_tx; }
+    Channel* getTransY() { return m_ty; }
+    Channel* getTransZ() { return m_tz; }
+    bool isRootSegment();
     virtual void reset();
     void setName(const QString & name);
     void setParent(Segment *segment);

@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QHash>
 #include "editorlabel.h"
 #include "core/brainiacglobals.h"
 #include "gui/itemeditorwidgetsbase.h"
@@ -19,6 +20,8 @@ class QComboBox;
 class GroupEditor;
 class SceneDisplay;
 
+class AgentManager;
+class BrainEditor;
 
 /** \brief  Main User Interface
 
@@ -62,6 +65,9 @@ protected:
 
     GroupEditor *m_groupEditor;
 
+    QHash<AgentManager*, BrainEditor*> m_brainEditors;
+    AgentManager *m_activeAgentManager; //!< AgentManager that is edited in brain/body editor
+
     QAction *m_saveSceneAction;
 
     QMenu *m_fileMenu;
@@ -69,6 +75,7 @@ protected:
     SceneDisplay *m_sceneDisplay; //!< Window that shows the rendered gl scene
 
 protected slots:
+    void addAgentManager(AgentManager *agentManager);
     void editModeComboChange(int index);
     void editorNodeClick(ItemEditorWidgetsBase::editMessage msg);
     void saveScene();

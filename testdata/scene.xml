@@ -6,11 +6,11 @@
     </Groups>
     <Generators>
         <PointGenerator>
-            <Point x="1" y="2" z="3" w="4" group="1"/>
+            <Point x="100" y="0" z="3" w="4" group="1"/>
         </PointGenerator>
         <PointGenerator>
-            <Point x="3" y="2" z="3" w="1" group="1"/>
-            <Point x="2" y="2" z="3" w="2" group="1"/>
+            <Point x="200" y="0" z="3" w="1" group="1"/>
+            <Point x="0" y="2" z="100" w="2" group="1"/>
         </PointGenerator>
     </Generators>
 </Place>

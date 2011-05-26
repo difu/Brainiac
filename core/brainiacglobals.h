@@ -8,6 +8,7 @@ class BrainiacGlobals
 public:
     static const qreal PI=3.14159265;
     enum ItemType {AND, OR, FUZZ, DEFUZZ, OUTPUT, INPUT, NOISE, TIMER, SPHERE, CUBE, GROUP, AGENT};
+    enum RotationOrder {XYZ, XZY, YXZ, YZX, ZXY, ZYX };
     static void normalizeAngle(qreal *angle)
     {
         while (*angle < 0)

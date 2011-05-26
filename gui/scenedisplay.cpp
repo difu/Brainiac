@@ -1,4 +1,5 @@
 #include "scenedisplay.h"
+#include "core/agent/agent.h"
 #include "core/scene.h"
 #include "core/camera.h"
 #include <QMouseEvent>
@@ -30,6 +31,9 @@ void SceneDisplay::initializeGL()
     glClearDepth(1.0f);
 
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glEnable(GL_COLOR_MATERIAL);
 }
 
 void SceneDisplay::keyPressEvent(QKeyEvent *event)
@@ -140,6 +144,9 @@ void SceneDisplay::paintGL()
         glVertex3f(  0.0f, -1.5f, -1000.0f);
     glEnd();
     glPopMatrix();
+    foreach(Agent *agent, m_scene->getAgents()) {
+        agent->renderGL();
+    }
 }
 
 void SceneDisplay::resizeGL(int width, int height)

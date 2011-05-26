@@ -33,7 +33,11 @@ SOURCES += main.cpp\
     core/agent/channel.cpp \
     core/agent/body/sphere.cpp \
     gui/scenedisplay.cpp \
-    core/camera.cpp
+    core/camera.cpp \
+    gui/editorbase.cpp \
+    gui/editoritem.cpp \
+    gui/braineditor/braineditor.cpp \
+    core/agent/brain/output.cpp
 
 HEADERS  += gui/mainwindow.h \
     core/scene.h \
@@ -57,10 +61,17 @@ HEADERS  += gui/mainwindow.h \
     core/agent/channel.h \
     core/agent/body/sphere.h \
     gui/scenedisplay.h \
-    core/camera.h
+    core/camera.h \
+    gui/editorbase.h \
+    gui/editoritem.h \
+    gui/braineditor/braineditor.h \
+    core/agent/brain/output.h
 
 FORMS    += gui/mainwindow.ui \
     gui/sceneeditor/groupeditor.ui
+
+LIBS += -framework \
+    glut
 
 RESOURCES += \
     brainiac.qrc
