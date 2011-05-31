@@ -37,7 +37,12 @@ SOURCES += main.cpp\
     gui/editorbase.cpp \
     gui/editoritem.cpp \
     gui/braineditor/braineditor.cpp \
-    core/agent/brain/output.cpp
+    core/agent/brain/output.cpp \
+    core/agent/brain/brain.cpp \
+    gui/braineditor/outputeditor.cpp \
+    gui/brainiacsliderframe.cpp \
+    gui/brainiacslider.cpp \
+    gui/braineditor/braineditoritem.cpp
 
 HEADERS  += gui/mainwindow.h \
     core/scene.h \
@@ -65,10 +70,16 @@ HEADERS  += gui/mainwindow.h \
     gui/editorbase.h \
     gui/editoritem.h \
     gui/braineditor/braineditor.h \
-    core/agent/brain/output.h
+    core/agent/brain/output.h \
+    core/agent/brain/brain.h \
+    gui/braineditor/outputeditor.h \
+    gui/brainiacsliderframe.h \
+    gui/brainiacslider.h \
+    gui/braineditor/braineditoritem.h
 
 FORMS    += gui/mainwindow.ui \
-    gui/sceneeditor/groupeditor.ui
+    gui/sceneeditor/groupeditor.ui \
+    gui/braineditor/outputeditor.ui
 
 LIBS += -framework \
     glut
