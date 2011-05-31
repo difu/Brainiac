@@ -1,6 +1,12 @@
 #include "body.h"
 #include "core/agent/agent.h"
 #include "core/agent/body/segment.h"
+#include "core/agent/body/sphere.h"
+#include "core/agent/channel.h"
+
+#include <QtOpenGL>
+#include <glu.h>
+#include <GLUT/glut.h>
 
 Body::Body(Agent *agent)
 {
@@ -38,4 +44,32 @@ quint32 Body::getSegmentId(Segment *seg)
 QList<Segment *> Body::getSegments()
 {
     return m_segments;
+}
+
+void Body::renderGL()
+{
+    foreach(Segment *seg, this->getSegments()) {
+        if(seg->isRootSegment()) {
+            glPushMatrix();
+            glTranslated(m_agent->getPosition()->x(),m_agent->getPosition()->y(),m_agent->getPosition()->z());
+            renderSegment(seg);
+            glPopMatrix();
+        }
+    }
+}
+
+
+void Body::renderSegment(Segment *seg)
+{
+    glTranslated(seg->getTransX()->getValue(),seg->getTransY()->getValue(),seg->getTransZ()->getValue());
+    glLineWidth( 3.0 );
+    glColor3f( 0.5, 0.1, 1);
+    if(seg->getType()==Segment::SPHERE) {
+        Sphere *sphere=(Sphere*)seg;
+        glutSolidSphere(sphere->getRadius()->getValue(),20,10);
+    }
+    foreach(Segment *segChild,seg->getChildren()) {
+        renderSegment(segChild);
+    }
+    qDebug() << "Rendered Segment"<<seg->getName();
 }

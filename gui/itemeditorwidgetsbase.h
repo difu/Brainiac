@@ -13,14 +13,20 @@ class ItemEditorWidgetsBase
 {
 public:
     ItemEditorWidgetsBase(Scene *scene);
+    /** \brief  Message to communicate between item-based editors and the items properties editors
+
+            It depends on the editors what properties to use, sometimes not all properties are used,
+            the message receiver has to handle this
+
+    **/
     struct editMessage {
-        quint32 id;
-        BrainiacGlobals::ItemType type;
-        void *object;
+        quint32 id; //!< usually the id of an item
+        BrainiacGlobals::ItemType type; //!< the type of the item
+        void *object; //!< free to use object
     };
 
 protected:
-    Scene *m_scene;
+    Scene *m_scene; //!< the project scene
 };
 
 #endif // ITEMEDITORWIDGETSBASE_H

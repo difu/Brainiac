@@ -18,6 +18,7 @@ class Scene;
 class SceneEditor;
 class QComboBox;
 class GroupEditor;
+class OutputEditor;
 class SceneDisplay;
 
 class AgentManager;
@@ -64,6 +65,8 @@ protected:
     QWidget *m_logicElementEditWidget;
 
     GroupEditor *m_groupEditor;
+    OutputEditor *m_outputEditor;
+
 
     QHash<AgentManager*, BrainEditor*> m_brainEditors;
     AgentManager *m_activeAgentManager; //!< AgentManager that is edited in brain/body editor
@@ -78,6 +81,7 @@ protected slots:
     void addAgentManager(AgentManager *agentManager);
     void editModeComboChange(int index);
     void editorNodeClick(ItemEditorWidgetsBase::editMessage msg);
+    void refreshBrainEditor();
     void saveScene();
 
 private:

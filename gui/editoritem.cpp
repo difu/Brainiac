@@ -5,6 +5,9 @@
 
 #include "core/group/group.h"
 #include "core/agent/agentmanager.h"
+#include "core/agent/agent.h"
+#include "core/agent/brain/brain.h"
+#include "core/agent/brain/output.h"
 
 EditorItem::EditorItem(BrainiacGlobals::ItemType type, void *object,quint32 id)
 {
@@ -21,6 +24,9 @@ EditorItem::EditorItem(BrainiacGlobals::ItemType type, void *object,quint32 id)
         break;
     case BrainiacGlobals::GROUP:
         m_symbolPic.load(":/gui/pics/editor_logo_group.png");
+        break;
+    case BrainiacGlobals::OUTPUT:
+        m_symbolPic.load(":/gui/pics/editor_logo_output.png");
         break;
     default:
         qDebug() << __PRETTY_FUNCTION__ << "Wrong label parameter!";
@@ -64,6 +70,9 @@ void EditorItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     } else if(m_type==BrainiacGlobals::AGENT) {
         AgentManager *myManager=(AgentManager*)m_object;
         painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,myManager->getName());
+    } else if(m_type==BrainiacGlobals::OUTPUT) {
+        AgentManager *myManager=(AgentManager*)m_object;
+        painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,myManager->getMasterAgent()->getBrain()->getFuzzy(m_id)->getName());
     }
     painter->drawImage(QPoint(relxPos+4,relyPos+6),m_symbolPic);
 

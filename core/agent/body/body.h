@@ -15,9 +15,11 @@ public:
     quint32 getSegmentId(Segment *seg);
     QList<Segment *> getSegments();
     Agent* getAgent();
+    void renderGL();
 protected:
     Agent *m_agent;
     QList<Segment *> m_segments;
+    void renderSegment(Segment *seg);
 };
 
 #endif // BODY_H

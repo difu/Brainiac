@@ -1,0 +1,25 @@
+<Agentconfig>
+	<Agent name="agent2" editorx="2200" editory="2100">
+		<Body>
+			<Segment type="sphere" id="1" parent="-1" name="sphere2_1">
+				<Translation x="0" y="0" z="0"/>
+				<Rotation x="0" y="0" z="0" />
+				<Radius r="10" />
+			</Segment>
+			<Segment type="sphere" id="2" parent="1" name="sphere2_2">
+				<Translation x="0" y="10" z="0"/>
+				<Rotation x="0" y="0" z="0" />
+				<Radius r="5" />
+			</Segment>
+			<Segment type="sphere" id="3" parent="2" name="sphere2_3">
+				<Translation x="10" y="00" z="0"/>
+				<Rotation x="0" y="0" z="0" />
+				<Radius r="2" />
+			</Segment>
+		</Body>
+		<Brain>
+			<Output editorx="2000" editory="2000" id="1" name="Color2" channel="color"/>
+			<Output editorx="2100" editory="2100" id="2" name="Radius2" channel="sphere2_1:radius"/>
+		</Brain>
+	</Agent>
+</Agentconfig>

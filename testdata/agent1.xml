@@ -1,17 +1,17 @@
 <Agentconfig>
 	<Agent name="agent1" editorx="2000" editory="2100">
 		<Body>
-			<Segment type="sphere" id="1" parent="-1" name="Sphere1">
+			<Segment type="sphere" id="1" parent="-1" name="sphere1">
 				<Translation x="0" y="0" z="0"/>
 				<Rotation x="0" y="0" z="0" />
 				<Radius r="10" />
 			</Segment>
-			<Segment type="sphere" id="2" parent="-1" name="Sphere2">
+			<Segment type="sphere" id="2" parent="-1" name="sphere2">
 				<Translation x="0" y="10" z="0"/>
 				<Rotation x="0" y="0" z="0" />
 				<Radius r="10" />
 			</Segment>
-			<Segment type="sphere" id="3" parent="1" name="Sphere3">
+			<Segment type="sphere" id="3" parent="1" name="sphere3">
 				<Translation x="10" y="10" z="0"/>
 				<Rotation x="0" y="0" z="0" />
 				<Radius r="5" />

@@ -14,6 +14,7 @@ class EditorItem : public QGraphicsItem
 public:
     EditorItem(BrainiacGlobals::ItemType type, void *object, quint32 id);
     QRectF boundingRect() const;
+    quint32 getId() { return m_id; }
     void * getObject() { return m_object; }
     BrainiacGlobals::ItemType  getType() {return m_type;}
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);

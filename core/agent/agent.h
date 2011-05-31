@@ -7,6 +7,7 @@
 #include <QVector3D>
 
 class Body;
+class Brain;
 class Channel;
 class Scene;
 class Segment;
@@ -18,9 +19,16 @@ public:
     explicit Agent(Scene *scene, quint32 id, QObject *parent = 0);
     bool addInputChannel(Channel* channel, QString name);
     bool addOutputChannel(Channel* channel, QString name);
+    void addOutputFuzz(quint32 id, QString name, QString channel, quint32 editorX, quint32 editorY);
     void deleteChannel(Channel* channel);
     Body *getBody();
+    Brain *getBrain();
+    Channel *getInputChannel(QString name);
+    Channel *getOutputChannel(QString name);
     quint32 getId();
+    QVector3D *getPosition();
+    bool inputChannelExists(QString name);
+    bool outputChannelExists(QString name);
     void renderGL();
     void reset();
     void setRotation(qreal x, qreal y, qreal z);
@@ -31,11 +39,12 @@ public:
 
 protected:
     Body *m_body; //!< the agent´s body
+    Brain *m_brain; //!< the agent´s brain
     quint32 m_id; //!< the agent´s id. Unique for its group
     QHash<QString, Channel *> m_inputs; //!< List of all input channels of this agent
     QHash<QString, Channel *> m_outputs; //!< List of all output channels of this agent
     void createChannels();
-    void renderSegment(Segment *seg);
+    Channel *m_color; //!< color of agent (input and output)
     Channel *m_tx; //!< x translation rate of agent (input and output)
     Channel *m_ty; //!< y translation rate of agent (input and output)
     Channel *m_tz; //!< z translation rate of agent (input and output)

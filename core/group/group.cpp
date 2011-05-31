@@ -37,7 +37,7 @@ void Group::loadConfig(QXmlStreamReader *xml)
     setEditorTranslation(attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
     xml->skipCurrentElement();
 
-    m_agentManager=new AgentManager(m_scene);
+    m_agentManager=new AgentManager(m_scene, this);
     m_agentManager->setFileName(m_agentFileName);
     if(m_agentManager->loadConfig()) {
 

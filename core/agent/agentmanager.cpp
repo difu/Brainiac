@@ -4,15 +4,21 @@
 #include "core/agent/agent.h"
 #include "core/agent/body/body.h"
 #include "core/agent/body/sphere.h"
+#include "core/agent/brain/brain.h"
+#include "core/agent/brain/fuzzybase.h"
+#include "core/agent/brain/output.h"
+#include "core/group/group.h"
 #include <QFile>
 #include <QXmlStreamReader>
 #include <QDebug>
 #include <QVector3D>
 
-AgentManager::AgentManager(Scene *scene)
+AgentManager::AgentManager(Scene *scene, Group *group)
 {
     m_scene=scene;
+    m_group=group;
     m_id=0;
+    m_masterAgent=new Agent(m_scene,0); // Id 0 is ok, its just a master agent
 }
 
 void AgentManager::addSphereFromConfig(QXmlStreamReader *reader, quint32 id, QString name, quint32 parent)
@@ -46,13 +52,29 @@ void AgentManager::addSphereFromConfig(QXmlStreamReader *reader, quint32 id, QSt
         }
     }
     Segment *parentSeg=m_masterAgent->getBody()->getSegment(parent);
-    if( !parentSeg )qDebug() << "Segment with id"<< id << "has no parent";
-    Segment *seg=new Sphere(id, m_masterAgent->getBody(),name,rotation,translation,radius,parentSeg);
+
+    Segment *seg=new Sphere(id, m_masterAgent->getBody(),name,rotation,translation,radius,0);
+    if( parentSeg ) {
+        qDebug() << "Segment with id"<< id << "has parent";
+        seg->setParentId(parentSeg->getId());
+    }
     m_masterAgent->getBody()->addSegment(seg);
     //reader->skipCurrentElement();
 
 }
 
+void AgentManager::addOutputFuzz(quint32 id, QString name, QString channel, quint32 editorX, quint32 editorY)
+{
+    m_masterAgent->addOutputFuzz(id, name, channel, editorX, editorY);
+}
+
+/** \brief clones an agent
+
+                this function clones an agent from this manager´s master agent
+
+        \param  id the id of the new agent
+        \return pointer to new agent instance
+**/
 Agent* AgentManager::cloneAgent(quint32 id)
 {
     Agent *agent=new Agent(m_scene,id);
@@ -62,10 +84,21 @@ Agent* AgentManager::cloneAgent(quint32 id)
             QVector3D *rot=new QVector3D(origSphere->getRestRotation()->x(),origSphere->getRestRotation()->y(),origSphere->getRestRotation()->z());
             QVector3D *trans=new QVector3D(origSphere->getRestTranslation()->x(),origSphere->getRestTranslation()->y(),origSphere->getRestTranslation()->z());
             Sphere *newSphere=new Sphere(origSphere->getId(),agent->getBody(),origSphere->getName(),rot,trans,origSphere->getRestRadius());
-            newSphere->setParent(origSphere->getParentId());
+            newSphere->setParentId(origSphere->getParentId());
             agent->getBody()->addSegment(newSphere);
+        } else {
+            qDebug() <<  __PRETTY_FUNCTION__ << "missing segment type" << id;
         }
     }
+    foreach(FuzzyBase *fuzz,m_masterAgent->getBrain()->getFuzzies()) {
+        if(fuzz->getType()==FuzzyBase::OUTPUT) {
+            Output *origOut=(Output *)fuzz;
+            agent->addOutputFuzz(origOut->getId(),origOut->getName(),origOut->getChannelName(),origOut->getEditorTranslationX(),origOut->getEditorTranslationY());
+        } else {
+            qDebug() <<  __PRETTY_FUNCTION__ << "missing fuzz type" << id;
+        }
+    }
+
     return agent;
 }
 
@@ -73,7 +106,6 @@ bool AgentManager::loadConfig()
 {
     QFile file(m_fileName);
     if(file.open(QIODevice::ReadOnly)) {
-        m_masterAgent=new Agent(m_scene,0); // Id 0 is ok, its just a master agent
         QXmlStreamReader reader;
         reader.setDevice(&file);
         while(reader.readNextStartElement()) {
@@ -109,6 +141,7 @@ bool AgentManager::loadConfig()
                                     if(reader.name()=="Output") {
                                         QXmlStreamAttributes attribs = reader.attributes();
                                         qDebug() << attribs.value("name");
+                                        addOutputFuzz(attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("channel").toString(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
                                         reader.skipCurrentElement();
                                     }else {
                                         reader.skipCurrentElement();
@@ -140,4 +173,15 @@ void AgentManager::setEditorTranslation(qint32 x, qint32 y)
 {
     m_editX=x;
     m_editY=y;
+}
+
+/** \brief sets result of a fuzz of all agents
+            each agent belonging to this manager is updated including its master agent
+**/
+void AgentManager::setFuzzyResult(quint32 id, qreal result)
+{
+    m_masterAgent->getBrain()->getFuzzy(id)->setResult(result);
+    foreach(Agent *agent, m_group->getAgents()) {
+        agent->getBrain()->getFuzzy(id)->setResult(result);
+    }
 }

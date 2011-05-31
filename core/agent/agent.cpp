@@ -1,4 +1,5 @@
 #include "agent.h"
+#include "brain/brain.h"
 #include "body/body.h"
 #include "body/segment.h"
 #include "body/sphere.h"
@@ -16,6 +17,7 @@ Agent::Agent(Scene *scene, quint32 id,  QObject *parent) :
     m_id=id;
     createChannels();
     m_body=new Body(this);
+    m_brain=new Brain(this);
     m_scene=scene;
 }
 
@@ -53,6 +55,8 @@ bool Agent::addInputChannel(Channel *channel, QString name)
 
                 adds an output channel to the agent.
                 If channel already exists nothing is added
+                \param  channel pointer to output channel
+                @param name name of the channel
                 \return true, if adding was successful, false if not
 
 **/
@@ -65,6 +69,11 @@ bool Agent::addOutputChannel(Channel *channel, QString name)
         m_outputs.insert(name,channel);
         return true;
     }
+}
+
+void Agent::addOutputFuzz(quint32 id, QString name, QString channel, quint32 editorX, quint32 editorY)
+{
+    m_brain->addOutputFuzz(id, name, channel, editorX,editorY);
 }
 
 void Agent::createChannels()
@@ -81,12 +90,17 @@ void Agent::createChannels()
     addInputChannel(m_tz,"tz");
     addOutputChannel(m_tz,"tz");
 
+    m_color=new Channel(0,1,0);
+    addInputChannel(m_color,"color");
+    addOutputChannel(m_color,"color");
+
 }
 
 /** \brief deletes channel
 
                 the channel is deleted both from inputs and outputs.
                 also its destructor is invoked
+                @param channel the channel to be deleted
 
 **/
 void Agent::deleteChannel(Channel *channel)
@@ -101,42 +115,61 @@ Body* Agent::getBody()
     return m_body;
 }
 
+Brain* Agent::getBrain()
+{
+    return m_brain;
+}
+
 quint32 Agent::getId() {
     return m_id;
 }
 
+Channel* Agent::getInputChannel(QString name)
+{
+    if(this->inputChannelExists(name))
+        return(m_inputs.value(name));
+    else
+        return 0;
+}
+
+Channel* Agent::getOutputChannel(QString name)
+{
+    if(this->outputChannelExists(name))
+        return(m_outputs.value(name));
+    else
+        return 0;
+}
+
+QVector3D* Agent::getPosition()
+{
+    return &m_position;
+}
+
+bool Agent::inputChannelExists(QString name)
+{
+    if(m_inputs.count(name)>0)
+        return true;
+    else
+        return false;
+}
+
+bool Agent::outputChannelExists(QString name)
+{
+    if(m_outputs.count(name)>0)
+        return true;
+    else
+        return false;
+}
 
 void Agent::renderGL()
 {
-    foreach(Segment *seg, m_body->getSegments()) {
-        if(seg->isRootSegment()) {
-            glPushMatrix();
-            glTranslated(m_position.x(),m_position.y(),m_position.z());
-            renderSegment(seg);
-            glPopMatrix();
-        }
-    }
+    m_body->renderGL();
 
 //    glPushMatrix();
 //    glLineWidth( 3.0 );
 //    glColor3f( 0.5, 0.1, 1);
 //    glutSolidSphere(10,20,10);
 //    glPopMatrix();
-}
-
-void Agent::renderSegment(Segment *seg)
-{
-    glTranslated(seg->getTransX()->getValue(),seg->getTransY()->getValue(),seg->getTransZ()->getValue());
-    glLineWidth( 3.0 );
-    glColor3f( 0.5, 0.1, 1);
-    if(seg->getType()==Segment::SPHERE) {
-        Sphere *sphere=(Sphere*)seg;
-        glutSolidSphere(sphere->getRadius()->getValue(),20,10);
-    }
-    foreach(Segment *segChild,seg->getChildren()) {
-        renderSegment(segChild);
-    }
-
 }
 
 void Agent::reset()

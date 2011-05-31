@@ -11,6 +11,8 @@ class Scene;
 /** \brief  Shows the Scene
 
         This class displays the OpenGL content of the scene
+        It also provides information about mouse movements to navigate the camera
+        @sa Camera
 
 **/
 class SceneDisplay : public QGLWidget

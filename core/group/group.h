@@ -15,6 +15,7 @@ class Group
 public:
     Group(Scene *scene);
     void addAgent(Agent *agent);
+    QList <Agent *> getAgents() {return m_agents;}
     quint32 getId() { return m_id; }
     qint32 getEditorTranslationX() { return m_editX; }
     qint32 getEditorTranslationY() { return m_editY; }

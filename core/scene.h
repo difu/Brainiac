@@ -11,6 +11,12 @@ class Camera;
 class Generator;
 class Group;
 
+/** \brief  The Scene
+
+        This class holds all contents of the scene.
+        All agents, lights, groups are referenced here
+
+**/
 class Scene : public QObject
 {
     Q_OBJECT
@@ -30,16 +36,16 @@ public:
 protected:
     void createAgents();
     void createAgents(Generator *gen);
-    QString m_fileName;
+    QString m_fileName; //!< the filename of this scene´s config file
     QXmlStreamWriter m_streamWriter;
     QXmlStreamReader m_streamReader;
     QList<Agent *> m_agents; //!< all agents of this scene
-    QList<Camera *> m_cameras;
-    QList<Generator *> m_generators;
-    QList<Group *> m_groups;
+    QList<Camera *> m_cameras; //!< all cameras of this scene
+    QList<Generator *> m_generators; //!< all agent generators of this scene
+    QList<Group *> m_groups; //!< all groups of this scene
 
 signals:
-    void groupAdded(Group *group);
+    void groupAdded(Group *group); //!< emitted when a group is added
 
 public slots:
 

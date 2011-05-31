@@ -1,5 +1,7 @@
 #include "fuzzybase.h"
 
+#include "core/agent/brain/brain.h"
+
 /** \brief  Baseclass of logic elements
 
         This class is the base of all logical elemets (and, orr, fuzz, defuzz, input, output, ...)
@@ -8,9 +10,10 @@
         and provides low-level functionality
 
 **/
-FuzzyBase::FuzzyBase(LogicType logicType, quint32 id, QString name, quint32 editorX, quint32 editorY) :
+FuzzyBase::FuzzyBase(LogicType logicType, Brain *brain, quint32 id, QString name, quint32 editorX, quint32 editorY) :
     QObject()
 {
+    m_brain=brain;
     m_logicType=logicType;
     m_id=id;
     m_maxValue=1.0;

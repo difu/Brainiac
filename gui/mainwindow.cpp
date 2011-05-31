@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "mainwindowlayout.h"
 #include "gui/braineditor/braineditor.h"
+#include "gui/braineditor/outputeditor.h"
 #include "gui/editorgraphicsview.h"
 #include "gui/sceneeditor/sceneeditor.h"
 #include "gui/sceneeditor/groupeditor.h"
@@ -156,11 +157,21 @@ void MainWindow::createEditorWidgets()
 {
     m_logicElementEditWidget=new QWidget();
     m_logicElementEditWidget->setFixedHeight(130);
+
     m_groupEditor=new GroupEditor(m_scene, m_logicElementEditWidget);
     m_groupEditor->setVisible(false);
-    m_layout->addWidget(m_logicElementEditWidget,MainWindowLayout::South);
     connect(m_sceneEditor, SIGNAL(itemClicked(ItemEditorWidgetsBase::editMessage)),this,SLOT(editorNodeClick(ItemEditorWidgetsBase::editMessage)));
 
+    m_outputEditor=new OutputEditor(m_scene, m_logicElementEditWidget);
+    m_outputEditor->setVisible(false);
+    foreach(BrainEditor *brainEditor,m_brainEditors) {
+        // This signal activates editor in South region
+        connect(brainEditor, SIGNAL(itemClicked(ItemEditorWidgetsBase::editMessage)),this,SLOT(editorNodeClick(ItemEditorWidgetsBase::editMessage)));
+    }
+    //
+    //connect(m_outputEditor,SIGNAL(updateBrainEditor()),this,SLOT(refreshBrainEditor()));
+
+    m_layout->addWidget(m_logicElementEditWidget,MainWindowLayout::South);
 }
 
 
@@ -178,7 +189,7 @@ void MainWindow::editModeComboChange(int index)
     setEditMode((EditMode)em.toInt());
 }
 
-/** \brief called when a node in an editor is clicked
+/** \brief called when a node in an editor (Brain, Body, Scene) is clicked
 
                 This slot is called when any node in any editor is clicked.
                 It shows the depending node editor and updates the editor with information of the
@@ -188,18 +199,28 @@ void MainWindow::editModeComboChange(int index)
 void MainWindow::editorNodeClick(ItemEditorWidgetsBase::editMessage msg)
 {
     m_groupEditor->setVisible(msg.type==BrainiacGlobals::GROUP);
+    m_outputEditor->setVisible(msg.type==BrainiacGlobals::OUTPUT);
     Group *grp;
+    AgentManager *mgr;
     switch(msg.type) {
     case BrainiacGlobals::GROUP:
         grp=(Group *)msg.object;
         m_groupEditor->setGroup(grp);
         m_activeAgentManager=grp->getAgentManager();
         break;
+    case BrainiacGlobals::OUTPUT:
+        mgr=(AgentManager *)msg.object;
+        m_outputEditor->setOutputConfig(mgr,msg.id);
+
     default:
     ;
     }
 }
 
+void MainWindow::refreshBrainEditor()
+{
+    m_editorView->scene()->update();
+}
 
 /** \brief saves the scene
 
@@ -221,6 +242,9 @@ void MainWindow::setEditMode(EditMode em)
     m_brainEditorItems->setVisible(em==MainWindow::BRAIN);
     m_bodyEditorItems->setVisible(em==MainWindow::BODY);
     m_sceneEditorItems->setVisible(em==MainWindow::SCENE);
+
+    m_groupEditor->setVisible(false);
+    m_outputEditor->setVisible(false);
 
     int index=m_editModeComboBox->findData(QVariant(em));
     m_editModeComboBox->setCurrentIndex(index);

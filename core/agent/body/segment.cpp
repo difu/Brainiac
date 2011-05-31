@@ -46,7 +46,7 @@ void Segment::addChild(Segment *segment)
 /** \brief add a segment to this sigment´s children
 
 **/
-void Segment::addChild(quint32 id)
+void Segment::addChildId(quint32 id)
 {
     Segment *seg=m_body->getSegment(id);
     if(seg)
@@ -137,10 +137,12 @@ void Segment::setName(const QString &name) {
 /** \brief set this segment´s parent
 
 **/
-void Segment::setParent(quint32 id)
+void Segment::setParentId(quint32 id)
 {
-    if(m_body->getSegment(id))
+    if(m_body->getSegment(id)) {
         m_body->getSegment(id)->addChild(this);
+        m_parent=m_body->getSegment(id);
+    }
 }
 
 /** \brief set this segment´s parent
@@ -150,5 +152,7 @@ void Segment::setParent(Segment *segment)
 {
     if(segment) {
         segment->addChild(this);
+        m_parent=segment;
     }
+
 }
