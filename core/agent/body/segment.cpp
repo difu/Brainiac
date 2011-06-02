@@ -4,6 +4,7 @@
 #include "core/agent/agent.h"
 #include "core/agent/channel.h"
 #include <QVector3D>
+#include <QtOpenGL>
 
 
 Segment::Segment(SegmentType type, quint32 id, Body *body, QString name, QVector3D *restRot, QVector3D *restTrans, Segment *parent)
@@ -88,6 +89,11 @@ void Segment::createSegmentChannels()
     m_rz->init(m_restRotation->z());
     name=m_name % ":rz";
     m_body->getAgent()->addInputChannel(m_rz,name);
+
+    m_color=new Channel();
+    m_color->init(0);
+    name=m_name % ":color";
+    m_body->getAgent()->addOutputChannel(m_color,name);
 }
 
 Segment* Segment::getParent() {
@@ -111,6 +117,18 @@ bool Segment::isRootSegment()
     }
 }
 
+void Segment::renderGL()
+{
+    glTranslated(getTransX()->getValue(),getTransY()->getValue(),getTransZ()->getValue());
+    glLineWidth( 3.0 );
+    QColor col=BrainiacGlobals::getColorFromBrainiacColorValue(getColor()->getValue());
+    glColor3f(col.redF(),col.greenF(),col.blueF());
+    this->renderGLSegment();
+    foreach(Segment *segChild,getChildren()) {
+        segChild->renderGL();
+    }
+}
+
 /** \brief reset this segment
 
                 resets this segement´s rotation and translation etc. to its rest pose
@@ -125,6 +143,27 @@ void Segment::reset()
     m_rx->init(m_restRotation->x());
     m_ry->init(m_restRotation->y());
     m_rz->init(m_restRotation->z());
+}
+
+void Segment::setColorInherited(bool inherited)
+{
+    m_inheritColor=inherited;
+    if(m_parent) {
+        if(inherited) {
+            m_color->changeValue(m_parent->getColor()->getValue());
+            connect(m_parent->getColor(),SIGNAL(valueChanged(qreal)),m_color,SLOT(changeValue(qreal)));
+        }
+        else
+            disconnect(m_parent->getColor(),SIGNAL(valueChanged(qreal)),m_color,SLOT(changeValue(qreal)));
+    } else {
+        // if this is a root element, check if it should inherit from agent color
+        if(inherited) {
+            m_color->changeValue(m_body->getAgent()->getColor()->getValue());
+            connect(m_body->getAgent()->getColor(),SIGNAL(valueChanged(qreal)),m_color,SLOT(changeValue(qreal)));
+        }
+        else
+            disconnect(m_body->getAgent()->getColor(),SIGNAL(valueChanged(qreal)),m_color,SLOT(changeValue(qreal)));
+    }
 }
 
 /** \brief set this segment´s name

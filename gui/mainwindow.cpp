@@ -47,6 +47,7 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
     setCentralWidget(widget);
 
     m_sceneDisplay=new SceneDisplay(this->m_scene,m_scene->getCameras().first());
+    connect(m_outputEditor,SIGNAL(updateGLContent()),m_sceneDisplay,SLOT(updateGL()));
 
     //connect(m_sceneEditor,SIGNAL(editorItemClicked(EditorLabel::EditorItemType)),this,SLOT(editorNodeClick(EditorLabel::EditorItemType)));
 }
@@ -169,8 +170,8 @@ void MainWindow::createEditorWidgets()
         connect(brainEditor, SIGNAL(itemClicked(ItemEditorWidgetsBase::editMessage)),this,SLOT(editorNodeClick(ItemEditorWidgetsBase::editMessage)));
     }
     //
-    //connect(m_outputEditor,SIGNAL(updateBrainEditor()),this,SLOT(refreshBrainEditor()));
-
+    connect(m_outputEditor,SIGNAL(updateBrainEditor()),this,SLOT(refreshBrainEditor()));
+    //connect(m_outputEditor,SIGNAL(updateGLContent()),m_sceneDisplay,SLOT(updateGL()));
     m_layout->addWidget(m_logicElementEditWidget,MainWindowLayout::South);
 }
 

@@ -39,6 +39,7 @@ protected slots:
 
 signals:
     void updateBrainEditor(); //!< emitted when editors should update
+    void updateGLContent(); //!< emitted when openGL content should update
 
 private:
     Ui::OutputEditor *ui;

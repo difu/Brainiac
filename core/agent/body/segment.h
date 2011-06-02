@@ -4,6 +4,7 @@
 #include "core/brainiacglobals.h"
 #include <QList>
 #include <QString>
+#include <QObject>
 
 class Body;
 class Channel;
@@ -11,14 +12,17 @@ class QVector3D;
 
 class BrainiacColor;
 
-class Segment
+class Segment : public QObject
 {
+    Q_OBJECT
 public:
     enum SegmentType {SPHERE=BrainiacGlobals::SPHERE, CUBE=BrainiacGlobals::CUBE};
     Segment(SegmentType type, quint32 id, Body *body, QString name, QVector3D *restRot, QVector3D *restTrans, Segment *parent=0);
     virtual ~Segment();
     void addChild(Segment *segment);
     void addChildId(quint32 id);
+    Body* getBody() { return m_body; }
+    Channel* getColor() { return m_color; }
     QList<Segment *> getChildren() { return m_children; }
     SegmentType getType() { return m_type; }
     quint32 getId() { return m_id; }
@@ -30,23 +34,29 @@ public:
     Channel* getTransX() { return m_tx; }
     Channel* getTransY() { return m_ty; }
     Channel* getTransZ() { return m_tz; }
+    bool isColorInherited() { return m_inheritColor; }
     bool isRootSegment();
+    void renderGL();
     virtual void reset();
+    void setColorInherited(bool inherited);
     void setName(const QString & name);
     void setParent(Segment *segment);
     void setParentId(quint32 id);
 
 protected:
     virtual void createSegmentChannels();
+    virtual void renderGLSegment()=0;
     quint32 m_id;
     Segment *m_parent;
     Body *m_body;
     qreal m_restColor; //!< color of rest pose
     SegmentType m_type;
     QList<Segment *> m_children;
+    bool m_inheritColor;//!< true, if color is inherited by this segment´s parent
     QString m_name;
     QVector3D *m_restRotation; //!< Rotation of rest pose
     QVector3D *m_restTranslation; //!< Translation of rest pose
+    Channel *m_color; //!< segement´s color
     Channel *m_tx; //!< x translation (input and output)
     Channel *m_ty; //!< y translation (input and output)
     Channel *m_tz; //!< z translation (input and output)

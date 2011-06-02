@@ -5,6 +5,7 @@
 #include "core/agent/channel.h"
 
 #include <QtOpenGL>
+#include <QColor>
 #include <glu.h>
 #include <GLUT/glut.h>
 
@@ -52,7 +53,7 @@ void Body::renderGL()
         if(seg->isRootSegment()) {
             glPushMatrix();
             glTranslated(m_agent->getPosition()->x(),m_agent->getPosition()->y(),m_agent->getPosition()->z());
-            renderSegment(seg);
+            seg->renderGL();
             glPopMatrix();
         }
     }
@@ -61,15 +62,16 @@ void Body::renderGL()
 
 void Body::renderSegment(Segment *seg)
 {
-    glTranslated(seg->getTransX()->getValue(),seg->getTransY()->getValue(),seg->getTransZ()->getValue());
-    glLineWidth( 3.0 );
-    glColor3f( 0.5, 0.1, 1);
-    if(seg->getType()==Segment::SPHERE) {
-        Sphere *sphere=(Sphere*)seg;
-        glutSolidSphere(sphere->getRadius()->getValue(),20,10);
-    }
-    foreach(Segment *segChild,seg->getChildren()) {
-        renderSegment(segChild);
-    }
-    qDebug() << "Rendered Segment"<<seg->getName();
+//    glTranslated(seg->getTransX()->getValue(),seg->getTransY()->getValue(),seg->getTransZ()->getValue());
+//    glLineWidth( 3.0 );
+//    QColor col=BrainiacGlobals::getColorFromBrainiacColorValue(seg->getColor()->getValue());
+//    glColor3f(col.redF(),col.greenF(),col.blueF());
+//    if(seg->getType()==Segment::SPHERE) {
+//        Sphere *sphere=(Sphere*)seg;
+//        glutSolidSphere(sphere->getRadius()->getValue(),20,10);
+//    }
+//    foreach(Segment *segChild,seg->getChildren()) {
+//        renderSegment(segChild);
+//    }
+//    qDebug() << "Rendered Segment"<<seg->getName();
 }

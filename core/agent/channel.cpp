@@ -14,8 +14,20 @@ void Channel::advance()
     m_oldValue=m_value;
 }
 
+void Channel::changeValue(qreal value)
+{
+    setValue(value);
+}
+
 qreal Channel::getValue() {
     return m_value;
+}
+
+
+/** \brief @returns true, if this channel´s value is inherited
+**/
+bool Channel::isInherited() {
+    return m_inherited;
 }
 
 /** \brief inits channel
@@ -27,6 +39,7 @@ qreal Channel::getValue() {
 void Channel::init(qreal value)
 {
     m_oldValue=m_value=value;
+    emit valueChanged(value);
 }
 
 /** \brief sets channel´s value
@@ -37,10 +50,14 @@ void Channel::init(qreal value)
 **/
 void Channel::setValue(qreal value, bool isSpeed)
 {
+    qreal origValue=m_value;
     if(isSpeed) {
         m_value=m_oldValue+value;
     } else {
         m_value=value;
     }
     m_value=qBound(m_min,m_value,m_max);
+    if(m_value!=origValue) {
+        emit valueChanged(m_value);
+    }
 }

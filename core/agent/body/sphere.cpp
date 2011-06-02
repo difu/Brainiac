@@ -2,6 +2,9 @@
 #include "core/agent/agent.h"
 #include "core/agent/body/body.h"
 #include "core/agent/channel.h"
+#include <QtOpenGL>
+#include <glu.h>
+#include <GLUT/glut.h>
 
 Sphere::Sphere(quint32 id, Body *body, QString name, QVector3D *restRot, QVector3D *restTrans, qreal radius, Segment *parent)
     :Segment(Segment::SPHERE,id,body,name,restRot,restTrans,parent)
@@ -33,6 +36,11 @@ Channel * Sphere::getRadius()
 qreal Sphere::getRestRadius()
 {
     return m_restRadius;
+}
+
+void Sphere::renderGLSegment()
+{
+    glutSolidSphere(getRadius()->getValue(),20,10);
 }
 
 void Sphere::reset()

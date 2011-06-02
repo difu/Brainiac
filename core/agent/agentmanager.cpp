@@ -7,6 +7,7 @@
 #include "core/agent/brain/brain.h"
 #include "core/agent/brain/fuzzybase.h"
 #include "core/agent/brain/output.h"
+#include "core/agent/channel.h"
 #include "core/group/group.h"
 #include <QFile>
 #include <QXmlStreamReader>
@@ -26,6 +27,8 @@ void AgentManager::addSphereFromConfig(QXmlStreamReader *reader, quint32 id, QSt
     QVector3D *translation;
     QVector3D *rotation;
     qreal radius;
+    qreal color;
+    bool colorInherited;
 
     while(reader->readNextStartElement()) {
         if(reader->name()=="Translation") {
@@ -49,11 +52,19 @@ void AgentManager::addSphereFromConfig(QXmlStreamReader *reader, quint32 id, QSt
             QXmlStreamAttributes attribs = reader->attributes();
             radius=attribs.value("r").toString().toDouble();
             reader->skipCurrentElement();
+        }  else if(reader->name()=="Color") {
+            QXmlStreamAttributes attribs = reader->attributes();
+            color=attribs.value("value").toString().toDouble();
+            colorInherited=attribs.value("inherited").toString().compare("true",Qt::CaseInsensitive)==0;
+            reader->skipCurrentElement();
+            qDebug() << "Sphere Color "<< color << colorInherited;
         }
     }
     Segment *parentSeg=m_masterAgent->getBody()->getSegment(parent);
 
     Segment *seg=new Sphere(id, m_masterAgent->getBody(),name,rotation,translation,radius,0);
+    seg->setColorInherited(colorInherited);
+    seg->getColor()->init(color);
     if( parentSeg ) {
         qDebug() << "Segment with id"<< id << "has parent";
         seg->setParentId(parentSeg->getId());
@@ -83,8 +94,12 @@ Agent* AgentManager::cloneAgent(quint32 id)
             Sphere *origSphere=(Sphere*)seg;
             QVector3D *rot=new QVector3D(origSphere->getRestRotation()->x(),origSphere->getRestRotation()->y(),origSphere->getRestRotation()->z());
             QVector3D *trans=new QVector3D(origSphere->getRestTranslation()->x(),origSphere->getRestTranslation()->y(),origSphere->getRestTranslation()->z());
+            qreal color=origSphere->getColor()->getValue();
+            bool colorInherited=origSphere->isColorInherited();
             Sphere *newSphere=new Sphere(origSphere->getId(),agent->getBody(),origSphere->getName(),rot,trans,origSphere->getRestRadius());
             newSphere->setParentId(origSphere->getParentId());
+            newSphere->getColor()->init(color);
+            newSphere->setColorInherited(colorInherited);
             agent->getBody()->addSegment(newSphere);
         } else {
             qDebug() <<  __PRETTY_FUNCTION__ << "missing segment type" << id;

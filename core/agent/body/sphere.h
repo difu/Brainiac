@@ -15,6 +15,7 @@ protected:
     qreal m_restRadius;
     Channel *m_radius;
     virtual void createSegmentChannels();
+    virtual void renderGLSegment();
     virtual void reset();
 };
 

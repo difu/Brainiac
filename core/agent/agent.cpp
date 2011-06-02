@@ -120,6 +120,11 @@ Brain* Agent::getBrain()
     return m_brain;
 }
 
+Channel* Agent::getColor()
+{
+    return m_color;
+}
+
 quint32 Agent::getId() {
     return m_id;
 }

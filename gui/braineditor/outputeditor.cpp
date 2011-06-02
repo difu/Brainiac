@@ -27,6 +27,7 @@ OutputEditor::OutputEditor(Scene *scene, QWidget *parent) :
 void OutputEditor::manualResultChange(qreal value) {
     m_agentManager->setFuzzyResult(m_id, value);
     emit updateBrainEditor();
+    emit updateGLContent();
     this->updateEditor();
 }
 

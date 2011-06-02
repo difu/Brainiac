@@ -5,8 +5,7 @@
 
 Output::Output( quint32 id, Brain *brain, QString name, QString channel, quint32 editorX, quint32 editorY) : FuzzyBase(FuzzyBase::OUTPUT, brain, id, name, editorX, editorY)
 {
-    m_channelName=channel;
-    m_channel=m_brain->getAgent()->getOutputChannel(m_channelName);
+    setChannelName(channel);
 }
 
 void Output::calculate()
@@ -23,6 +22,12 @@ void Output::calculate()
 QString Output::getChannelName()
 {
     return m_channelName;
+}
+
+void Output::setChannelName(QString channel)
+{
+    m_channelName=channel;
+    m_channel=m_brain->getAgent()->getOutputChannel(m_channelName);
 }
 
 /** \brief sets the result of this output node

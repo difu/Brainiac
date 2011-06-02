@@ -2,16 +2,19 @@
 	<Agent name="agent1" editorx="2000" editory="2100">
 		<Body>
 			<Segment type="sphere" id="1" parent="-1" name="sphere1">
+				<Color value="0.1" inherited="false"/>
 				<Translation x="0" y="0" z="0"/>
 				<Rotation x="0" y="0" z="0" />
 				<Radius r="10" />
 			</Segment>
 			<Segment type="sphere" id="2" parent="-1" name="sphere2">
+				<Color value="0.2" inherited="true"/>
 				<Translation x="0" y="10" z="0"/>
 				<Rotation x="0" y="0" z="0" />
 				<Radius r="10" />
 			</Segment>
 			<Segment type="sphere" id="3" parent="1" name="sphere3">
+				<Color value="0.3" inherited="true"/>
 				<Translation x="10" y="10" z="0"/>
 				<Rotation x="0" y="0" z="0" />
 				<Radius r="5" />

@@ -23,6 +23,7 @@ public:
     void deleteChannel(Channel* channel);
     Body *getBody();
     Brain *getBrain();
+    Channel *getColor();
     Channel *getInputChannel(QString name);
     Channel *getOutputChannel(QString name);
     quint32 getId();
