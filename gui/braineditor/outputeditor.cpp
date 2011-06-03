@@ -45,6 +45,7 @@ void OutputEditor::updateEditor()
     ui->outputName->setText(m_output->getName());
     ui->rangeMax->setText(QString::number(m_output->getMaxValue()));
     ui->rangeMin->setText(QString::number(m_output->getMinValue()));
+    m_slider->setRange(m_output->getMinValue(),m_output->getMaxValue());
     m_slider->setValue(m_output->getResult());
 }
 

@@ -28,6 +28,9 @@ void Output::setChannelName(QString channel)
 {
     m_channelName=channel;
     m_channel=m_brain->getAgent()->getOutputChannel(m_channelName);
+    setResult(m_channel->getValue());
+    m_maxValue=m_channel->getMax();
+    m_minValue=m_channel->getMin();
 }
 
 /** \brief sets the result of this output node

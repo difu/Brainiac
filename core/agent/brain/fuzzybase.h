@@ -22,6 +22,8 @@ public:
     qreal getResult() { return m_result; }
     LogicType getType() {return m_logicType; }
     void setId(quint32 id) { m_id=id; }
+    void setMax(qreal max);
+    void setMin(qreal min);
     void setName( QString name );
     virtual void setResult(qreal result)=0;
 

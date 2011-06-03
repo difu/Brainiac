@@ -10,6 +10,8 @@ class Channel: public QObject
 public:
     Channel(qreal min=-std::numeric_limits<qreal>::max(), qreal max=std::numeric_limits<qreal>::max(), qreal value=0);
     void advance();
+    qreal getMax();
+    qreal getMin();
     void init(qreal value);
     bool isInherited();
     qreal getValue();

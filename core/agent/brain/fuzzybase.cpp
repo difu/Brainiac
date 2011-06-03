@@ -29,3 +29,12 @@ void FuzzyBase::inputChanged(InputResult input)
 
 }
 
+void FuzzyBase::setMax(qreal max)
+{
+    m_minValue=max;
+}
+
+void FuzzyBase::setMin(qreal min)
+{
+    m_maxValue=min;
+}

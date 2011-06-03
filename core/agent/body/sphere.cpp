@@ -20,7 +20,7 @@ Sphere::~Sphere()
 
 void Sphere::createSegmentChannels()
 {
-    m_radius=new Channel();
+    m_radius=new Channel(0,100);
     m_radius->init(m_restRadius);
     QString name=m_name % ":radius";
     m_body->getAgent()->addInputChannel(m_radius,name);

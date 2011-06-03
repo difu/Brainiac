@@ -19,6 +19,16 @@ void Channel::changeValue(qreal value)
     setValue(value);
 }
 
+qreal Channel::getMax()
+{
+    return m_max;
+}
+
+qreal Channel::getMin()
+{
+    return m_min;
+}
+
 qreal Channel::getValue() {
     return m_value;
 }

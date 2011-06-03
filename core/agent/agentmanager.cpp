@@ -77,6 +77,9 @@ void AgentManager::addSphereFromConfig(QXmlStreamReader *reader, quint32 id, QSt
 void AgentManager::addOutputFuzz(quint32 id, QString name, QString channel, quint32 editorX, quint32 editorY)
 {
     m_masterAgent->addOutputFuzz(id, name, channel, editorX, editorY);
+    foreach(Agent* agent,m_scene->getAgents()) {
+        agent->addOutputFuzz(id, name, channel, editorX, editorY);
+    }
 }
 
 /** \brief clones an agent
