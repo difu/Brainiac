@@ -19,7 +19,7 @@ public:
     explicit Agent(Scene *scene, quint32 id, QObject *parent = 0);
     bool addInputChannel(Channel* channel, QString name);
     bool addOutputChannel(Channel* channel, QString name);
-    void addOutputFuzz(quint32 id, QString name, QString channel, quint32 editorX, quint32 editorY);
+    void addOutputFuzz(quint32 id, QString name, QString channel);
     void deleteChannel(Channel* channel);
     Body *getBody();
     Brain *getBrain();

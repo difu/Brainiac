@@ -19,7 +19,7 @@ class Brain : public QObject
 public:
     explicit Brain(Agent *agent);
     void addOutputFuzz(Output *out);
-    void addOutputFuzz(quint32 id, QString name, QString channel, quint32 editorX, quint32 editorY);
+    void addOutputFuzz(quint32 id, QString name, QString channel);
     Agent* getAgent();
     FuzzyBase* getFuzzy(quint32 id);
     QList <FuzzyBase *> getFuzzies();

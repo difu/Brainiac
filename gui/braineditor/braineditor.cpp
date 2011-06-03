@@ -16,7 +16,7 @@ BrainEditor::BrainEditor(Scene *scene, AgentManager *agentManager) : EditorBase(
         if(fuzzy->getType()==FuzzyBase::OUTPUT) {
             qDebug() << "Placing output";
             BrainEditorItem *item=new BrainEditorItem(BrainiacGlobals::OUTPUT,m_agentManager,fuzzy->getId());
-            item->setPos(m_agentManager->getMasterAgent()->getBrain()->getFuzzy(fuzzy->getId())->getEditorTranslationX(),m_agentManager->getMasterAgent()->getBrain()->getFuzzy(fuzzy->getId())->getEditorTranslationY());
+            item->setPos(m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).x(),m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).y());
             //item->setFlag();
             addItem(item);
         }

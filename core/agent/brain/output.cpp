@@ -3,7 +3,7 @@
 #include "core/agent/agent.h"
 #include "core/agent/channel.h"
 
-Output::Output( quint32 id, Brain *brain, QString name, QString channel, quint32 editorX, quint32 editorY) : FuzzyBase(FuzzyBase::OUTPUT, brain, id, name, editorX, editorY)
+Output::Output( quint32 id, Brain *brain, QString name, QString channel) : FuzzyBase(FuzzyBase::OUTPUT, brain, id, name)
 {
     setChannelName(channel);
 }

@@ -76,10 +76,11 @@ void AgentManager::addSphereFromConfig(QXmlStreamReader *reader, quint32 id, QSt
 
 void AgentManager::addOutputFuzz(quint32 id, QString name, QString channel, quint32 editorX, quint32 editorY)
 {
-    m_masterAgent->addOutputFuzz(id, name, channel, editorX, editorY);
+    m_masterAgent->addOutputFuzz(id, name, channel);
     foreach(Agent* agent,m_scene->getAgents()) {
-        agent->addOutputFuzz(id, name, channel, editorX, editorY);
+        agent->addOutputFuzz(id, name, channel);
     }
+    m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
 }
 
 /** \brief clones an agent
@@ -111,13 +112,18 @@ Agent* AgentManager::cloneAgent(quint32 id)
     foreach(FuzzyBase *fuzz,m_masterAgent->getBrain()->getFuzzies()) {
         if(fuzz->getType()==FuzzyBase::OUTPUT) {
             Output *origOut=(Output *)fuzz;
-            agent->addOutputFuzz(origOut->getId(),origOut->getName(),origOut->getChannelName(),origOut->getEditorTranslationX(),origOut->getEditorTranslationY());
+            agent->addOutputFuzz(origOut->getId(),origOut->getName(),origOut->getChannelName());
         } else {
             qDebug() <<  __PRETTY_FUNCTION__ << "missing fuzz type" << id;
         }
     }
 
     return agent;
+}
+
+QHash<quint32, QPoint> AgentManager::getEditorFuzzyLocations()
+{
+    return m_editorFuzzyLocations;
 }
 
 bool AgentManager::loadConfig()

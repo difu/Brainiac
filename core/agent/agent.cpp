@@ -71,9 +71,9 @@ bool Agent::addOutputChannel(Channel *channel, QString name)
     }
 }
 
-void Agent::addOutputFuzz(quint32 id, QString name, QString channel, quint32 editorX, quint32 editorY)
+void Agent::addOutputFuzz(quint32 id, QString name, QString channel)
 {
-    m_brain->addOutputFuzz(id, name, channel, editorX,editorY);
+    m_brain->addOutputFuzz(id, name, channel);
 }
 
 void Agent::createChannels()

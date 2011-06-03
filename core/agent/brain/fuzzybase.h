@@ -12,9 +12,7 @@ class FuzzyBase : public QObject
 public:
     enum LogicType{AND=BrainiacGlobals::AND,OR=BrainiacGlobals::OR,OUTPUT=BrainiacGlobals::OUTPUT,INPUT=BrainiacGlobals::INPUT,DEFUZZ=BrainiacGlobals::DEFUZZ,FUZZ=BrainiacGlobals::FUZZ,NOISE=BrainiacGlobals::NOISE,TIMER=BrainiacGlobals::TIMER};
     enum FuzzType{DIRAC,ACTIVATE,DEACTIVATE,TRIANGLE,TRAPEZOID};
-    explicit FuzzyBase(LogicType logicType, Brain *brain, quint32 id, QString name, quint32 editorX, quint32 editorY);
-    qint32 getEditorTranslationX() { return m_editX; }
-    qint32 getEditorTranslationY() { return m_editY; }
+    explicit FuzzyBase(LogicType logicType, Brain *brain, quint32 id, QString name);
     quint32 getId() { return m_id; }
     qreal getMinValue() {return m_minValue;}
     qreal getMaxValue() {return m_maxValue;}
@@ -41,7 +39,6 @@ protected:
         QObject *sourceObject;
         qreal value;
     };
-    quint32 m_editX, m_editY;
     QString m_name;
 signals:
     void resultChanged(InputResult result); //!< This signal is emitted whenever result changes

@@ -10,7 +10,7 @@
         and provides low-level functionality
 
 **/
-FuzzyBase::FuzzyBase(LogicType logicType, Brain *brain, quint32 id, QString name, quint32 editorX, quint32 editorY) :
+FuzzyBase::FuzzyBase(LogicType logicType, Brain *brain, quint32 id, QString name) :
     QObject()
 {
     m_brain=brain;
@@ -20,8 +20,6 @@ FuzzyBase::FuzzyBase(LogicType logicType, Brain *brain, quint32 id, QString name
     m_minValue=0.0;
     m_result=0.0;
     m_name=name;
-    m_editX=editorX;
-    m_editY=editorY;
 }
 
 void FuzzyBase::inputChanged(InputResult input)

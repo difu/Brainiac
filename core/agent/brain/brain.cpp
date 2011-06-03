@@ -19,9 +19,9 @@ void Brain::addOutputFuzz(Output *out)
 
 /** \brief adds an output to this brain
 **/
-void Brain::addOutputFuzz(quint32 id, QString name, QString channel, quint32 editorX, quint32 editorY)
+void Brain::addOutputFuzz(quint32 id, QString name, QString channel)
 {
-    Output *out=new Output(id, this, name, channel, editorX, editorY);
+    Output *out=new Output(id, this, name, channel);
     addOutputFuzz(out);
 }
 

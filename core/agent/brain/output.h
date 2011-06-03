@@ -14,7 +14,7 @@ class Channel;
 class Output : public FuzzyBase
 {
 public:
-    Output(quint32 id, Brain *brain, QString name, QString channel, quint32 editorX, quint32 editorY);
+    Output(quint32 id, Brain *brain, QString name, QString channel);
     QString getChannelName();
     void calculate();
     void setChannelName(QString channel);
