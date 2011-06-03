@@ -42,6 +42,15 @@ void Channel::init(qreal value)
     emit valueChanged(value);
 }
 
+void Channel::setInherited(Channel *parent, bool inherited)
+{
+    m_inherited=inherited;
+    if(m_inherited)
+        connect(parent,SIGNAL(valueChanged(qreal)),this,SLOT(changeValue(qreal)),Qt::DirectConnection);
+    else
+        disconnect(parent,SIGNAL(valueChanged(qreal)),this,SLOT(changeValue(qreal)));
+}
+
 /** \brief sets channel´s value
 
                 set the channels value.

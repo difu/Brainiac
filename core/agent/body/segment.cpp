@@ -149,20 +149,13 @@ void Segment::setColorInherited(bool inherited)
 {
     m_inheritColor=inherited;
     if(m_parent) {
-        if(inherited) {
+        if(inherited)
             m_color->changeValue(m_parent->getColor()->getValue());
-            connect(m_parent->getColor(),SIGNAL(valueChanged(qreal)),m_color,SLOT(changeValue(qreal)));
-        }
-        else
-            disconnect(m_parent->getColor(),SIGNAL(valueChanged(qreal)),m_color,SLOT(changeValue(qreal)));
+        m_color->setInherited(m_parent->getColor(),m_inheritColor);
     } else {
-        // if this is a root element, check if it should inherit from agent color
-        if(inherited) {
+        if(inherited)
             m_color->changeValue(m_body->getAgent()->getColor()->getValue());
-            connect(m_body->getAgent()->getColor(),SIGNAL(valueChanged(qreal)),m_color,SLOT(changeValue(qreal)));
-        }
-        else
-            disconnect(m_body->getAgent()->getColor(),SIGNAL(valueChanged(qreal)),m_color,SLOT(changeValue(qreal)));
+        m_color->setInherited(m_body->getAgent()->getColor(),m_inheritColor);
     }
 }
 
