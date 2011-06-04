@@ -60,18 +60,3 @@ void Body::renderGL()
 }
 
 
-void Body::renderSegment(Segment *seg)
-{
-//    glTranslated(seg->getTransX()->getValue(),seg->getTransY()->getValue(),seg->getTransZ()->getValue());
-//    glLineWidth( 3.0 );
-//    QColor col=BrainiacGlobals::getColorFromBrainiacColorValue(seg->getColor()->getValue());
-//    glColor3f(col.redF(),col.greenF(),col.blueF());
-//    if(seg->getType()==Segment::SPHERE) {
-//        Sphere *sphere=(Sphere*)seg;
-//        glutSolidSphere(sphere->getRadius()->getValue(),20,10);
-//    }
-//    foreach(Segment *segChild,seg->getChildren()) {
-//        renderSegment(segChild);
-//    }
-//    qDebug() << "Rendered Segment"<<seg->getName();
-}

@@ -19,7 +19,6 @@ public:
 protected:
     Agent *m_agent;
     QList<Segment *> m_segments;
-    void renderSegment(Segment *seg);
 };
 
 #endif // BODY_H
