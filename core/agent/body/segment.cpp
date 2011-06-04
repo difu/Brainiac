@@ -108,6 +108,11 @@ quint32 Segment::getParentId()
         return 0;
 }
 
+bool Segment::isColorInherited()
+{
+    return m_color->isInherited();
+}
+
 bool Segment::isRootSegment()
 {
     if(m_parent==0) {
@@ -147,15 +152,14 @@ void Segment::reset()
 
 void Segment::setColorInherited(bool inherited)
 {
-    m_inheritColor=inherited;
     if(m_parent) {
         if(inherited)
             m_color->changeValue(m_parent->getColor()->getValue());
-        m_color->setInherited(m_parent->getColor(),m_inheritColor);
+        m_color->setInherited(m_parent->getColor(),inherited);
     } else {
         if(inherited)
             m_color->changeValue(m_body->getAgent()->getColor()->getValue());
-        m_color->setInherited(m_body->getAgent()->getColor(),m_inheritColor);
+        m_color->setInherited(m_body->getAgent()->getColor(),inherited);
     }
 }
 

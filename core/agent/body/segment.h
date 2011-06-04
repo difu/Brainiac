@@ -34,7 +34,7 @@ public:
     Channel* getTransX() { return m_tx; }
     Channel* getTransY() { return m_ty; }
     Channel* getTransZ() { return m_tz; }
-    bool isColorInherited() { return m_inheritColor; }
+    bool isColorInherited();
     bool isRootSegment();
     void renderGL();
     virtual void reset();
@@ -52,7 +52,6 @@ protected:
     qreal m_restColor; //!< color of rest pose
     SegmentType m_type;
     QList<Segment *> m_children;
-    bool m_inheritColor;//!< true, if color is inherited by this segment´s parent
     QString m_name;
     QVector3D *m_restRotation; //!< Rotation of rest pose
     QVector3D *m_restTranslation; //!< Translation of rest pose
