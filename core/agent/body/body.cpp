@@ -52,7 +52,13 @@ void Body::renderGL()
     foreach(Segment *seg, this->getSegments()) {
         if(seg->isRootSegment()) {
             glPushMatrix();
+//            glRotated(m_agent->getRotation()->x(),1,0,0);
+//            glRotated(m_agent->getRotation()->y(),0,1,0);
+//            glRotated(m_agent->getRotation()->z(),0,0,1);
             glTranslated(m_agent->getPosition()->x(),m_agent->getPosition()->y(),m_agent->getPosition()->z());
+            glRotated(m_agent->getRotation()->x(),1,0,0);
+            glRotated(m_agent->getRotation()->y(),0,1,0);
+            glRotated(m_agent->getRotation()->z(),0,0,1);
             seg->renderGL();
             glPopMatrix();
         }

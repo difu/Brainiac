@@ -72,8 +72,11 @@ protected:
     AgentManager *m_activeAgentManager; //!< AgentManager that is edited in brain/body editor
 
     QAction *m_saveSceneAction;
+    QAction *m_runSimulationAction;
+    QAction *m_stopSimulationAction;
 
     QMenu *m_fileMenu;
+    QMenu *m_simulationMenu;
 
     SceneDisplay *m_sceneDisplay; //!< Window that shows the rendered gl scene
 

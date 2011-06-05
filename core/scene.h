@@ -10,6 +10,7 @@ class Agent;
 class Camera;
 class Generator;
 class Group;
+class Simulation;
 
 /** \brief  The Scene
 
@@ -29,6 +30,7 @@ public:
     QList<Camera *> getCameras();
     Group *getGroup(quint32 id);
     QList<Group *> getGroups() { return m_groups; }
+    Simulation *getSimulation() { return m_simulation; }
     bool openConfig(const QString & fileName);
     bool saveConfig(const QString & fileName);
     bool saveConfig();
@@ -43,6 +45,7 @@ protected:
     QList<Camera *> m_cameras; //!< all cameras of this scene
     QList<Generator *> m_generators; //!< all agent generators of this scene
     QList<Group *> m_groups; //!< all groups of this scene
+    Simulation *m_simulation; //!< simulation
 
 signals:
     void groupAdded(Group *group); //!< emitted when a group is added

@@ -15,20 +15,22 @@
 			</Segment>
 			<Segment type="sphere" id="3" parent="2" name="sphere2_3">
 				<Color value="0.4" inherited="true"/>
-				<Translation x="10" y="00" z="0"/>
+				<Translation x="00" y="00" z="10"/>
 				<Rotation x="0" y="0" z="0" />
 				<Radius r="2" />
 			</Segment>
 			<Segment type="sphere" id="4" parent="3" name="sphere2_4">
 				<Color value="0.6" inherited="false"/>
-				<Translation x="10" y="00" z="0"/>
+				<Translation x="00" y="00" z="10"/>
 				<Rotation x="0" y="0" z="0" />
 				<Radius r="4" />
 			</Segment>
 		</Body>
 		<Brain>
-			<Output editorx="2000" editory="2000" id="1" name="Color2" channel="color"/>
-			<Output editorx="2100" editory="2100" id="2" name="Radius2" channel="sphere2_1:radius"/>
+			<Output editorx="2000" editory="2000" id="1" name="Color2" channel="color" min="0" max="1" />
+			<Output editorx="2100" editory="2100" id="2" name="Radius2" channel="sphere2_1:radius" min="0" max="10"/>
+			<Output editorx="2200" editory="2100" id="3" name="tz" channel="tz" min="0" max="1"/>
+			<Output editorx="2300" editory="2100" id="4" name="ry" channel="ry" min="-90" max="90"/>
 		</Brain>
 	</Agent>
 </Agentconfig>

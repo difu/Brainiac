@@ -12,6 +12,17 @@ class Channel;
 class Scene;
 class Segment;
 
+/** \brief  Main agent class
+
+        This class holds all properties of an agent.
+        It holds the agent´s brain, actions and body.
+        The class also makes the agent interact with other scene content
+        like other agents, terrain, colors etc.
+        @sa Body
+        @sa Brain
+        @sa Scene
+
+**/
 class Agent : public QObject
 {
     Q_OBJECT
@@ -20,6 +31,8 @@ public:
     bool addInputChannel(Channel* channel, QString name);
     bool addOutputChannel(Channel* channel, QString name);
     void addOutputFuzz(quint32 id, QString name, QString channel);
+    void advance();
+    void advanceCommit();
     void deleteChannel(Channel* channel);
     Body *getBody();
     Brain *getBrain();
@@ -28,6 +41,7 @@ public:
     Channel *getOutputChannel(QString name);
     quint32 getId();
     QVector3D *getPosition();
+    QVector3D *getRotation();
     bool inputChannelExists(QString name);
     bool outputChannelExists(QString name);
     void renderGL();
@@ -46,12 +60,17 @@ protected:
     QHash<QString, Channel *> m_outputs; //!< List of all output channels of this agent
     void createChannels();
     Channel *m_color; //!< color of agent (input and output)
+    Channel *m_rx; //!< x rotation rate of agent (input and output)
+    Channel *m_ry; //!< y rotation rate of agent (input and output)
+    Channel *m_rz; //!< z rotation rate of agent (input and output)
     Channel *m_tx; //!< x translation rate of agent (input and output)
     Channel *m_ty; //!< y translation rate of agent (input and output)
     Channel *m_tz; //!< z translation rate of agent (input and output)
     Scene *m_scene; //!< the scene
     QVector3D m_position; //!< Agent position in world space
     QVector3D m_rotation; //!< Agent rotation in world space
+    QVector3D m_newPosition; //!< new agent position in world space
+    QVector3D m_newRotation; //!< new agent rotation in world space
     QVector3D m_restPosition; //!< Agent rest position in world space
     QVector3D m_restRotation; //!< Agent rest rotation in world space
 

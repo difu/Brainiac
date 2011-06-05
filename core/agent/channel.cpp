@@ -33,6 +33,9 @@ qreal Channel::getValue() {
     return m_value;
 }
 
+qreal Channel::getOldValue() {
+    return m_oldValue;
+}
 
 /** \brief @returns true, if this channel´s value is inherited
 **/

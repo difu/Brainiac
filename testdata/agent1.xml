@@ -21,8 +21,8 @@
 			</Segment>
 		</Body>
 		<Brain>
-			<Output editorx="2000" editory="2000" id="1" name="Color" channel="color"/>
-			<Output editorx="2100" editory="2100" id="2" name="Radius" channel="sphere1:radius"/>
+			<Output editorx="2000" editory="2000" id="1" name="Color" channel="color" min="0" max="1"/>
+			<Output editorx="2100" editory="2100" id="2" name="Radius" channel="sphere1:radius" min="0" max="10"/>
 		</Brain>
 	</Agent>
 </Agentconfig>

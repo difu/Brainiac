@@ -1,6 +1,7 @@
 #include "scene.h"
 #include <QFile>
 #include <QVector4D>
+#include "core/simulation.h"
 #include "core/agent/agentmanager.h"
 #include "core/agent/agent.h"
 #include "generator/generator.h"
@@ -14,6 +15,7 @@ Scene::Scene(QObject *parent) :
 {
     // add basic camera
     m_cameras.append(new Camera(this,0,100,200)); //!< \todo handle (delete?) this camera when scene is loaded
+    m_simulation=new Simulation(this);
 }
 
 void Scene::addAgent(Agent *agent)

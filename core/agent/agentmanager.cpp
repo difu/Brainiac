@@ -74,12 +74,19 @@ void AgentManager::addSphereFromConfig(QXmlStreamReader *reader, quint32 id, QSt
 
 }
 
-void AgentManager::addOutputFuzz(quint32 id, QString name, QString channel, quint32 editorX, quint32 editorY)
+void AgentManager::addOutputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY)
 {
-    m_masterAgent->addOutputFuzz(id, name, channel);
+    m_masterAgent->addOutputFuzz(id, name, channel); //!< @todo reemplent with max and min values!
+    Output *out=(Output*)m_masterAgent->getBrain()->getFuzzy(id);
+    out->setMin(min);
+    out->setMax(max);
     foreach(Agent* agent,m_scene->getAgents()) {
         agent->addOutputFuzz(id, name, channel);
+        Output *out=(Output*)agent->getBrain()->getFuzzy(id);
+        out->setMin(min);
+        out->setMax(max);
     }
+
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
 }
 
@@ -113,6 +120,11 @@ Agent* AgentManager::cloneAgent(quint32 id)
         if(fuzz->getType()==FuzzyBase::OUTPUT) {
             Output *origOut=(Output *)fuzz;
             agent->addOutputFuzz(origOut->getId(),origOut->getName(),origOut->getChannelName());
+            Output *out=(Output*)agent->getBrain()->getFuzzy(origOut->getId());
+            out->setMin(origOut->getMinValue());
+            out->setMax(origOut->getMaxValue());
+            qDebug()<< "OutMax" << out->getMaxValue() << out->getId() << origOut->getMaxValue();
+            qDebug()<< "OutMin" << out->getMinValue();
         } else {
             qDebug() <<  __PRETTY_FUNCTION__ << "missing fuzz type" << id;
         }
@@ -164,8 +176,8 @@ bool AgentManager::loadConfig()
                                     qDebug()<< "Tag Name "<< reader.name();
                                     if(reader.name()=="Output") {
                                         QXmlStreamAttributes attribs = reader.attributes();
-                                        qDebug() << attribs.value("name");
-                                        addOutputFuzz(attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("channel").toString(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
+                                        qDebug() << attribs.value("min") << attribs.value("max") << attribs.value("name");
+                                        addOutputFuzz(attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("channel").toString(),attribs.value("min").toString().toDouble(),attribs.value("max").toString().toDouble(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
                                         reader.skipCurrentElement();
                                     }else {
                                         reader.skipCurrentElement();

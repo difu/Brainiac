@@ -15,6 +15,7 @@ public:
     void init(qreal value);
     bool isInherited();
     qreal getValue();
+    qreal getOldValue();
     void setValue(qreal value, bool isSpeed=false);
     void setInherited(Channel *parent, bool inherited);
 

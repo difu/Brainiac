@@ -9,6 +9,7 @@
 #include "gui/scenedisplay.h"
 #include "editorlabel.h"
 #include "core/scene.h"
+#include "core/simulation.h"
 #include "core/group/group.h"
 #include <QDebug>
 #include <QComboBox>
@@ -37,10 +38,6 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
 
     setEditMode(MainWindow::SCENE);
 
-
-//    m_layout->addWidget(new QLabel("EAST"),MainWindowLayout::East);
-//    m_layout->addWidget(new QLabel("SOUTH"),MainWindowLayout::South);
-
     //qDebug() << __PRETTY_FUNCTION__;
 
     widget->setLayout(m_layout);
@@ -49,7 +46,8 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
     m_sceneDisplay=new SceneDisplay(this->m_scene,m_scene->getCameras().first());
     connect(m_outputEditor,SIGNAL(updateGLContent()),m_sceneDisplay,SLOT(updateGL()));
 
-    //connect(m_sceneEditor,SIGNAL(editorItemClicked(EditorLabel::EditorItemType)),this,SLOT(editorNodeClick(EditorLabel::EditorItemType)));
+    // When a frame has been calculated update display
+    connect(m_scene->getSimulation(),SIGNAL(frameDone()),m_sceneDisplay,SLOT(updateGL()),Qt::DirectConnection);
 }
 
 void MainWindow::addAgentManager(AgentManager *agentManager)
@@ -64,6 +62,12 @@ void MainWindow::createActions()
     // File Menu Actions
     m_saveSceneAction = new QAction(tr("Save Scene"),this);
     connect(m_saveSceneAction,SIGNAL(triggered()),this,SLOT(saveScene()));
+
+    // Simulation Menu Actions
+    m_runSimulationAction=new QAction(tr("Run"), this);
+    connect(m_runSimulationAction,SIGNAL(triggered()),m_scene->getSimulation(),SLOT(startSimulation()));
+    m_stopSimulationAction=new QAction(tr("Stop"),this);
+    connect(m_stopSimulationAction,SIGNAL(triggered()),m_scene->getSimulation(),SLOT(stopSimulation()));
 }
 
 void MainWindow::createEditors()
@@ -182,6 +186,9 @@ void MainWindow::createMenues()
 {
     m_fileMenu=menuBar()->addMenu(tr("&File"));
     m_fileMenu->addAction(m_saveSceneAction);
+
+    m_simulationMenu=menuBar()->addMenu(tr("&Simulation"));
+    m_simulationMenu->addAction(m_runSimulationAction);
 }
 
 void MainWindow::editModeComboChange(int index)

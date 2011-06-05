@@ -76,8 +76,68 @@ void Agent::addOutputFuzz(quint32 id, QString name, QString channel)
     m_brain->addOutputFuzz(id, name, channel);
 }
 
+
+/** \brief advances this agent
+
+                calling this function makes the agent go one step further in time
+                Typically this function is called from the Simulation class
+
+                It queries infos of all agents in the scene and the scene´s environment
+                It triggers its brain to process
+
+                The changes have to be written down after all agents have calculated their
+                new values via advanceCommit()
+
+                @sa Simulation
+                @sa Brain
+                @sa Agent::advanceCommit()
+
+**/
+void Agent::advance()
+{
+    //qDebug() << __PRETTY_FUNCTION__<< "Agent " << m_id;
+    // Process movement
+    m_newRotation.setX(m_rotation.x()+ m_rx->getValue());
+    m_newRotation.setY(m_rotation.y()+ m_ry->getValue());
+    m_newRotation.setZ(m_rotation.z()+ m_rz->getValue());
+
+    m_newPosition.setX(m_position.x()+m_tz->getValue()*BrainiacGlobals::sinGrad(m_newRotation.y()));
+    m_newPosition.setY(m_position.y()); //!< @todo Implement this!
+    m_newPosition.setZ(m_position.z()+m_tz->getValue()*BrainiacGlobals::cosGrad(m_newRotation.y()));
+}
+
+/** \brief commits all changes calculated by advance
+
+                all calculated channels etc are written down and are "baked"
+                @sa Agent::advance()
+
+**/
+void Agent::advanceCommit()
+{
+    foreach(Channel *channel, m_inputs) {
+        channel->advance();
+    }
+    foreach(Channel *channel, m_outputs ) {
+        channel->advance();
+    }
+    m_position=m_newPosition;
+    m_rotation=m_newRotation;
+}
+
 void Agent::createChannels()
 {
+    m_rx=new Channel();
+    addInputChannel(m_rx,"rx");
+    addOutputChannel(m_rx,"rx");
+
+    m_ry=new Channel();
+    addInputChannel(m_ry,"ry");
+    addOutputChannel(m_ry,"ry");
+
+    m_rz=new Channel();
+    addInputChannel(m_rz,"rz");
+    addOutputChannel(m_rz,"rz");
+
     m_tx=new Channel();
     addInputChannel(m_tx,"tx");
     addOutputChannel(m_tx,"tx");
@@ -148,6 +208,11 @@ Channel* Agent::getOutputChannel(QString name)
 QVector3D* Agent::getPosition()
 {
     return &m_position;
+}
+
+QVector3D* Agent::getRotation()
+{
+    return &m_rotation;
 }
 
 bool Agent::inputChannelExists(QString name)
