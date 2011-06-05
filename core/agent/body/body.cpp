@@ -9,9 +9,28 @@
 #include <glu.h>
 #include <GLUT/glut.h>
 
-Body::Body(Agent *agent)
+Body::Body(Agent *agent,Body *body)
 {
     m_agent=agent;
+    // if we have a body, clone it
+    if(body) {
+        foreach(Segment *seg, body->getSegments()) {
+            if(seg->getType()==Segment::SPHERE) {
+                Sphere *origSphere=(Sphere*)seg;
+                QVector3D *rot=new QVector3D(origSphere->getRestRotation()->x(),origSphere->getRestRotation()->y(),origSphere->getRestRotation()->z());
+                QVector3D *trans=new QVector3D(origSphere->getRestTranslation()->x(),origSphere->getRestTranslation()->y(),origSphere->getRestTranslation()->z());
+                qreal color=origSphere->getColor()->getValue();
+                bool colorInherited=origSphere->isColorInherited();
+                Sphere *newSphere=new Sphere(origSphere->getId(),this,origSphere->getName(),rot,trans,origSphere->getRestRadius());
+                newSphere->setParentId(origSphere->getParentId());
+                newSphere->getColor()->init(color);
+                newSphere->setColorInherited(colorInherited);
+                this->addSegment(newSphere);
+            } else {
+                qDebug() <<  __PRETTY_FUNCTION__ << "missing segment type" << seg->getType();
+            }
+        }
+    }
 }
 
 void Body::addSegment(Segment *segment)

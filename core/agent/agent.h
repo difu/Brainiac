@@ -27,7 +27,8 @@ class Agent : public QObject
 {
     Q_OBJECT
 public:
-    explicit Agent(Scene *scene, quint32 id, QObject *parent = 0);
+    Agent(Scene *scene, quint32 id);
+    Agent(Agent *agent, quint32 id=0);
     bool addInputChannel(Channel* channel, QString name);
     bool addOutputChannel(Channel* channel, QString name);
     void addOutputFuzz(quint32 id, QString name, QString channel);
@@ -42,6 +43,7 @@ public:
     quint32 getId();
     QVector3D *getPosition();
     QVector3D *getRotation();
+    Scene *getScene();
     bool inputChannelExists(QString name);
     bool outputChannelExists(QString name);
     void renderGL();

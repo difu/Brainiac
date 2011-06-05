@@ -17,7 +17,7 @@ class Brain : public QObject
 {
     Q_OBJECT
 public:
-    explicit Brain(Agent *agent);
+    explicit Brain(Agent *agent, Brain *brain);
     void addOutputFuzz(Output *out);
     void addOutputFuzz(quint32 id, QString name, QString channel);
     Agent* getAgent();

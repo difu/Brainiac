@@ -2,10 +2,22 @@
 #include "core/agent/agent.h"
 #include "core/agent/brain/output.h"
 
-Brain::Brain(Agent *agent) :
+Brain::Brain(Agent *agent, Brain *brain) :
     QObject(),m_agent(agent)
 {
-
+    if(brain) {
+        foreach(FuzzyBase *fuzz,brain->getFuzzies()) {
+            if(fuzz->getType()==FuzzyBase::OUTPUT) {
+                Output *origOut=(Output *)fuzz;
+                addOutputFuzz(origOut->getId(),origOut->getName(),origOut->getChannelName());
+                Output *out=(Output*)brain->getFuzzy(origOut->getId());
+                out->setMin(origOut->getMinValue());
+                out->setMax(origOut->getMaxValue());
+            } else {
+                qDebug() <<  __PRETTY_FUNCTION__ << "missing fuzz type" << fuzz->getId();
+            }
+        }
+    }
 }
 
 

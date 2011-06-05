@@ -99,37 +99,7 @@ void AgentManager::addOutputFuzz(quint32 id, QString name, QString channel, qrea
 **/
 Agent* AgentManager::cloneAgent(quint32 id)
 {
-    Agent *agent=new Agent(m_scene,id);
-    foreach(Segment *seg, m_masterAgent->getBody()->getSegments()) {
-        if(seg->getType()==Segment::SPHERE) {
-            Sphere *origSphere=(Sphere*)seg;
-            QVector3D *rot=new QVector3D(origSphere->getRestRotation()->x(),origSphere->getRestRotation()->y(),origSphere->getRestRotation()->z());
-            QVector3D *trans=new QVector3D(origSphere->getRestTranslation()->x(),origSphere->getRestTranslation()->y(),origSphere->getRestTranslation()->z());
-            qreal color=origSphere->getColor()->getValue();
-            bool colorInherited=origSphere->isColorInherited();
-            Sphere *newSphere=new Sphere(origSphere->getId(),agent->getBody(),origSphere->getName(),rot,trans,origSphere->getRestRadius());
-            newSphere->setParentId(origSphere->getParentId());
-            newSphere->getColor()->init(color);
-            newSphere->setColorInherited(colorInherited);
-            agent->getBody()->addSegment(newSphere);
-        } else {
-            qDebug() <<  __PRETTY_FUNCTION__ << "missing segment type" << id;
-        }
-    }
-    foreach(FuzzyBase *fuzz,m_masterAgent->getBrain()->getFuzzies()) {
-        if(fuzz->getType()==FuzzyBase::OUTPUT) {
-            Output *origOut=(Output *)fuzz;
-            agent->addOutputFuzz(origOut->getId(),origOut->getName(),origOut->getChannelName());
-            Output *out=(Output*)agent->getBrain()->getFuzzy(origOut->getId());
-            out->setMin(origOut->getMinValue());
-            out->setMax(origOut->getMaxValue());
-            qDebug()<< "OutMax" << out->getMaxValue() << out->getId() << origOut->getMaxValue();
-            qDebug()<< "OutMin" << out->getMinValue();
-        } else {
-            qDebug() <<  __PRETTY_FUNCTION__ << "missing fuzz type" << id;
-        }
-    }
-
+    Agent *agent=new Agent(m_masterAgent,id);
     return agent;
 }
 

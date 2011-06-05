@@ -16,7 +16,7 @@ public:
     quint32 getId() { return m_id; }
     qreal getMinValue() {return m_minValue;}
     qreal getMaxValue() {return m_maxValue;}
-    QString & getName() {return m_name;}
+    QString getName() {return m_name;}
     qreal getResult() { return m_result; }
     LogicType getType() {return m_logicType; }
     void setId(quint32 id) { m_id=id; }

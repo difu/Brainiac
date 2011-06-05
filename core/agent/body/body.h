@@ -9,7 +9,7 @@ class Segment;
 class Body
 {
 public:
-    Body(Agent *agent);
+    Body(Agent *agent, Body *body=0);
     void addSegment(Segment *segment);
     Segment * getSegment( quint32 id);
     quint32 getSegmentId(Segment *seg);

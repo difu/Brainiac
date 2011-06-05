@@ -11,14 +11,26 @@
 #include <GLUT/glut.h>
 #include <QDebug>
 
-Agent::Agent(Scene *scene, quint32 id,  QObject *parent) :
-    QObject(parent)
+Agent::Agent(Scene *scene, quint32 id) :
+    QObject()
 {
     m_id=id;
     createChannels();
-    m_body=new Body(this);
-    m_brain=new Brain(this);
+    m_body=new Body(this,0);
+    m_brain=new Brain(this,0);
     m_scene=scene;
+    qDebug() <<"NOT Copy Constructor";
+}
+
+Agent::Agent(Agent *agent, quint32 id)  :
+    QObject()
+{
+    m_id=id;
+    createChannels();
+    m_body=new Body(this,agent->getBody());
+    m_brain=new Brain(this,agent->getBrain());
+    m_scene=agent->getScene();
+    qDebug() <<"Copy Constructor";
 }
 
 Agent::~Agent() {
@@ -213,6 +225,11 @@ QVector3D* Agent::getPosition()
 QVector3D* Agent::getRotation()
 {
     return &m_rotation;
+}
+
+Scene* Agent::getScene()
+{
+    return m_scene;
 }
 
 bool Agent::inputChannelExists(QString name)
