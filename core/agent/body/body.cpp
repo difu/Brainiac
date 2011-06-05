@@ -84,4 +84,9 @@ void Body::renderGL()
     }
 }
 
-
+Body::~Body()
+{
+    foreach(Segment *seg, this->getSegments()) {
+        delete seg;
+    }
+}

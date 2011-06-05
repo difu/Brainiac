@@ -16,6 +16,7 @@ public:
     QList<Segment *> getSegments();
     Agent* getAgent();
     void renderGL();
+    ~Body();
 protected:
     Agent *m_agent;
     QList<Segment *> m_segments;

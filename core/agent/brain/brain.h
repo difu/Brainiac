@@ -23,7 +23,7 @@ public:
     Agent* getAgent();
     FuzzyBase* getFuzzy(quint32 id);
     QList <FuzzyBase *> getFuzzies();
-
+    ~Brain();
 
 protected:
     Agent *m_agent; //!< This brain´s agent

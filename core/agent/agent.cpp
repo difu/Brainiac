@@ -35,6 +35,7 @@ Agent::Agent(Agent *agent, quint32 id)  :
 
 Agent::~Agent() {
     delete m_body;
+    delete m_brain;
     foreach(Channel *chan,m_inputs) {
         delete chan;
     }

@@ -66,3 +66,10 @@ QList<FuzzyBase *> Brain::getFuzzies()
 {
     return m_fuzzies;
 }
+
+Brain::~Brain()
+{
+    foreach(Fuzzy *fuzz, m_fuzzies) {
+        delete fuzz;
+    }
+}
