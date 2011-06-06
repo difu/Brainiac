@@ -5,7 +5,7 @@
 
 class Channel;
 
-/** \brief  Output fuzz node
+/** \brief  Input fuzz node
 
         this class describes and manages an input node in the agent´s brain.
         if this node is associated with an output channel, it reads the calculated results out
