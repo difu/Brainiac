@@ -10,7 +10,11 @@ Input::Input( quint32 id, Brain *brain, QString name, QString channel) : FuzzyBa
 
 void Input::calculate()
 {
-
+    if(m_channel) {
+        setResult(m_channel->getValue());
+    } else {
+        qDebug() << __PRETTY_FUNCTION__ << "channel " << m_channelName<< "does not exist!";
+    }
 }
 
 /** \brief returns the channel name

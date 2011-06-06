@@ -14,14 +14,12 @@ BrainEditor::BrainEditor(Scene *scene, AgentManager *agentManager) : EditorBase(
     foreach(FuzzyBase *fuzzy, m_agentManager->getMasterAgent()->getBrain()->getFuzzies())
     {
         if(fuzzy->getType()==FuzzyBase::OUTPUT) {
-            qDebug() << "Placing output";
             BrainEditorItem *item=new BrainEditorItem(BrainiacGlobals::OUTPUT,m_agentManager,fuzzy->getId());
             item->setPos(m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).x(),m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).y());
             //item->setFlag();
             addItem(item);
             continue;
         } else if(fuzzy->getType()==FuzzyBase::INPUT) {
-            qDebug() << "Placing output";
             BrainEditorItem *item=new BrainEditorItem(BrainiacGlobals::INPUT,m_agentManager,fuzzy->getId());
             item->setPos(m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).x(),m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).y());
             //item->setFlag();

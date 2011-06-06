@@ -33,7 +33,6 @@ void AgentManager::addSphereFromConfig(QXmlStreamReader *reader, quint32 id, QSt
 
     while(reader->readNextStartElement()) {
         if(reader->name()=="Translation") {
-            qDebug() << "Sphere Translation";
             QXmlStreamAttributes attribs = reader->attributes();
             translation= new QVector3D();
             translation->setX(attribs.value("x").toString().toDouble());
@@ -41,7 +40,6 @@ void AgentManager::addSphereFromConfig(QXmlStreamReader *reader, quint32 id, QSt
             translation->setZ(attribs.value("z").toString().toDouble());
             reader->skipCurrentElement();
         } else if(reader->name()=="Rotation") {
-            qDebug() << "Sphere Rotation";
             QXmlStreamAttributes attribs = reader->attributes();
             rotation= new QVector3D();
             rotation->setX(attribs.value("x").toString().toDouble());
@@ -49,7 +47,6 @@ void AgentManager::addSphereFromConfig(QXmlStreamReader *reader, quint32 id, QSt
             rotation->setZ(attribs.value("z").toString().toDouble());
             reader->skipCurrentElement();
         } else if(reader->name()=="Radius") {
-            qDebug() << "Sphere Radius";
             QXmlStreamAttributes attribs = reader->attributes();
             radius=attribs.value("r").toString().toDouble();
             reader->skipCurrentElement();
@@ -58,7 +55,6 @@ void AgentManager::addSphereFromConfig(QXmlStreamReader *reader, quint32 id, QSt
             color=attribs.value("value").toString().toDouble();
             colorInherited=attribs.value("inherited").toString().compare("true",Qt::CaseInsensitive)==0;
             reader->skipCurrentElement();
-            qDebug() << "Sphere Color "<< color << colorInherited;
         }
     }
     Segment *parentSeg=m_masterAgent->getBody()->getSegment(parent);
@@ -67,7 +63,6 @@ void AgentManager::addSphereFromConfig(QXmlStreamReader *reader, quint32 id, QSt
     seg->setColorInherited(colorInherited);
     seg->getColor()->init(color);
     if( parentSeg ) {
-        qDebug() << "Segment with id"<< id << "has parent";
         seg->setParentId(parentSeg->getId());
     }
     m_masterAgent->getBody()->addSegment(seg);
@@ -135,20 +130,16 @@ bool AgentManager::loadConfig()
             if(reader.name()=="Agentconfig") {
                 while(reader.readNextStartElement()) {
                     if(reader.name()=="Agent") {
-                        qDebug() << "Agemt Tag";
                         QXmlStreamAttributes attribs = reader.attributes();
                         setEditorTranslation(attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
                         setId(attribs.value("id").toString().toInt());
                         setName(attribs.value("name").toString());
                         while(reader.readNextStartElement()) {
                             if(reader.name()=="Body") {
-                                qDebug() << "Body";
                                 while(reader.readNextStartElement()) {
-                                    qDebug()<< "Tag Name "<< reader.name();
                                     if(reader.name()=="Segment") {
                                         QXmlStreamAttributes attribs = reader.attributes();
                                         if( QString::compare( attribs.value("type").toString(),QString("sphere"),Qt::CaseInsensitive ) == 0 ) {
-                                            qDebug() << "found SPhere" << attribs.value("id").toString();
                                             addSphereFromConfig(&reader,attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("parent").toString().toInt());
                                             //reader.skipCurrentElement();
                                         }
@@ -158,17 +149,13 @@ bool AgentManager::loadConfig()
                                     }
                                 }
                             } else if(reader.name()=="Brain") {
-                                qDebug() << "parsing Brain";
                                 while(reader.readNextStartElement()) {
-                                    qDebug()<< "Tag Name "<< reader.name();
                                     if(reader.name()=="Output") {
                                         QXmlStreamAttributes attribs = reader.attributes();
-                                        qDebug() << attribs.value("min") << attribs.value("max") << attribs.value("name");
                                         addOutputFuzz(attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("channel").toString(),attribs.value("min").toString().toDouble(),attribs.value("max").toString().toDouble(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
                                         reader.skipCurrentElement();
                                     }else if(reader.name()=="Input") {
                                         QXmlStreamAttributes attribs = reader.attributes();
-                                        qDebug() << attribs.value("min") << attribs.value("max") << attribs.value("name");
                                         addInputFuzz(attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("channel").toString(),attribs.value("min").toString().toDouble(),attribs.value("max").toString().toDouble(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
                                         reader.skipCurrentElement();
                                     }else {

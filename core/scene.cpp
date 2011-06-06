@@ -121,7 +121,6 @@ bool Scene::openConfig(const QString & fileName)
                             }
                         } // all generators done
                     } else if(m_streamReader.name()=="Groups") {
-                        qDebug() << "Groups";
                         //m_streamReader.skipCurrentElement();
                         while(m_streamReader.readNextStartElement()) {
                             if(m_streamReader.name()=="Group") {
