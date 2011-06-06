@@ -28,6 +28,9 @@ EditorItem::EditorItem(BrainiacGlobals::ItemType type, void *object,quint32 id)
     case BrainiacGlobals::OUTPUT:
         m_symbolPic.load(":/gui/pics/editor_logo_output.png");
         break;
+    case BrainiacGlobals::INPUT:
+        m_symbolPic.load(":/gui/pics/editor_logo_input.png");
+        break;
     default:
         qDebug() << __PRETTY_FUNCTION__ << "Wrong label parameter!";
     }
@@ -71,6 +74,9 @@ void EditorItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
         AgentManager *myManager=(AgentManager*)m_object;
         painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,myManager->getName());
     } else if(m_type==BrainiacGlobals::OUTPUT) {
+        AgentManager *myManager=(AgentManager*)m_object;
+        painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,myManager->getMasterAgent()->getBrain()->getFuzzy(m_id)->getName());
+    } else if(m_type==BrainiacGlobals::INPUT) {
         AgentManager *myManager=(AgentManager*)m_object;
         painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,myManager->getMasterAgent()->getBrain()->getFuzzy(m_id)->getName());
     }

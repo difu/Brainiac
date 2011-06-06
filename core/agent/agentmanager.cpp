@@ -6,6 +6,7 @@
 #include "core/agent/body/sphere.h"
 #include "core/agent/brain/brain.h"
 #include "core/agent/brain/fuzzybase.h"
+#include "core/agent/brain/input.h"
 #include "core/agent/brain/output.h"
 #include "core/agent/channel.h"
 #include "core/group/group.h"
@@ -90,6 +91,22 @@ void AgentManager::addOutputFuzz(quint32 id, QString name, QString channel, qrea
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
 }
 
+void AgentManager::addInputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY)
+{
+    m_masterAgent->addInputFuzz(id, name, channel); //!< @todo reemplent with max and min values!
+    Input *in=(Input*)m_masterAgent->getBrain()->getFuzzy(id);
+    in->setMin(min);
+    in->setMax(max);
+    foreach(Agent* agent,m_scene->getAgents()) {
+        agent->addInputFuzz(id, name, channel);
+        Input *in=(Input*)agent->getBrain()->getFuzzy(id);
+        in->setMin(min);
+        in->setMax(max);
+    }
+
+    m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
+}
+
 /** \brief clones an agent
 
                 this function clones an agent from this manager´s master agent
@@ -148,6 +165,11 @@ bool AgentManager::loadConfig()
                                         QXmlStreamAttributes attribs = reader.attributes();
                                         qDebug() << attribs.value("min") << attribs.value("max") << attribs.value("name");
                                         addOutputFuzz(attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("channel").toString(),attribs.value("min").toString().toDouble(),attribs.value("max").toString().toDouble(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
+                                        reader.skipCurrentElement();
+                                    }else if(reader.name()=="Input") {
+                                        QXmlStreamAttributes attribs = reader.attributes();
+                                        qDebug() << attribs.value("min") << attribs.value("max") << attribs.value("name");
+                                        addInputFuzz(attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("channel").toString(),attribs.value("min").toString().toDouble(),attribs.value("max").toString().toDouble(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
                                         reader.skipCurrentElement();
                                     }else {
                                         reader.skipCurrentElement();

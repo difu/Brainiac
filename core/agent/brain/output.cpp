@@ -10,7 +10,9 @@ Output::Output( quint32 id, Brain *brain, QString name, QString channel) : Fuzzy
 
 void Output::calculate()
 {
-
+    if(m_channel) {
+        setResult(m_channel->getValue());
+    }
 }
 
 /** \brief returns the channel name

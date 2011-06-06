@@ -18,6 +18,7 @@ class Scene;
 class SceneEditor;
 class QComboBox;
 class GroupEditor;
+class InputEditor;
 class OutputEditor;
 class SceneDisplay;
 
@@ -65,6 +66,7 @@ protected:
     QWidget *m_logicElementEditWidget;
 
     GroupEditor *m_groupEditor;
+    InputEditor *m_inputEditor;
     OutputEditor *m_outputEditor;
 
 

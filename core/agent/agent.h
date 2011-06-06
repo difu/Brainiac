@@ -31,6 +31,7 @@ public:
     Agent(Agent *agent, quint32 id=0);
     bool addInputChannel(Channel* channel, QString name);
     bool addOutputChannel(Channel* channel, QString name);
+    void addInputFuzz(quint32 id, QString name, QString channel);
     void addOutputFuzz(quint32 id, QString name, QString channel);
     void advance();
     void advanceCommit();

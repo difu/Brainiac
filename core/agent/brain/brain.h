@@ -6,6 +6,7 @@
 class Agent;
 class FuzzyBase;
 class Output;
+class Input;
 
 
 /** \brief  The agent´s brain
@@ -18,6 +19,8 @@ class Brain : public QObject
     Q_OBJECT
 public:
     explicit Brain(Agent *agent, Brain *brain);
+    void addInputFuzz(Input *out);
+    void addInputFuzz(quint32 id, QString name, QString channel);
     void addOutputFuzz(Output *out);
     void addOutputFuzz(quint32 id, QString name, QString channel);
     Agent* getAgent();

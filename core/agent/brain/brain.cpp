@@ -1,5 +1,6 @@
 #include "brain.h"
 #include "core/agent/agent.h"
+#include "core/agent/brain/input.h"
 #include "core/agent/brain/output.h"
 
 Brain::Brain(Agent *agent, Brain *brain) :
@@ -13,11 +14,34 @@ Brain::Brain(Agent *agent, Brain *brain) :
                 Output *out=(Output*)brain->getFuzzy(origOut->getId());
                 out->setMin(origOut->getMinValue());
                 out->setMax(origOut->getMaxValue());
+            } else if(fuzz->getType()==FuzzyBase::INPUT) {
+                Input *origInput=(Input *)fuzz;
+                addInputFuzz(origInput->getId(),origInput->getName(),origInput->getChannelName());
+                Input *input=(Input*)brain->getFuzzy(origInput->getId());
+                input->setMin(origInput->getMinValue());
+                input->setMax(origInput->getMaxValue());
             } else {
-                qDebug() <<  __PRETTY_FUNCTION__ << "missing fuzz type" << fuzz->getId();
+                qCritical() <<  __PRETTY_FUNCTION__ << "missing fuzz type" << fuzz->getId();
             }
         }
     }
+}
+
+
+/** \brief adds an input to this brain
+            @param the input to be added
+**/
+void Brain::addInputFuzz(Input *input)
+{
+    m_fuzzies.append(input);
+}
+
+/** \brief adds an input to this brain
+**/
+void Brain::addInputFuzz(quint32 id, QString name, QString channel)
+{
+    Input *input=new Input(id, this, name, channel);
+    addInputFuzz(input);
 }
 
 

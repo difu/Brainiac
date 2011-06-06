@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "mainwindowlayout.h"
 #include "gui/braineditor/braineditor.h"
+#include "gui/braineditor/inputeditor.h"
 #include "gui/braineditor/outputeditor.h"
 #include "gui/editorgraphicsview.h"
 #include "gui/sceneeditor/sceneeditor.h"
@@ -167,6 +168,9 @@ void MainWindow::createEditorWidgets()
     m_groupEditor->setVisible(false);
     connect(m_sceneEditor, SIGNAL(itemClicked(ItemEditorWidgetsBase::editMessage)),this,SLOT(editorNodeClick(ItemEditorWidgetsBase::editMessage)));
 
+    m_inputEditor=new InputEditor(m_scene, m_logicElementEditWidget);
+    m_inputEditor->setVisible(false);
+
     m_outputEditor=new OutputEditor(m_scene, m_logicElementEditWidget);
     m_outputEditor->setVisible(false);
     foreach(BrainEditor *brainEditor,m_brainEditors) {
@@ -174,6 +178,7 @@ void MainWindow::createEditorWidgets()
         connect(brainEditor, SIGNAL(itemClicked(ItemEditorWidgetsBase::editMessage)),this,SLOT(editorNodeClick(ItemEditorWidgetsBase::editMessage)));
     }
     //
+    connect(m_inputEditor, SIGNAL(updateBrainEditor()),this,SLOT(refreshBrainEditor()));
     connect(m_outputEditor,SIGNAL(updateBrainEditor()),this,SLOT(refreshBrainEditor()));
     //connect(m_outputEditor,SIGNAL(updateGLContent()),m_sceneDisplay,SLOT(updateGL()));
     m_layout->addWidget(m_logicElementEditWidget,MainWindowLayout::South);
@@ -207,6 +212,7 @@ void MainWindow::editModeComboChange(int index)
 void MainWindow::editorNodeClick(ItemEditorWidgetsBase::editMessage msg)
 {
     m_groupEditor->setVisible(msg.type==BrainiacGlobals::GROUP);
+    m_inputEditor->setVisible(msg.type==BrainiacGlobals::INPUT);
     m_outputEditor->setVisible(msg.type==BrainiacGlobals::OUTPUT);
     Group *grp;
     AgentManager *mgr;
@@ -219,6 +225,11 @@ void MainWindow::editorNodeClick(ItemEditorWidgetsBase::editMessage msg)
     case BrainiacGlobals::OUTPUT:
         mgr=(AgentManager *)msg.object;
         m_outputEditor->setOutputConfig(mgr,msg.id);
+        break;
+    case BrainiacGlobals::INPUT:
+        mgr=(AgentManager *)msg.object;
+        m_inputEditor->setInputConfig(mgr,msg.id);
+        break;
 
     default:
     ;

@@ -89,6 +89,10 @@ void Agent::addOutputFuzz(quint32 id, QString name, QString channel)
     m_brain->addOutputFuzz(id, name, channel);
 }
 
+void Agent::addInputFuzz(quint32 id, QString name, QString channel)
+{
+    m_brain->addInputFuzz(id, name, channel);
+}
 
 /** \brief advances this agent
 
