@@ -40,6 +40,7 @@ protected:
     // Brain stuff
     void addOutputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY);
     void addInputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY);
+    void addNoiseFuzz(quint32 id, QString name, qreal rate, quint32 editorX, quint32 editorY);
 
     // Body stuff
     void addSphereFromConfig( QXmlStreamReader *reader, quint32 id, QString name, quint32 parent );

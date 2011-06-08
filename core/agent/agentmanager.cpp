@@ -102,6 +102,17 @@ void AgentManager::addInputFuzz(quint32 id, QString name, QString channel, qreal
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
 }
 
+void AgentManager::addNoiseFuzz(quint32 id, QString name, qreal rate, quint32 editorX, quint32 editorY)
+{
+    m_masterAgent->addNoiseFuzz(id, name, rate);
+    //Noise *noise=(Noise*) m_masterAgent->getBrain()->getFuzzy(id);
+    foreach(Agent* agent,m_scene->getAgents()) {
+        agent->addNoiseFuzz(id, name, rate);
+    }
+
+    m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
+}
+
 /** \brief clones an agent
 
                 this function clones an agent from this manager´s master agent
@@ -157,6 +168,10 @@ bool AgentManager::loadConfig()
                                     }else if(reader.name()=="Input") {
                                         QXmlStreamAttributes attribs = reader.attributes();
                                         addInputFuzz(attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("channel").toString(),attribs.value("min").toString().toDouble(),attribs.value("max").toString().toDouble(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
+                                        reader.skipCurrentElement();
+                                    }else if(reader.name()=="Noise") {
+                                        QXmlStreamAttributes attribs = reader.attributes();
+                                        addNoiseFuzz(attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("rate").toString().toDouble(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
                                         reader.skipCurrentElement();
                                     }else {
                                         reader.skipCurrentElement();

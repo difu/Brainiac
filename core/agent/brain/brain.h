@@ -7,6 +7,7 @@ class Agent;
 class FuzzyBase;
 class Output;
 class Input;
+class Noise;
 
 
 /** \brief  The agent´s brain
@@ -23,6 +24,8 @@ public:
     void addInputFuzz(quint32 id, QString name, QString channel);
     void addOutputFuzz(Output *out);
     void addOutputFuzz(quint32 id, QString name, QString channel);
+    void addNoiseFuzz(Noise *noise);
+    void addNoiseFuzz(quint32 id, QString name, qreal rate);
     Agent* getAgent();
     FuzzyBase* getFuzzy(quint32 id);
     QList <FuzzyBase *> getFuzzies();

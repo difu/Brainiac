@@ -20,6 +20,10 @@ public:
     }
     static qreal sinGrad( qreal grad) { return sin(grad*PI/180.0f); }
     static qreal cosGrad( qreal grad) { return cos(grad*PI/180.0f); }
-};
 
+    static const quint32 NUMBER_OF_RANDOMS=300;
+    static const qreal randoms[NUMBER_OF_RANDOMS];
+
+    static qreal getRand( quint32 index ) { return randoms[index%NUMBER_OF_RANDOMS]; }
+};
 #endif // BRAINIACGLOBALS_H

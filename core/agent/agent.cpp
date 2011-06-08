@@ -92,6 +92,11 @@ void Agent::addInputFuzz(quint32 id, QString name, QString channel)
     m_brain->addInputFuzz(id, name, channel);
 }
 
+void Agent::addNoiseFuzz(quint32 id, QString name, qreal rate)
+{
+    m_brain->addNoiseFuzz(id, name,rate);
+}
+
 /** \brief advances this agent
 
                 calling this function makes the agent go one step further in time

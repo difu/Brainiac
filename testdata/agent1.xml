@@ -21,11 +21,15 @@
 			</Segment>
 		</Body>
 		<Brain>
-			<Input editorx="2300" editory="2300" id="5" name="ry" channel="ry" min="-2" max="2"/>
+			<Input editorx="2300" editory="2100" id="5" name="ry" channel="ry" min="-2" max="2"/>
 			<Output editorx="2000" editory="2000" id="1" name="Color" channel="color" min="0" max="1"/>
 			<Output editorx="2100" editory="2100" id="2" name="Radius" channel="sphere1:radius" min="0" max="10"/>
 			<Output editorx="2200" editory="2100" id="3" name="tz" channel="tz" min="0" max="1"/>
-			<Output editorx="2300" editory="2100" id="4" name="ry" channel="ry" min="-2" max="2"/>
+			<Output editorx="2300" editory="2200" id="4" name="ry" channel="ry" min="-2" max="2"/>
+			<Noise editorx="1900" editory="2100" id="6" name="noise" rate="1"/>
+			<Noise editorx="1900" editory="2150" id="7" name="noise2" rate="1"/>
+			<Noise editorx="1900" editory="2200" id="8" name="noise3" rate="1"/>
+			<Noise editorx="1900" editory="2250" id="9" name="noise4" rate="1"/>
 		</Brain>
 	</Agent>
 </Agentconfig>

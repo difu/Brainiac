@@ -2,6 +2,7 @@
 #include "core/agent/agent.h"
 #include "core/agent/brain/input.h"
 #include "core/agent/brain/output.h"
+#include "core/agent/brain/noise.h"
 
 Brain::Brain(Agent *agent, Brain *brain) :
     QObject(),m_agent(agent)
@@ -20,6 +21,9 @@ Brain::Brain(Agent *agent, Brain *brain) :
                 Input *input=(Input*)brain->getFuzzy(origInput->getId());
                 input->setMin(origInput->getMinValue());
                 input->setMax(origInput->getMaxValue());
+            } else if(fuzz->getType()==FuzzyBase::NOISE) {
+                Noise *origNoise=(Noise *)fuzz;
+                addNoiseFuzz(origNoise->getId(),origNoise->getName(),origNoise->getRate());
             } else {
                 qCritical() <<  __PRETTY_FUNCTION__ << "missing fuzz type" << fuzz->getId();
             }
@@ -61,6 +65,22 @@ void Brain::addOutputFuzz(quint32 id, QString name, QString channel)
     addOutputFuzz(out);
 }
 
+/** \brief adds a noise fuzz to this brain
+            @param the noise to be added
+**/
+void Brain::addNoiseFuzz(Noise *noise)
+{
+    m_fuzzies.append(noise);
+}
+
+/** \brief adds a noise fuzz to this brain
+            @param the noise to be added
+**/
+void Brain::addNoiseFuzz(quint32 id, QString name, qreal rate)
+{
+    Noise *noise=new Noise(id, this, name, rate);
+    addNoiseFuzz(noise);
+}
 
 /** \brief returns the agent this brain belongs to
 

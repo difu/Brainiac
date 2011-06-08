@@ -33,6 +33,7 @@ public:
     bool addOutputChannel(Channel* channel, QString name);
     void addInputFuzz(quint32 id, QString name, QString channel);
     void addOutputFuzz(quint32 id, QString name, QString channel);
+    void addNoiseFuzz(quint32 id, QString name, qreal rate);
     void advance();
     void advanceCommit();
     void deleteChannel(Channel* channel);
