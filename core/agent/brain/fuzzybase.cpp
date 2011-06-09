@@ -10,19 +10,19 @@
         and provides low-level functionality
 
 **/
-FuzzyBase::FuzzyBase(LogicType logicType, Brain *brain, quint32 id, QString name) :
+FuzzyBase::FuzzyBase(LogicType logicType, Brain *brain, quint32 id, QString name, qreal min=0.0f, qreal max=1.0f) :
     QObject()
 {
     m_brain=brain;
     m_logicType=logicType;
     m_id=id;
-    m_maxValue=1.0;
-    m_minValue=0.0;
+    m_maxValue=max;
+    m_minValue=min;
     m_result=0.0;
     m_name=name;
 }
 
-void FuzzyBase::inputChanged(InputResult input)
+void FuzzyBase::inputChanged()
 {
 
 }
@@ -35,4 +35,12 @@ void FuzzyBase::setMax(qreal max)
 void FuzzyBase::setMin(qreal min)
 {
     m_minValue=min;
+}
+
+void FuzzyBase::setResult(qreal result)
+{
+    if(m_result!=result) {
+        emit resultChanged();
+        m_result=qBound(m_minValue,result,m_maxValue);
+    }
 }

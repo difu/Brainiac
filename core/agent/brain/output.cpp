@@ -3,7 +3,7 @@
 #include "core/agent/agent.h"
 #include "core/agent/channel.h"
 
-Output::Output( quint32 id, Brain *brain, QString name, QString channel) : FuzzyBase(FuzzyBase::OUTPUT, brain, id, name)
+Output::Output( quint32 id, Brain *brain, QString name, QString channel, qreal min, qreal max) : FuzzyBase(FuzzyBase::OUTPUT, brain, id, name, min, max)
 {
     setChannelName(channel);
 }
@@ -13,6 +13,7 @@ void Output::calculate()
     if(m_channel) {
         setResult(m_channel->getValue());
     }
+    qDebug() <<"Output calculated called";
 }
 
 /** \brief returns the channel name
@@ -30,9 +31,10 @@ void Output::setChannelName(QString channel)
 {
     m_channelName=channel;
     m_channel=m_brain->getAgent()->getOutputChannel(m_channelName);
+//    m_maxValue=m_channel->getMax();
+//    m_minValue=m_channel->getMin();
+
     setResult(m_channel->getValue());
-    m_maxValue=m_channel->getMax();
-    m_minValue=m_channel->getMin();
 }
 
 /** \brief sets the result of this output node
@@ -43,9 +45,9 @@ void Output::setChannelName(QString channel)
 **/
 void Output::setResult(qreal result)
 {
-    m_result=result;
+    FuzzyBase::setResult(result);
     if(m_channel) {
-        m_channel->setValue(result);
+        m_channel->setValue(m_result);
     } else {
         qDebug() << __PRETTY_FUNCTION__ << "channel " << m_channelName<< "does not exist!";
     }

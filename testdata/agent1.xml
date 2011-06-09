@@ -28,8 +28,8 @@
 			<Output editorx="2300" editory="2200" id="4" name="ry" channel="ry" min="-2" max="2"/>
 			<Noise editorx="1900" editory="2100" id="6" name="noise" rate="1"/>
 			<Noise editorx="1900" editory="2150" id="7" name="noise2" rate="1"/>
-			<Noise editorx="1900" editory="2200" id="8" name="noise3" rate="1"/>
-			<Noise editorx="1900" editory="2250" id="9" name="noise4" rate="1"/>
+			<Noise editorx="1900" editory="2200" id="8" name="noise3" rate="2"/>
+			<Noise editorx="1900" editory="2250" id="9" name="noise4" rate="0"/>
 		</Brain>
 	</Agent>
 </Agentconfig>

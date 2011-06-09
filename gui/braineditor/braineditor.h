@@ -5,16 +5,20 @@
 #include "gui/editorbase.h"
 
 class AgentManager;
+class Agent;
 
 class BrainEditor : public EditorBase
 {
     Q_OBJECT
 public:
     explicit BrainEditor(Scene *scene, AgentManager *agentManager);
+    Agent* getSelectedAgent();
+    void setSelectedAgent(Agent *agent);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
+    Agent *m_selectedAgent;
     AgentManager *m_agentManager;
 signals:
 

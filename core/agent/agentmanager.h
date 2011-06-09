@@ -17,6 +17,7 @@ public:
     qint32 getEditorTranslationX() { return m_editX; }
     qint32 getEditorTranslationY() { return m_editY; }
     QHash<quint32, QPoint> getEditorFuzzyLocations();
+    Group* getGroup() { return m_group; }
     Agent* getMasterAgent() {return m_masterAgent; }
     QString & getName() {return m_name;}
     bool loadConfig();

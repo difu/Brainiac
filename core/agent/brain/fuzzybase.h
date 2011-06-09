@@ -12,7 +12,8 @@ class FuzzyBase : public QObject
 public:
     enum LogicType{AND=BrainiacGlobals::AND,OR=BrainiacGlobals::OR,OUTPUT=BrainiacGlobals::OUTPUT,INPUT=BrainiacGlobals::INPUT,DEFUZZ=BrainiacGlobals::DEFUZZ,FUZZ=BrainiacGlobals::FUZZ,NOISE=BrainiacGlobals::NOISE,TIMER=BrainiacGlobals::TIMER};
     enum FuzzType{DIRAC,ACTIVATE,DEACTIVATE,TRIANGLE,TRAPEZOID};
-    explicit FuzzyBase(LogicType logicType, Brain *brain, quint32 id, QString name);
+    explicit FuzzyBase(LogicType logicType, Brain *brain, quint32 id, QString name, qreal min, qreal max);
+    virtual void calculate()=0;
     quint32 getId() { return m_id; }
     qreal getMinValue() {return m_minValue;}
     qreal getMaxValue() {return m_maxValue;}
@@ -23,28 +24,21 @@ public:
     void setMax(qreal max);
     void setMin(qreal min);
     void setName( QString name );
-    virtual void setResult(qreal result)=0;
+    virtual void setResult(qreal result);
 
 protected:
     Brain *m_brain;
     LogicType m_logicType;
-    virtual void calculate()=0;
     qreal m_maxValue;
     qreal m_minValue;
     qreal m_result;
     quint32 m_id;
 
-    struct InputResult {
-        quint32 source;
-        QObject *sourceObject;
-        qreal value;
-    };
     QString m_name;
 signals:
-    void resultChanged(InputResult result); //!< This signal is emitted whenever result changes
-    void invertedResultChanged(InputResult result); //!< This signal is emitted whenever inverted result changes
+    void resultChanged(); //!< This signal is emitted whenever result changes
 public slots:
-    void inputChanged(InputResult input);
+    void inputChanged();
 
 };
 

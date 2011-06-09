@@ -15,7 +15,7 @@ class Channel;
 class Input : public FuzzyBase
 {
 public:
-    Input(quint32 id, Brain *brain, QString name, QString channel);
+    Input(quint32 id, Brain *brain, QString name, QString channel, qreal min, qreal max);
     QString getChannelName();
     void calculate();
     void setChannelName(QString channel);

@@ -20,6 +20,8 @@ class Simulation : public QObject
     Q_OBJECT
 public:
     explicit Simulation(Scene *scene);
+    quint32 getCurrentFrame();
+    quint32 getFps();
 
 protected:
     quint32 m_fps; //!< frametrate of the sim

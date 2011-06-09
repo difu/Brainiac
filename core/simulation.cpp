@@ -41,6 +41,16 @@ void Simulation::advance()
     }
 }
 
+quint32 Simulation::getCurrentFrame()
+{
+    return m_currentFrame;
+}
+
+quint32 Simulation::getFps()
+{
+    return m_fps;
+}
+
 void Simulation::startSimulation()
 {
     m_running=true;
@@ -55,5 +65,6 @@ void Simulation::timerEvent(QTimerEvent *)
 {
     if(m_running) {
         this->advance();
+        m_currentFrame++;
     }
 }

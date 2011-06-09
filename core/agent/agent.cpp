@@ -1,5 +1,6 @@
 #include "agent.h"
 #include "brain/brain.h"
+#include "brain/fuzzybase.h"
 #include "body/body.h"
 #include "body/segment.h"
 #include "body/sphere.h"
@@ -82,14 +83,14 @@ bool Agent::addOutputChannel(Channel *channel, QString name)
     }
 }
 
-void Agent::addOutputFuzz(quint32 id, QString name, QString channel)
+void Agent::addOutputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max)
 {
-    m_brain->addOutputFuzz(id, name, channel);
+    m_brain->addOutputFuzz(id, name, channel, min,  max);
 }
 
-void Agent::addInputFuzz(quint32 id, QString name, QString channel)
+void Agent::addInputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max)
 {
-    m_brain->addInputFuzz(id, name, channel);
+    m_brain->addInputFuzz(id, name, channel,  min,  max);
 }
 
 void Agent::addNoiseFuzz(quint32 id, QString name, qreal rate)
@@ -124,6 +125,11 @@ void Agent::advance()
     m_newPosition.setX(m_position.x()+m_tz->getValue()*BrainiacGlobals::sinGrad(m_newRotation.y()));
     m_newPosition.setY(m_position.y()); //!< @todo Implement this!
     m_newPosition.setZ(m_position.z()+m_tz->getValue()*BrainiacGlobals::cosGrad(m_newRotation.y()));
+    foreach(FuzzyBase *fuzz, m_brain->getFuzzies()) {
+        if(fuzz->getType()==FuzzyBase::NOISE) {
+            fuzz->calculate();
+        }
+    }
 }
 
 /** \brief commits all changes calculated by advance

@@ -11,16 +11,16 @@ Brain::Brain(Agent *agent, Brain *brain) :
         foreach(FuzzyBase *fuzz,brain->getFuzzies()) {
             if(fuzz->getType()==FuzzyBase::OUTPUT) {
                 Output *origOut=(Output *)fuzz;
-                addOutputFuzz(origOut->getId(),origOut->getName(),origOut->getChannelName());
-                Output *out=(Output*)brain->getFuzzy(origOut->getId());
-                out->setMin(origOut->getMinValue());
-                out->setMax(origOut->getMaxValue());
+                addOutputFuzz(origOut->getId(),origOut->getName(),origOut->getChannelName(),origOut->getMinValue(),origOut->getMaxValue());
+//                Output *out=(Output*)brain->getFuzzy(origOut->getId());
+//                out->setMin(origOut->getMinValue());
+//                out->setMax(origOut->getMaxValue());
             } else if(fuzz->getType()==FuzzyBase::INPUT) {
                 Input *origInput=(Input *)fuzz;
-                addInputFuzz(origInput->getId(),origInput->getName(),origInput->getChannelName());
-                Input *input=(Input*)brain->getFuzzy(origInput->getId());
-                input->setMin(origInput->getMinValue());
-                input->setMax(origInput->getMaxValue());
+                addInputFuzz(origInput->getId(),origInput->getName(),origInput->getChannelName(),origInput->getMinValue(),origInput->getMaxValue());
+//                Input *input=(Input*)brain->getFuzzy(origInput->getId());
+//                input->setMin(origInput->getMinValue());
+//                input->setMax(origInput->getMaxValue());
             } else if(fuzz->getType()==FuzzyBase::NOISE) {
                 Noise *origNoise=(Noise *)fuzz;
                 addNoiseFuzz(origNoise->getId(),origNoise->getName(),origNoise->getRate());
@@ -42,9 +42,9 @@ void Brain::addInputFuzz(Input *input)
 
 /** \brief adds an input to this brain
 **/
-void Brain::addInputFuzz(quint32 id, QString name, QString channel)
+void Brain::addInputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max)
 {
-    Input *input=new Input(id, this, name, channel);
+    Input *input=new Input(id, this, name, channel, min, max);
     addInputFuzz(input);
 }
 
@@ -59,9 +59,9 @@ void Brain::addOutputFuzz(Output *out)
 
 /** \brief adds an output to this brain
 **/
-void Brain::addOutputFuzz(quint32 id, QString name, QString channel)
+void Brain::addOutputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max)
 {
-    Output *out=new Output(id, this, name, channel);
+    Output *out=new Output(id, this, name, channel, min, max);
     addOutputFuzz(out);
 }
 

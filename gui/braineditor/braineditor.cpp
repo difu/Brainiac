@@ -11,6 +11,7 @@
 BrainEditor::BrainEditor(Scene *scene, AgentManager *agentManager) : EditorBase(scene)
 {
     m_agentManager=agentManager;
+    m_selectedAgent=0;
     foreach(FuzzyBase *fuzzy, m_agentManager->getMasterAgent()->getBrain()->getFuzzies())
     {
         if(fuzzy->getType()==FuzzyBase::OUTPUT) {
@@ -34,6 +35,15 @@ BrainEditor::BrainEditor(Scene *scene, AgentManager *agentManager) : EditorBase(
     }
 }
 
+Agent* BrainEditor::getSelectedAgent()
+{
+    return m_selectedAgent;
+}
+
+void BrainEditor::setSelectedAgent(Agent *agent)
+{
+    m_selectedAgent=agent;
+}
 
 void BrainEditor::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     QGraphicsScene::mousePressEvent(event);
@@ -48,6 +58,11 @@ void BrainEditor::mousePressEvent(QGraphicsSceneMouseEvent *event) {
         } else if(item->getType() == BrainiacGlobals::INPUT) {
             msg.object=item->getObject();
             msg.type=BrainiacGlobals::INPUT;
+            msg.id=item->getId();
+            emit itemClicked(msg);
+        } else if(item->getType() == BrainiacGlobals::NOISE) {
+            msg.object=item->getObject();
+            msg.type=BrainiacGlobals::NOISE;
             msg.id=item->getId();
             emit itemClicked(msg);
         }

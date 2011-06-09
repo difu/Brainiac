@@ -9,6 +9,8 @@
 #include "gui/sceneeditor/groupeditor.h"
 #include "gui/scenedisplay.h"
 #include "editorlabel.h"
+#include "core/agent/agentmanager.h"
+#include "core/agent/agent.h"
 #include "core/scene.h"
 #include "core/simulation.h"
 #include "core/group/group.h"
@@ -49,6 +51,17 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
 
     // When a frame has been calculated update display
     connect(m_scene->getSimulation(),SIGNAL(frameDone()),m_sceneDisplay,SLOT(updateGL()),Qt::DirectConnection);
+
+    // Assign each BrainEditor the first of its Agentmanagers Agent as the to be edited agentbrain
+    QHashIterator<AgentManager*, BrainEditor*> i(m_brainEditors);
+    while (i.hasNext()) {
+        i.next();
+        if(i.key()->getGroup()->getAgents().count()>0) {
+            i.value()->setSelectedAgent(i.key()->getGroup()->getAgents().first());
+        } else {
+            i.value()->setSelectedAgent(i.key()->getMasterAgent());
+        }
+    }
 }
 
 void MainWindow::addAgentManager(AgentManager *agentManager)
@@ -176,6 +189,8 @@ void MainWindow::createEditorWidgets()
     foreach(BrainEditor *brainEditor,m_brainEditors) {
         // This signal activates editor in South region
         connect(brainEditor, SIGNAL(itemClicked(ItemEditorWidgetsBase::editMessage)),this,SLOT(editorNodeClick(ItemEditorWidgetsBase::editMessage)));
+        // When a frame has been calculated update the braineditors to display the new values
+        connect(m_scene->getSimulation(),SIGNAL(frameDone()),brainEditor,SLOT(update()),Qt::DirectConnection);
     }
     //
     connect(m_inputEditor, SIGNAL(updateBrainEditor()),this,SLOT(refreshBrainEditor()));

@@ -21,9 +21,9 @@ class Brain : public QObject
 public:
     explicit Brain(Agent *agent, Brain *brain);
     void addInputFuzz(Input *out);
-    void addInputFuzz(quint32 id, QString name, QString channel);
+    void addInputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max);
     void addOutputFuzz(Output *out);
-    void addOutputFuzz(quint32 id, QString name, QString channel);
+    void addOutputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max);
     void addNoiseFuzz(Noise *noise);
     void addNoiseFuzz(quint32 id, QString name, qreal rate);
     Agent* getAgent();

@@ -72,15 +72,11 @@ void AgentManager::addSphereFromConfig(QXmlStreamReader *reader, quint32 id, QSt
 
 void AgentManager::addOutputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY)
 {
-    m_masterAgent->addOutputFuzz(id, name, channel); //!< @todo reemplent with max and min values!
-    Output *out=(Output*)m_masterAgent->getBrain()->getFuzzy(id);
-    out->setMin(min);
-    out->setMax(max);
+    m_masterAgent->addOutputFuzz(id, name, channel, min, max);
+    //Output *out=(Output*)m_masterAgent->getBrain()->getFuzzy(id);
     foreach(Agent* agent,m_scene->getAgents()) {
-        agent->addOutputFuzz(id, name, channel);
-        Output *out=(Output*)agent->getBrain()->getFuzzy(id);
-        out->setMin(min);
-        out->setMax(max);
+        agent->addOutputFuzz(id, name, channel, min, max);
+        //Output *out=(Output*)agent->getBrain()->getFuzzy(id);
     }
 
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
@@ -88,15 +84,15 @@ void AgentManager::addOutputFuzz(quint32 id, QString name, QString channel, qrea
 
 void AgentManager::addInputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY)
 {
-    m_masterAgent->addInputFuzz(id, name, channel); //!< @todo reemplent with max and min values!
-    Input *in=(Input*)m_masterAgent->getBrain()->getFuzzy(id);
-    in->setMin(min);
-    in->setMax(max);
+    m_masterAgent->addInputFuzz(id, name, channel, min, max);
+//    Input *in=(Input*)m_masterAgent->getBrain()->getFuzzy(id);
+//    in->setMin(min);
+//    in->setMax(max);
     foreach(Agent* agent,m_scene->getAgents()) {
-        agent->addInputFuzz(id, name, channel);
-        Input *in=(Input*)agent->getBrain()->getFuzzy(id);
-        in->setMin(min);
-        in->setMax(max);
+        agent->addInputFuzz(id, name, channel, min, max);
+//        Input *in=(Input*)agent->getBrain()->getFuzzy(id);
+//        in->setMin(min);
+//        in->setMax(max);
     }
 
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
