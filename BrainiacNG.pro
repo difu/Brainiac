@@ -46,7 +46,8 @@ SOURCES += main.cpp\
     core/simulation.cpp \
     core/agent/brain/input.cpp \
     gui/braineditor/inputeditor.cpp \
-    core/agent/brain/noise.cpp
+    core/agent/brain/noise.cpp \
+    gui/editoritemconnector.cpp
 
 HEADERS  += gui/mainwindow.h \
     core/scene.h \
@@ -83,7 +84,8 @@ HEADERS  += gui/mainwindow.h \
     core/simulation.h \
     core/agent/brain/input.h \
     gui/braineditor/inputeditor.h \
-    core/agent/brain/noise.h
+    core/agent/brain/noise.h \
+    gui/editoritemconnector.h
 
 FORMS    += gui/mainwindow.ui \
     gui/sceneeditor/groupeditor.ui \

@@ -26,6 +26,7 @@ public:
     void addOutputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max);
     void addNoiseFuzz(Noise *noise);
     void addNoiseFuzz(quint32 id, QString name, qreal rate);
+    void connectFuzzies(quint32 childId, quint32 parentId, bool inverted);
     Agent* getAgent();
     FuzzyBase* getFuzzy(quint32 id);
     QList <FuzzyBase *> getFuzzies();

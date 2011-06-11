@@ -83,6 +83,11 @@ bool Agent::addOutputChannel(Channel *channel, QString name)
     }
 }
 
+void Agent::addConnection(quint32 childId, quint32 parentId, bool inverted)
+{
+    m_brain->connectFuzzies(childId, parentId,inverted);
+}
+
 void Agent::addOutputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max)
 {
     m_brain->addOutputFuzz(id, name, channel, min,  max);

@@ -22,8 +22,32 @@ FuzzyBase::FuzzyBase(LogicType logicType, Brain *brain, quint32 id, QString name
     m_name=name;
 }
 
+void FuzzyBase::addChild(FuzzyBase *child)
+{
+    m_children.append(child);
+}
+
+void FuzzyBase::addParent(FuzzyBase *parent)
+{
+    m_parents.append(parent);
+}
+
+QList<FuzzyBase *> FuzzyBase::getChildren()
+{
+    return m_children;
+}
+
 void FuzzyBase::inputChanged()
 {
+    this->calculate();
+}
+
+bool FuzzyBase::hasChildren()
+{
+    if(m_children.count()>0) {
+        return true;
+    } else
+        return false;
 
 }
 
@@ -39,8 +63,9 @@ void FuzzyBase::setMin(qreal min)
 
 void FuzzyBase::setResult(qreal result)
 {
+    result=qBound(m_minValue,result,m_maxValue);
     if(m_result!=result) {
+        m_result=result;
         emit resultChanged();
-        m_result=qBound(m_minValue,result,m_maxValue);
     }
 }

@@ -31,6 +31,7 @@ public:
     Agent(Agent *agent, quint32 id=0);
     bool addInputChannel(Channel* channel, QString name);
     bool addOutputChannel(Channel* channel, QString name);
+    void addConnection(quint32 child, quint32 parentId, bool inverted);
     void addInputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max);
     void addOutputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max);
     void addNoiseFuzz(quint32 id, QString name, qreal rate);

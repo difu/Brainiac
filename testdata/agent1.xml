@@ -30,6 +30,8 @@
 			<Noise editorx="1900" editory="2150" id="7" name="noise2" rate="1"/>
 			<Noise editorx="1900" editory="2200" id="8" name="noise3" rate="2"/>
 			<Noise editorx="1900" editory="2250" id="9" name="noise4" rate="0"/>
+			<Connector parent="6" child="1" inverted="0" />
+			<Connector parent="7" child="4" inverted="0" />
 		</Brain>
 	</Agent>
 </Agentconfig>

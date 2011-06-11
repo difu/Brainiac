@@ -12,20 +12,22 @@ Brain::Brain(Agent *agent, Brain *brain) :
             if(fuzz->getType()==FuzzyBase::OUTPUT) {
                 Output *origOut=(Output *)fuzz;
                 addOutputFuzz(origOut->getId(),origOut->getName(),origOut->getChannelName(),origOut->getMinValue(),origOut->getMaxValue());
-//                Output *out=(Output*)brain->getFuzzy(origOut->getId());
-//                out->setMin(origOut->getMinValue());
-//                out->setMax(origOut->getMaxValue());
             } else if(fuzz->getType()==FuzzyBase::INPUT) {
                 Input *origInput=(Input *)fuzz;
                 addInputFuzz(origInput->getId(),origInput->getName(),origInput->getChannelName(),origInput->getMinValue(),origInput->getMaxValue());
-//                Input *input=(Input*)brain->getFuzzy(origInput->getId());
-//                input->setMin(origInput->getMinValue());
-//                input->setMax(origInput->getMaxValue());
             } else if(fuzz->getType()==FuzzyBase::NOISE) {
                 Noise *origNoise=(Noise *)fuzz;
                 addNoiseFuzz(origNoise->getId(),origNoise->getName(),origNoise->getRate());
             } else {
                 qCritical() <<  __PRETTY_FUNCTION__ << "missing fuzz type" << fuzz->getId();
+            }
+        }
+        // Now we have all fuzzies, let´s connect them
+        foreach(FuzzyBase *fuzz,brain->getFuzzies()) {
+            if(fuzz->hasChildren()) {
+                foreach(FuzzyBase *childFuzz,fuzz->getChildren()) {
+                    connectFuzzies(childFuzz->getId(),fuzz->getId(),false); //!< @todo Handle innverted!
+                }
             }
         }
     }
@@ -80,6 +82,19 @@ void Brain::addNoiseFuzz(quint32 id, QString name, qreal rate)
 {
     Noise *noise=new Noise(id, this, name, rate);
     addNoiseFuzz(noise);
+}
+
+/** \brief connect two fuzz nodes
+            @param childId the fuzz to receive the output/result
+            @param parentId the fuzz to send it´s result
+**/
+void Brain::connectFuzzies(quint32 childId, quint32 parentId, bool inverted)
+{
+    FuzzyBase *child=getFuzzy(childId);
+    FuzzyBase *parent=getFuzzy(parentId);
+    child->addParent(parent);
+    parent->addChild(child);
+    connect(parent,SIGNAL(resultChanged()), child, SLOT(inputChanged()),Qt::DirectConnection);
 }
 
 /** \brief returns the agent this brain belongs to

@@ -10,10 +10,13 @@ Output::Output( quint32 id, Brain *brain, QString name, QString channel, qreal m
 
 void Output::calculate()
 {
-    if(m_channel) {
-        setResult(m_channel->getValue());
+//    if(m_channel) {
+//        setResult(m_channel->getValue());
+//    }
+//    qDebug() <<"Output calculated called";
+    if(m_parents.count()>0) {
+        setResult(m_parents.at(0)->getResult()); // Only take the first parent
     }
-    qDebug() <<"Output calculated called";
 }
 
 /** \brief returns the channel name

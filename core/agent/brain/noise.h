@@ -16,7 +16,6 @@ public:
     qreal getRate();
     void setRate(qreal rate);
     void calculate();
-    void setResult(qreal result);
 
 
 protected:

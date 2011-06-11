@@ -39,7 +39,3 @@ void Noise::setRate(qreal rate)
     m_rate=rate;
 }
 
-void Noise::setResult(qreal result)
-{
-    m_result=result;
-}

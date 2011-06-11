@@ -2,7 +2,9 @@
 #include <QLinearGradient>
 #include <QPainter>
 #include <QPalette>
+#include <QGraphicsScene>
 
+#include "gui/editoritemconnector.h"
 #include "core/group/group.h"
 #include "core/agent/agentmanager.h"
 #include "core/agent/agent.h"
@@ -39,6 +41,10 @@ EditorItem::EditorItem(BrainiacGlobals::ItemType type, void *object,quint32 id)
     }
 }
 
+void EditorItem::addConnector(EditorItemConnector *connector){
+    m_connectors.append(connector);
+}
+
 QRectF EditorItem::boundingRect() const
 {
     return QRectF(relxPos - adjust*15, relyPos - adjust*15,_width + adjust*15, _height + adjust*15);
@@ -48,6 +54,9 @@ QVariant EditorItem::itemChange(GraphicsItemChange change,
                      const QVariant &value)
 {
     if (change == QGraphicsItem::ItemPositionChange) {
+        foreach (EditorItemConnector *connector, m_connectors) {
+            connector->updatePosition();
+        }
         // value is the new position.
         QPoint newPos = value.toPoint();
         int x=((newPos.x())/_raster);
@@ -102,3 +111,20 @@ QPainterPath EditorItem::shape() const
     return path;
 }
 
+void EditorItem::removeConnector(EditorItemConnector *connector)
+{
+    int index = m_connectors.indexOf(connector);
+
+    if (index != -1)
+        m_connectors.removeAt(index);
+}
+
+void EditorItem::removeConnectors()
+{
+    foreach (EditorItemConnector *connector, m_connectors) {
+        connector->startItem()->removeConnector(connector);
+        connector->endItem()->removeConnector(connector);
+        scene()->removeItem(connector);
+        delete connector;
+    }
+}

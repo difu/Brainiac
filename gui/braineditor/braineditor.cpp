@@ -4,6 +4,7 @@
 #include "core/agent/brain/brain.h"
 #include "core/agent/brain/output.h"
 #include "gui/braineditor/braineditoritem.h"
+#include "gui/editoritemconnector.h"
 #include <QGraphicsSceneMouseEvent>
 
 #include <QDebug>
@@ -31,6 +32,42 @@ BrainEditor::BrainEditor(Scene *scene, AgentManager *agentManager) : EditorBase(
             item->setPos(m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).x(),m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).y());
             addItem(item);
             continue;
+        }
+    }
+    foreach(FuzzyBase *fuzzy, m_agentManager->getMasterAgent()->getBrain()->getFuzzies())
+    {
+        if(fuzzy->hasChildren()) {
+            EditorItem *eItemParent=0;
+            EditorItem *eItemChild=0;
+            foreach (QGraphicsItem *item, items()) {
+                if(item->type()==EditorItem::Type) {
+                    eItemParent=qgraphicsitem_cast<EditorItem*> (item);
+                    if(eItemParent) {
+                        if(eItemParent->getId()==fuzzy->getId()) {
+                            qDebug( ) << "Found parent" << eItemParent->getId();
+                            foreach(FuzzyBase *fuzzChild, fuzzy->getChildren()) {
+                                foreach (QGraphicsItem *childItem, items()) {
+                                    if(childItem->type()==EditorItem::Type) {
+                                        eItemChild=qgraphicsitem_cast<EditorItem*> (childItem);
+                                        if(eItemChild->getId()==fuzzChild->getId()) {
+                                            EditorItemConnector *connector=new EditorItemConnector(eItemParent,eItemChild);
+                                            addItem(connector);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    //! \bug  OK..Doing Here really nasty stuff. The Connectors are NOT SHOWING when scene is initially displayed So move all items one to the right and back again to schedule a redraw... Why the F*CK
+    foreach (QGraphicsItem *item, items()) {
+        if (item->type() == BrainEditorItem::Type) {
+            BrainEditorItem *eItem=(BrainEditorItem *)item;
+            eItem->setPos(eItem->x()+1,eItem->y());
+            eItem->setPos(eItem->x()-1,eItem->y());
         }
     }
 }

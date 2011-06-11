@@ -109,6 +109,14 @@ void AgentManager::addNoiseFuzz(quint32 id, QString name, qreal rate, quint32 ed
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
 }
 
+void AgentManager::addConnector(quint32 childId, quint32 parentId, bool inverted)
+{
+    m_masterAgent->addConnection(childId, parentId, inverted);
+    foreach(Agent* agent,m_scene->getAgents()) {
+        agent->addConnection(childId, parentId, inverted);
+    }
+}
+
 /** \brief clones an agent
 
                 this function clones an agent from this manager´s master agent
@@ -168,6 +176,10 @@ bool AgentManager::loadConfig()
                                     }else if(reader.name()=="Noise") {
                                         QXmlStreamAttributes attribs = reader.attributes();
                                         addNoiseFuzz(attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("rate").toString().toDouble(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
+                                        reader.skipCurrentElement();
+                                    }else if(reader.name()=="Connector") {
+                                        QXmlStreamAttributes attribs = reader.attributes();
+                                        addConnector(attribs.value("child").toString().toUInt(),attribs.value("parent").toString().toUInt(),attribs.value("inverted").toString().toUInt()!=0);
                                         reader.skipCurrentElement();
                                     }else {
                                         reader.skipCurrentElement();
