@@ -85,8 +85,11 @@ void Brain::addNoiseFuzz(quint32 id, QString name, qreal rate)
 }
 
 /** \brief connect two fuzz nodes
+            Connect a child to a parent. After the fuzzies are connected, a calculation of the child is issued to fetch the value of the parent(s)
             @param childId the fuzz to receive the output/result
             @param parentId the fuzz to send it´s result
+            @param inverted if the parent´s result must be inverted
+            @sa FuzzyBase
 **/
 void Brain::connectFuzzies(quint32 childId, quint32 parentId, bool inverted)
 {
@@ -95,6 +98,7 @@ void Brain::connectFuzzies(quint32 childId, quint32 parentId, bool inverted)
     child->addParent(parent);
     parent->addChild(child);
     connect(parent,SIGNAL(resultChanged()), child, SLOT(inputChanged()),Qt::DirectConnection);
+    child->calculate();
 }
 
 /** \brief returns the agent this brain belongs to
