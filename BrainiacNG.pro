@@ -47,7 +47,9 @@ SOURCES += main.cpp\
     core/agent/brain/input.cpp \
     gui/braineditor/inputeditor.cpp \
     core/agent/brain/noise.cpp \
-    gui/editoritemconnector.cpp
+    gui/editoritemconnector.cpp \
+    core/agent/brain/fuzzyand.cpp \
+    core/agent/brain/fuzzyor.cpp
 
 HEADERS  += gui/mainwindow.h \
     core/scene.h \
@@ -85,7 +87,9 @@ HEADERS  += gui/mainwindow.h \
     core/agent/brain/input.h \
     gui/braineditor/inputeditor.h \
     core/agent/brain/noise.h \
-    gui/editoritemconnector.h
+    gui/editoritemconnector.h \
+    core/agent/brain/fuzzyand.h \
+    core/agent/brain/fuzzyor.h
 
 FORMS    += gui/mainwindow.ui \
     gui/sceneeditor/groupeditor.ui \
