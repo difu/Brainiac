@@ -147,12 +147,13 @@ void Agent::advance()
         QVector3D loudAgentPosition=QVector3D(otherAgent->getPosition()->x(),otherAgent->getPosition()->y(),otherAgent->getPosition()->z());
         qreal distance=(loudAgentPosition-m_position).length();
         //qDebug() << "Distcance from agent " << m_id << "to " << agent->getId() << " is" << distance;
-        loudestAmplitude=otherAgent->getOutputChannel("sound.a")->getValue();
-        qreal reception=loudestAmplitude-distance;
+        qreal loudAmplitude=otherAgent->getOutputChannel("sound.a")->getValue();
+        qreal reception=loudAmplitude-distance;
         if(reception>loudestReception) {
             loudestReception=reception;
             loudestAgent=otherAgent;
             loudestAgentPosition=loudAgentPosition;
+            loudestAmplitude=loudAmplitude;
         }
         // End sound stuff
 
@@ -180,7 +181,7 @@ void Agent::advance()
     //
 
     foreach(FuzzyBase *fuzz, m_brain->getFuzzies()) {
-        if(fuzz->getType()==FuzzyBase::NOISE) { // noise nodes depend only on frame imformation
+        if(fuzz->getType()==FuzzyBase::NOISE) { // noise nodes depend only on frame information
             fuzz->calculate();
         }
         if(fuzz->getType()==FuzzyBase::INPUT  && !fuzz->hasParents()) { // input nodes with parents are triggered implicite by their parents
@@ -191,7 +192,7 @@ void Agent::advance()
 
 /** \brief commits all changes calculated by advance
 
-                all calculated channels etc are written down and are "baked"
+                all calculated channels etc are written down and are "baked", the new values becoming the actual values
                 @sa Agent::advance()
 
 **/
