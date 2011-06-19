@@ -8,7 +8,7 @@ class Channel;
 /** \brief  Input fuzz node
 
         this class describes and manages an input node in the agent´s brain.
-        if this node is associated with an output channel, it reads the calculated results out
+        if this node is associated with an input channel, it reads the calculated results out
 
 **/
 
@@ -19,7 +19,6 @@ public:
     QString getChannelName();
     void calculate();
     void setChannelName(QString channel);
-    void setResult(qreal result);
 
 protected:
     QString m_channelName;

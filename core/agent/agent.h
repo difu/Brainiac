@@ -46,10 +46,12 @@ public:
     quint32 getId();
     QVector3D *getPosition();
     QVector3D *getRotation();
+    bool getRenderSoundEmission();
     Scene *getScene();
     bool inputChannelExists(QString name);
     bool outputChannelExists(QString name);
     void renderGL();
+    void renderSoundEmission(bool render);
     void reset();
     void setRotation(qreal x, qreal y, qreal z);
     void setTranslation(qreal x, qreal y, qreal z);
@@ -64,6 +66,7 @@ protected:
     QHash<QString, Channel *> m_inputs; //!< List of all input channels of this agent
     QHash<QString, Channel *> m_outputs; //!< List of all output channels of this agent
     void createChannels();
+    // Channels
     Channel *m_color; //!< color of agent (input and output)
     Channel *m_rx; //!< x rotation rate of agent (input and output)
     Channel *m_ry; //!< y rotation rate of agent (input and output)
@@ -71,6 +74,10 @@ protected:
     Channel *m_tx; //!< x translation rate of agent (input and output)
     Channel *m_ty; //!< y translation rate of agent (input and output)
     Channel *m_tz; //!< z translation rate of agent (input and output)
+    Channel *m_oSoundF; //!< Emmited frequency of sound (output)
+    Channel *m_oSoundA; //!< Emmited amplitude of sound (output)
+    Channel *m_iSoundX; //!< polar coordinate about the Y axis of sound source (input)
+    Channel *m_iSoundD; //!< distance of received sound;
     Scene *m_scene; //!< the scene
     QVector3D m_position; //!< Agent position in world space
     QVector3D m_rotation; //!< Agent rotation in world space
@@ -78,6 +85,8 @@ protected:
     QVector3D m_newRotation; //!< new agent rotation in world space
     QVector3D m_restPosition; //!< Agent rest position in world space
     QVector3D m_restRotation; //!< Agent rest rotation in world space
+
+    bool m_renderSoundEmission; //!< toogle render sound emissions
 
 signals:
 

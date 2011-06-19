@@ -15,7 +15,7 @@
 			</Segment>
 			<Segment type="sphere" id="3" parent="1" name="sphere3">
 				<Color value="0.3" inherited="true"/>
-				<Translation x="10" y="10" z="0"/>
+				<Translation x="0" y="10" z="10"/>
 				<Rotation x="0" y="0" z="0" />
 				<Radius r="5" />
 			</Segment>
@@ -26,12 +26,16 @@
 			<Output editorx="2100" editory="2100" id="2" name="Radius" channel="sphere1:radius" min="0" max="10"/>
 			<Output editorx="2200" editory="2100" id="3" name="tz" channel="tz" min="0" max="1"/>
 			<Output editorx="2300" editory="2200" id="4" name="ry" channel="ry" min="-2" max="2"/>
+			<Output editorx="2400" editory="2200" id="10" name="amplitude" channel="sound.a" min="0" max="1000"/>
+			<Output editorx="2400" editory="2250" id="11" name="frequency" channel="sound.f" min="0" max="10"/>
 			<Noise editorx="1900" editory="2100" id="6" name="noise" rate="1"/>
 			<Noise editorx="1900" editory="2150" id="7" name="noise2" rate="1"/>
 			<Noise editorx="1900" editory="2200" id="8" name="noise3" rate="2"/>
 			<Noise editorx="1900" editory="2250" id="9" name="noise4" rate="0"/>
 			<Connector parent="6" child="1" inverted="0" />
 			<Connector parent="7" child="4" inverted="0" />
+			<Connector parent="8" child="2" inverted="0" />
+			<Connector parent="9" child="11" inverted="0" />
 		</Brain>
 	</Agent>
 </Agentconfig>

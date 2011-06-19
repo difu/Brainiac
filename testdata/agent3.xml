@@ -1,0 +1,20 @@
+<Agentconfig>
+	<Agent name="agent3" editorx="2400" editory="2100">
+		<Body>
+			<Segment type="sphere" id="1" parent="-1" name="sphere1">
+				<Color value="0.1" inherited="true"/>
+				<Translation x="0" y="0" z="0"/>
+				<Rotation x="0" y="0" z="0" />
+				<Radius r="10" />
+			</Segment>
+		</Body>
+		<Brain>
+			<Input editorx="2300" editory="2100" id="5" name="sound.d" channel="sound.d" min="0" max="1"/>
+			<Output editorx="2000" editory="2100" id="3" name="tz" channel="tz" min="0" max="1"/>
+			<Output editorx="2200" editory="2200" id="10" name="amplitude" channel="sound.a" min="0" max="1000"/>
+			<Output editorx="2400" editory="2250" id="11" name="frequency" channel="sound.f" min="0" max="10"/>
+			<Output editorx="2000" editory="2000" id="1" name="Color2" channel="color" min="0" max="1" />
+			<Connector parent="5" child="1" inverted="0" />
+		</Brain>
+	</Agent>
+</Agentconfig>

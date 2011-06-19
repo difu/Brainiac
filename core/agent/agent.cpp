@@ -20,6 +20,7 @@ Agent::Agent(Scene *scene, quint32 id) :
     m_body=new Body(this,0);
     m_brain=new Brain(this,0);
     m_scene=scene;
+    m_renderSoundEmission=true;
 }
 
 Agent::Agent(Agent *agent, quint32 id)  :
@@ -30,6 +31,7 @@ Agent::Agent(Agent *agent, quint32 id)  :
     m_body=new Body(this,agent->getBody());
     m_brain=new Brain(this,agent->getBrain());
     m_scene=agent->getScene();
+    m_renderSoundEmission=true;
 }
 
 Agent::~Agent() {
@@ -130,8 +132,58 @@ void Agent::advance()
     m_newPosition.setX(m_position.x()+m_tz->getValue()*BrainiacGlobals::sinGrad(m_newRotation.y()));
     m_newPosition.setY(m_position.y()); //!< @todo Implement this!
     m_newPosition.setZ(m_position.z()+m_tz->getValue()*BrainiacGlobals::cosGrad(m_newRotation.y()));
+
+    Agent *loudestAgent=0;
+    qreal loudestReception=0;
+    qreal loudestAmplitude=0;
+    QVector3D loudestAgentPosition;
+    foreach(Agent *otherAgent,m_scene->getAgents()) {
+        if(otherAgent==this) {
+            //qDebug() << "found myself"  << agent->getId() << m_id;
+            continue;
+        }
+
+        // Sound Stuff
+        QVector3D loudAgentPosition=QVector3D(otherAgent->getPosition()->x(),otherAgent->getPosition()->y(),otherAgent->getPosition()->z());
+        qreal distance=(loudAgentPosition-m_position).length();
+        //qDebug() << "Distcance from agent " << m_id << "to " << agent->getId() << " is" << distance;
+        loudestAmplitude=otherAgent->getOutputChannel("sound.a")->getValue();
+        qreal reception=loudestAmplitude-distance;
+        if(reception>loudestReception) {
+            loudestReception=reception;
+            loudestAgent=otherAgent;
+            loudestAgentPosition=loudAgentPosition;
+        }
+        // End sound stuff
+
+    }
+
+    // Postprocess sound stuff
+    if(loudestAgent) { // has heard something
+        // calculate angle about y axis
+        QVector3D distVect=m_position-loudestAgentPosition;
+        qreal scalar=QVector3D::dotProduct(distVect,QVector3D(1.0f,0.0f,0.0f));
+
+        //qDebug() << "loudest agent from agent " << m_id << "is " << loudestAgent->getId() << loudestAgentPosition;
+        qreal angle=acos(scalar/(distVect.length())) * ((double)180.0)/BrainiacGlobals::PI-90.0f;
+
+        BrainiacGlobals::normalizeAngle(&angle);
+        //if(angle>180.0f) angle=-angle+270.0f;
+        //qDebug() << "Angle of LA:"<< angle << "dist" << distVect.length() << m_position << "Dist Vector" << distVect << scalar << distVect.length()/loudestReception;
+        m_iSoundX->setValue(angle);
+        m_iSoundD->setValue(loudestReception/loudestAmplitude);
+
+    } else { // this agent hasn´t heard any sound
+        m_iSoundX->setValue(0.0f);
+        m_iSoundD->setValue(0.0f);
+    }
+    //
+
     foreach(FuzzyBase *fuzz, m_brain->getFuzzies()) {
-        if(fuzz->getType()==FuzzyBase::NOISE) {
+        if(fuzz->getType()==FuzzyBase::NOISE) { // noise nodes depend only on frame imformation
+            fuzz->calculate();
+        }
+        if(fuzz->getType()==FuzzyBase::INPUT  && !fuzz->hasParents()) { // input nodes with parents are triggered implicite by their parents
             fuzz->calculate();
         }
     }
@@ -185,6 +237,17 @@ void Agent::createChannels()
     addInputChannel(m_color,"color");
     addOutputChannel(m_color,"color");
 
+    m_oSoundA=new Channel(0);
+    addOutputChannel(m_oSoundA,"sound.a");
+
+    m_oSoundF=new Channel(0,10,0);
+    addOutputChannel(m_oSoundF,"sound.f");
+
+    m_iSoundX=new Channel(-180,180,0);
+    addInputChannel(m_iSoundX,"sound.x");
+    m_iSoundD=new Channel(0,1,0);
+    addInputChannel(m_iSoundD,"sound.d");
+
 }
 
 /** \brief deletes channel
@@ -201,25 +264,39 @@ void Agent::deleteChannel(Channel *channel)
     delete channel;
 }
 
+/** \brief returns the body
+**/
 Body* Agent::getBody()
 {
     return m_body;
 }
 
+/** \brief returns the brain
+**/
 Brain* Agent::getBrain()
 {
     return m_brain;
 }
 
+/** \brief returns the bodie´s color
+        by default this value is inherited recursivly to all segments of the body
+        @sa Segment::setColorInherited(bool inherited)
+**/
 Channel* Agent::getColor()
 {
     return m_color;
 }
 
+/** \brief returns the id of this agent
+**/
 quint32 Agent::getId() {
     return m_id;
 }
 
+/** \brief returns input channel
+    @param name the name of the input channel
+    @returns 0 if channel does not exist
+**/
 Channel* Agent::getInputChannel(QString name)
 {
     if(this->inputChannelExists(name))
@@ -228,6 +305,10 @@ Channel* Agent::getInputChannel(QString name)
         return 0;
 }
 
+/** \brief returns output channel
+    @param name the name of the output channel
+    @returns 0 if channel does not exist
+**/
 Channel* Agent::getOutputChannel(QString name)
 {
     if(this->outputChannelExists(name))
@@ -236,21 +317,37 @@ Channel* Agent::getOutputChannel(QString name)
         return 0;
 }
 
+/** \brief returns the position of the agent in world space
+**/
 QVector3D* Agent::getPosition()
 {
     return &m_position;
 }
 
+/** \brief returns the rotation of the agent in world space
+**/
 QVector3D* Agent::getRotation()
 {
     return &m_rotation;
 }
 
+/** \brief true if sound emmisions should be rendered
+**/
+bool Agent::getRenderSoundEmission()
+{
+    return m_renderSoundEmission;
+}
+
+/** \brief returns the scene
+    @sa Scene
+**/
 Scene* Agent::getScene()
 {
     return m_scene;
 }
 
+/** \brief @returns true if channel exists
+**/
 bool Agent::inputChannelExists(QString name)
 {
     if(m_inputs.count(name)>0)
@@ -259,6 +356,8 @@ bool Agent::inputChannelExists(QString name)
         return false;
 }
 
+/** \brief @returns true if channel exists
+**/
 bool Agent::outputChannelExists(QString name)
 {
     if(m_outputs.count(name)>0)
@@ -267,15 +366,41 @@ bool Agent::outputChannelExists(QString name)
         return false;
 }
 
+/** \brief renders the agent in gl context
+        calls the bodie´s render function
+        it also draws sound emmissions
+        @sa getRenderSoundEmission()
+        @sa renderSoundEmission()
+        @sa Body::renderGL()
+**/
 void Agent::renderGL()
 {
     m_body->renderGL();
+    // Draw sound emission
+    if(m_renderSoundEmission) {
+        glPushMatrix();
+        glTranslated(getPosition()->x(),getPosition()->y(),getPosition()->z());
+        glEnable(GL_DEPTH_TEST);
+        glBegin(GL_LINE_LOOP);
+            glRotated(getRotation()->x(),1,0,0);
+            glRotated(getRotation()->y(),0,1,0);
+            glRotated(getRotation()->z(),0,0,1);
+            QColor col=BrainiacGlobals::getColorFromBrainiacColorValue(m_oSoundF->getValue()/m_oSoundF->getRange());
+            glColor3f(col.redF(),col.greenF(),col.blueF());
+            for ( float angle = 0; angle <= 2*BrainiacGlobals::PI; angle+=BrainiacGlobals::PI/30) {
+                glVertex3f(m_oSoundA->getValue() * sin (angle), 5 , m_oSoundA->getValue() * cos (angle));
+                glVertex3f(m_oSoundA->getValue() * sin (angle + BrainiacGlobals::PI/30) , 5 , m_oSoundA->getValue() * cos (angle + BrainiacGlobals::PI/30));
+            }
+        glEnd();
+        glPopMatrix();
+    } else {
+        qDebug() << "not rendered";
+    }
+}
 
-//    glPushMatrix();
-//    glLineWidth( 3.0 );
-//    glColor3f( 0.5, 0.1, 1);
-//    glutSolidSphere(10,20,10);
-//    glPopMatrix();
+void Agent::renderSoundEmission(bool render)
+{
+    m_renderSoundEmission=render;
 }
 
 void Agent::reset()
@@ -284,6 +409,9 @@ void Agent::reset()
     m_position.setY(m_restPosition.y());
     m_position.setZ(m_restPosition.z());
 
+    m_rotation.setX(m_restRotation.x());
+    m_rotation.setY(m_restRotation.y());
+    m_rotation.setZ(m_restRotation.z());
 }
 
 void Agent::setRotation(qreal x, qreal y, qreal z)

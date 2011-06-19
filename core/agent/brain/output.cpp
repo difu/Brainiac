@@ -10,10 +10,6 @@ Output::Output( quint32 id, Brain *brain, QString name, QString channel, qreal m
 
 void Output::calculate()
 {
-//    if(m_channel) {
-//        setResult(m_channel->getValue());
-//    }
-//    qDebug() <<"Output calculated called";
     if(m_parents.count()>0) {
         setResult(m_parents.at(0)->getResult()); // Only take the first parent
     }
@@ -45,13 +41,15 @@ void Output::setChannelName(QString channel)
                 sets the result and if this node is associated with a channel it writes it in.
 
         \param  result the result
+        @returns true if result was changed
 **/
-void Output::setResult(qreal result)
+bool Output::setResult(qreal result)
 {
-    FuzzyBase::setResult(result);
+    bool changed=FuzzyBase::setResult(result);
     if(m_channel) {
         m_channel->setValue(m_result);
     } else {
         qDebug() << __PRETTY_FUNCTION__ << "channel " << m_channelName<< "does not exist!";
     }
+    return changed;
 }

@@ -36,18 +36,3 @@ void Input::setChannelName(QString channel)
     setResult(m_channel->getValue());
 }
 
-/** \brief sets the result of this input node
-
-                sets the result
-
-        \param  result the result
-**/
-void Input::setResult(qreal result)
-{
-    m_result=result;
-    if(m_channel) {
-        //m_channel->setValue(result);
-    } else {
-        qDebug() << __PRETTY_FUNCTION__ << "channel " << m_channelName<< "does not exist!";
-    }
-}

@@ -51,6 +51,15 @@ bool FuzzyBase::hasChildren()
 
 }
 
+bool FuzzyBase::hasParents()
+{
+    if(m_parents.count()>0) {
+        return true;
+    } else
+        return false;
+
+}
+
 void FuzzyBase::setMax(qreal max)
 {
     m_maxValue=max;
@@ -61,11 +70,22 @@ void FuzzyBase::setMin(qreal min)
     m_minValue=min;
 }
 
-void FuzzyBase::setResult(qreal result)
+/** \brief sets the result of this node
+
+                sets the result
+
+        \param  result the result
+        @returns true if result was changed
+**/
+bool FuzzyBase::setResult(qreal result)
 {
     result=qBound(m_minValue,result,m_maxValue);
     if(m_result!=result) {
         m_result=result;
         emit resultChanged();
+        return true;
+    }
+    else {
+        return false;
     }
 }

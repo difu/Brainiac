@@ -3,17 +3,19 @@
     <Groups>
         <Group name="grp1" id="1" editorx="2000" editory="2000" agentFile="/Users/dirkfuchs/Programming/BrainiacNG/testdata/agent1.xml"/>
         <Group name="grp2" id="2" editorx="2200" editory="2000" agentFile="/Users/dirkfuchs/Programming/BrainiacNG/testdata/agent2.xml"/>
+		<Group name="grp3" id="3" editorx="2400" editory="2000" agentFile="/Users/dirkfuchs/Programming/BrainiacNG/testdata/agent3.xml"/>
     </Groups>
     <Generators>
         <PointGenerator>
             <Point x="100" y="0" z="3" w="4" group="1"/>
-			<Point x="300" y="2" z="100" w="2" group="2"/>
+			<Point x="300" y="0" z="100" w="2" group="2"/>
+			<Point x="250" y="0" z="150" w="180" group="3"/>
         </PointGenerator>
         <PointGenerator>
             <Point x="200" y="0" z="3" w="1" group="1"/>
-            <Point x="0" y="2" z="100" w="2" group="1"/>
-            <Point x="0" y="2" z="0" w="2" group="1"/>
-			<Point x="200" y="2" z="100" w="2" group="2"/>
+            <Point x="0" y="0" z="100" w="2" group="1"/>
+            <Point x="0" y="0" z="0" w="2" group="1"/>
+			<Point x="200" y="0" z="100" w="2" group="2"/>
         </PointGenerator>
     </Generators>
 </Place>

@@ -65,6 +65,7 @@ void Scene::createAgents(Generator *gen)
             if(grp->getAgentManager()) { // only, if we successfully loaded an agent
                 Agent *agent=grp->getAgentManager()->cloneAgent(grp->getNextAgentId());
                 agent->setRestTranslation(trans->x(),trans->y(),trans->z()); //!< \todo add rest rotation
+                agent->setRestRotation(0,trans->w(),0);
                 m_agents.append(agent);
                 grp->addAgent(agent);
                 agent->reset();

@@ -18,7 +18,7 @@ public:
     QString getChannelName();
     void calculate();
     void setChannelName(QString channel);
-    void setResult(qreal result);
+    bool setResult(qreal result);
 
 protected:
     QString m_channelName;

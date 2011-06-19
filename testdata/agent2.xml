@@ -31,6 +31,9 @@
 			<Output editorx="2100" editory="2100" id="2" name="Radius2" channel="sphere2_1:radius" min="0" max="10"/>
 			<Output editorx="2200" editory="2100" id="3" name="tz" channel="tz" min="0" max="1"/>
 			<Output editorx="2300" editory="2100" id="4" name="ry" channel="ry" min="-2" max="2"/>
+			<Input editorx="2300" editory="1900" id="5" name="sound.x" channel="sound.x" min="-180" max="180"/>
+			<Input editorx="2300" editory="1850" id="6" name="sound.d" channel="sound.d" min="0" max="1"/>
+			<Connector parent="6" child="1" inverted="0" />
 		</Brain>
 	</Agent>
 </Agentconfig>
