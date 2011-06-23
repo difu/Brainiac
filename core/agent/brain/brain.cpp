@@ -26,7 +26,7 @@ Brain::Brain(Agent *agent, Brain *brain) :
         foreach(FuzzyBase *fuzz,brain->getFuzzies()) {
             if(fuzz->hasChildren()) {
                 foreach(FuzzyBase *childFuzz,fuzz->getChildren()) {
-                    connectFuzzies(childFuzz->getId(),fuzz->getId(),false); //!< @todo Handle innverted!
+                    connectFuzzies(childFuzz->getId(),fuzz->getId(),childFuzz->isConnectionInverted(fuzz->getId()));
                 }
             }
         }
@@ -95,7 +95,7 @@ void Brain::connectFuzzies(quint32 childId, quint32 parentId, bool inverted)
 {
     FuzzyBase *child=getFuzzy(childId);
     FuzzyBase *parent=getFuzzy(parentId);
-    child->addParent(parent);
+    child->addParent(parent,inverted);
     parent->addChild(child);
     connect(parent,SIGNAL(resultChanged()), child, SLOT(inputChanged()),Qt::DirectConnection);
     child->calculate();

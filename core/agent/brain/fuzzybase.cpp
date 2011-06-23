@@ -27,14 +27,27 @@ void FuzzyBase::addChild(FuzzyBase *child)
     m_children.append(child);
 }
 
-void FuzzyBase::addParent(FuzzyBase *parent)
+void FuzzyBase::addParent(FuzzyBase *parent, bool isInverted)
 {
-    m_parents.append(parent);
+    Parent par;
+    par.parent=parent;
+    par.inverted=isInverted;
+    if(isInverted) {
+        qDebug() << "Figge";
+    }
+    m_parents.append(par);
 }
 
 QList<FuzzyBase *> FuzzyBase::getChildren()
 {
     return m_children;
+}
+
+qreal FuzzyBase::getResult(bool inverted) {
+    if(!inverted)
+        return m_result;
+    else
+        return m_maxValue-m_result;
 }
 
 void FuzzyBase::inputChanged()
@@ -58,6 +71,21 @@ bool FuzzyBase::hasParents()
     } else
         return false;
 
+}
+
+/** \brief checks if connection to a given parent id is inverted
+        \param  parentId the id of the parent to check
+        @returns true if connection is inverted
+**/
+bool FuzzyBase::isConnectionInverted(quint32 parentId)
+{
+    foreach(Parent parent, m_parents) {
+        if(parent.parent->getId()==parentId) {
+            return parent.inverted;
+        }
+    }
+    qDebug() << __PRETTY_FUNCTION__ << "Fuzzy "<< m_id << "has no parent with id" << parentId;
+    return false;
 }
 
 void FuzzyBase::setMax(qreal max)

@@ -14,17 +14,18 @@ public:
     enum FuzzType{DIRAC,ACTIVATE,DEACTIVATE,TRIANGLE,TRAPEZOID};
     explicit FuzzyBase(LogicType logicType, Brain *brain, quint32 id, QString name, qreal min, qreal max);
     void addChild(FuzzyBase *child);
-    void addParent(FuzzyBase *parent);
+    void addParent(FuzzyBase *parent, bool isInverted=false);
     virtual void calculate()=0;
     QList<FuzzyBase *> getChildren();
     quint32 getId() { return m_id; }
     qreal getMinValue() {return m_minValue;}
     qreal getMaxValue() {return m_maxValue;}
     QString getName() {return m_name;}
-    qreal getResult() { return m_result; }
+    qreal getResult( bool inverted=false );
     LogicType getType() {return m_logicType; }
     bool hasChildren();
     bool hasParents();
+    bool isConnectionInverted( quint32 parentId );
     void setId(quint32 id) { m_id=id; }
     void setMax(qreal max);
     void setMin(qreal min);
@@ -32,14 +33,20 @@ public:
     virtual bool setResult(qreal result);
 
 protected:
+    struct Parent {
+        FuzzyBase *parent;
+        bool inverted;
+    };
     Brain *m_brain;
     LogicType m_logicType;
     qreal m_maxValue;
     qreal m_minValue;
     qreal m_result;
     quint32 m_id;
-    QList<FuzzyBase *> m_parents;
+    QList<Parent> m_parents;
     QList<FuzzyBase *> m_children;
+
+
 
     QString m_name;
 signals:

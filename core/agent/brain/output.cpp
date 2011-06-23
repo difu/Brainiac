@@ -11,7 +11,8 @@ Output::Output( quint32 id, Brain *brain, QString name, QString channel, qreal m
 void Output::calculate()
 {
     if(m_parents.count()>0) {
-        setResult(m_parents.at(0)->getResult()); // Only take the first parent
+        Parent par=m_parents.at(0);
+        setResult(par.parent->getResult(isConnectionInverted(par.parent->getId()))); // Only take the first parent
     }
 }
 

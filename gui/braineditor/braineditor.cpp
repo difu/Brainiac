@@ -44,13 +44,14 @@ BrainEditor::BrainEditor(Scene *scene, AgentManager *agentManager) : EditorBase(
                     eItemParent=qgraphicsitem_cast<EditorItem*> (item);
                     if(eItemParent) {
                         if(eItemParent->getId()==fuzzy->getId()) {
-                            qDebug( ) << "Found parent" << eItemParent->getId();
+                            //qDebug( ) << "Found parent" << eItemParent->getId();
                             foreach(FuzzyBase *fuzzChild, fuzzy->getChildren()) {
                                 foreach (QGraphicsItem *childItem, items()) {
                                     if(childItem->type()==EditorItem::Type) {
                                         eItemChild=qgraphicsitem_cast<EditorItem*> (childItem);
                                         if(eItemChild->getId()==fuzzChild->getId()) {
                                             EditorItemConnector *connector=new EditorItemConnector(eItemParent,eItemChild);
+                                            connector->setInverted(fuzzChild->isConnectionInverted(fuzzy->getId()));
                                             addItem(connector);
                                         }
                                     }
