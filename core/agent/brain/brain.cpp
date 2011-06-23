@@ -18,6 +18,12 @@ Brain::Brain(Agent *agent, Brain *brain) :
             } else if(fuzz->getType()==FuzzyBase::NOISE) {
                 Noise *origNoise=(Noise *)fuzz;
                 addNoiseFuzz(origNoise->getId(),origNoise->getName(),origNoise->getRate());
+            } else if(fuzz->getType()==FuzzyBase::AND) {
+                FuzzyAnd *origAnd=(FuzzyAnd *)fuzz;
+                addAndFuzz(origAnd->getId(),origAnd->getName(),origAnd->getMode());
+            } else if(fuzz->getType()==FuzzyBase::OR) {
+                FuzzyOr *origOr=(FuzzyOr *)fuzz;
+                addOrFuzz(origOr->getId(),origOr->getName(),origOr->getMode());
             } else {
                 qCritical() <<  __PRETTY_FUNCTION__ << "missing fuzz type" << fuzz->getId();
             }
@@ -33,6 +39,21 @@ Brain::Brain(Agent *agent, Brain *brain) :
     }
 }
 
+/** \brief adds an and fuzzy rule to this brain
+            @param the and rule to be added
+**/
+void Brain::addAndFuzz(FuzzyAnd *andFuzz)
+{
+    m_fuzzies.append(andFuzz);
+}
+
+/** \brief adds an and fuzzy rule to this brain
+**/
+void Brain::addAndFuzz(quint32 id, QString name, FuzzyAnd::Mode mode)
+{
+    FuzzyAnd *newAnd=new FuzzyAnd(id, this, name, mode);
+    addAndFuzz(newAnd);
+}
 
 /** \brief adds an input to this brain
             @param the input to be added
@@ -50,6 +71,21 @@ void Brain::addInputFuzz(quint32 id, QString name, QString channel, qreal min, q
     addInputFuzz(input);
 }
 
+/** \brief adds an or fuzzy rule to this brain
+            @param the or rule to be added
+**/
+void Brain::addOrFuzz(FuzzyOr *orFuzz)
+{
+    m_fuzzies.append(orFuzz);
+}
+
+/** \brief adds an or fuzzy rule to this brain
+**/
+void Brain::addOrFuzz(quint32 id, QString name, FuzzyOr::Mode mode)
+{
+    FuzzyOr *newOr=new FuzzyOr(id, this, name, mode);
+    addOrFuzz(newOr);
+}
 
 /** \brief adds an output to this brain
             @param the output to be added

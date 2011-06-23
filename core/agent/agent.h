@@ -5,6 +5,8 @@
 #include <QHash>
 #include <QString>
 #include <QVector3D>
+#include "brain/fuzzyand.h" // needed for Mode
+#include "brain/fuzzyor.h"
 
 class Body;
 class Brain;
@@ -32,7 +34,10 @@ public:
     bool addInputChannel(Channel* channel, QString name);
     bool addOutputChannel(Channel* channel, QString name);
     void addConnection(quint32 child, quint32 parentId, bool inverted);
+    // Fuzz Stuff
+    void addAndFuzz(quint32 id, QString name, FuzzyAnd::Mode mode);
     void addInputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max);
+    void addOrFuzz(quint32 id, QString name, FuzzyOr::Mode mode);
     void addOutputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max);
     void addNoiseFuzz(quint32 id, QString name, qreal rate);
     void advance();

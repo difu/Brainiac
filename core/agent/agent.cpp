@@ -90,6 +90,16 @@ void Agent::addConnection(quint32 childId, quint32 parentId, bool inverted)
     m_brain->connectFuzzies(childId, parentId,inverted);
 }
 
+void Agent::addAndFuzz(quint32 id, QString name, FuzzyAnd::Mode mode)
+{
+    m_brain->addAndFuzz(id, name, mode);
+}
+
+void Agent::addOrFuzz(quint32 id, QString name, FuzzyOr::Mode mode)
+{
+    m_brain->addOrFuzz(id, name, mode);
+}
+
 void Agent::addOutputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max)
 {
     m_brain->addOutputFuzz(id, name, channel, min,  max);

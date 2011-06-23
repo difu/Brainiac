@@ -2,6 +2,8 @@
 #define BRAIN_H
 
 #include <QObject>
+#include "fuzzyand.h" // needed for Mode
+#include "fuzzyor.h"
 
 class Agent;
 class FuzzyBase;
@@ -20,8 +22,12 @@ class Brain : public QObject
     Q_OBJECT
 public:
     explicit Brain(Agent *agent, Brain *brain);
+    void addAndFuzz(FuzzyAnd *andFuzz);
+    void addAndFuzz(quint32 id, QString name, FuzzyAnd::Mode mode);
     void addInputFuzz(Input *out);
     void addInputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max);
+    void addOrFuzz(FuzzyOr *orFuzz);
+    void addOrFuzz(quint32 id, QString name, FuzzyOr::Mode mode);
     void addOutputFuzz(Output *out);
     void addOutputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max);
     void addNoiseFuzz(Noise *noise);

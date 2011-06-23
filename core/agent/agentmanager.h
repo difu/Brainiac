@@ -39,6 +39,8 @@ protected:
     QHash<quint32, QPoint> m_editorFuzzyLocations;
 
     // Brain stuff
+    void addAndFuzz(quint32 id, QString name, QString mode, quint32 editorX, quint32 editorY);
+    void addOrFuzz(quint32 id, QString name, QString mode, quint32 editorX, quint32 editorY);
     void addOutputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY);
     void addInputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY);
     void addNoiseFuzz(quint32 id, QString name, qreal rate, quint32 editorX, quint32 editorY);

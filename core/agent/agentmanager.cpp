@@ -5,6 +5,8 @@
 #include "core/agent/body/body.h"
 #include "core/agent/body/sphere.h"
 #include "core/agent/brain/brain.h"
+#include "core/agent/brain/fuzzyand.h"
+#include "core/agent/brain/fuzzyor.h"
 #include "core/agent/brain/fuzzybase.h"
 #include "core/agent/brain/input.h"
 #include "core/agent/brain/output.h"
@@ -68,6 +70,36 @@ void AgentManager::addSphereFromConfig(QXmlStreamReader *reader, quint32 id, QSt
     m_masterAgent->getBody()->addSegment(seg);
     //reader->skipCurrentElement();
 
+}
+
+void AgentManager::addAndFuzz(quint32 id, QString name, QString mode, quint32 editorX, quint32 editorY)
+{
+    FuzzyAnd::Mode andMode;
+    if(QString::compare("min",mode,Qt::CaseInsensitive)==0) {
+        andMode=FuzzyAnd::MIN;
+    } else {
+        andMode=FuzzyAnd::PRODUCT;
+    }
+    m_masterAgent->addAndFuzz(id,name,andMode);
+    foreach(Agent* agent,m_scene->getAgents()) {
+        agent->addAndFuzz(id,name,andMode);
+    }
+    m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
+}
+
+void AgentManager::addOrFuzz(quint32 id, QString name, QString mode, quint32 editorX, quint32 editorY)
+{
+    FuzzyOr::Mode orMode;
+    if(QString::compare("max",mode,Qt::CaseInsensitive)==0) {
+        orMode=FuzzyOr::MAX;
+    } else {
+        orMode=FuzzyOr::SUM;
+    }
+    m_masterAgent->addOrFuzz(id,name,orMode);
+    foreach(Agent* agent,m_scene->getAgents()) {
+        agent->addOrFuzz(id,name,orMode);
+    }
+    m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
 }
 
 void AgentManager::addOutputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY)
@@ -172,6 +204,14 @@ bool AgentManager::loadConfig()
                                     }else if(reader.name()=="Input") {
                                         QXmlStreamAttributes attribs = reader.attributes();
                                         addInputFuzz(attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("channel").toString(),attribs.value("min").toString().toDouble(),attribs.value("max").toString().toDouble(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
+                                        reader.skipCurrentElement();
+                                    }else if(reader.name()=="And") {
+                                        QXmlStreamAttributes attribs = reader.attributes();
+                                        addAndFuzz(attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("mode").toString(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
+                                        reader.skipCurrentElement();
+                                    }else if(reader.name()=="Or") {
+                                        QXmlStreamAttributes attribs = reader.attributes();
+                                        addOrFuzz(attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("mode").toString(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
                                         reader.skipCurrentElement();
                                     }else if(reader.name()=="Noise") {
                                         QXmlStreamAttributes attribs = reader.attributes();

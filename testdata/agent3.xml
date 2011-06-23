@@ -10,11 +10,18 @@
 		</Body>
 		<Brain>
 			<Input editorx="2300" editory="2100" id="5" name="sound.d" channel="sound.d" min="0" max="1"/>
+			<Input editorx="2300" editory="1950" id="14" name="sound.d2" channel="sound.d" min="0" max="1"/>
 			<Output editorx="2000" editory="2100" id="3" name="tz" channel="tz" min="0" max="1"/>
 			<Output editorx="2200" editory="2200" id="10" name="amplitude" channel="sound.a" min="0" max="1000"/>
 			<Output editorx="2400" editory="2250" id="11" name="frequency" channel="sound.f" min="0" max="10"/>
 			<Output editorx="2000" editory="2000" id="1" name="Color2" channel="color" min="0" max="1" />
+			<And editorx="2000" editory="1900" id="12" name="and1" mode="min"/>
+			<Or editorx="2000" editory="1950" id="13" name="or1" mode="max" />
 			<Connector parent="5" child="1" inverted="0" />
+			<Connector parent="5" child="12" inverted="0" />
+			<Connector parent="14" child="12" inverted="0" />
+			<Connector parent="5" child="13" inverted="0" />
+			<Connector parent="14" child="13" inverted="0" />
 		</Brain>
 	</Agent>
 </Agentconfig>

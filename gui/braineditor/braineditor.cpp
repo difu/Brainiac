@@ -27,8 +27,18 @@ BrainEditor::BrainEditor(Scene *scene, AgentManager *agentManager) : EditorBase(
             //item->setFlag();
             addItem(item);
             continue;
-        }  else if(fuzzy->getType()==FuzzyBase::NOISE) {
+        } else if(fuzzy->getType()==FuzzyBase::NOISE) {
             BrainEditorItem *item=new BrainEditorItem(BrainiacGlobals::NOISE,m_agentManager,fuzzy->getId());
+            item->setPos(m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).x(),m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).y());
+            addItem(item);
+            continue;
+        } else if(fuzzy->getType()==FuzzyBase::AND) {
+            BrainEditorItem *item=new BrainEditorItem(BrainiacGlobals::AND,m_agentManager,fuzzy->getId());
+            item->setPos(m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).x(),m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).y());
+            addItem(item);
+            continue;
+        } else if(fuzzy->getType()==FuzzyBase::OR) {
+            BrainEditorItem *item=new BrainEditorItem(BrainiacGlobals::OR,m_agentManager,fuzzy->getId());
             item->setPos(m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).x(),m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).y());
             addItem(item);
             continue;
