@@ -40,7 +40,7 @@ Brain::Brain(Agent *agent, Brain *brain) :
 }
 
 /** \brief adds an and fuzzy rule to this brain
-            @param the and rule to be added
+            @param andFuzz the and rule to be added
 **/
 void Brain::addAndFuzz(FuzzyAnd *andFuzz)
 {
@@ -56,7 +56,7 @@ void Brain::addAndFuzz(quint32 id, QString name, FuzzyAnd::Mode mode)
 }
 
 /** \brief adds an input to this brain
-            @param the input to be added
+            @param input the input to be added
 **/
 void Brain::addInputFuzz(Input *input)
 {
@@ -72,7 +72,7 @@ void Brain::addInputFuzz(quint32 id, QString name, QString channel, qreal min, q
 }
 
 /** \brief adds an or fuzzy rule to this brain
-            @param the or rule to be added
+            @param orFuzz the or rule to be added
 **/
 void Brain::addOrFuzz(FuzzyOr *orFuzz)
 {
@@ -88,7 +88,7 @@ void Brain::addOrFuzz(quint32 id, QString name, FuzzyOr::Mode mode)
 }
 
 /** \brief adds an output to this brain
-            @param the output to be added
+            @param out the output to be added
 **/
 void Brain::addOutputFuzz(Output *out)
 {
@@ -104,7 +104,7 @@ void Brain::addOutputFuzz(quint32 id, QString name, QString channel, qreal min, 
 }
 
 /** \brief adds a noise fuzz to this brain
-            @param the noise to be added
+            @param noise the noise to be added
 **/
 void Brain::addNoiseFuzz(Noise *noise)
 {
