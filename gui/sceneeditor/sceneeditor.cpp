@@ -11,7 +11,7 @@
 SceneEditor::SceneEditor(Scene *scene) : EditorBase(scene)
 {
     foreach(Group *grp,m_scene->getGroups()) {
-        qDebug() << "Group in editor added" << grp->getId();
+        //qDebug() << "Group in editor added" << grp->getId();
         SceneEditorItem *item=new SceneEditorItem(BrainiacGlobals::GROUP,grp);
         item->setPos(grp->getEditorTranslationX(),grp->getEditorTranslationY());
         //item->setFlag();
