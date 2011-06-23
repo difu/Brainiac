@@ -58,6 +58,9 @@
    <property name="text">
     <string>Position</string>
    </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
   </widget>
   <widget class="QPushButton" name="speedButton">
    <property name="geometry">
@@ -70,6 +73,9 @@
    </property>
    <property name="text">
     <string>Speed</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QLineEdit" name="rangeMin">
