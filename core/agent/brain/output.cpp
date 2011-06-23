@@ -12,7 +12,7 @@ void Output::calculate()
 {
     if(m_parents.count()>0) {
         Parent par=m_parents.at(0);
-        setResult(par.inverted); // Only take the first parent
+        setResult(par.parent->getResult(par.inverted));// Only take the first parent
     }
 }
 
