@@ -32,9 +32,6 @@ void FuzzyBase::addParent(FuzzyBase *parent, bool isInverted)
     Parent par;
     par.parent=parent;
     par.inverted=isInverted;
-    if(isInverted) {
-        qDebug() << "Figge";
-    }
     m_parents.append(par);
 }
 
