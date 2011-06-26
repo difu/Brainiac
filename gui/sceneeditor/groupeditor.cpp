@@ -4,8 +4,8 @@
 
 GroupEditor::GroupEditor(Scene *scene,QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::GroupEditor),
-    ItemEditorWidgetsBase(scene)
+    ItemEditorWidgetsBase(scene),
+    ui(new Ui::GroupEditor)
 {
     ui->setupUi(this);
     connect(ui->groupName,SIGNAL(returnPressed()),this,SLOT(groupNameChanged()));
