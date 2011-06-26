@@ -10,8 +10,8 @@
 
 OutputEditor::OutputEditor(Scene *scene, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::OutputEditor),
-    ItemEditorWidgetsBase(scene)
+    ItemEditorWidgetsBase(scene),
+    ui(new Ui::OutputEditor)
 {
     ui->setupUi(this);
     m_agentManager=0;

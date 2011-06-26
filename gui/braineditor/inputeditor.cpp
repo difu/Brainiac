@@ -8,8 +8,8 @@
 
 InputEditor::InputEditor(Scene *scene, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::InputEditor),
-    ItemEditorWidgetsBase(scene)
+    ItemEditorWidgetsBase(scene),
+    ui(new Ui::InputEditor)
 {
     ui->setupUi(this);
     m_agentManager=0;
