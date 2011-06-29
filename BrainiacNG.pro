@@ -51,7 +51,8 @@ SOURCES += main.cpp\
     core/agent/brain/fuzzyand.cpp \
     core/agent/brain/fuzzyor.cpp \
     core/agent/brain/fuzzyfuzz.cpp \
-    core/agent/brain/fuzzydefuzz.cpp
+    core/agent/brain/fuzzydefuzz.cpp \
+    gui/braineditor/fuzzyeditor.cpp
 
 HEADERS  += gui/mainwindow.h \
     core/scene.h \
@@ -93,12 +94,14 @@ HEADERS  += gui/mainwindow.h \
     core/agent/brain/fuzzyand.h \
     core/agent/brain/fuzzyor.h \
     core/agent/brain/fuzzyfuzz.h \
-    core/agent/brain/fuzzydefuzz.h
+    core/agent/brain/fuzzydefuzz.h \
+    gui/braineditor/fuzzyeditor.h
 
 FORMS    += gui/mainwindow.ui \
     gui/sceneeditor/groupeditor.ui \
     gui/braineditor/outputeditor.ui \
-    gui/braineditor/inputeditor.ui
+    gui/braineditor/inputeditor.ui \
+    gui/braineditor/fuzzyeditor.ui
 
 LIBS += -framework \
     glut

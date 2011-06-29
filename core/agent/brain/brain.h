@@ -7,6 +7,7 @@
 
 class Agent;
 class FuzzyBase;
+class FuzzyDefuzz;
 class Output;
 class Input;
 class Noise;
@@ -24,6 +25,8 @@ public:
     explicit Brain(Agent *agent, Brain *brain);
     void addAndFuzz(FuzzyAnd *andFuzz);
     void addAndFuzz(quint32 id, QString name, FuzzyAnd::Mode mode);
+    void addDefuzz(FuzzyDefuzz *defuzz);
+    void addDefuzz(quint32 id, QString name, qreal defuzzValue, bool isElse);
     void addInputFuzz(Input *out);
     void addInputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max);
     void addOrFuzz(FuzzyOr *orFuzz);

@@ -5,15 +5,18 @@
 #include "core/agent/body/body.h"
 #include "core/agent/body/sphere.h"
 #include "core/agent/brain/brain.h"
+#include "core/agent/brain/fuzzydefuzz.h"
 #include "core/agent/brain/fuzzyand.h"
 #include "core/agent/brain/fuzzyor.h"
 #include "core/agent/brain/fuzzybase.h"
 #include "core/agent/brain/input.h"
 #include "core/agent/brain/output.h"
+#include "core/agent/brain/noise.h"
 #include "core/agent/channel.h"
 #include "core/group/group.h"
 #include <QFile>
 #include <QXmlStreamReader>
+#include <QXmlStreamWriter>
 #include <QDebug>
 #include <QVector3D>
 
@@ -63,6 +66,7 @@ void AgentManager::addSphereFromConfig(QXmlStreamReader *reader, quint32 id, QSt
 
     Segment *seg=new Sphere(id, m_masterAgent->getBody(),name,rotation,translation,radius,0);
     seg->setColorInherited(colorInherited);
+    seg->setRestColor(color);
     seg->getColor()->init(color);
     if( parentSeg ) {
         seg->setParentId(parentSeg->getId());
@@ -83,6 +87,15 @@ void AgentManager::addAndFuzz(quint32 id, QString name, QString mode, quint32 ed
     m_masterAgent->addAndFuzz(id,name,andMode);
     foreach(Agent* agent,m_scene->getAgents()) {
         agent->addAndFuzz(id,name,andMode);
+    }
+    m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
+}
+
+void AgentManager::addDefuzz(quint32 id, QString name, qreal defuzzValue, bool isElse, quint32 editorX, quint32 editorY)
+{
+    m_masterAgent->addDefuzz(id,name,defuzzValue,isElse);
+    foreach(Agent* agent,m_scene->getAgents()) {
+        agent->addDefuzz(id,name,defuzzValue,isElse);
     }
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
 }
@@ -117,14 +130,8 @@ void AgentManager::addOutputFuzz(quint32 id, QString name, QString channel, qrea
 void AgentManager::addInputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY)
 {
     m_masterAgent->addInputFuzz(id, name, channel, min, max);
-//    Input *in=(Input*)m_masterAgent->getBrain()->getFuzzy(id);
-//    in->setMin(min);
-//    in->setMax(max);
     foreach(Agent* agent,m_scene->getAgents()) {
         agent->addInputFuzz(id, name, channel, min, max);
-//        Input *in=(Input*)agent->getBrain()->getFuzzy(id);
-//        in->setMin(min);
-//        in->setMax(max);
     }
 
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
@@ -209,6 +216,10 @@ bool AgentManager::loadConfig()
                                         QXmlStreamAttributes attribs = reader.attributes();
                                         addAndFuzz(attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("mode").toString(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
                                         reader.skipCurrentElement();
+                                    }else if(reader.name()=="Defuzz") {
+                                        QXmlStreamAttributes attribs = reader.attributes();
+                                        addDefuzz(attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("defuzzvalue").toString().toDouble(), QString::compare(attribs.value("iselse").toString(),QString("true"),Qt::CaseInsensitive )==0,attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
+                                        reader.skipCurrentElement();
                                     }else if(reader.name()=="Or") {
                                         QXmlStreamAttributes attribs = reader.attributes();
                                         addOrFuzz(attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("mode").toString(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
@@ -244,6 +255,125 @@ bool AgentManager::loadConfig()
 
 bool AgentManager::saveConfig()
 {
+    QFile file(m_fileName);
+    file.open(QIODevice::WriteOnly);
+    QXmlStreamWriter stream(&file);
+    stream.setAutoFormatting(true);
+    stream.writeStartDocument();
+    stream.writeStartElement("Agentconfig");
+    stream.writeStartElement("Agent");
+    stream.writeAttribute("name", m_name);
+    stream.writeAttribute("editorx", QString::number(m_editX));
+    stream.writeAttribute("editory", QString::number(m_editY));
+    stream.writeStartElement("Body");
+    foreach(Segment *seg,m_masterAgent->getBody()->getSegments()) {
+        stream.writeStartElement("Segment");
+        stream.writeAttribute("id", QString::number(seg->getId()));
+        stream.writeAttribute("parent", QString::number(seg->getParentId()));
+        stream.writeAttribute("name", seg->getName());
+        if(seg->getType()==Segment::SPHERE) {
+            Sphere *sphere=(Sphere *)seg;
+            stream.writeAttribute("type", "sphere");
+            stream.writeStartElement("Radius");
+            stream.writeAttribute("r", QString::number(sphere->getRestRadius(),'f'));
+            stream.writeEndElement(); // Radius
+        }
+        stream.writeStartElement("Color");
+        stream.writeAttribute("value", QString::number(seg->getRestColor(),'f'));
+        if(seg->getColor()->isInherited()) {
+            stream.writeAttribute("inherited", "true");
+        } else {
+            stream.writeAttribute("inherited", "false");
+        }
+        stream.writeEndElement(); //Color
+        stream.writeStartElement("Translation");
+        stream.writeAttribute("x",  QString::number(seg->getRestTranslation()->x(),'f'));
+        stream.writeAttribute("y",  QString::number(seg->getRestTranslation()->y(),'f'));
+        stream.writeAttribute("z",  QString::number(seg->getRestTranslation()->z(),'f'));
+        stream.writeEndElement(); //Translation
+        stream.writeStartElement("Rotation");
+        stream.writeAttribute("x",  QString::number(seg->getRestRotation()->x(),'f'));
+        stream.writeAttribute("y",  QString::number(seg->getRestRotation()->y(),'f'));
+        stream.writeAttribute("z",  QString::number(seg->getRestRotation()->z(),'f'));
+        stream.writeEndElement(); //Rotation
+
+        stream.writeEndElement(); //Segment
+    }
+    stream.writeEndElement(); // Body
+    stream.writeStartElement("Brain");
+    foreach(FuzzyBase *fuzz,m_masterAgent->getBrain()->getFuzzies()) {
+        if(fuzz->getType()==FuzzyBase::AND) {
+            stream.writeStartElement("And");
+            FuzzyAnd *fAnd=(FuzzyAnd *)fuzz;
+            if(fAnd->getMode()==FuzzyAnd::MIN) {
+                stream.writeAttribute("mode", "min");
+            } else {
+                stream.writeAttribute("mode", "prod");
+            }
+        } else if(fuzz->getType()==FuzzyBase::OR) {
+            stream.writeStartElement("Or");
+            FuzzyOr *fOr=(FuzzyOr *)fuzz;
+            if(fOr->getMode()==FuzzyOr::MAX) {
+                stream.writeAttribute("mode", "max");
+            } else {
+                stream.writeAttribute("mode", "sum");
+            }
+        } else if(fuzz->getType()==FuzzyBase::INPUT) {
+            stream.writeStartElement("Input");
+            Input *inp=(Input *)fuzz;
+            stream.writeAttribute("channel", inp->getChannelName());
+            stream.writeAttribute("min",  QString::number(inp->getMinValue(),'f'));
+            stream.writeAttribute("max",  QString::number(inp->getMaxValue(),'f'));
+        } else if(fuzz->getType()==FuzzyBase::FUZZ) {
+            stream.writeStartElement("Fuzz");
+        }  else if(fuzz->getType()==FuzzyBase::DEFUZZ) {
+            stream.writeStartElement("Defuzz");
+            FuzzyDefuzz *defuzz=(FuzzyDefuzz *)fuzz;
+            stream.writeAttribute("defuzzvalue",  QString::number(defuzz->getDefuzzVal(),'f'));
+            if(defuzz->isElse()) {
+                stream.writeAttribute("iselse", "true");
+            } else {
+                stream.writeAttribute("iselse", "false");
+            }
+        } else if(fuzz->getType()==FuzzyBase::OUTPUT) {
+            stream.writeStartElement("Output");
+            Output *out=(Output *)fuzz;
+            stream.writeAttribute("channel", out->getChannelName());
+            stream.writeAttribute("min",  QString::number(out->getMinValue(),'f'));
+            stream.writeAttribute("max",  QString::number(out->getMaxValue(),'f'));
+        } else if(fuzz->getType()==FuzzyBase::NOISE) {
+            stream.writeStartElement("Noise");
+            Noise *noise=(Noise *)fuzz;
+            stream.writeAttribute("rate",  QString::number(noise->getRate(),'f'));
+        } else {
+            stream.writeStartElement("Dummy");
+            qDebug() << __PRETTY_FUNCTION__ << "Could not save fuzz with type" << fuzz->getType();
+        }
+        stream.writeAttribute("id",QString::number(fuzz->getId()));
+        stream.writeAttribute("name",fuzz->getName());
+        stream.writeAttribute("editorx",QString::number(m_editorFuzzyLocations.value(fuzz->getId()).x()));
+        stream.writeAttribute("editory",QString::number(m_editorFuzzyLocations.value(fuzz->getId()).y()));
+        stream.writeEndElement(); //FuzzyFuzz
+    }
+    foreach(FuzzyBase *fuzz,m_masterAgent->getBrain()->getFuzzies()) {
+        foreach(FuzzyBase *childFuzz,fuzz->getChildren()) {
+            stream.writeStartElement("Connector");
+            stream.writeAttribute("parent",QString::number(fuzz->getId()));
+            stream.writeAttribute("child",QString::number(childFuzz->getId()));
+            if(childFuzz->isConnectionInverted(fuzz->getId())) {
+                stream.writeAttribute("inverted", "1");
+            } else {
+                stream.writeAttribute("inverted", "0");
+            }
+            stream.writeEndElement(); //Connector
+        }
+    }
+    stream.writeEndElement(); // Brain
+    stream.writeEndElement(); // Agent
+    stream.writeEndElement(); // Agentconfig
+
+    stream.writeEndDocument();
+    qDebug() << "Agent written";
     return false;
 }
 
@@ -251,6 +381,14 @@ void AgentManager::setEditorTranslation(qint32 x, qint32 y)
 {
     m_editX=x;
     m_editY=y;
+}
+
+void AgentManager::setFuzzyEditorTranslation(quint32 id, qint32 x, qint32 y)
+{
+    QPoint point=m_editorFuzzyLocations.value(id);
+    point.setX(x);
+    point.setY(y);
+    m_editorFuzzyLocations.insert(id,point);
 }
 
 /** \brief sets result of a fuzz of all agents

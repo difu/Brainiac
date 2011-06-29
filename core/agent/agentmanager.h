@@ -23,6 +23,7 @@ public:
     bool loadConfig();
     bool saveConfig();
     void setEditorTranslation(qint32 x, qint32 y);
+    void setFuzzyEditorTranslation(quint32 id, qint32 x, qint32 y);
     void setFuzzyResult(quint32 id, qreal result);
     void setId(quint32 id) { m_id=id; }
     void setName( QString name ) { m_name=name; }
@@ -40,6 +41,7 @@ protected:
 
     // Brain stuff
     void addAndFuzz(quint32 id, QString name, QString mode, quint32 editorX, quint32 editorY);
+    void addDefuzz(quint32 id, QString name, qreal defuzzValue, bool isElse, quint32 editorX, quint32 editorY);
     void addOrFuzz(quint32 id, QString name, QString mode, quint32 editorX, quint32 editorY);
     void addOutputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY);
     void addInputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY);

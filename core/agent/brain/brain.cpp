@@ -3,6 +3,7 @@
 #include "core/agent/brain/input.h"
 #include "core/agent/brain/output.h"
 #include "core/agent/brain/noise.h"
+#include "core/agent/brain/fuzzydefuzz.h"
 
 Brain::Brain(Agent *agent, Brain *brain) :
     QObject(),m_agent(agent)
@@ -24,6 +25,9 @@ Brain::Brain(Agent *agent, Brain *brain) :
             } else if(fuzz->getType()==FuzzyBase::OR) {
                 FuzzyOr *origOr=(FuzzyOr *)fuzz;
                 addOrFuzz(origOr->getId(),origOr->getName(),origOr->getMode());
+            } else if(fuzz->getType()==FuzzyBase::DEFUZZ) {
+                FuzzyDefuzz *origDefuzz=(FuzzyDefuzz *)fuzz;
+                addDefuzz(origDefuzz->getId(),origDefuzz->getName(),origDefuzz->getDefuzzVal(),origDefuzz->isElse());
             } else {
                 qCritical() <<  __PRETTY_FUNCTION__ << "missing fuzz type" << fuzz->getId();
             }
@@ -53,6 +57,23 @@ void Brain::addAndFuzz(quint32 id, QString name, FuzzyAnd::Mode mode)
 {
     FuzzyAnd *newAnd=new FuzzyAnd(id, this, name, mode);
     addAndFuzz(newAnd);
+}
+
+/** \brief adds a defuzz fuzzy rule to this brain
+            @param defuzz the defuzz rule to be added
+**/
+void Brain::addDefuzz(FuzzyDefuzz *defuzz)
+{
+    m_fuzzies.append(defuzz);
+}
+
+/** \brief adds a defuzz rule to this brain
+**/
+void Brain::addDefuzz(quint32 id, QString name, qreal defuzzValue, bool isElse)
+{
+    FuzzyDefuzz *defuzz=new FuzzyDefuzz(id, this, name, defuzzValue);
+    defuzz->setElse(isElse);
+    addDefuzz(defuzz);
 }
 
 /** \brief adds an input to this brain

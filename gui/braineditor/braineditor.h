@@ -14,6 +14,7 @@ public:
     explicit BrainEditor(Scene *scene, AgentManager *agentManager);
     Agent* getSelectedAgent();
     void setSelectedAgent(Agent *agent);
+    void updateItemLocations();
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);

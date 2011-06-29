@@ -73,6 +73,7 @@ protected:
     QHash<AgentManager*, BrainEditor*> m_brainEditors;
     AgentManager *m_activeAgentManager; //!< AgentManager that is edited in brain/body editor
 
+    QAction *m_saveAgentAction;
     QAction *m_saveSceneAction;
     QAction *m_runSimulationAction;
     QAction *m_stopSimulationAction;
@@ -87,6 +88,7 @@ protected slots:
     void editModeComboChange(int index);
     void editorNodeClick(ItemEditorWidgetsBase::editMessage msg);
     void refreshBrainEditor();
+    void saveAgent();
     void saveScene();
 
 private:

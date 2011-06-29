@@ -1,39 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <Agentconfig>
-	<Agent name="agent2" editorx="2200" editory="2100">
-		<Body>
-			<Segment type="sphere" id="1" parent="-1" name="sphere2_1">
-				<Color value="0" inherited="true"/>
-				<Translation x="0" y="0" z="0"/>
-				<Rotation x="0" y="0" z="0" />
-				<Radius r="10" />
-			</Segment>
-			<Segment type="sphere" id="2" parent="1" name="sphere2_2">
-				<Color value="0" inherited="true"/>
-				<Translation x="0" y="10" z="0"/>
-				<Rotation x="0" y="0" z="0" />
-				<Radius r="5" />
-			</Segment>
-			<Segment type="sphere" id="3" parent="2" name="sphere2_3">
-				<Color value="0.4" inherited="true"/>
-				<Translation x="00" y="00" z="10"/>
-				<Rotation x="0" y="0" z="0" />
-				<Radius r="2" />
-			</Segment>
-			<Segment type="sphere" id="4" parent="3" name="sphere2_4">
-				<Color value="0.6" inherited="false"/>
-				<Translation x="00" y="00" z="10"/>
-				<Rotation x="0" y="0" z="0" />
-				<Radius r="4" />
-			</Segment>
-		</Body>
-		<Brain>
-			<Output editorx="2000" editory="2000" id="1" name="Color2" channel="color" min="0" max="1" />
-			<Output editorx="2100" editory="2100" id="2" name="Radius2" channel="sphere2_1:radius" min="0" max="10"/>
-			<Output editorx="2200" editory="2100" id="3" name="tz" channel="tz" min="0" max="1"/>
-			<Output editorx="2300" editory="2100" id="4" name="ry" channel="ry" min="-2" max="2"/>
-			<Input editorx="2300" editory="1900" id="5" name="sound.x" channel="sound.x" min="-180" max="180"/>
-			<Input editorx="2300" editory="1850" id="6" name="sound.d" channel="sound.d" min="0" max="1"/>
-			<Connector parent="6" child="1" inverted="1" />
-		</Brain>
-	</Agent>
+    <Agent name="agent2" editorx="2200" editory="2100">
+        <Body>
+            <Segment id="1" parent="0" name="sphere2_1" type="sphere">
+                <Radius r="10.000000"/>
+                <Color value="0.000000" inherited="true"/>
+                <Translation x="0.000000" y="0.000000" z="0.000000"/>
+                <Rotation x="0.000000" y="0.000000" z="0.000000"/>
+            </Segment>
+            <Segment id="2" parent="1" name="sphere2_2" type="sphere">
+                <Radius r="5.000000"/>
+                <Color value="0.000000" inherited="true"/>
+                <Translation x="0.000000" y="10.000000" z="0.000000"/>
+                <Rotation x="0.000000" y="0.000000" z="0.000000"/>
+            </Segment>
+            <Segment id="3" parent="2" name="sphere2_3" type="sphere">
+                <Radius r="2.000000"/>
+                <Color value="0.400000" inherited="true"/>
+                <Translation x="0.000000" y="0.000000" z="10.000000"/>
+                <Rotation x="0.000000" y="0.000000" z="0.000000"/>
+            </Segment>
+            <Segment id="4" parent="3" name="sphere2_4" type="sphere">
+                <Radius r="4.000000"/>
+                <Color value="0.600000" inherited="false"/>
+                <Translation x="0.000000" y="0.000000" z="10.000000"/>
+                <Rotation x="0.000000" y="0.000000" z="0.000000"/>
+            </Segment>
+        </Body>
+        <Brain>
+            <Output channel="color" min="0.000000" max="1.000000" id="1" name="Color2" editorx="1990" editory="2000"/>
+            <Output channel="sphere2_1:radius" min="0.000000" max="10.000000" id="2" name="Radius2" editorx="2090" editory="2100"/>
+            <Output channel="tz" min="0.000000" max="1.000000" id="3" name="tz" editorx="2190" editory="2100"/>
+            <Output channel="ry" min="-2.000000" max="2.000000" id="4" name="ry" editorx="2290" editory="2100"/>
+            <Input channel="sound.x" min="-180.000000" max="180.000000" id="5" name="sound.x" editorx="2290" editory="1900"/>
+            <Input channel="sound.d" min="0.000000" max="1.000000" id="6" name="sound.d" editorx="1990" editory="1880"/>
+            <Defuzz defuzzvalue="1.000000" iselse="false" id="7" name="left" editorx="1920" editory="1820"/>
+            <Connector parent="6" child="1" inverted="1"/>
+        </Brain>
+    </Agent>
 </Agentconfig>

@@ -11,7 +11,6 @@ class FuzzyBase : public QObject
     Q_OBJECT
 public:
     enum LogicType{AND=BrainiacGlobals::AND,OR=BrainiacGlobals::OR,OUTPUT=BrainiacGlobals::OUTPUT,INPUT=BrainiacGlobals::INPUT,DEFUZZ=BrainiacGlobals::DEFUZZ,FUZZ=BrainiacGlobals::FUZZ,NOISE=BrainiacGlobals::NOISE,TIMER=BrainiacGlobals::TIMER};
-    enum FuzzType{DIRAC,ACTIVATE,DEACTIVATE,TRIANGLE,TRAPEZOID};
     explicit FuzzyBase(LogicType logicType, Brain *brain, quint32 id, QString name, qreal min, qreal max);
     void addChild(FuzzyBase *child);
     void addParent(FuzzyBase *parent, bool isInverted=false);

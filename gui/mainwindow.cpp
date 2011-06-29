@@ -74,6 +74,8 @@ void MainWindow::addAgentManager(AgentManager *agentManager)
 void MainWindow::createActions()
 {
     // File Menu Actions
+    m_saveAgentAction=new QAction(tr("Save Agent"),this);
+    connect(m_saveAgentAction,SIGNAL(triggered()),this,SLOT(saveAgent()));
     m_saveSceneAction = new QAction(tr("Save Scene"),this);
     connect(m_saveSceneAction,SIGNAL(triggered()),this,SLOT(saveScene()));
 
@@ -205,6 +207,7 @@ void MainWindow::createEditorWidgets()
 void MainWindow::createMenues()
 {
     m_fileMenu=menuBar()->addMenu(tr("&File"));
+    m_fileMenu->addAction(m_saveAgentAction);
     m_fileMenu->addAction(m_saveSceneAction);
 
     m_simulationMenu=menuBar()->addMenu(tr("&Simulation"));
@@ -254,6 +257,17 @@ void MainWindow::editorNodeClick(ItemEditorWidgetsBase::editMessage msg)
 void MainWindow::refreshBrainEditor()
 {
     m_editorView->scene()->update();
+}
+
+/** \brief saves the selected agent
+
+**/
+void MainWindow::saveAgent()
+{
+    if(m_activeAgentManager) {
+        m_brainEditors.value(m_activeAgentManager)->updateItemLocations();
+        m_activeAgentManager->saveConfig();
+    }
 }
 
 /** \brief saves the scene

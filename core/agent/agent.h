@@ -36,6 +36,7 @@ public:
     void addConnection(quint32 child, quint32 parentId, bool inverted);
     // Fuzz Stuff
     void addAndFuzz(quint32 id, QString name, FuzzyAnd::Mode mode);
+    void addDefuzz(quint32 id, QString name, qreal defuzzValue, bool isElse);
     void addInputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max);
     void addOrFuzz(quint32 id, QString name, FuzzyOr::Mode mode);
     void addOutputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max);

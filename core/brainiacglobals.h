@@ -18,6 +18,18 @@ public:
         while (*angle > 360)
             *angle -= 360;
     }
+
+    static qreal norm(qreal min, qreal max, qreal val) {
+        qreal dist=max-min;
+        qreal norm=(val-min)/dist;
+        return norm;
+    }
+
+    static qreal deNorm(qreal min, qreal max, qreal val) {
+        qreal dist=max-min;
+        qreal deNorm=min+val*dist;
+        return deNorm;
+    }
     static qreal sinGrad( qreal grad) { return sin(grad*PI/180.0f); }
     static qreal cosGrad( qreal grad) { return cos(grad*PI/180.0f); }
 

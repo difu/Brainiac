@@ -1,18 +1,50 @@
 #include "output.h"
 #include "core/agent/brain/brain.h"
+#include "core/agent/brain/fuzzydefuzz.h"
 #include "core/agent/agent.h"
 #include "core/agent/channel.h"
 
 Output::Output( quint32 id, Brain *brain, QString name, QString channel, qreal min, qreal max) : FuzzyBase(FuzzyBase::OUTPUT, brain, id, name, min, max)
 {
     setChannelName(channel);
+    m_defuzzMode=AVERAGE;
 }
 
 void Output::calculate()
 {
-    if(m_parents.count()>0) {
-        Parent par=m_parents.at(0);
-        setResult(par.parent->getResult(par.inverted));// Only take the first parent
+
+    bool defuzzFound=false;
+    qreal avgResult=0;
+    quint32 numOfDefuzzes=0;
+    qreal maxResult=0;
+    qreal maxDefuzzValue;
+    foreach(Parent par, m_parents) {
+        if(par.parent->getType()==DEFUZZ) {
+            defuzzFound=true;
+            FuzzyDefuzz *defuzz=(FuzzyDefuzz *)par.parent;
+            qreal result=defuzz->getResult(par.inverted);
+            avgResult+=result*BrainiacGlobals::deNorm(m_minValue,m_maxValue,defuzz->getDefuzzVal());
+            if(result>maxResult) {
+                maxDefuzzValue=defuzz->getDefuzzVal();
+                maxResult=result;
+            }
+            numOfDefuzzes++;
+        }
+    }
+    if(defuzzFound) {
+        switch(m_defuzzMode) {
+        case AVERAGE:
+            setResult(avgResult);
+            break;
+        case MAX:
+            setResult(BrainiacGlobals::deNorm(m_minValue,m_maxValue,maxDefuzzValue));
+            break;
+        }
+    } else {
+        if(m_parents.count()>0) {
+            Parent par=m_parents.at(0);
+            setResult(par.parent->getResult(par.inverted));// Only take the first parent
+        }
     }
 }
 
@@ -27,6 +59,11 @@ QString Output::getChannelName()
     return m_channelName;
 }
 
+Output::DefuzzMode Output::getDefuzzMode()
+{
+    return m_defuzzMode;
+}
+
 void Output::setChannelName(QString channel)
 {
     m_channelName=channel;
@@ -35,6 +72,11 @@ void Output::setChannelName(QString channel)
 //    m_minValue=m_channel->getMin();
 
     setResult(m_channel->getValue());
+}
+
+void Output::setDefuzzMode(DefuzzMode mode)
+{
+    m_defuzzMode=mode;
 }
 
 /** \brief sets the result of this output node

@@ -14,15 +14,19 @@ class Channel;
 class Output : public FuzzyBase
 {
 public:
+    enum DefuzzMode {AVERAGE, MAX};
     Output(quint32 id, Brain *brain, QString name, QString channel, qreal min, qreal max);
     QString getChannelName();
     void calculate();
+    Output::DefuzzMode getDefuzzMode();
     void setChannelName(QString channel);
+    void setDefuzzMode( DefuzzMode mode);
     bool setResult(qreal result);
 
 protected:
     QString m_channelName;
     Channel *m_channel;
+    DefuzzMode m_defuzzMode;
 };
 
 #endif // OUTPUT_H

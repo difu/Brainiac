@@ -178,6 +178,10 @@ void Segment::setParentId(quint32 id)
     if(m_body->getSegment(id)) {
         m_body->getSegment(id)->addChild(this);
         m_parent=m_body->getSegment(id);
+    } else if(id<=0){
+        m_parent=0;
+    } else {
+        qDebug() << __PRETTY_FUNCTION__ << "Invalid id";
     }
 }
 
@@ -191,4 +195,9 @@ void Segment::setParent(Segment *segment)
         m_parent=segment;
     }
 
+}
+
+void Segment::setRestColor(qreal color)
+{
+    m_restColor=qBound((qreal)0.0,color,(qreal)1.0);
 }

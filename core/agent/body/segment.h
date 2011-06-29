@@ -29,6 +29,7 @@ public:
     QString getName() {return m_name; }
     Segment* getParent();
     quint32 getParentId();
+    qreal getRestColor() { return m_restColor; }
     QVector3D* getRestRotation() { return m_restRotation; }
     QVector3D*  getRestTranslation() { return m_restTranslation; }
     Channel* getTransX() { return m_tx; }
@@ -42,6 +43,7 @@ public:
     void setName(const QString & name);
     void setParent(Segment *segment);
     void setParentId(quint32 id);
+    void setRestColor(qreal color);
 
 protected:
     virtual void createSegmentChannels();
