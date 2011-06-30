@@ -21,7 +21,7 @@ public:
     Output::DefuzzMode getDefuzzMode();
     void setChannelName(QString channel);
     void setDefuzzMode( DefuzzMode mode);
-    bool setResult(qreal result);
+    bool setResult(qreal result,bool emitChange=true);
 
 protected:
     QString m_channelName;

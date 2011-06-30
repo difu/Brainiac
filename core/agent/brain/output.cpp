@@ -86,9 +86,9 @@ void Output::setDefuzzMode(DefuzzMode mode)
         \param  result the result
         @returns true if result was changed
 **/
-bool Output::setResult(qreal result)
+bool Output::setResult(qreal result,bool emitChange)
 {
-    bool changed=FuzzyBase::setResult(result);
+    bool changed=FuzzyBase::setResult(result,emitChange);
     if(m_channel) {
         m_channel->setValue(m_result);
     } else {
