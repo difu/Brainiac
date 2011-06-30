@@ -26,7 +26,7 @@ void FuzzyDefuzz::calculate()
                 }
             }
         }
-        setResult(result,false); // do not emit, this is done by the none defuzz(es) anyway
+        setResult(result);
     } else {
         if(m_parents.count()>0) {
             Parent par=m_parents.at(0);
