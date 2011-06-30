@@ -20,6 +20,7 @@ class QComboBox;
 class GroupEditor;
 class InputEditor;
 class OutputEditor;
+class DefuzzEditor;
 class SceneDisplay;
 
 class AgentManager;
@@ -68,6 +69,7 @@ protected:
     GroupEditor *m_groupEditor;
     InputEditor *m_inputEditor;
     OutputEditor *m_outputEditor;
+    DefuzzEditor *m_defuzzEditor;
 
 
     QHash<AgentManager*, BrainEditor*> m_brainEditors;

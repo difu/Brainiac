@@ -118,6 +118,11 @@ void BrainEditor::mousePressEvent(QGraphicsSceneMouseEvent *event) {
             msg.type=BrainiacGlobals::NOISE;
             msg.id=item->getId();
             emit itemClicked(msg);
+        } else if(item->getType() == BrainiacGlobals::DEFUZZ) {
+            msg.object=item->getObject();
+            msg.type=BrainiacGlobals::DEFUZZ;
+            msg.id=item->getId();
+            emit itemClicked(msg);
         }
     }
 }
