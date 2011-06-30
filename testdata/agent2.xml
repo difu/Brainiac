@@ -28,14 +28,22 @@
             </Segment>
         </Body>
         <Brain>
-            <Output channel="color" min="0.000000" max="1.000000" id="1" name="Color2" editorx="1990" editory="2000"/>
-            <Output channel="sphere2_1:radius" min="0.000000" max="10.000000" id="2" name="Radius2" editorx="2090" editory="2100"/>
-            <Output channel="tz" min="0.000000" max="1.000000" id="3" name="tz" editorx="2190" editory="2100"/>
-            <Output channel="ry" min="-2.000000" max="2.000000" id="4" name="ry" editorx="2290" editory="2100"/>
-            <Input channel="sound.x" min="-180.000000" max="180.000000" id="5" name="sound.x" editorx="2290" editory="1900"/>
-            <Input channel="sound.d" min="0.000000" max="1.000000" id="6" name="sound.d" editorx="1990" editory="1880"/>
-            <Defuzz defuzzvalue="1.000000" iselse="false" id="7" name="left" editorx="1920" editory="1820"/>
+            <Output channel="color" min="0.000000" max="1.000000" id="1" name="Color2" editorx="2020" editory="1770"/>
+            <Output channel="sphere2_1:radius" min="0.000000" max="10.000000" id="2" name="Radius2" editorx="2290" editory="2160"/>
+            <Output channel="tz" min="0.000000" max="1.000000" id="3" name="tz" editorx="2290" editory="2090"/>
+            <Output channel="ry" min="-2.000000" max="2.000000" id="4" name="ry" editorx="2290" editory="1920"/>
+            <Input channel="sound.x" min="-180.000000" max="180.000000" id="5" name="sound.x" editorx="1980" editory="2140"/>
+            <Input channel="sound.d" min="0.000000" max="1.000000" id="6" name="sound.d" editorx="1830" editory="1860"/>
+            <Defuzz defuzzvalue="1.000000" iselse="false" id="7" name="left" editorx="2120" editory="1870"/>
+            <Defuzz defuzzvalue="0.500000" iselse="true" id="8" name="straight" editorx="2120" editory="1930"/>
+            <Input channel="sound.d" min="0.000000" max="1.000000" id="9" name="sound.d" editorx="1830" editory="1990"/>
+            <Defuzz defuzzvalue="0.000000" iselse="false" id="10" name="right" editorx="2120" editory="1990"/>
             <Connector parent="6" child="1" inverted="1"/>
+            <Connector parent="6" child="7" inverted="0"/>
+            <Connector parent="7" child="4" inverted="0"/>
+            <Connector parent="8" child="4" inverted="0"/>
+            <Connector parent="9" child="10" inverted="0"/>
+            <Connector parent="10" child="4" inverted="0"/>
         </Brain>
     </Agent>
 </Agentconfig>

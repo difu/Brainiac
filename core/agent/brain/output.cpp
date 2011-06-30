@@ -12,7 +12,6 @@ Output::Output( quint32 id, Brain *brain, QString name, QString channel, qreal m
 
 void Output::calculate()
 {
-
     bool defuzzFound=false;
     qreal avgResult=0;
     quint32 numOfDefuzzes=0;
@@ -28,6 +27,7 @@ void Output::calculate()
                 maxDefuzzValue=defuzz->getDefuzzVal();
                 maxResult=result;
             }
+            //qDebug() << "result" << result << avgResult <<BrainiacGlobals::deNorm( m_minValue,m_maxValue,defuzz->getDefuzzVal()) << defuzz->getDefuzzVal();
             numOfDefuzzes++;
         }
     }
@@ -37,7 +37,7 @@ void Output::calculate()
             setResult(avgResult);
             break;
         case MAX:
-            setResult(BrainiacGlobals::deNorm(m_minValue,m_maxValue,maxDefuzzValue));
+            setResult(BrainiacGlobals::deNorm(m_minValue,m_maxValue,maxDefuzzValue)*maxResult);
             break;
         }
     } else {
@@ -70,8 +70,8 @@ void Output::setChannelName(QString channel)
     m_channel=m_brain->getAgent()->getOutputChannel(m_channelName);
 //    m_maxValue=m_channel->getMax();
 //    m_minValue=m_channel->getMin();
-
-    setResult(m_channel->getValue());
+    if(m_result)
+        setResult(m_channel->getValue());
 }
 
 void Output::setDefuzzMode(DefuzzMode mode)

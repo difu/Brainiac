@@ -10,7 +10,45 @@ FuzzyDefuzz::FuzzyDefuzz(quint32 id, Brain *brain, QString name, qreal defuzzVal
 
 void FuzzyDefuzz::calculate()
 {
-
+    if(m_isElse) {
+        qreal result=1;
+        foreach(FuzzyBase *fuzz, m_children) {
+            if(fuzz->getType()==OUTPUT) {
+                foreach(FuzzyBase *fuzzyParent,fuzz->getParents()) {
+                    if(fuzzyParent->getType()==DEFUZZ) {
+                        if(fuzzyParent==this)
+                            continue;
+                        else {
+                            FuzzyDefuzz *defuzz=(FuzzyDefuzz*)fuzzyParent;
+                            result-=defuzz->getResult();
+                        }
+                    }
+                }
+            }
+        }
+        setResult(result,false); // do not emit, this is done by the none defuzz(es) anyway
+    } else {
+        if(m_parents.count()>0) {
+            Parent par=m_parents.at(0);
+            setResult(par.parent->getResult(par.inverted));
+        }
+    // Find else defuzz
+        foreach(FuzzyBase *fuzz, m_children) {
+            if(fuzz->getType()==OUTPUT) {
+                foreach(FuzzyBase *fuzzyParent,fuzz->getParents()) {
+                    if(fuzzyParent->getType()==DEFUZZ) {
+                        if(fuzzyParent==this)
+                            continue;
+                        else {
+                            FuzzyDefuzz *defuzz=(FuzzyDefuzz*)fuzzyParent;
+                            if(defuzz->isElse())
+                                defuzz->calculate();
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 /** \brief  returns the defuzzyfication value

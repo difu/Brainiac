@@ -20,6 +20,7 @@ public:
     qreal getMinValue() {return m_minValue;}
     qreal getMaxValue() {return m_maxValue;}
     QString getName() {return m_name;}
+    QList<FuzzyBase *> getParents();
     qreal getResult( bool inverted=false );
     LogicType getType() {return m_logicType; }
     bool hasChildren();
@@ -29,7 +30,7 @@ public:
     void setMax(qreal max);
     void setMin(qreal min);
     void setName( QString name );
-    virtual bool setResult(qreal result);
+    virtual bool setResult(qreal result,bool emitChange=true);
 
 protected:
     struct Parent {

@@ -40,6 +40,15 @@ QList<FuzzyBase *> FuzzyBase::getChildren()
     return m_children;
 }
 
+QList<FuzzyBase *> FuzzyBase::getParents()
+{
+    QList<FuzzyBase *> parents;
+    foreach(Parent fuzz, m_parents) {
+        parents.append(fuzz.parent);
+    }
+    return parents;
+}
+
 qreal FuzzyBase::getResult(bool inverted) {
     if(!inverted)
         return m_result;
@@ -102,12 +111,13 @@ void FuzzyBase::setMin(qreal min)
         \param  result the result
         @returns true if result was changed
 **/
-bool FuzzyBase::setResult(qreal result)
+bool FuzzyBase::setResult(qreal result,bool emitChange)
 {
     result=qBound(m_minValue,result,m_maxValue);
     if(m_result!=result) {
         m_result=result;
-        emit resultChanged();
+        if(emitChange)
+            emit resultChanged();
         return true;
     }
     else {
