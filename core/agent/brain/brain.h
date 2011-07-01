@@ -4,6 +4,7 @@
 #include <QObject>
 #include "fuzzyand.h" // needed for Mode
 #include "fuzzyor.h"
+#include "fuzzyfuzz.h"
 
 class Agent;
 class FuzzyBase;
@@ -27,6 +28,8 @@ public:
     void addAndFuzz(quint32 id, QString name, FuzzyAnd::Mode mode);
     void addDefuzz(FuzzyDefuzz *defuzz);
     void addDefuzz(quint32 id, QString name, qreal defuzzValue, bool isElse);
+    void addFuzzFuzz(quint32 id, QString name, FuzzyFuzz::Mode mode, FuzzyFuzz::InterpolationMode intMode, qreal p1, qreal p2, qreal p3, qreal p4);
+    void addFuzzFuzz(FuzzyFuzz *fuzzyFuzz);
     void addInputFuzz(Input *out);
     void addInputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max);
     void addOrFuzz(FuzzyOr *orFuzz);

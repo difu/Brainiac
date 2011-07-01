@@ -10,19 +10,24 @@
             </Segment>
         </Body>
         <Brain>
-            <Input channel="sound.d" min="0.000000" max="1.000000" id="5" name="sound.d" editorx="1950" editory="1960"/>
-            <Input channel="sound.d" min="0.000000" max="1.000000" id="14" name="sound.d2" editorx="1950" editory="1890"/>
-            <Output channel="tz" min="0.000000" max="1.000000" id="3" name="tz" editorx="1910" editory="2170"/>
-            <Output channel="sound.a" min="0.000000" max="1000.000000" id="10" name="amplitude" editorx="2130" editory="2170"/>
-            <Output channel="sound.f" min="0.000000" max="10.000000" id="11" name="frequency" editorx="2330" editory="2170"/>
-            <Output channel="color" min="0.000000" max="1.000000" id="1" name="Color2" editorx="2280" editory="2000"/>
-            <And mode="min" id="12" name="and1" editorx="2280" editory="1880"/>
-            <Or mode="max" id="13" name="or1" editorx="2280" editory="1940"/>
+            <Input channel="sound.d" min="0.000000" max="1.000000" id="5" name="sound.d" editorx="1930" editory="1960"/>
+            <Input channel="sound.d" min="0.000000" max="1.000000" id="14" name="sound.d2" editorx="1930" editory="1890"/>
+            <Output channel="tz" min="0.000000" max="1.000000" id="3" name="tz" editorx="1890" editory="2170"/>
+            <Output channel="sound.a" min="0.000000" max="1000.000000" id="10" name="amplitude" editorx="2110" editory="2170"/>
+            <Output channel="sound.f" min="0.000000" max="10.000000" id="11" name="frequency" editorx="2310" editory="2170"/>
+            <Output channel="color" min="0.000000" max="1.000000" id="1" name="Color2" editorx="2260" editory="2000"/>
+            <And mode="min" id="12" name="and1" editorx="2260" editory="1880"/>
+            <Or mode="max" id="13" name="or1" editorx="2260" editory="1940"/>
+            <Input channel="" min="0.000000" max="1.000000" id="15" name="Input" editorx="1930" editory="2030"/>
+            <Fuzz p1="0.300000" p2="0.500000" p3="0.700000" p4="0.800000" mode="trapeziod" interpolation="sine" id="16" name="fuzz1" editorx="2260" editory="2060"/>
+            <Fuzz p1="0.300000" p2="0.500000" p3="0.700000" p4="0.800000" mode="activate" interpolation="sine" id="17" name="fuzz2" editorx="2260" editory="2120"/>
             <Connector parent="5" child="1" inverted="0"/>
             <Connector parent="5" child="12" inverted="0"/>
             <Connector parent="5" child="13" inverted="0"/>
             <Connector parent="14" child="12" inverted="0"/>
             <Connector parent="14" child="13" inverted="0"/>
+            <Connector parent="15" child="16" inverted="0"/>
+            <Connector parent="15" child="17" inverted="0"/>
         </Brain>
     </Agent>
 </Agentconfig>

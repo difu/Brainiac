@@ -45,6 +45,9 @@ EditorItem::EditorItem(BrainiacGlobals::ItemType type, void *object,quint32 id)
     case BrainiacGlobals::DEFUZZ:
         m_symbolPic.load(":/gui/pics/editor_logo_defuzz.png");
         break;
+    case BrainiacGlobals::FUZZ:
+        m_symbolPic.load(":/gui/pics/editor_logo_fuzz.png");
+        break;
     default:
         qDebug() << __PRETTY_FUNCTION__ << "Wrong label parameter!";
     }
@@ -110,6 +113,9 @@ void EditorItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
         AgentManager *myManager=(AgentManager*)m_object;
         painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,myManager->getMasterAgent()->getBrain()->getFuzzy(m_id)->getName());
     } else if(m_type==BrainiacGlobals::DEFUZZ) {
+        AgentManager *myManager=(AgentManager*)m_object;
+        painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,myManager->getMasterAgent()->getBrain()->getFuzzy(m_id)->getName());
+    } else if(m_type==BrainiacGlobals::FUZZ) {
         AgentManager *myManager=(AgentManager*)m_object;
         painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,myManager->getMasterAgent()->getBrain()->getFuzzy(m_id)->getName());
     }

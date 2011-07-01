@@ -100,6 +100,11 @@ void Agent::addDefuzz(quint32 id, QString name, qreal defuzzValue, bool isElse)
     m_brain->addDefuzz(id,name,defuzzValue,isElse);
 }
 
+void Agent::addFuzzFuzz(quint32 id, QString name, FuzzyFuzz::Mode mode, FuzzyFuzz::InterpolationMode intMode, qreal p1, qreal p2, qreal p3, qreal p4)
+{
+    m_brain->addFuzzFuzz(id,name,mode,intMode,p1,p2,p3,p4);
+}
+
 void Agent::addOrFuzz(quint32 id, QString name, FuzzyOr::Mode mode)
 {
     m_brain->addOrFuzz(id, name, mode);

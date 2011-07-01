@@ -47,6 +47,11 @@ BrainEditor::BrainEditor(Scene *scene, AgentManager *agentManager) : EditorBase(
             item->setPos(m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).x(),m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).y());
             addItem(item);
             continue;
+        } else if(fuzzy->getType()==FuzzyBase::FUZZ) {
+            BrainEditorItem *item=new BrainEditorItem(BrainiacGlobals::FUZZ,m_agentManager,fuzzy->getId());
+            item->setPos(m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).x(),m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).y());
+            addItem(item);
+            continue;
         }
     }
     foreach(FuzzyBase *fuzzy, m_agentManager->getMasterAgent()->getBrain()->getFuzzies())
@@ -121,6 +126,11 @@ void BrainEditor::mousePressEvent(QGraphicsSceneMouseEvent *event) {
         } else if(item->getType() == BrainiacGlobals::DEFUZZ) {
             msg.object=item->getObject();
             msg.type=BrainiacGlobals::DEFUZZ;
+            msg.id=item->getId();
+            emit itemClicked(msg);
+        } else if(item->getType() == BrainiacGlobals::FUZZ) {
+            msg.object=item->getObject();
+            msg.type=BrainiacGlobals::FUZZ;
             msg.id=item->getId();
             emit itemClicked(msg);
         }

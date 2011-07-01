@@ -13,7 +13,7 @@ void Input::calculate()
     if(m_channel) {
         setResult(m_channel->getValue());
     } else {
-        qDebug() << __PRETTY_FUNCTION__ << "channel " << m_channelName<< "does not exist!";
+        //qDebug() << __PRETTY_FUNCTION__ << "channel " << m_channelName<< "does not exist!";
     }
 }
 
@@ -33,6 +33,7 @@ void Input::setChannelName(QString channel)
 {
     m_channelName=channel;
     m_channel=m_brain->getAgent()->getInputChannel(m_channelName);
-    setResult(m_channel->getValue());
+    if(m_channel)
+        setResult(m_channel->getValue());
 }
 

@@ -14,14 +14,13 @@ public:
     enum InterpolationMode {LINEAR, SINE, QUAD };
     FuzzyFuzz( quint32 id, Brain *brain, QString name, Mode mode, InterpolationMode iMode);
     void calculate();
-
-protected:
-    Mode m_mode;
-    InterpolationMode m_interpolationMode;
-    qreal m_p1, m_p2, m_p3, m_p4;
     qreal getFuzzOut( qreal val );
     qreal getFuzzOut( qreal min, qreal max, qreal val );
     Mode getMode();
+    qreal getP1();
+    qreal getP2();
+    qreal getP3();
+    qreal getP4();
     qreal getParentMin();
     qreal getParentMax();
     InterpolationMode getInterpolationMode();
@@ -32,6 +31,10 @@ protected:
     void setP3(qreal p3);
     void setP4(qreal p4);
 
+protected:
+    Mode m_mode;
+    InterpolationMode m_interpolationMode;
+    qreal m_p1, m_p2, m_p3, m_p4;
     QEasingCurve m_easing;
 };
 

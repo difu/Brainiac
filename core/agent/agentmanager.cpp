@@ -12,6 +12,7 @@
 #include "core/agent/brain/input.h"
 #include "core/agent/brain/output.h"
 #include "core/agent/brain/noise.h"
+#include "core/agent/brain/fuzzyfuzz.h"
 #include "core/agent/channel.h"
 #include "core/group/group.h"
 #include <QFile>
@@ -87,6 +88,39 @@ void AgentManager::addAndFuzz(quint32 id, QString name, QString mode, quint32 ed
     m_masterAgent->addAndFuzz(id,name,andMode);
     foreach(Agent* agent,m_scene->getAgents()) {
         agent->addAndFuzz(id,name,andMode);
+    }
+    m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
+}
+
+void AgentManager::addFuzzFuzz(quint32 id, QString name, QString mode, QString intMode, qreal p1, qreal p2, qreal p3, qreal p4, quint32 editorX, quint32 editorY)
+{
+    FuzzyFuzz::Mode fuzzMode=FuzzyFuzz::TRAPEZOID;;
+    FuzzyFuzz::InterpolationMode interMode=FuzzyFuzz::LINEAR;
+    if(QString::compare("trapezoid",mode,Qt::CaseInsensitive )==0) {
+        fuzzMode=FuzzyFuzz::TRAPEZOID;
+    } else if(QString::compare("triangle",mode,Qt::CaseInsensitive )==0) {
+        fuzzMode=FuzzyFuzz::TRIANGLE;
+    } else if(QString::compare("dirac",mode,Qt::CaseInsensitive )==0) {
+        fuzzMode=FuzzyFuzz::DIRAC;
+    } else if(QString::compare("activate",mode,Qt::CaseInsensitive )==0) {
+        fuzzMode=FuzzyFuzz::ACTIVATE;
+    } else if(QString::compare("deactivate",mode,Qt::CaseInsensitive )==0) {
+        fuzzMode=FuzzyFuzz::DEACTIVATE;
+    } else {
+        qDebug() << __PRETTY_FUNCTION__ << "unkown mode, setting to trapezoid";
+    }
+
+    if(QString::compare("linear",intMode,Qt::CaseInsensitive )==0) {
+        interMode=FuzzyFuzz::LINEAR;
+    } else if(QString::compare("sine",intMode,Qt::CaseInsensitive )==0) {
+        interMode=FuzzyFuzz::SINE;
+    } else if(QString::compare("quad",intMode,Qt::CaseInsensitive )==0) {
+        interMode=FuzzyFuzz::QUAD;
+    }
+
+    m_masterAgent->addFuzzFuzz(id,name,fuzzMode,interMode,p1,p2,p3,p4);
+    foreach(Agent* agent,m_scene->getAgents()) {
+        agent->addFuzzFuzz(id,name,fuzzMode,interMode,p1,p2,p3,p4);
     }
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
 }
@@ -228,6 +262,10 @@ bool AgentManager::loadConfig()
                                         QXmlStreamAttributes attribs = reader.attributes();
                                         addNoiseFuzz(attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("rate").toString().toDouble(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
                                         reader.skipCurrentElement();
+                                    }else if(reader.name()=="Fuzz") {
+                                        QXmlStreamAttributes attribs = reader.attributes();
+                                        addFuzzFuzz(attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("mode").toString(),attribs.value("interpolation").toString(),attribs.value("p1").toString().toDouble(),attribs.value("p2").toString().toDouble(),attribs.value("p3").toString().toDouble(),attribs.value("p4").toString().toDouble(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
+                                        reader.skipCurrentElement();
                                     }else if(reader.name()=="Connector") {
                                         QXmlStreamAttributes attribs = reader.attributes();
                                         addConnector(attribs.value("child").toString().toUInt(),attribs.value("parent").toString().toUInt(),attribs.value("inverted").toString().toUInt()!=0);
@@ -324,8 +362,6 @@ bool AgentManager::saveConfig()
             stream.writeAttribute("channel", inp->getChannelName());
             stream.writeAttribute("min",  QString::number(inp->getMinValue(),'f'));
             stream.writeAttribute("max",  QString::number(inp->getMaxValue(),'f'));
-        } else if(fuzz->getType()==FuzzyBase::FUZZ) {
-            stream.writeStartElement("Fuzz");
         }  else if(fuzz->getType()==FuzzyBase::DEFUZZ) {
             stream.writeStartElement("Defuzz");
             FuzzyDefuzz *defuzz=(FuzzyDefuzz *)fuzz;
@@ -345,6 +381,45 @@ bool AgentManager::saveConfig()
             stream.writeStartElement("Noise");
             Noise *noise=(Noise *)fuzz;
             stream.writeAttribute("rate",  QString::number(noise->getRate(),'f'));
+        } else if(fuzz->getType()==FuzzyBase::FUZZ) {
+            stream.writeStartElement("Fuzz");
+            FuzzyFuzz *fuzzy=(FuzzyFuzz *)fuzz;
+            stream.writeAttribute("p1",  QString::number(fuzzy->getP1(),'f'));
+            stream.writeAttribute("p2",  QString::number(fuzzy->getP2(),'f'));
+            stream.writeAttribute("p3",  QString::number(fuzzy->getP3(),'f'));
+            stream.writeAttribute("p4",  QString::number(fuzzy->getP4(),'f'));
+            switch(fuzzy->getMode()) {
+                case FuzzyFuzz::TRAPEZOID:
+                    stream.writeAttribute("mode", "trapeziod");
+                    break;
+                case FuzzyFuzz::TRIANGLE:
+                    stream.writeAttribute("mode", "triangle");
+                    break;
+                case FuzzyFuzz::ACTIVATE:
+                    stream.writeAttribute("mode", "activate");
+                    break;
+                case FuzzyFuzz::DEACTIVATE:
+                    stream.writeAttribute("mode", "trapeziod");
+                    break;
+                case FuzzyFuzz::DIRAC:
+                    stream.writeAttribute("mode", "dirac");
+                    break;
+                default:
+                    qDebug() << __PRETTY_FUNCTION__ <<" unknown Mode";
+            }
+            switch(fuzzy->getInterpolationMode()) {
+                case FuzzyFuzz::LINEAR:
+                    stream.writeAttribute("interpolation", "linear");
+                    break;
+                case FuzzyFuzz::SINE:
+                    stream.writeAttribute("interpolation", "sine");
+                    break;
+                case FuzzyFuzz::QUAD:
+                    stream.writeAttribute("interpolation", "quad");
+                    break;
+                default:
+                    qDebug() << __PRETTY_FUNCTION__ <<" unknown Mode";
+            }
         } else {
             stream.writeStartElement("Dummy");
             qDebug() << __PRETTY_FUNCTION__ << "Could not save fuzz with type" << fuzz->getType();

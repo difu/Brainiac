@@ -7,6 +7,7 @@
 #include <QVector3D>
 #include "brain/fuzzyand.h" // needed for Mode
 #include "brain/fuzzyor.h"
+#include "brain/fuzzyfuzz.h"
 
 class Body;
 class Brain;
@@ -37,6 +38,7 @@ public:
     // Fuzz Stuff
     void addAndFuzz(quint32 id, QString name, FuzzyAnd::Mode mode);
     void addDefuzz(quint32 id, QString name, qreal defuzzValue, bool isElse);
+    void addFuzzFuzz(quint32 id, QString name, FuzzyFuzz::Mode mode, FuzzyFuzz::InterpolationMode intMode, qreal p1, qreal p2, qreal p3, qreal p4);
     void addInputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max);
     void addOrFuzz(quint32 id, QString name, FuzzyOr::Mode mode);
     void addOutputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max);

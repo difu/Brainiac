@@ -92,7 +92,7 @@ bool Output::setResult(qreal result,bool emitChange)
     if(m_channel) {
         m_channel->setValue(m_result);
     } else {
-        qDebug() << __PRETTY_FUNCTION__ << "channel " << m_channelName<< "does not exist!";
+        //qDebug() << __PRETTY_FUNCTION__ << "channel " << m_channelName<< "does not exist!";
     }
     return changed;
 }

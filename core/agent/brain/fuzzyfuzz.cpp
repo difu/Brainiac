@@ -118,6 +118,26 @@ qreal FuzzyFuzz::getFuzzOut( qreal min, qreal max, qreal val ) {
 
 }
 
+qreal FuzzyFuzz::getP1()
+{
+    return m_p1;
+}
+
+qreal FuzzyFuzz::getP2()
+{
+    return m_p2;
+}
+
+qreal FuzzyFuzz::getP3()
+{
+    return m_p3;
+}
+
+qreal FuzzyFuzz::getP4()
+{
+    return m_p4;
+}
+
 void FuzzyFuzz::setMode(Mode mode)
 {
     m_mode=mode;
@@ -137,4 +157,24 @@ void FuzzyFuzz::setInterpolationMode(InterpolationMode mode)
         m_easing.setType(QEasingCurve::InOutQuad);
         break;
     }
+}
+
+void FuzzyFuzz::setP1(qreal p1)
+{
+    m_p1=p1;
+}
+
+void FuzzyFuzz::setP2(qreal p2)
+{
+    m_p2=p2;
+}
+
+void FuzzyFuzz::setP3(qreal p3)
+{
+    m_p3=p3;
+}
+
+void FuzzyFuzz::setP4(qreal p4)
+{
+    m_p4=p4;
 }
