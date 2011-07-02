@@ -107,7 +107,7 @@ void AgentManager::addFuzzFuzz(quint32 id, QString name, QString mode, QString i
     } else if(QString::compare("deactivate",mode,Qt::CaseInsensitive )==0) {
         fuzzMode=FuzzyFuzz::DEACTIVATE;
     } else {
-        qDebug() << __PRETTY_FUNCTION__ << "unkown mode, setting to trapezoid";
+        qDebug() << __PRETTY_FUNCTION__ << "unkown mode "<< mode << ", setting to trapezoid";
     }
 
     if(QString::compare("linear",intMode,Qt::CaseInsensitive )==0) {
@@ -390,7 +390,7 @@ bool AgentManager::saveConfig()
             stream.writeAttribute("p4",  QString::number(fuzzy->getP4(),'f'));
             switch(fuzzy->getMode()) {
                 case FuzzyFuzz::TRAPEZOID:
-                    stream.writeAttribute("mode", "trapeziod");
+                    stream.writeAttribute("mode", "trapezoid");
                     break;
                 case FuzzyFuzz::TRIANGLE:
                     stream.writeAttribute("mode", "triangle");
