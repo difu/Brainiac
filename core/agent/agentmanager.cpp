@@ -399,7 +399,7 @@ bool AgentManager::saveConfig()
                     stream.writeAttribute("mode", "activate");
                     break;
                 case FuzzyFuzz::DEACTIVATE:
-                    stream.writeAttribute("mode", "trapeziod");
+                    stream.writeAttribute("mode", "deactivate");
                     break;
                 case FuzzyFuzz::DIRAC:
                     stream.writeAttribute("mode", "dirac");
