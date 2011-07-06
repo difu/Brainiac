@@ -32,8 +32,9 @@ protected:
     BrainiacSlider *m_fuzzResultSlider;
 
 protected slots:
-//    void manualResultChange(qreal param_value);
-//    void nameChange(QString param_name);
+    void manualDefuzzValueChange(qreal value);
+    void manualNameChange();
+    void manualIsElseChange(bool isChecked);
 signals:
     void updateBrainEditor(); //!< emitted when editors should update
     void updateGLContent(); //!< emitted when openGL content should update

@@ -17,14 +17,38 @@ InputEditor::InputEditor(Scene *scene, QWidget *parent) :
     m_slider->setGeometry(10,60,400,40);
     ui->rangeMax->setValidator(new QDoubleValidator(ui->rangeMax));
     ui->rangeMin->setValidator(new QDoubleValidator(ui->rangeMin));
-//    m_ui->lineEdit_rangeStop->setValidator(new QDoubleValidator(m_ui->lineEdit_rangeStop));
-//    m_ui->lineEdit_rangeStart->setValidator(new QDoubleValidator(m_ui->lineEdit_rangeStart));
     connect(m_slider,SIGNAL(valueChanged(qreal)),this,SLOT(manualResultChange(qreal)));
+    connect(ui->inputName,SIGNAL(returnPressed()),this,SLOT(manualNameChange()));
+    connect(ui->channelName,SIGNAL(returnPressed()),this,SLOT(manualChannelChange()));
+    connect(ui->rangeMin,SIGNAL(returnPressed()),this,SLOT(manualMinMaxValueChange()));
+    connect(ui->rangeMax,SIGNAL(returnPressed()),this,SLOT(manualMinMaxValueChange()));
 }
 
 InputEditor::~InputEditor()
 {
     delete ui;
+}
+
+void InputEditor::manualChannelChange()
+{
+    m_agentManager->setFuzzyChannelName(m_id,ui->channelName->text());
+    emit updateGLContent();
+    this->updateEditor();
+}
+
+void InputEditor::manualMinMaxValueChange()
+{
+    m_agentManager->setFuzzyMinMax(m_id,ui->rangeMin->text().toDouble(),ui->rangeMax->text().toDouble());
+    emit updateBrainEditor();
+    emit updateGLContent();
+    this->updateEditor();
+}
+
+void InputEditor::manualNameChange()
+{
+    m_agentManager->setFuzzyName(m_id,ui->inputName->text());
+    emit updateBrainEditor();
+    this->updateEditor();
 }
 
 void InputEditor::manualResultChange(qreal value)
@@ -46,7 +70,7 @@ void InputEditor::setInputConfig(AgentManager *manager, quint32 id)
 void InputEditor::updateEditor()
 {
     ui->channelName->setText(m_input->getChannelName());
-    ui->outputName->setText(m_input->getName());
+    ui->inputName->setText(m_input->getName());
     ui->rangeMax->setText(QString::number(m_input->getMaxValue()));
     ui->rangeMin->setText(QString::number(m_input->getMinValue()));
     m_slider->setRange(m_input->getMinValue(),m_input->getMaxValue());

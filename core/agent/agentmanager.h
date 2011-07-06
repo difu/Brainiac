@@ -2,6 +2,7 @@
 #define AGENTMANAGER_H
 
 #include <QtCore>
+#include "core/agent/brain/output.h"
 
 class Agent;
 class Group;
@@ -12,6 +13,13 @@ class AgentManager
 {
 public:
     AgentManager(Scene *scene, Group *group);
+    /** \brief clones an agent
+
+                    this function clones an agent from this manager´s master agent
+
+            \param  id the id of the new agent
+            \return pointer to new agent instance
+    **/
     Agent *cloneAgent(quint32 id);
     quint32 getId() { return m_id; }
     qint32 getEditorTranslationX() { return m_editX; }
@@ -24,7 +32,52 @@ public:
     bool saveConfig();
     void setEditorTranslation(qint32 x, qint32 y);
     void setFuzzyEditorTranslation(quint32 id, qint32 x, qint32 y);
+
+    /** \brief sets the is else state of the defuzz of all agents
+      @param id the defuzz´ id
+      @param isElse true if this defuzz shall be an else defuzz
+      @sa Defuzz
+    **/
+    void setDefuzzIsElse(quint32 id, bool isElse);
+
+    /** \brief sets the defuzzification value of given defuzz of all agents
+      @param id the defuzz´ id
+      @param value the defuzz value
+      @sa Defuzz
+    **/
+    void setDefuzzValue(quint32 id, qreal value);
+
+    /** \brief sets the channel name of an input/output fuzz of all agents
+      @param id the fuzz´ id
+      @param name the name of the channel to set
+    **/
+    void setFuzzyChannelName( quint32 id, QString name);
+
+    /** \brief sets the min and the max values of a fuzz of all agents
+      @param id the fuzz´ id
+      @param min minimum value of the fuzz´ result
+      @param max maximum value of the fuzz´ result
+    **/
+    void setFuzzyMinMax(quint32 id, qreal min, qreal max);
+
+    /** \brief sets the name of a fuzz of all agents
+                each agent belonging to this manager is updated including its master agent
+    **/
+    void setFuzzyName(quint32 id,QString name);
+
+    /** \brief sets result of a fuzz of all agents
+                each agent belonging to this manager is updated including its master agent
+    **/
     void setFuzzyResult(quint32 id, qreal result);
+
+    /** \brief sets the dufuzzification mode of given output of all agents
+                each agent belonging to this manager is updated including its master agent
+                @param id the fuzz id
+                @param mode the defuzzification mode
+                @sa Output
+                @sa Defuzz
+    **/
+    void setOutputDefuzzMode(quint32 id, Output::DefuzzMode mode);
     void setId(quint32 id) { m_id=id; }
     void setName( QString name ) { m_name=name; }
     void setFileName( QString fileName ) { m_fileName=fileName; }

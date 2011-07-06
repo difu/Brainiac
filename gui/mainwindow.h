@@ -21,6 +21,7 @@ class GroupEditor;
 class InputEditor;
 class OutputEditor;
 class DefuzzEditor;
+class FuzzyEditor;
 class SceneDisplay;
 
 class AgentManager;
@@ -70,6 +71,7 @@ protected:
     InputEditor *m_inputEditor;
     OutputEditor *m_outputEditor;
     DefuzzEditor *m_defuzzEditor;
+    FuzzyEditor *m_fuzzyEditor;
 
 
     QHash<AgentManager*, BrainEditor*> m_brainEditors;

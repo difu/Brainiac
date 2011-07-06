@@ -62,7 +62,7 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QLineEdit" name="outputName">
+  <widget class="QLineEdit" name="inputName">
    <property name="geometry">
     <rect>
      <x>10</x>

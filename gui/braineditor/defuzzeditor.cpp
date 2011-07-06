@@ -19,6 +19,34 @@ DefuzzEditor::DefuzzEditor(Scene *scene, QWidget *parent) :
     m_fuzzResultSlider=new BrainiacSlider(this);
     m_fuzzResultSlider->setGeometry(10,100,400,40);
     m_fuzzResultSlider->setEnabled(false);
+    m_fuzzValSlider->notifyReleaseButton(true);
+    connect(m_fuzzValSlider,SIGNAL(valueChanged(qreal)),this,SLOT(manualDefuzzValueChange(qreal)));
+    connect(ui->defuzzName,SIGNAL(returnPressed()),this,SLOT(manualNameChange()));
+    connect(ui->isElse_pb,SIGNAL(toggled(bool)),this,SLOT(manualIsElseChange(bool)));
+}
+
+void DefuzzEditor::manualDefuzzValueChange(qreal value)
+{
+    m_agentManager->setDefuzzValue(m_id, value);
+    emit updateBrainEditor();
+    emit updateGLContent();
+    this->updateEditor();
+}
+
+void DefuzzEditor::manualNameChange()
+{
+    m_agentManager->setFuzzyName(m_id,ui->defuzzName->text());
+    emit updateBrainEditor();
+    this->updateEditor();
+}
+
+void DefuzzEditor::manualIsElseChange(bool isChecked)
+{
+    if(isChecked) {
+        m_agentManager->setDefuzzIsElse(m_id,true);
+    } else {
+        m_agentManager->setDefuzzIsElse(m_id,false);
+    }
 }
 
 void DefuzzEditor::setDefuzzConfig(AgentManager *manager, quint32 id)

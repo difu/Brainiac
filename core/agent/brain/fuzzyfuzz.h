@@ -14,6 +14,11 @@ public:
     enum InterpolationMode {LINEAR, SINE, QUAD };
     FuzzyFuzz( quint32 id, Brain *brain, QString name, Mode mode, InterpolationMode iMode);
     void calculate();
+    /** \brief  returns the fuzzy value
+        if this fuzz is connected to a node, it returns the value with respect to the parent´s bounds
+        if not, it sets the bounds to 0 and 1
+            @returns the fuzzyfication value
+    **/
     qreal getFuzzOut( qreal val );
     qreal getFuzzOut( qreal min, qreal max, qreal val );
     Mode getMode();
@@ -21,7 +26,15 @@ public:
     qreal getP2();
     qreal getP3();
     qreal getP4();
+    /** \brief  returns this fuzz´s parent´s minimum
+
+            @returns the minimum value of its parent, 0 if it has no parent. This is the default min value of any fuzz
+    **/
     qreal getParentMin();
+    /** \brief  returns this fuzz´s parent´s max
+
+            @returns the maximum value of its parent, 1 if it has no parent. This is the default max value of any fuzz
+    **/
     qreal getParentMax();
     InterpolationMode getInterpolationMode();
     void setInterpolationMode(InterpolationMode mode);

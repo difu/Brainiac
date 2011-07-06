@@ -111,6 +111,51 @@
     <string>Range</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="defuzzAvgButton">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>101</y>
+     <width>71</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>AVG</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>110</y>
+     <width>62</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Defuzz</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="defuzzMaxButton">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>101</y>
+     <width>71</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>MAX</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

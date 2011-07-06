@@ -27,11 +27,6 @@ FuzzyFuzz::Mode FuzzyFuzz::getMode()
     return m_mode;
 }
 
-
-/** \brief  returns this fuzz´s parent´s max
-
-        @returns the maximum value of its parent, 1 if it has no parent. This is the default max value of any fuzz
-**/
 qreal FuzzyFuzz::getParentMax()
 {
     if(m_parents.count()>0) {
@@ -42,10 +37,6 @@ qreal FuzzyFuzz::getParentMax()
     }
 }
 
-/** \brief  returns this fuzz´s parent´s minimum
-
-        @returns the minimum value of its parent, 0 if it has no parent. This is the default min value of any fuzz
-**/
 qreal FuzzyFuzz::getParentMin()
 {
     if(m_parents.count()>0) {

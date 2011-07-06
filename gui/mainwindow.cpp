@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "mainwindowlayout.h"
 #include "gui/braineditor/braineditor.h"
+#include "gui/braineditor/fuzzyeditor.h"
 #include "gui/braineditor/defuzzeditor.h"
 #include "gui/braineditor/inputeditor.h"
 #include "gui/braineditor/outputeditor.h"
@@ -192,6 +193,10 @@ void MainWindow::createEditorWidgets()
 
     m_defuzzEditor=new DefuzzEditor(m_scene,m_logicElementEditWidget);
     m_defuzzEditor->setVisible(false);
+
+    m_fuzzyEditor=new FuzzyEditor(m_scene,m_logicElementEditWidget);
+    m_fuzzyEditor->setVisible(false);
+
     foreach(BrainEditor *brainEditor,m_brainEditors) {
         // This signal activates editor in South region
         connect(brainEditor, SIGNAL(itemClicked(ItemEditorWidgetsBase::editMessage)),this,SLOT(editorNodeClick(ItemEditorWidgetsBase::editMessage)));
@@ -202,6 +207,7 @@ void MainWindow::createEditorWidgets()
     connect(m_inputEditor, SIGNAL(updateBrainEditor()),this,SLOT(refreshBrainEditor()));
     connect(m_outputEditor,SIGNAL(updateBrainEditor()),this,SLOT(refreshBrainEditor()));
     connect(m_defuzzEditor,SIGNAL(updateBrainEditor()),this,SLOT(refreshBrainEditor()));
+    connect(m_fuzzyEditor,SIGNAL(updateBrainEditor()),this,SLOT(refreshBrainEditor()));
     //connect(m_outputEditor,SIGNAL(updateGLContent()),m_sceneDisplay,SLOT(updateGL()));
     m_layout->addWidget(m_logicElementEditWidget,MainWindowLayout::South);
 }
@@ -238,6 +244,7 @@ void MainWindow::editorNodeClick(ItemEditorWidgetsBase::editMessage msg)
     m_inputEditor->setVisible(msg.type==BrainiacGlobals::INPUT);
     m_outputEditor->setVisible(msg.type==BrainiacGlobals::OUTPUT);
     m_defuzzEditor->setVisible(msg.type==BrainiacGlobals::DEFUZZ);
+    m_fuzzyEditor->setVisible(msg.type==BrainiacGlobals::FUZZ);
     Group *grp;
     AgentManager *mgr;
     switch(msg.type) {
@@ -257,6 +264,10 @@ void MainWindow::editorNodeClick(ItemEditorWidgetsBase::editMessage msg)
     case BrainiacGlobals::DEFUZZ:
         mgr=(AgentManager *)msg.object;
         m_defuzzEditor->setDefuzzConfig(mgr,msg.id);
+        break;
+    case BrainiacGlobals::FUZZ:
+        mgr=(AgentManager *)msg.object;
+        m_fuzzyEditor->setFuzzConfig(mgr,msg.id);
         break;
 
     default:

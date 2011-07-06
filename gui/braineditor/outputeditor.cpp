@@ -19,16 +19,58 @@ OutputEditor::OutputEditor(Scene *scene, QWidget *parent) :
     m_slider->setGeometry(10,60,400,40);
     ui->rangeMax->setValidator(new QDoubleValidator(ui->rangeMax));
     ui->rangeMin->setValidator(new QDoubleValidator(ui->rangeMin));
-//    m_ui->lineEdit_rangeStop->setValidator(new QDoubleValidator(m_ui->lineEdit_rangeStop));
-//    m_ui->lineEdit_rangeStart->setValidator(new QDoubleValidator(m_ui->lineEdit_rangeStart));
     connect(m_slider,SIGNAL(valueChanged(qreal)),this,SLOT(manualResultChange(qreal)));
+    connect(ui->outputName,SIGNAL(returnPressed()),this,SLOT(manualNameChange()));
+    connect(ui->channelName,SIGNAL(returnPressed()),this,SLOT(manualChannelChange()));
+    connect(ui->rangeMin,SIGNAL(returnPressed()),this,SLOT(manualMinMaxValueChange()));
+    connect(ui->rangeMax,SIGNAL(returnPressed()),this,SLOT(manualMinMaxValueChange()));
+    connect(ui->defuzzAvgButton,SIGNAL(clicked()),this,SLOT(manualDefuzzAvgPressed()));
+    connect(ui->defuzzMaxButton,SIGNAL(clicked()),this,SLOT(manualDefuzzMaxPressed()));
 }
 
-void OutputEditor::manualResultChange(qreal value) {
-    m_agentManager->setFuzzyResult(m_id, value);
+void OutputEditor::manualChannelChange()
+{
+    m_agentManager->setFuzzyChannelName(m_id, ui->channelName->text());
     emit updateBrainEditor();
     emit updateGLContent();
     this->updateEditor();
+}
+
+void OutputEditor::manualDefuzzAvgPressed()
+{
+    m_agentManager->setOutputDefuzzMode(m_id, Output::AVERAGE);
+    emit updateBrainEditor();
+    emit updateGLContent();
+    this->updateEditor();
+}
+
+void OutputEditor::manualDefuzzMaxPressed()
+{
+    m_agentManager->setOutputDefuzzMode(m_id, Output::MAX);
+    emit updateBrainEditor();
+    emit updateGLContent();
+    this->updateEditor();
+}
+
+void OutputEditor::manualMinMaxValueChange()
+{
+    m_agentManager->setFuzzyMinMax(m_id,ui->rangeMin->text().toDouble(),ui->rangeMax->text().toDouble());
+    emit updateBrainEditor();
+    emit updateGLContent();
+    this->updateEditor();
+}
+
+
+void OutputEditor::manualResultChange(qreal value) {
+    m_agentManager->setFuzzyResult(m_id, value);
+    emit updateGLContent();
+    this->updateEditor();
+}
+
+void OutputEditor::manualNameChange()
+{
+    m_agentManager->setFuzzyName(m_id,ui->outputName->text());
+    emit updateBrainEditor();
 }
 
 void OutputEditor::setOutputConfig(AgentManager *manager,quint32 id)
@@ -47,6 +89,8 @@ void OutputEditor::updateEditor()
     ui->rangeMin->setText(QString::number(m_output->getMinValue()));
     m_slider->setRange(m_output->getMinValue(),m_output->getMaxValue());
     m_slider->setValue(m_output->getResult());
+    ui->defuzzAvgButton->setChecked(m_output->getDefuzzMode()==Output::AVERAGE);
+    ui->defuzzMaxButton->setChecked(m_output->getDefuzzMode()==Output::MAX);
 }
 
 OutputEditor::~OutputEditor()

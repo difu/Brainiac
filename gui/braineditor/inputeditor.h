@@ -31,8 +31,9 @@ protected:
 
 protected slots:
     void manualResultChange(qreal value);
-//    void nameChange(QString param_name);
-//    void channelChange(QString param_name);
+    void manualNameChange();
+    void manualChannelChange();
+    void manualMinMaxValueChange();
 //    void minValueChange(QString param_value);
 //    void maxValueChange(QString param_value);
 

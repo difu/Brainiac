@@ -2,14 +2,6 @@
 
 #include "core/agent/brain/brain.h"
 
-/** \brief  Baseclass of logic elements
-
-        This class is the base of all logical elemets (and, orr, fuzz, defuzz, input, output, ...)
-
-        It handles the forwarding of changes of results via Qt´s Signal/Slot feature
-        and provides low-level functionality
-
-**/
 FuzzyBase::FuzzyBase(LogicType logicType, Brain *brain, quint32 id, QString name, qreal min=0.0f, qreal max=1.0f) :
     QObject()
 {
@@ -79,10 +71,6 @@ bool FuzzyBase::hasParents()
 
 }
 
-/** \brief checks if connection to a given parent id is inverted
-        \param  parentId the id of the parent to check
-        @returns true if connection is inverted
-**/
 bool FuzzyBase::isConnectionInverted(quint32 parentId)
 {
     foreach(Parent parent, m_parents) {
@@ -97,20 +85,20 @@ bool FuzzyBase::isConnectionInverted(quint32 parentId)
 void FuzzyBase::setMax(qreal max)
 {
     m_maxValue=max;
+    setResult(m_result); // Crop the current result and emit changes
 }
 
 void FuzzyBase::setMin(qreal min)
 {
     m_minValue=min;
+    setResult(m_result); // Crop the current result and emit changes
 }
 
-/** \brief sets the result of this node
+void FuzzyBase::setName(QString name)
+{
+    m_name=name;
+}
 
-                sets the result
-
-        \param  result the result
-        @returns true if result was changed
-**/
 bool FuzzyBase::setResult(qreal result,bool emitChange)
 {
     result=qBound(m_minValue,result,m_maxValue);

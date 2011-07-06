@@ -190,13 +190,6 @@ void AgentManager::addConnector(quint32 childId, quint32 parentId, bool inverted
     }
 }
 
-/** \brief clones an agent
-
-                this function clones an agent from this manager´s master agent
-
-        \param  id the id of the new agent
-        \return pointer to new agent instance
-**/
 Agent* AgentManager::cloneAgent(quint32 id)
 {
     Agent *agent=new Agent(m_masterAgent,id);
@@ -448,7 +441,6 @@ bool AgentManager::saveConfig()
     stream.writeEndElement(); // Agentconfig
 
     stream.writeEndDocument();
-    qDebug() << "Agent written";
     return false;
 }
 
@@ -466,13 +458,99 @@ void AgentManager::setFuzzyEditorTranslation(quint32 id, qint32 x, qint32 y)
     m_editorFuzzyLocations.insert(id,point);
 }
 
-/** \brief sets result of a fuzz of all agents
-            each agent belonging to this manager is updated including its master agent
-**/
+void AgentManager::setFuzzyChannelName(quint32 id, QString name)
+{
+    FuzzyBase *fuzz=m_masterAgent->getBrain()->getFuzzy(id);
+    switch(fuzz->getType()) {
+    Input *inp;
+    Output *out;
+    case(FuzzyBase::INPUT):
+        inp=(Input *) fuzz;
+        inp->setChannelName(name);
+        foreach(Agent *agent, m_group->getAgents()) {
+            Input *agentInput=(Input *) agent->getBrain()->getFuzzy(id);
+            Q_ASSERT(agentInput->getType()==FuzzyBase::INPUT);
+            agentInput->setChannelName(name);
+        }
+        break;
+    case(FuzzyBase::OUTPUT):
+        out=(Output *)fuzz;
+        out->setChannelName(name);
+        foreach(Agent *agent, m_group->getAgents()) {
+            Output *agentOut=(Output *) agent->getBrain()->getFuzzy(id);
+            Q_ASSERT(agentOut->getType()==FuzzyBase::OUTPUT);
+            agentOut->setChannelName(name);
+        }
+        break;
+    default:
+        qDebug()  << __PRETTY_FUNCTION__ << "Fuzz with id" << id << "is neither input nor output!";
+    }
+}
+
+void AgentManager::setFuzzyMinMax(quint32 id, qreal min, qreal max)
+{
+    m_masterAgent->getBrain()->getFuzzy(id)->setMin(min);
+    m_masterAgent->getBrain()->getFuzzy(id)->setMax(max);
+    foreach(Agent *agent, m_group->getAgents()) {
+        agent->getBrain()->getFuzzy(id)->setMin(min);
+        agent->getBrain()->getFuzzy(id)->setMax(max);
+    }
+}
+
+void AgentManager::setFuzzyName(quint32 id, QString name)
+{
+    m_masterAgent->getBrain()->getFuzzy(id)->setName(name);
+    foreach(Agent *agent, m_group->getAgents()) {
+        agent->getBrain()->getFuzzy(id)->setName(name);
+    }
+}
+
 void AgentManager::setFuzzyResult(quint32 id, qreal result)
 {
     m_masterAgent->getBrain()->getFuzzy(id)->setResult(result);
     foreach(Agent *agent, m_group->getAgents()) {
         agent->getBrain()->getFuzzy(id)->setResult(result);
     }
+}
+
+// Defuzz Stuff
+void AgentManager::setDefuzzValue(quint32 id, qreal value)
+{
+    if(m_masterAgent->getBrain()->getFuzzy(id)->getType()==FuzzyBase::DEFUZZ) {
+        FuzzyDefuzz *masterDefuzz=(FuzzyDefuzz *)m_masterAgent->getBrain()->getFuzzy(id);
+        masterDefuzz->setDefuzzValAbs(value);
+        foreach(Agent *agent, m_group->getAgents()) {
+            FuzzyDefuzz *agentDefuzz=(FuzzyDefuzz *)agent->getBrain()->getFuzzy(id);
+            Q_ASSERT(agentDefuzz->getType()==FuzzyBase::DEFUZZ);
+            agentDefuzz->setDefuzzValAbs(value);
+        }
+    }
+}
+
+void AgentManager::setDefuzzIsElse(quint32 id, bool isElse)
+{
+    if(m_masterAgent->getBrain()->getFuzzy(id)->getType()==FuzzyBase::DEFUZZ) {
+        FuzzyDefuzz *masterDefuzz=(FuzzyDefuzz *)m_masterAgent->getBrain()->getFuzzy(id);
+        masterDefuzz->setElse(isElse);
+        foreach(Agent *agent, m_group->getAgents()) {
+            FuzzyDefuzz *agentDefuzz=(FuzzyDefuzz *)agent->getBrain()->getFuzzy(id);
+            Q_ASSERT(agentDefuzz->getType()==FuzzyBase::DEFUZZ);
+            agentDefuzz->setElse(isElse);
+        }
+    }
+}
+
+// Output Stuff
+void AgentManager::setOutputDefuzzMode(quint32 id, Output::DefuzzMode mode)
+{
+    if(m_masterAgent->getBrain()->getFuzzy(id)->getType()==FuzzyBase::OUTPUT) {
+        Output *masterOut=(Output *)m_masterAgent->getBrain()->getFuzzy(id);
+        masterOut->setDefuzzMode(mode);
+        foreach(Agent *agent, m_group->getAgents()) {
+            Output *agentOut=(Output *) agent->getBrain()->getFuzzy(id);
+            Q_ASSERT(agentOut->getType()==FuzzyBase::OUTPUT);
+            agentOut->setDefuzzMode(mode);
+        }
+    }
+
 }

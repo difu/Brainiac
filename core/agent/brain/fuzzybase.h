@@ -6,6 +6,14 @@
 
 class Brain;
 
+/** \brief  Baseclass of logic elements
+
+        This class is the base of all logical elemets (and, orr, fuzz, defuzz, input, output, ...)
+
+        It handles the forwarding of changes of results via Qt´s Signal/Slot feature
+        and provides low-level functionality
+
+**/
 class FuzzyBase : public QObject
 {
     Q_OBJECT
@@ -25,11 +33,22 @@ public:
     LogicType getType() {return m_logicType; }
     bool hasChildren();
     bool hasParents();
+    /** \brief checks if connection to a given parent id is inverted
+            \param  parentId the id of the parent to check
+            @returns true if connection is inverted
+    **/
     bool isConnectionInverted( quint32 parentId );
     void setId(quint32 id) { m_id=id; }
     void setMax(qreal max);
     void setMin(qreal min);
     void setName( QString name );
+    /** \brief sets the result of this node
+
+                    sets the result
+
+            \param  result the result
+            @returns true if result was changed
+    **/
     virtual bool setResult(qreal result,bool emitChange=true);
 
 protected:

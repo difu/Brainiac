@@ -31,11 +31,12 @@ protected:
     Output *m_output;
 
 protected slots:
-    void manualResultChange(qreal param_value);
-//    void nameChange(QString param_name);
-//    void channelChange(QString param_name);
-//    void minValueChange(QString param_value);
-//    void maxValueChange(QString param_value);
+    void manualResultChange(qreal value);
+    void manualNameChange();
+    void manualChannelChange();
+    void manualMinMaxValueChange();
+    void manualDefuzzMaxPressed();
+    void manualDefuzzAvgPressed();
 
 signals:
     void updateBrainEditor(); //!< emitted when editors should update

@@ -6,8 +6,8 @@
 #include <QWidget>
 
 class AgentManager;
-class BrainiacSlider;
 class FuzzyFuzz;
+
 
 namespace Ui {
     class FuzzyEditor;
@@ -19,10 +19,19 @@ class FuzzyEditor : public QWidget, public ItemEditorWidgetsBase
 
 public:
     explicit FuzzyEditor(Scene *scene, QWidget *parent = 0);
+    void setFuzzConfig(AgentManager *manager, quint32 id);
+    void updateEditor();
     ~FuzzyEditor();
 
 protected:
     void changeEvent(QEvent *e);
+    AgentManager *m_agentManager;
+    quint32 m_id;
+    FuzzyFuzz *m_fuzz;
+
+signals:
+    void updateBrainEditor(); //!< emitted when editors should update
+    void updateGLContent(); //!< emitted when openGL content should update
 
 private:
     Ui::FuzzyEditor *ui;
