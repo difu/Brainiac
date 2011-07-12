@@ -167,10 +167,12 @@ void Agent::advance()
         //qDebug() << "Angle of LA:"<< angle << "dist" << distVect.length() << m_position << "Dist Vector" << distVect << scalar << distVect.length()/loudestReception;
         m_iSoundX->setValue(angle);
         m_iSoundD->setValue(loudestReception/loudestAmplitude);
+        m_iSoundF->setValue(loudestAgent->getOutputChannel("sound.f")->getValue());
 
     } else { // this agent hasn´t heard any sound
         m_iSoundX->setValue(0.0f);
         m_iSoundD->setValue(0.0f);
+        m_iSoundF->setValue(0.0f);
     }
     //
 
@@ -238,6 +240,10 @@ void Agent::createChannels()
 
     m_iSoundX=new Channel(-180,180,0);
     addInputChannel(m_iSoundX,"sound.x");
+
+    m_iSoundF=new Channel(0,10,0);
+    addInputChannel(m_iSoundF,"sound.f");
+
     m_iSoundD=new Channel(0,1,0);
     addInputChannel(m_iSoundD,"sound.d");
 

@@ -164,6 +164,7 @@ protected:
     Channel *m_oSoundA; //!< Emmited amplitude of sound (output)
     Channel *m_iSoundX; //!< polar coordinate about the Y axis of sound source (input)
     Channel *m_iSoundD; //!< distance of received sound;
+    Channel *m_iSoundF; //!< frequency of received sound;
     Scene *m_scene; //!< the scene
     QVector3D m_position; //!< Agent position in world space
     QVector3D m_rotation; //!< Agent rotation in world space
