@@ -8,6 +8,7 @@
 #include "brain/fuzzyand.h" // needed for Mode
 #include "brain/fuzzyor.h"
 #include "brain/fuzzyfuzz.h"
+#include "brain/timer.h"
 
 class Body;
 class Brain;
@@ -32,7 +33,23 @@ class Agent : public QObject
 public:
     Agent(Scene *scene, quint32 id);
     Agent(Agent *agent, quint32 id=0);
+    /** \brief adds an input channel
+
+                    adds an input channel to the agent.
+                    If channel already exists nothing is added
+                    \return true, if adding was successful, false if not
+
+    **/
     bool addInputChannel(Channel* channel, QString name);
+    /** \brief adds an output channel
+
+                    adds an output channel to the agent.
+                    If channel already exists nothing is added
+                    \param  channel pointer to output channel
+                    @param name name of the channel
+                    \return true, if adding was successful, false if not
+
+    **/
     bool addOutputChannel(Channel* channel, QString name);
     void addConnection(quint32 child, quint32 parentId, bool inverted);
     // Fuzz Stuff
@@ -43,21 +60,82 @@ public:
     void addOrFuzz(quint32 id, QString name, FuzzyOr::Mode mode);
     void addOutputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max);
     void addNoiseFuzz(quint32 id, QString name, qreal rate);
+    void addTimerFuzz(quint32 id, QString name, qreal rate, Timer::TimerMode mode);
+    /** \brief advances this agent
+
+                    calling this function makes the agent go one step further in time
+                    Typically this function is called from the Simulation class
+
+                    It queries infos of all agents in the scene and the scene´s environment
+                    It triggers its brain to process
+
+                    The changes have to be written down after all agents have calculated their
+                    new values via advanceCommit()
+
+                    @sa Simulation
+                    @sa Brain
+                    @sa Agent::advanceCommit()
+
+    **/
     void advance();
+    /** \brief commits all changes calculated by advance
+
+                    all calculated channels etc are written down and are "baked", the new values becoming the actual values
+                    @sa Agent::advance()
+
+    **/
     void advanceCommit();
     void deleteChannel(Channel* channel);
+    /** \brief returns the body
+    **/
     Body *getBody();
+    /** \brief returns the brain
+    **/
     Brain *getBrain();
+    /** \brief returns the bodie´s color
+            by default this value is inherited recursivly to all segments of the body
+            @sa Segment::setColorInherited(bool inherited)
+    **/
     Channel *getColor();
+    /** \brief returns input channel
+        @param name the name of the input channel
+        @returns 0 if channel does not exist
+    **/
     Channel *getInputChannel(QString name);
+    /** \brief returns output channel
+        @param name the name of the output channel
+        @returns 0 if channel does not exist
+    **/
     Channel *getOutputChannel(QString name);
+    /** \brief returns the id of this agent
+    **/
     quint32 getId();
+    /** \brief returns the position of the agent in world space
+    **/
     QVector3D *getPosition();
+    /** \brief returns the rotation of the agent in world space
+    **/
     QVector3D *getRotation();
+    /** \brief true if sound emmisions should be rendered
+    **/
     bool getRenderSoundEmission();
+    /** \brief returns the scene
+        @sa Scene
+    **/
     Scene *getScene();
+    /** \brief @returns true if channel exists
+    **/
     bool inputChannelExists(QString name);
+    /** \brief @returns true if channel exists
+    **/
     bool outputChannelExists(QString name);
+    /** \brief renders the agent in gl context
+            calls the bodie´s render function
+            it also draws sound emmissions
+            @sa getRenderSoundEmission()
+            @sa renderSoundEmission()
+            @sa Body::renderGL()
+    **/
     void renderGL();
     void renderSoundEmission(bool render);
     void reset();

@@ -1,6 +1,7 @@
 #include "agent.h"
 #include "brain/brain.h"
 #include "brain/fuzzybase.h"
+#include "brain/timer.h"
 #include "body/body.h"
 #include "body/segment.h"
 #include "body/sphere.h"
@@ -28,9 +29,9 @@ Agent::Agent(Agent *agent, quint32 id)  :
 {
     m_id=id;
     createChannels();
+    m_scene=agent->getScene();
     m_body=new Body(this,agent->getBody());
     m_brain=new Brain(this,agent->getBrain());
-    m_scene=agent->getScene();
     m_renderSoundEmission=true;
 }
 
@@ -47,13 +48,6 @@ Agent::~Agent() {
     m_outputs.clear();
 }
 
-/** \brief adds an input channel
-
-                adds an input channel to the agent.
-                If channel already exists nothing is added
-                \return true, if adding was successful, false if not
-
-**/
 bool Agent::addInputChannel(Channel *channel, QString name)
 {
     if(m_inputs.contains(name)) {
@@ -65,15 +59,6 @@ bool Agent::addInputChannel(Channel *channel, QString name)
     }
 }
 
-/** \brief adds an output channel
-
-                adds an output channel to the agent.
-                If channel already exists nothing is added
-                \param  channel pointer to output channel
-                @param name name of the channel
-                \return true, if adding was successful, false if not
-
-**/
 bool Agent::addOutputChannel(Channel *channel, QString name)
 {
     if(m_outputs.contains(name)) {
@@ -125,22 +110,11 @@ void Agent::addNoiseFuzz(quint32 id, QString name, qreal rate)
     m_brain->addNoiseFuzz(id, name,rate);
 }
 
-/** \brief advances this agent
+void Agent::addTimerFuzz(quint32 id, QString name, qreal rate, Timer::TimerMode mode)
+{
+    m_brain->addTimerFuzz(id, name, rate, mode);
+}
 
-                calling this function makes the agent go one step further in time
-                Typically this function is called from the Simulation class
-
-                It queries infos of all agents in the scene and the scene´s environment
-                It triggers its brain to process
-
-                The changes have to be written down after all agents have calculated their
-                new values via advanceCommit()
-
-                @sa Simulation
-                @sa Brain
-                @sa Agent::advanceCommit()
-
-**/
 void Agent::advance()
 {
     //qDebug() << __PRETTY_FUNCTION__<< "Agent " << m_id;
@@ -203,19 +177,17 @@ void Agent::advance()
     foreach(FuzzyBase *fuzz, m_brain->getFuzzies()) {
         if(fuzz->getType()==FuzzyBase::NOISE) { // noise nodes depend only on frame information
             fuzz->calculate();
-        }
-        if(fuzz->getType()==FuzzyBase::INPUT  && !fuzz->hasParents()) { // input nodes with parents are triggered implicite by their parents
+        } else if(fuzz->getType()==FuzzyBase::INPUT  && !fuzz->hasParents()) { // input nodes with parents are triggered implicite by their parents
+            fuzz->calculate();
+        } else if(fuzz->getType()==FuzzyBase::TIMER) {
+            Timer *timer=(Timer *)fuzz;
+            timer->advance();
+        } else if(fuzz->getType()==FuzzyBase::DEFUZZ ) { // input nodes with parents are triggered implicite by their parents
             fuzz->calculate();
         }
     }
 }
 
-/** \brief commits all changes calculated by advance
-
-                all calculated channels etc are written down and are "baked", the new values becoming the actual values
-                @sa Agent::advance()
-
-**/
 void Agent::advanceCommit()
 {
     foreach(Channel *channel, m_inputs) {
@@ -285,39 +257,26 @@ void Agent::deleteChannel(Channel *channel)
     delete channel;
 }
 
-/** \brief returns the body
-**/
 Body* Agent::getBody()
 {
     return m_body;
 }
 
-/** \brief returns the brain
-**/
 Brain* Agent::getBrain()
 {
     return m_brain;
 }
 
-/** \brief returns the bodie´s color
-        by default this value is inherited recursivly to all segments of the body
-        @sa Segment::setColorInherited(bool inherited)
-**/
+
 Channel* Agent::getColor()
 {
     return m_color;
 }
 
-/** \brief returns the id of this agent
-**/
 quint32 Agent::getId() {
     return m_id;
 }
 
-/** \brief returns input channel
-    @param name the name of the input channel
-    @returns 0 if channel does not exist
-**/
 Channel* Agent::getInputChannel(QString name)
 {
     if(this->inputChannelExists(name))
@@ -326,10 +285,6 @@ Channel* Agent::getInputChannel(QString name)
         return 0;
 }
 
-/** \brief returns output channel
-    @param name the name of the output channel
-    @returns 0 if channel does not exist
-**/
 Channel* Agent::getOutputChannel(QString name)
 {
     if(this->outputChannelExists(name))
@@ -338,37 +293,26 @@ Channel* Agent::getOutputChannel(QString name)
         return 0;
 }
 
-/** \brief returns the position of the agent in world space
-**/
 QVector3D* Agent::getPosition()
 {
     return &m_position;
 }
 
-/** \brief returns the rotation of the agent in world space
-**/
 QVector3D* Agent::getRotation()
 {
     return &m_rotation;
 }
 
-/** \brief true if sound emmisions should be rendered
-**/
 bool Agent::getRenderSoundEmission()
 {
     return m_renderSoundEmission;
 }
 
-/** \brief returns the scene
-    @sa Scene
-**/
 Scene* Agent::getScene()
 {
     return m_scene;
 }
 
-/** \brief @returns true if channel exists
-**/
 bool Agent::inputChannelExists(QString name)
 {
     if(m_inputs.count(name)>0)
@@ -377,8 +321,6 @@ bool Agent::inputChannelExists(QString name)
         return false;
 }
 
-/** \brief @returns true if channel exists
-**/
 bool Agent::outputChannelExists(QString name)
 {
     if(m_outputs.count(name)>0)
@@ -387,13 +329,6 @@ bool Agent::outputChannelExists(QString name)
         return false;
 }
 
-/** \brief renders the agent in gl context
-        calls the bodie´s render function
-        it also draws sound emmissions
-        @sa getRenderSoundEmission()
-        @sa renderSoundEmission()
-        @sa Body::renderGL()
-**/
 void Agent::renderGL()
 {
     m_body->renderGL();

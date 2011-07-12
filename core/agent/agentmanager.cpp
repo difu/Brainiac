@@ -181,6 +181,18 @@ void AgentManager::addNoiseFuzz(quint32 id, QString name, qreal rate, quint32 ed
 
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
 }
+// addTimerFuzz(quint32 id, QString name, qreal rate, QString mode, quint32 editorX, quint32 editorY);
+void AgentManager::addTimerFuzz(quint32 id, QString name, qreal rate, QString mode, quint32 editorX, quint32 editorY)
+{
+    if(QString::compare("ifstopped",mode,Qt::CaseInsensitive)==0) {
+        m_masterAgent->addTimerFuzz(id,name,rate,Timer::IFSTOPPED);
+        foreach(Agent* agent,m_scene->getAgents()) {
+            agent->addTimerFuzz(id,name,rate,Timer::IFSTOPPED);
+        }
+        qDebug() << "Timwer " << name;
+    }
+    m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
+}
 
 void AgentManager::addConnector(quint32 childId, quint32 parentId, bool inverted)
 {
@@ -258,6 +270,10 @@ bool AgentManager::loadConfig()
                                     }else if(reader.name()=="Fuzz") {
                                         QXmlStreamAttributes attribs = reader.attributes();
                                         addFuzzFuzz(attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("mode").toString(),attribs.value("interpolation").toString(),attribs.value("p1").toString().toDouble(),attribs.value("p2").toString().toDouble(),attribs.value("p3").toString().toDouble(),attribs.value("p4").toString().toDouble(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
+                                        reader.skipCurrentElement();
+                                    }else if(reader.name()=="Timer") {
+                                        QXmlStreamAttributes attribs = reader.attributes();
+                                        addTimerFuzz(attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("rate").toString().toDouble(),attribs.value("mode").toString(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
                                         reader.skipCurrentElement();
                                     }else if(reader.name()=="Connector") {
                                         QXmlStreamAttributes attribs = reader.attributes();
@@ -412,6 +428,20 @@ bool AgentManager::saveConfig()
                     break;
                 default:
                     qDebug() << __PRETTY_FUNCTION__ <<" unknown Mode";
+            }
+        } else if(fuzz->getType()==FuzzyBase::TIMER) {
+            stream.writeStartElement("Timer");
+            Timer *timer=(Timer *)fuzz;
+            stream.writeAttribute("rate",  QString::number(timer->getRate(),'f'));
+            switch(timer->getMode()) {
+            case Timer::IFSTOPPED:
+                stream.writeAttribute("mode",  "ifstopped");
+                break;
+            case Timer::ALWAYS:
+                stream.writeAttribute("mode",  "always");
+                break;
+            default:
+                qDebug() << __PRETTY_FUNCTION__ <<" unknown Mode";
             }
         } else {
             stream.writeStartElement("Dummy");

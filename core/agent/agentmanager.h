@@ -100,6 +100,7 @@ protected:
     void addOutputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY);
     void addInputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY);
     void addNoiseFuzz(quint32 id, QString name, qreal rate, quint32 editorX, quint32 editorY);
+    void addTimerFuzz(quint32 id, QString name, qreal rate, QString mode, quint32 editorX, quint32 editorY);
     void addConnector(quint32 childId, quint32 parentId, bool inverted);
 
     // Body stuff

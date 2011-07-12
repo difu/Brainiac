@@ -32,6 +32,10 @@ Brain::Brain(Agent *agent, Brain *brain) :
             } else if(fuzz->getType()==FuzzyBase::FUZZ) {
                 FuzzyFuzz *origFuzz=(FuzzyFuzz *)fuzz;
                 addFuzzFuzz(origFuzz->getId(),origFuzz->getName(),origFuzz->getMode(),origFuzz->getInterpolationMode(),origFuzz->getP1(),origFuzz->getP2(),origFuzz->getP3(),origFuzz->getP4());
+            } else if(fuzz->getType()==FuzzyBase::TIMER) {
+                Timer *origTimer=(Timer *)fuzz;
+                addTimerFuzz(origTimer->getId(),origTimer->getName(),origTimer->getRate(),origTimer->getMode());
+
             }  else {
                 qCritical() <<  __PRETTY_FUNCTION__ << "missing fuzz type" << fuzz->getId();
             }
@@ -47,32 +51,22 @@ Brain::Brain(Agent *agent, Brain *brain) :
     }
 }
 
-/** \brief adds an and fuzzy rule to this brain
-            @param andFuzz the and rule to be added
-**/
 void Brain::addAndFuzz(FuzzyAnd *andFuzz)
 {
     m_fuzzies.append(andFuzz);
 }
 
-/** \brief adds an and fuzzy rule to this brain
-**/
 void Brain::addAndFuzz(quint32 id, QString name, FuzzyAnd::Mode mode)
 {
     FuzzyAnd *newAnd=new FuzzyAnd(id, this, name, mode);
     addAndFuzz(newAnd);
 }
 
-/** \brief adds a defuzz fuzzy rule to this brain
-            @param defuzz the defuzz rule to be added
-**/
 void Brain::addDefuzz(FuzzyDefuzz *defuzz)
 {
     m_fuzzies.append(defuzz);
 }
 
-/** \brief adds a defuzz rule to this brain
-**/
 void Brain::addDefuzz(quint32 id, QString name, qreal defuzzValue, bool isElse)
 {
     FuzzyDefuzz *defuzz=new FuzzyDefuzz(id, this, name, defuzzValue);
@@ -95,78 +89,61 @@ void Brain::addFuzzFuzz(FuzzyFuzz *fuzzyFuzz)
     m_fuzzies.append(fuzzyFuzz);
 }
 
-/** \brief adds an input to this brain
-            @param input the input to be added
-**/
 void Brain::addInputFuzz(Input *input)
 {
     m_fuzzies.append(input);
 }
 
-/** \brief adds an input to this brain
-**/
 void Brain::addInputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max)
 {
     Input *input=new Input(id, this, name, channel, min, max);
     addInputFuzz(input);
 }
 
-/** \brief adds an or fuzzy rule to this brain
-            @param orFuzz the or rule to be added
-**/
 void Brain::addOrFuzz(FuzzyOr *orFuzz)
 {
     m_fuzzies.append(orFuzz);
 }
 
-/** \brief adds an or fuzzy rule to this brain
-**/
 void Brain::addOrFuzz(quint32 id, QString name, FuzzyOr::Mode mode)
 {
     FuzzyOr *newOr=new FuzzyOr(id, this, name, mode);
     addOrFuzz(newOr);
 }
 
-/** \brief adds an output to this brain
-            @param out the output to be added
-**/
 void Brain::addOutputFuzz(Output *out)
 {
     m_fuzzies.append(out);
 }
 
-/** \brief adds an output to this brain
-**/
 void Brain::addOutputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max)
 {
     Output *out=new Output(id, this, name, channel, min, max);
     addOutputFuzz(out);
 }
 
-/** \brief adds a noise fuzz to this brain
-            @param noise the noise to be added
-**/
 void Brain::addNoiseFuzz(Noise *noise)
 {
     m_fuzzies.append(noise);
 }
 
-/** \brief adds a noise fuzz to this brain
-            @param the noise to be added
-**/
 void Brain::addNoiseFuzz(quint32 id, QString name, qreal rate)
 {
     Noise *noise=new Noise(id, this, name, rate);
     addNoiseFuzz(noise);
 }
 
-/** \brief connect two fuzz nodes
-            Connect a child to a parent. After the fuzzies are connected, a calculation of the child is issued to fetch the value of the parent(s)
-            @param childId the fuzz to receive the output/result
-            @param parentId the fuzz to send it´s result
-            @param inverted if the parent´s result must be inverted
-            @sa FuzzyBase
-**/
+void Brain::addTimerFuzz(Timer *timer)
+{
+    m_fuzzies.append(timer);
+}
+
+void Brain::addTimerFuzz(quint32 id, QString name, qreal rate, Timer::TimerMode mode)
+{
+    Timer *timer=new Timer(id,this,name,rate,mode);
+    addTimerFuzz(timer);
+}
+
 void Brain::connectFuzzies(quint32 childId, quint32 parentId, bool inverted)
 {
     FuzzyBase *child=getFuzzy(childId);
@@ -177,21 +154,11 @@ void Brain::connectFuzzies(quint32 childId, quint32 parentId, bool inverted)
     child->calculate();
 }
 
-/** \brief returns the agent this brain belongs to
-
-                @returns the agent
-
-**/
 Agent* Brain::getAgent()
 {
     return m_agent;
 }
 
-/** \brief get this fuzzie´s id
-
-                @returns the fuzzie´s id
-
-**/
 FuzzyBase* Brain::getFuzzy(quint32 id)
 {
     foreach(FuzzyBase *fuzzy,m_fuzzies) {
