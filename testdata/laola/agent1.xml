@@ -22,25 +22,33 @@
             </Segment>
         </Body>
         <Brain>
-            <Input channel="" min="0.000000" max="1.000000" id="5" name="input" editorx="1890" editory="2010"/>
-            <Timer rate="2.000000" mode="ifstopped" id="1" name="timer" editorx="2030" editory="2010"/>
-            <Fuzz p1="0.000000" p2="0.100000" p3="0.200000" p4="0.300000" mode="trapezoid" interpolation="sine" id="17" name="fuzz2" editorx="2170" editory="2010"/>
-            <Fuzz p1="0.300000" p2="0.400000" p3="0.500000" p4="0.600000" mode="trapezoid" interpolation="sine" id="18" name="fuzz2" editorx="2170" editory="1960"/>
-            <Fuzz p1="0.800000" p2="0.900000" p3="0.810000" p4="0.820000" mode="deactivate" interpolation="sine" id="19" name="fuzz2" editorx="2170" editory="2060"/>
-            <Output channel="sound.a" min="0.000000" max="1000.000000" id="10" name="amplitude" editorx="2080" editory="2170"/>
-            <Output channel="sound.f" min="0.000000" max="1000.000000" id="11" name="frequency" editorx="2080" editory="2170"/>
-            <Output channel="color" min="0.000000" max="1.000000" id="20" name="Color" editorx="2490" editory="1980"/>
-            <Defuzz defuzzvalue="0.180000" iselse="true" id="8" name="Radius" editorx="1930" editory="2170"/>
-            <Defuzz defuzzvalue="0.000000" iselse="true" id="21" name="neutral" editorx="2320" editory="1960"/>
-            <Defuzz defuzzvalue="1.000000" iselse="false" id="22" name="highlight" editorx="2320" editory="2010"/>
+            <Input channel="sound.f" min="0.000000" max="1.000000" id="5" name="freq reception" editorx="1870" editory="2010"/>
+            <Timer rate="2.000000" mode="ifstopped" id="1" name="timer" editorx="2010" editory="2010"/>
+            <Fuzz p1="0.000000" p2="0.100000" p3="0.200000" p4="0.300000" mode="trapezoid" interpolation="sine" id="17" name="start" editorx="2150" editory="2010"/>
+            <Fuzz p1="0.300000" p2="0.400000" p3="0.500000" p4="0.600000" mode="trapezoid" interpolation="sine" id="18" name="emit" editorx="2150" editory="1880"/>
+            <Fuzz p1="0.800000" p2="0.900000" p3="0.810000" p4="0.820000" mode="deactivate" interpolation="sine" id="19" name="block" editorx="2150" editory="2060"/>
+            <Output channel="sound.a" min="0.000000" max="120.000000" id="10" name="amplitude" editorx="2060" editory="2170"/>
+            <Output channel="sound.f" min="0.000000" max="10.000000" id="11" name="frequency" editorx="2430" editory="1860"/>
+            <Output channel="color" min="0.000000" max="1.000000" id="20" name="Color" editorx="2470" editory="1980"/>
+            <Defuzz defuzzvalue="1.000000" iselse="false" id="8" name="max Radius" editorx="1910" editory="2170"/>
+            <Defuzz defuzzvalue="0.000000" iselse="true" id="9" name="min Radius" editorx="1910" editory="2170"/>
+            <Defuzz defuzzvalue="0.000000" iselse="true" id="21" name="neutral" editorx="2300" editory="1960"/>
+            <Defuzz defuzzvalue="1.000000" iselse="false" id="22" name="highlight" editorx="2300" editory="2010"/>
+            <Defuzz defuzzvalue="0.000000" iselse="true" id="31" name="no freq" editorx="2300" editory="1830"/>
+            <Defuzz defuzzvalue="1.000000" iselse="false" id="32" name="high freq" editorx="2300" editory="1880"/>
             <Connector parent="5" child="1" inverted="0"/>
             <Connector parent="1" child="17" inverted="0"/>
             <Connector parent="1" child="18" inverted="0"/>
             <Connector parent="1" child="19" inverted="0"/>
             <Connector parent="17" child="22" inverted="0"/>
             <Connector parent="8" child="10" inverted="0"/>
+            <Connector parent="9" child="10" inverted="0"/>
+            <Connector parent="18" child="8" inverted="0"/>
             <Connector parent="21" child="20" inverted="0"/>
             <Connector parent="22" child="20" inverted="0"/>
+            <Connector parent="18" child="32" inverted="0"/>
+            <Connector parent="32" child="11" inverted="0"/>
+            <Connector parent="31" child="11" inverted="0"/>
         </Brain>
     </Agent>
 </Agentconfig>
