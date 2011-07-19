@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Place>
     <Groups>
-        <Group name="grp1" id="1" editorx="2000" editory="2000" agentFile="/Users/dirkfuchs/Programming/BrainiacNG/testdata/laola/agent1.xml"/>
-        <Group name="grp2" id="2" editorx="2200" editory="2000" agentFile="/Users/dirkfuchs/Programming/BrainiacNG/testdata/laola/agent2.xml"/>
+        <Group name="grp1" id="1" editorx="2000" editory="2000" agentFile="/Users/dirkfuchs/Programming/BrainiacNG/testdata/sound/laola/agent1.xml"/>
+        <Group name="grp2" id="2" editorx="2200" editory="2000" agentFile="/Users/dirkfuchs/Programming/BrainiacNG/testdata/sound/laola/agent2.xml"/>
     </Groups>
     <Generators>
         <PointGenerator>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Place>
+    <Groups>
+        <Group name="grp1" id="1" editorx="2400" editory="2000" agentFile="/Users/dirkfuchs/Programming/BrainiacNG/testdata/sound/agent.xml"/>
+        <Group name="grp2" id="2" editorx="2200" editory="2000" agentFile="/Users/dirkfuchs/Programming/BrainiacNG/testdata/sound/agent.xml"/>
+    </Groups>
+    <Generators>
+        <PointGenerator>
+            <Point x="100" y="0" z="3" w="0" group="1"/>
+        </PointGenerator>
+        <PointGenerator>
+            <Point x="200" y="0" z="3" w="0" group="2"/>
+        </PointGenerator>
+    </Generators>
+</Place>

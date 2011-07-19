@@ -160,11 +160,38 @@ void Agent::advance()
         qreal scalar=QVector3D::dotProduct(distVect,QVector3D(1.0f,0.0f,0.0f));
 
         //qDebug() << "loudest agent from agent " << m_id << "is " << loudestAgent->getId() << loudestAgentPosition;
-        qreal angle=acos(scalar/(distVect.length())) * ((double)180.0)/BrainiacGlobals::PI-90.0f;
+        qreal yRotation=m_rotation.y(); // we need to normalize that value, so store it in a temp var for norm function
+        BrainiacGlobals::normalizeAngle(&yRotation);
+        if(yRotation<0)
+            yRotation=-yRotation;
+        qreal angle=acos(scalar/(distVect.length())) * ((double)180.0)/BrainiacGlobals::PI + yRotation-270.0f;
+        // determine, if the loudest agent is on this agent´s right or left side
+        // place to points with distance 1 to current position on 90° and 270° and find out which point is closer
+        QVector3D leftPoint;
+        QVector3D rightPoint;
+        leftPoint.setX(m_position.x()+BrainiacGlobals::sinGrad(m_rotation.y()+90.0f));
+        leftPoint.setZ(m_position.z()+BrainiacGlobals::cosGrad(m_rotation.y()+90.0f));
+        leftPoint.setY(0.0f);
 
+        rightPoint.setX(m_position.x()+BrainiacGlobals::sinGrad(m_rotation.y()+270.0f));
+        rightPoint.setZ(m_position.z()+BrainiacGlobals::cosGrad(m_rotation.y()+270.0f));
+        rightPoint.setY(0.0f);
+        //qDebug() << "Position:" << m_position << "left:" << leftPoint << "right:" << rightPoint;
+
+        QVector3D leftDistVec=loudestAgentPosition-leftPoint;
+        QVector3D rightDistVec=loudestAgentPosition-rightPoint;
+//        if(leftDistVec.length()>rightDistVec.length()) {
+//            //angle=-angle;
+//            qDebug() << "Loudest Agent is to the right";
+//        } else {
+//            qDebug() << "Loudest Agent is to the left";
+//        }
+        if(angle>180.0f) {
+            angle=-360.0f+angle;
+        }
         BrainiacGlobals::normalizeAngle(&angle);
         //if(angle>180.0f) angle=-angle+270.0f;
-        //qDebug() << "Angle of LA:"<< angle << "dist" << distVect.length() << m_position << "Dist Vector" << distVect << scalar << distVect.length()/loudestReception;
+//        qDebug() << "Angle of LA:"<< angle << "dist" << distVect.length() << m_position << "y rotation" << yRotation;
         m_iSoundX->setValue(angle);
         m_iSoundD->setValue(loudestReception/loudestAmplitude);
         m_iSoundF->setValue(loudestAgent->getOutputChannel("sound.f")->getValue());
