@@ -73,6 +73,9 @@ void Timer::setMode(TimerMode mode)
 
 void Timer::setRate(qreal rate)
 {
+    if(rate<0) {
+        rate=0;
+    }
     m_rate=rate;
     quint32 fps=m_brain->getAgent()->getScene()->getSimulation()->getFps();
     m_frameDist=(quint32) m_rate*fps;
