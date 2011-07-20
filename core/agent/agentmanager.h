@@ -25,6 +25,7 @@ public:
     quint32 addOutputFuzz(QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY);
     quint32 addInputFuzz(QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY);
     quint32 addNoiseFuzz(QString name, qreal rate, quint32 editorX, quint32 editorY);
+    quint32 addTimerFuzz(quint32 editorX, quint32 editorY);
     quint32 addTimerFuzz(QString name, qreal rate, QString mode, quint32 editorX, quint32 editorY);
     void addConnector(quint32 childId, quint32 parentId, bool inverted);
 

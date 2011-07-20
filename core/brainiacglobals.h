@@ -39,13 +39,16 @@ public:
     static const quint32 NUMBER_OF_RANDOMS=300;
     static const qreal randoms[NUMBER_OF_RANDOMS];
 
-    static const QString XmlModeAttrib;
+    static const char* const XmlModeAttrib;
 
-    static const QString FuzzAndModeMin;
-    static const QString FuzzAndModeProduct;
+    static const char* const FuzzAndModeMin;
+    static const char* const FuzzAndModeProduct;
 
-    static const QString FuzzOrModeMax;
-    static const QString FuzzOrModeSum;
+    static const char* const FuzzOrModeMax;
+    static const char* const FuzzOrModeSum;
+
+    static const char* const FuzzTimerModeIfStopped;
+    static const char* const FuzzTimerModeAlways;
 
     static qreal getRand( quint32 index ) { return randoms[index%NUMBER_OF_RANDOMS]; }
 };

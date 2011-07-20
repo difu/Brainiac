@@ -98,7 +98,7 @@ void AgentManager::addAndFuzz(quint32 id, QString name, QString mode, quint32 ed
         andMode=FuzzyAnd::PRODUCT;
     }
     m_masterAgent->addAndFuzz(id,name,andMode);
-    foreach(Agent* agent,m_scene->getAgents()) {
+    foreach(Agent* agent,m_group->getAgents()) {
         agent->addAndFuzz(id,name,andMode);
     }
     m_brainIdGenerator.registerId(id);
@@ -139,7 +139,7 @@ void AgentManager::addFuzzFuzz(quint32 id, QString name, QString mode, QString i
     }
 
     m_masterAgent->addFuzzFuzz(id,name,fuzzMode,interMode,p1,p2,p3,p4);
-    foreach(Agent* agent,m_scene->getAgents()) {
+    foreach(Agent* agent,m_group->getAgents()) {
         agent->addFuzzFuzz(id,name,fuzzMode,interMode,p1,p2,p3,p4);
     }
     m_brainIdGenerator.registerId(id);
@@ -156,7 +156,7 @@ quint32 AgentManager::addDefuzz(QString name, qreal defuzzValue, bool isElse, qu
 void AgentManager::addDefuzz(quint32 id, QString name, qreal defuzzValue, bool isElse, quint32 editorX, quint32 editorY)
 {
     m_masterAgent->addDefuzz(id,name,defuzzValue,isElse);
-    foreach(Agent* agent,m_scene->getAgents()) {
+    foreach(Agent* agent,m_group->getAgents()) {
         agent->addDefuzz(id,name,defuzzValue,isElse);
     }
     m_brainIdGenerator.registerId(id);
@@ -184,7 +184,7 @@ void AgentManager::addOrFuzz(quint32 id, QString name, QString mode, quint32 edi
         orMode=FuzzyOr::SUM;
     }
     m_masterAgent->addOrFuzz(id,name,orMode);
-    foreach(Agent* agent,m_scene->getAgents()) {
+    foreach(Agent* agent,m_group->getAgents()) {
         agent->addOrFuzz(id,name,orMode);
     }
     m_brainIdGenerator.registerId(id);
@@ -202,7 +202,7 @@ void AgentManager::addOutputFuzz(quint32 id, QString name, QString channel, qrea
 {
     m_masterAgent->addOutputFuzz(id, name, channel, min, max);
     //Output *out=(Output*)m_masterAgent->getBrain()->getFuzzy(id);
-    foreach(Agent* agent,m_scene->getAgents()) {
+    foreach(Agent* agent,m_group->getAgents()) {
         agent->addOutputFuzz(id, name, channel, min, max);
         //Output *out=(Output*)agent->getBrain()->getFuzzy(id);
     }
@@ -220,7 +220,7 @@ quint32 AgentManager::addInputFuzz(QString name, QString channel, qreal min, qre
 void AgentManager::addInputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY)
 {
     m_masterAgent->addInputFuzz(id, name, channel, min, max);
-    foreach(Agent* agent,m_scene->getAgents()) {
+    foreach(Agent* agent,m_group->getAgents()) {
         agent->addInputFuzz(id, name, channel, min, max);
     }
     m_brainIdGenerator.registerId(id);
@@ -239,11 +239,18 @@ void AgentManager::addNoiseFuzz(quint32 id, QString name, qreal rate, quint32 ed
 {
     m_masterAgent->addNoiseFuzz(id, name, rate);
     //Noise *noise=(Noise*) m_masterAgent->getBrain()->getFuzzy(id);
-    foreach(Agent* agent,m_scene->getAgents()) {
+    foreach(Agent* agent,m_group->getAgents()) {
         agent->addNoiseFuzz(id, name, rate);
     }
     m_brainIdGenerator.registerId(id);
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
+}
+
+quint32 AgentManager::addTimerFuzz(quint32 editorX, quint32 editorY)
+{
+    quint32 id=m_brainIdGenerator.getNewId();
+    addTimerFuzz(id,"Timer",1,BrainiacGlobals::FuzzTimerModeIfStopped,editorX,editorY);
+    return id;
 }
 
 quint32 AgentManager::addTimerFuzz(QString name, qreal rate, QString mode, quint32 editorX, quint32 editorY)
@@ -255,12 +262,11 @@ quint32 AgentManager::addTimerFuzz(QString name, qreal rate, QString mode, quint
 
 void AgentManager::addTimerFuzz(quint32 id, QString name, qreal rate, QString mode, quint32 editorX, quint32 editorY)
 {
-    if(QString::compare("ifstopped",mode,Qt::CaseInsensitive)==0) {
+    if(QString::compare(BrainiacGlobals::FuzzTimerModeIfStopped,mode,Qt::CaseInsensitive)==0) {
         m_masterAgent->addTimerFuzz(id,name,rate,Timer::IFSTOPPED);
-        foreach(Agent* agent,m_scene->getAgents()) {
+        foreach(Agent* agent,m_group->getAgents()) {
             agent->addTimerFuzz(id,name,rate,Timer::IFSTOPPED);
         }
-        qDebug() << "Timwer " << name;
     }
     m_brainIdGenerator.registerId(id);
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
@@ -269,7 +275,7 @@ void AgentManager::addTimerFuzz(quint32 id, QString name, qreal rate, QString mo
 void AgentManager::addConnector(quint32 childId, quint32 parentId, bool inverted)
 {
     m_masterAgent->addConnection(childId, parentId, inverted);
-    foreach(Agent* agent,m_scene->getAgents()) {
+    foreach(Agent* agent,m_group->getAgents()) {
         agent->addConnection(childId, parentId, inverted);
     }
 }
@@ -507,7 +513,7 @@ bool AgentManager::saveConfig()
             stream.writeAttribute("rate",  QString::number(timer->getRate(),'f'));
             switch(timer->getMode()) {
             case Timer::IFSTOPPED:
-                stream.writeAttribute(BrainiacGlobals::XmlModeAttrib,  "ifstopped");
+                stream.writeAttribute(BrainiacGlobals::XmlModeAttrib,  BrainiacGlobals::FuzzTimerModeIfStopped);
                 break;
             case Timer::ALWAYS:
                 stream.writeAttribute(BrainiacGlobals::XmlModeAttrib,  "always");

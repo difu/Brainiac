@@ -6,13 +6,16 @@
 #include "gui/braineditor/braineditoritem.h"
 #include "gui/editoritemconnector.h"
 #include <QGraphicsSceneMouseEvent>
-
+#include <QKeyEvent>
 #include <QDebug>
 
 BrainEditor::BrainEditor(Scene *scene, AgentManager *agentManager) : EditorBase(scene)
 {
     m_agentManager=agentManager;
     m_selectedAgent=0;
+    m_altPressed=false;
+    m_shiftPressed=false;
+    m_connectSourceItem=0;
     foreach(FuzzyBase *fuzzy, m_agentManager->getMasterAgent()->getBrain()->getFuzzies())
     {
         if(fuzzy->getType()==FuzzyBase::OUTPUT) {
@@ -139,6 +142,32 @@ void BrainEditor::mousePressEvent(QGraphicsSceneMouseEvent *event) {
             msg.id=item->getId();
             emit itemClicked(msg);
         }
+        if(m_altPressed) {
+            if(m_connectSourceItem==0) {
+                m_connectSourceItem=item;
+                emit statusBarMessageChanged(QString("Select destination fuzz to connect"));
+            } else {
+                if( m_connectSourceItem!=item) {
+                    //qDebug() << "Connect " << m_connectSourceItem->getId() << "with "<< item->getId();
+                    EditorItemConnector *connector=new EditorItemConnector(m_connectSourceItem,item);
+                    if(m_shiftPressed) {
+                        m_agentManager->addConnector(item->getId(),m_connectSourceItem->getId(),true);
+                        connector->setInverted(true);
+                    } else {
+                        m_agentManager->addConnector(item->getId(),m_connectSourceItem->getId(),false);
+                    }
+                    //connector->setInverted(fuzzChild->isConnectionInverted(fuzzy->getId()));
+                    item->setPos(item->x()+1,item->y()); //! \bug move item to make it appear
+                    //item->setPos(item->x()-1,item->y());
+                    addItem(connector);
+                    emit statusBarMessageChanged(QString("Connected"));
+                    m_connectSourceItem=0;
+                } else {
+                    emit statusBarMessageChanged(QString(""));
+                    m_connectSourceItem=0;
+                }
+            }
+        }
     }
 }
 
@@ -149,6 +178,30 @@ void BrainEditor::updateItemLocations()
             BrainEditorItem* bItem=(BrainEditorItem *) item;
             m_agentManager->setFuzzyEditorTranslation(bItem->getId(),(qint32)item->pos().x(),(qint32)item->pos().y());
         }
+    }
+}
+
+void BrainEditor::keyPressEvent(QKeyEvent *event)
+{
+
+    if(event->key()==Qt::Key_Alt) {
+      emit statusBarMessageChanged(QString("Select source fuzz to connect"));
+      m_altPressed=true;
+    }
+    if(event->key()==Qt::Key_Shift) {
+      m_shiftPressed=true;
+    }
+}
+
+void BrainEditor::keyReleaseEvent(QKeyEvent *event)
+{
+    if(event->key()==Qt::Key_Alt) {
+      emit statusBarMessageChanged(QString(""));
+      m_connectSourceItem=0;
+      m_altPressed=false;
+    }
+    if(event->key()==Qt::Key_Shift) {
+      m_shiftPressed=false;
     }
 }
 
@@ -165,6 +218,9 @@ void BrainEditor::dropEvent(QGraphicsSceneDragDropEvent *event)
             break;
         case BrainiacGlobals::OR:
             fuzzId=m_agentManager->addOrFuzz(event->scenePos().x(),event->scenePos().y());
+            break;
+        case BrainiacGlobals::TIMER:
+            fuzzId=m_agentManager->addTimerFuzz(event->scenePos().x(),event->scenePos().y());
             break;
         default:
             qDebug()<<__PRETTY_FUNCTION__ << "Not a valid label!";

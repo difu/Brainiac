@@ -202,6 +202,8 @@ void MainWindow::createEditorWidgets()
         connect(brainEditor, SIGNAL(itemClicked(ItemEditorWidgetsBase::editMessage)),this,SLOT(editorNodeClick(ItemEditorWidgetsBase::editMessage)));
         // When a frame has been calculated update the braineditors to display the new values
         connect(m_scene->getSimulation(),SIGNAL(frameDone()),brainEditor,SLOT(update()),Qt::DirectConnection);
+        // Display statusbar messages
+        connect(brainEditor, SIGNAL(statusBarMessageChanged(QString)),this,SLOT(statusBarMessageChange(QString)));
     }
     //
     connect(m_inputEditor, SIGNAL(updateBrainEditor()),this,SLOT(refreshBrainEditor()));
@@ -331,6 +333,11 @@ void MainWindow::setEditMode(EditMode em)
         break;
     }
     m_editorView->centerOn(m_editorView->scene()->width()/2,m_editorView->scene()->height()/2);
+}
+
+void MainWindow::statusBarMessageChange(const QString &message)
+{
+    this->statusBar()->showMessage(message);
 }
 
 MainWindow::~MainWindow()

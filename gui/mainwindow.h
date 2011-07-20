@@ -87,6 +87,9 @@ protected:
 
     SceneDisplay *m_sceneDisplay; //!< Window that shows the rendered gl scene
 
+public slots:
+    void statusBarMessageChange( const QString & message );
+
 protected slots:
     void addAgentManager(AgentManager *agentManager);
     void editModeComboChange(int index);

@@ -148,10 +148,15 @@ void Brain::connectFuzzies(quint32 childId, quint32 parentId, bool inverted)
 {
     FuzzyBase *child=getFuzzy(childId);
     FuzzyBase *parent=getFuzzy(parentId);
-    child->addParent(parent,inverted);
-    parent->addChild(child);
-    connect(parent,SIGNAL(resultChanged()), child, SLOT(inputChanged()),Qt::DirectConnection);
-    child->calculate();
+    if(child && parent) {
+        child->addParent(parent,inverted);
+        parent->addChild(child);
+        connect(parent,SIGNAL(resultChanged()), child, SLOT(inputChanged()),Qt::DirectConnection);
+        child->calculate();
+    } else {
+        qDebug() << __PRETTY_FUNCTION__ << "Whoops! Source or dest are invalid! " << child << parent;
+        qDebug() << __PRETTY_FUNCTION__ << m_agent->getId() << m_agent->getPosition()->x() << m_agent->getPosition()->z();
+    }
 }
 
 Agent* Brain::getAgent()
