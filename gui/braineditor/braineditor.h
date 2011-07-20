@@ -18,7 +18,7 @@ public:
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
-
+    void dropEvent(QGraphicsSceneDragDropEvent *event);
     Agent *m_selectedAgent;
     AgentManager *m_agentManager;
 signals:

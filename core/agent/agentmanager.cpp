@@ -77,15 +77,22 @@ void AgentManager::addSphereFromConfig(QXmlStreamReader *reader, quint32 id, QSt
 
 }
 
-void AgentManager::addAndFuzz(QString name, QString mode, quint32 editorX, quint32 editorY)
+quint32 AgentManager::addAndFuzz(quint32 editorX, quint32 editorY)
 {
-    addAndFuzz(m_brainIdGenerator.getNewId(),name,mode,editorX,editorY);
+    return addAndFuzz(QString("And"),BrainiacGlobals::FuzzAndModeMin,editorX,editorY);
+}
+
+quint32 AgentManager::addAndFuzz(QString name, QString mode, quint32 editorX, quint32 editorY)
+{
+    quint32 id=m_brainIdGenerator.getNewId();
+    addAndFuzz(id,name,mode,editorX,editorY);
+    return id;
 }
 
 void AgentManager::addAndFuzz(quint32 id, QString name, QString mode, quint32 editorX, quint32 editorY)
 {
     FuzzyAnd::Mode andMode;
-    if(QString::compare("min",mode,Qt::CaseInsensitive)==0) {
+    if(QString::compare(BrainiacGlobals::FuzzAndModeMin,mode,Qt::CaseInsensitive)==0) {
         andMode=FuzzyAnd::MIN;
     } else {
         andMode=FuzzyAnd::PRODUCT;
@@ -98,9 +105,11 @@ void AgentManager::addAndFuzz(quint32 id, QString name, QString mode, quint32 ed
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
 }
 
-void AgentManager::addFuzzFuzz(QString name, QString mode, QString intMode, qreal p1, qreal p2, qreal p3, qreal p4, quint32 editorX, quint32 editorY)
+quint32 AgentManager::addFuzzFuzz(QString name, QString mode, QString intMode, qreal p1, qreal p2, qreal p3, qreal p4, quint32 editorX, quint32 editorY)
 {
-    addFuzzFuzz(m_brainIdGenerator.getNewId(),name,mode,intMode,p1,p2,p3,p4,editorX,editorY);
+    quint32 id=m_brainIdGenerator.getNewId();
+    addFuzzFuzz(id,name,mode,intMode,p1,p2,p3,p4,editorX,editorY);
+    return id;
 }
 
 void AgentManager::addFuzzFuzz(quint32 id, QString name, QString mode, QString intMode, qreal p1, qreal p2, qreal p3, qreal p4, quint32 editorX, quint32 editorY)
@@ -137,9 +146,11 @@ void AgentManager::addFuzzFuzz(quint32 id, QString name, QString mode, QString i
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
 }
 
-void AgentManager::addDefuzz(QString name, qreal defuzzValue, bool isElse, quint32 editorX, quint32 editorY)
+quint32 AgentManager::addDefuzz(QString name, qreal defuzzValue, bool isElse, quint32 editorX, quint32 editorY)
 {
-    addDefuzz(m_brainIdGenerator.getNewId(),name,defuzzValue,isElse,editorX,editorY);
+    quint32 id=m_brainIdGenerator.getNewId();
+    addDefuzz(id,name,defuzzValue,isElse,editorX,editorY);
+    return id;
 }
 
 void AgentManager::addDefuzz(quint32 id, QString name, qreal defuzzValue, bool isElse, quint32 editorX, quint32 editorY)
@@ -152,15 +163,22 @@ void AgentManager::addDefuzz(quint32 id, QString name, qreal defuzzValue, bool i
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
 }
 
-void AgentManager::addOrFuzz(QString name, QString mode, quint32 editorX, quint32 editorY)
+quint32 AgentManager::addOrFuzz(quint32 editorX, quint32 editorY)
 {
-    addOrFuzz(m_brainIdGenerator.getNewId(),name,mode,editorX,editorY);
+    return addOrFuzz("Or",BrainiacGlobals::FuzzOrModeMax,editorX,editorY);
+}
+
+quint32 AgentManager::addOrFuzz(QString name, QString mode, quint32 editorX, quint32 editorY)
+{
+    quint32 id=m_brainIdGenerator.getNewId();
+    addOrFuzz(id,name,mode,editorX,editorY);
+    return id;
 }
 
 void AgentManager::addOrFuzz(quint32 id, QString name, QString mode, quint32 editorX, quint32 editorY)
 {
     FuzzyOr::Mode orMode;
-    if(QString::compare("max",mode,Qt::CaseInsensitive)==0) {
+    if(QString::compare(BrainiacGlobals::FuzzOrModeMax,mode,Qt::CaseInsensitive)==0) {
         orMode=FuzzyOr::MAX;
     } else {
         orMode=FuzzyOr::SUM;
@@ -173,9 +191,11 @@ void AgentManager::addOrFuzz(quint32 id, QString name, QString mode, quint32 edi
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
 }
 
-void AgentManager::addOutputFuzz(QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY)
+quint32 AgentManager::addOutputFuzz(QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY)
 {
-    addOutputFuzz(m_brainIdGenerator.getNewId(),name,channel,min,max,editorX,editorY);
+    quint32 id=m_brainIdGenerator.getNewId();
+    addOutputFuzz(id,name,channel,min,max,editorX,editorY);
+    return id;
 }
 
 void AgentManager::addOutputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY)
@@ -190,9 +210,11 @@ void AgentManager::addOutputFuzz(quint32 id, QString name, QString channel, qrea
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
 }
 
-void AgentManager::addInputFuzz(QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY)
+quint32 AgentManager::addInputFuzz(QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY)
 {
-    addInputFuzz(m_brainIdGenerator.getNewId(),name,channel,min,max,editorX,editorY);
+    quint32 id=m_brainIdGenerator.getNewId();
+    addInputFuzz(id,name,channel,min,max,editorX,editorY);
+    return id;
 }
 
 void AgentManager::addInputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY)
@@ -206,9 +228,11 @@ void AgentManager::addInputFuzz(quint32 id, QString name, QString channel, qreal
 }
 
 
-void AgentManager::addNoiseFuzz(QString name, qreal rate, quint32 editorX, quint32 editorY)
+quint32 AgentManager::addNoiseFuzz(QString name, qreal rate, quint32 editorX, quint32 editorY)
 {
-    addNoiseFuzz(m_brainIdGenerator.getNewId(),name,rate,editorX,editorY);
+    quint32 id=m_brainIdGenerator.getNewId();
+    addNoiseFuzz(id,name,rate,editorX,editorY);
+    return id;
 }
 
 void AgentManager::addNoiseFuzz(quint32 id, QString name, qreal rate, quint32 editorX, quint32 editorY)
@@ -222,9 +246,11 @@ void AgentManager::addNoiseFuzz(quint32 id, QString name, qreal rate, quint32 ed
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
 }
 
-void AgentManager::addTimerFuzz(QString name, qreal rate, QString mode, quint32 editorX, quint32 editorY)
+quint32 AgentManager::addTimerFuzz(QString name, qreal rate, QString mode, quint32 editorX, quint32 editorY)
 {
-    addTimerFuzz(m_brainIdGenerator.getNewId(),name,rate,mode,editorX,editorY);
+    quint32 id=m_brainIdGenerator.getNewId();
+    addTimerFuzz(id,name,rate,mode,editorX,editorY);
+    return id;
 }
 
 void AgentManager::addTimerFuzz(quint32 id, QString name, qreal rate, QString mode, quint32 editorX, quint32 editorY)
@@ -299,7 +325,7 @@ bool AgentManager::loadConfig()
                                         reader.skipCurrentElement();
                                     }else if(reader.name()=="And") {
                                         QXmlStreamAttributes attribs = reader.attributes();
-                                        addAndFuzz(attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("mode").toString(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
+                                        addAndFuzz(attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value(BrainiacGlobals::XmlModeAttrib).toString(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
                                         reader.skipCurrentElement();
                                     }else if(reader.name()=="Defuzz") {
                                         QXmlStreamAttributes attribs = reader.attributes();
@@ -307,7 +333,7 @@ bool AgentManager::loadConfig()
                                         reader.skipCurrentElement();
                                     }else if(reader.name()=="Or") {
                                         QXmlStreamAttributes attribs = reader.attributes();
-                                        addOrFuzz(attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("mode").toString(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
+                                        addOrFuzz(attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value(BrainiacGlobals::XmlModeAttrib).toString(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
                                         reader.skipCurrentElement();
                                     }else if(reader.name()=="Noise") {
                                         QXmlStreamAttributes attribs = reader.attributes();
@@ -315,11 +341,11 @@ bool AgentManager::loadConfig()
                                         reader.skipCurrentElement();
                                     }else if(reader.name()=="Fuzz") {
                                         QXmlStreamAttributes attribs = reader.attributes();
-                                        addFuzzFuzz(attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("mode").toString(),attribs.value("interpolation").toString(),attribs.value("p1").toString().toDouble(),attribs.value("p2").toString().toDouble(),attribs.value("p3").toString().toDouble(),attribs.value("p4").toString().toDouble(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
+                                        addFuzzFuzz(attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value(BrainiacGlobals::XmlModeAttrib).toString(),attribs.value("interpolation").toString(),attribs.value("p1").toString().toDouble(),attribs.value("p2").toString().toDouble(),attribs.value("p3").toString().toDouble(),attribs.value("p4").toString().toDouble(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
                                         reader.skipCurrentElement();
                                     }else if(reader.name()=="Timer") {
                                         QXmlStreamAttributes attribs = reader.attributes();
-                                        addTimerFuzz(attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("rate").toString().toDouble(),attribs.value("mode").toString(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
+                                        addTimerFuzz(attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("rate").toString().toDouble(),attribs.value(BrainiacGlobals::XmlModeAttrib).toString(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
                                         reader.skipCurrentElement();
                                     }else if(reader.name()=="Connector") {
                                         QXmlStreamAttributes attribs = reader.attributes();
@@ -399,17 +425,17 @@ bool AgentManager::saveConfig()
             stream.writeStartElement("And");
             FuzzyAnd *fAnd=(FuzzyAnd *)fuzz;
             if(fAnd->getMode()==FuzzyAnd::MIN) {
-                stream.writeAttribute("mode", "min");
+                stream.writeAttribute(BrainiacGlobals::XmlModeAttrib, BrainiacGlobals::FuzzAndModeMin);
             } else {
-                stream.writeAttribute("mode", "prod");
+                stream.writeAttribute(BrainiacGlobals::XmlModeAttrib, BrainiacGlobals::FuzzAndModeProduct);
             }
         } else if(fuzz->getType()==FuzzyBase::OR) {
             stream.writeStartElement("Or");
             FuzzyOr *fOr=(FuzzyOr *)fuzz;
             if(fOr->getMode()==FuzzyOr::MAX) {
-                stream.writeAttribute("mode", "max");
+                stream.writeAttribute(BrainiacGlobals::XmlModeAttrib, BrainiacGlobals::FuzzOrModeMax);
             } else {
-                stream.writeAttribute("mode", "sum");
+                stream.writeAttribute(BrainiacGlobals::XmlModeAttrib, BrainiacGlobals::FuzzOrModeSum);
             }
         } else if(fuzz->getType()==FuzzyBase::INPUT) {
             stream.writeStartElement("Input");
@@ -445,19 +471,19 @@ bool AgentManager::saveConfig()
             stream.writeAttribute("p4",  QString::number(fuzzy->getP4(),'f'));
             switch(fuzzy->getMode()) {
                 case FuzzyFuzz::TRAPEZOID:
-                    stream.writeAttribute("mode", "trapezoid");
+                    stream.writeAttribute(BrainiacGlobals::XmlModeAttrib, "trapezoid");
                     break;
                 case FuzzyFuzz::TRIANGLE:
-                    stream.writeAttribute("mode", "triangle");
+                    stream.writeAttribute(BrainiacGlobals::XmlModeAttrib, "triangle");
                     break;
                 case FuzzyFuzz::ACTIVATE:
-                    stream.writeAttribute("mode", "activate");
+                    stream.writeAttribute(BrainiacGlobals::XmlModeAttrib, "activate");
                     break;
                 case FuzzyFuzz::DEACTIVATE:
-                    stream.writeAttribute("mode", "deactivate");
+                    stream.writeAttribute(BrainiacGlobals::XmlModeAttrib, "deactivate");
                     break;
                 case FuzzyFuzz::DIRAC:
-                    stream.writeAttribute("mode", "dirac");
+                    stream.writeAttribute(BrainiacGlobals::XmlModeAttrib, "dirac");
                     break;
                 default:
                     qDebug() << __PRETTY_FUNCTION__ <<" unknown Mode";
@@ -481,10 +507,10 @@ bool AgentManager::saveConfig()
             stream.writeAttribute("rate",  QString::number(timer->getRate(),'f'));
             switch(timer->getMode()) {
             case Timer::IFSTOPPED:
-                stream.writeAttribute("mode",  "ifstopped");
+                stream.writeAttribute(BrainiacGlobals::XmlModeAttrib,  "ifstopped");
                 break;
             case Timer::ALWAYS:
-                stream.writeAttribute("mode",  "always");
+                stream.writeAttribute(BrainiacGlobals::XmlModeAttrib,  "always");
                 break;
             default:
                 qDebug() << __PRETTY_FUNCTION__ <<" unknown Mode";

@@ -151,3 +151,30 @@ void BrainEditor::updateItemLocations()
         }
     }
 }
+
+void BrainEditor::dropEvent(QGraphicsSceneDragDropEvent *event)
+{
+    QString dropAction=event->mimeData()->text();
+    qDebug() << "Droptext "<< dropAction;
+    if(dropAction.startsWith("AddLogicType")) {
+        BrainiacGlobals::ItemType type=(BrainiacGlobals::ItemType)dropAction.right(1).toInt();
+        quint32 fuzzId=0;
+        switch(type) {
+        case BrainiacGlobals::AND:
+            fuzzId=m_agentManager->addAndFuzz(event->scenePos().x(),event->scenePos().y());
+            break;
+        case BrainiacGlobals::OR:
+            fuzzId=m_agentManager->addOrFuzz(event->scenePos().x(),event->scenePos().y());
+            break;
+        default:
+            qDebug()<<__PRETTY_FUNCTION__ << "Not a valid label!";
+        }
+        if(fuzzId>0) {
+            BrainEditorItem *item=new BrainEditorItem(type,m_agentManager,fuzzId);
+            item->setPos(event->scenePos().x()+BrainEditorItem::_width,event->scenePos().y());
+            addItem(item);
+        }
+
+    }
+
+}

@@ -88,7 +88,7 @@ void EditorLabel::mousePressEvent(QMouseEvent *ev)
     QMimeData *mimeData = new QMimeData;
     drag->setHotSpot(QPoint(drag->pixmap().width()/2,
                             drag->pixmap().height()));
-    mimeData->setText(QString("AddLogicType"+QString::number(m_type) ));
+    mimeData->setText(QString("AddLogicType "+QString::number(m_type) ));
     drag->setMimeData(mimeData);
     drag->start();
 }

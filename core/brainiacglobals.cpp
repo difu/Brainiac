@@ -48,3 +48,11 @@ const qreal BrainiacGlobals::randoms[]={
 
 const qreal BrainiacGlobals::MAXQREAL=std::numeric_limits<qreal>::max();
 const qreal BrainiacGlobals::MINQREAL=-std::numeric_limits<qreal>::max();
+
+const QString BrainiacGlobals::XmlModeAttrib=QString("mode");
+
+const QString BrainiacGlobals::FuzzAndModeMin=QString("min");
+const QString BrainiacGlobals::FuzzAndModeProduct=QString("prod");
+
+const QString BrainiacGlobals::FuzzOrModeMax=QString("max");
+const QString BrainiacGlobals::FuzzOrModeSum=QString("sum");

@@ -39,6 +39,14 @@ public:
     static const quint32 NUMBER_OF_RANDOMS=300;
     static const qreal randoms[NUMBER_OF_RANDOMS];
 
+    static const QString XmlModeAttrib;
+
+    static const QString FuzzAndModeMin;
+    static const QString FuzzAndModeProduct;
+
+    static const QString FuzzOrModeMax;
+    static const QString FuzzOrModeSum;
+
     static qreal getRand( quint32 index ) { return randoms[index%NUMBER_OF_RANDOMS]; }
 };
 #endif // BRAINIACGLOBALS_H

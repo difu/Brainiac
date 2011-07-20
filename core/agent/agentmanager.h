@@ -16,14 +16,16 @@ public:
     AgentManager(Scene *scene, Group *group);
 
     // Brain stuff
-    void addAndFuzz(QString name, QString mode, quint32 editorX, quint32 editorY);
-    void addFuzzFuzz(QString name, QString mode, QString intMode, qreal p1, qreal p2, qreal p3, qreal p4, quint32 editorX, quint32 editorY);
-    void addDefuzz(QString name, qreal defuzzValue, bool isElse, quint32 editorX, quint32 editorY);
-    void addOrFuzz(QString name, QString mode, quint32 editorX, quint32 editorY);
-    void addOutputFuzz(QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY);
-    void addInputFuzz(QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY);
-    void addNoiseFuzz(QString name, qreal rate, quint32 editorX, quint32 editorY);
-    void addTimerFuzz(QString name, qreal rate, QString mode, quint32 editorX, quint32 editorY);
+    quint32 addAndFuzz(quint32 editorX, quint32 editorY);
+    quint32 addAndFuzz(QString name, QString mode, quint32 editorX, quint32 editorY);
+    quint32 addFuzzFuzz(QString name, QString mode, QString intMode, qreal p1, qreal p2, qreal p3, qreal p4, quint32 editorX, quint32 editorY);
+    quint32 addDefuzz(QString name, qreal defuzzValue, bool isElse, quint32 editorX, quint32 editorY);
+    quint32 addOrFuzz(quint32 editorX, quint32 editorY);
+    quint32 addOrFuzz(QString name, QString mode, quint32 editorX, quint32 editorY);
+    quint32 addOutputFuzz(QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY);
+    quint32 addInputFuzz(QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY);
+    quint32 addNoiseFuzz(QString name, qreal rate, quint32 editorX, quint32 editorY);
+    quint32 addTimerFuzz(QString name, qreal rate, QString mode, quint32 editorX, quint32 editorY);
     void addConnector(quint32 childId, quint32 parentId, bool inverted);
 
     /** \brief clones an agent
