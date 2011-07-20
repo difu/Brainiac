@@ -54,7 +54,8 @@ SOURCES += main.cpp\
     core/agent/brain/fuzzydefuzz.cpp \
     gui/braineditor/fuzzyeditor.cpp \
     gui/braineditor/defuzzeditor.cpp \
-    core/agent/brain/timer.cpp
+    core/agent/brain/timer.cpp \
+    core/idgenerator.cpp
 
 HEADERS  += gui/mainwindow.h \
     core/scene.h \
@@ -99,7 +100,8 @@ HEADERS  += gui/mainwindow.h \
     core/agent/brain/fuzzydefuzz.h \
     gui/braineditor/fuzzyeditor.h \
     gui/braineditor/defuzzeditor.h \
-    core/agent/brain/timer.h
+    core/agent/brain/timer.h \
+    core/idgenerator.h
 
 FORMS    += gui/mainwindow.ui \
     gui/sceneeditor/groupeditor.ui \

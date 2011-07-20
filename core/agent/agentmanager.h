@@ -3,6 +3,7 @@
 
 #include <QtCore>
 #include "core/agent/brain/output.h"
+#include "core/idgenerator.h"
 
 class Agent;
 class Group;
@@ -13,6 +14,18 @@ class AgentManager
 {
 public:
     AgentManager(Scene *scene, Group *group);
+
+    // Brain stuff
+    void addAndFuzz(QString name, QString mode, quint32 editorX, quint32 editorY);
+    void addFuzzFuzz(QString name, QString mode, QString intMode, qreal p1, qreal p2, qreal p3, qreal p4, quint32 editorX, quint32 editorY);
+    void addDefuzz(QString name, qreal defuzzValue, bool isElse, quint32 editorX, quint32 editorY);
+    void addOrFuzz(QString name, QString mode, quint32 editorX, quint32 editorY);
+    void addOutputFuzz(QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY);
+    void addInputFuzz(QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY);
+    void addNoiseFuzz(QString name, qreal rate, quint32 editorX, quint32 editorY);
+    void addTimerFuzz(QString name, qreal rate, QString mode, quint32 editorX, quint32 editorY);
+    void addConnector(quint32 childId, quint32 parentId, bool inverted);
+
     /** \brief clones an agent
 
                     this function clones an agent from this manager´s master agent
@@ -91,6 +104,7 @@ protected:
     Group *m_group;
     Scene *m_scene;
     QHash<quint32, QPoint> m_editorFuzzyLocations;
+    IdGenerator m_brainIdGenerator;
 
     // Brain stuff
     void addAndFuzz(quint32 id, QString name, QString mode, quint32 editorX, quint32 editorY);
@@ -101,7 +115,6 @@ protected:
     void addInputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY);
     void addNoiseFuzz(quint32 id, QString name, qreal rate, quint32 editorX, quint32 editorY);
     void addTimerFuzz(quint32 id, QString name, qreal rate, QString mode, quint32 editorX, quint32 editorY);
-    void addConnector(quint32 childId, quint32 parentId, bool inverted);
 
     // Body stuff
     void addSphereFromConfig( QXmlStreamReader *reader, quint32 id, QString name, quint32 parent );
