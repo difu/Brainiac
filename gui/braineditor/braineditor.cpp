@@ -216,8 +216,23 @@ void BrainEditor::dropEvent(QGraphicsSceneDragDropEvent *event)
         case BrainiacGlobals::AND:
             fuzzId=m_agentManager->addAndFuzz(event->scenePos().x(),event->scenePos().y());
             break;
+        case BrainiacGlobals::DEFUZZ:
+            fuzzId=m_agentManager->addDefuzz(event->scenePos().x(),event->scenePos().y());
+            break;
+        case BrainiacGlobals::FUZZ:
+            fuzzId=m_agentManager->addFuzzFuzz(event->scenePos().x(),event->scenePos().y());
+            break;
+        case BrainiacGlobals::INPUT:
+            fuzzId=m_agentManager->addInputFuzz(event->scenePos().x(),event->scenePos().y());
+            break;
+        case BrainiacGlobals::NOISE:
+            fuzzId=m_agentManager->addNoiseFuzz(event->scenePos().x(),event->scenePos().y());
+            break;
         case BrainiacGlobals::OR:
             fuzzId=m_agentManager->addOrFuzz(event->scenePos().x(),event->scenePos().y());
+            break;
+        case BrainiacGlobals::OUTPUT:
+            fuzzId=m_agentManager->addOutputFuzz(event->scenePos().x(),event->scenePos().y());
             break;
         case BrainiacGlobals::TIMER:
             fuzzId=m_agentManager->addTimerFuzz(event->scenePos().x(),event->scenePos().y());

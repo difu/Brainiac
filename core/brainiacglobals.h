@@ -50,6 +50,9 @@ public:
     static const char* const FuzzTimerModeIfStopped;
     static const char* const FuzzTimerModeAlways;
 
+    static const char* const FuzzFuzzModeTrapezoid;
+    static const char* const FuzzFuzzInterpolationSine;
+
     static qreal getRand( quint32 index ) { return randoms[index%NUMBER_OF_RANDOMS]; }
 };
 #endif // BRAINIACGLOBALS_H

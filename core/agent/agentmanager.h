@@ -16,16 +16,87 @@ public:
     AgentManager(Scene *scene, Group *group);
 
     // Brain stuff
-    quint32 addAndFuzz(quint32 editorX, quint32 editorY);
+    /** \brief adds an And fuzz rule to all agent brains
+
+                    creates an And fuzz node with name "And" and MIN mode
+
+            \param  editorX x ordinate of label in editor
+            \param  editorY y ordinate of label in editor
+            \return id of the created rule
+    **/
+    quint32 addAndFuzz(quint32 editorX=0, quint32 editorY=0);
     quint32 addAndFuzz(QString name, QString mode, quint32 editorX, quint32 editorY);
+    /** \brief adds a Fuzz fuzz rule to all agent brains
+
+                    creates a fuzz fuzz node with name "Fuzz", "sine" interpolation and "trapezoid" mode.
+                    The points of the trapezoid are at 0.3, 0.5, 0.7, 0.9
+
+            \param  editorX x ordinate of label in editor
+            \param  editorY y ordinate of label in editor
+            \return id of the created rule
+    **/
+    quint32 addFuzzFuzz(quint32 editorX=0, quint32 editorY=0);
     quint32 addFuzzFuzz(QString name, QString mode, QString intMode, qreal p1, qreal p2, qreal p3, qreal p4, quint32 editorX, quint32 editorY);
+
+    /** \brief adds a Defuzz fuzz rule to all agent brains
+
+                    creates a defuzz fuzz node with name "defuzz" and defuzz weight 1.0 as a "no else" defuzz rule
+
+            \param  editorX x ordinate of label in editor
+            \param  editorY y ordinate of label in editor
+            \return id of the created rule
+    **/
+    quint32 addDefuzz(quint32 editorX=0, quint32 editorY=0);
     quint32 addDefuzz(QString name, qreal defuzzValue, bool isElse, quint32 editorX, quint32 editorY);
-    quint32 addOrFuzz(quint32 editorX, quint32 editorY);
+    /** \brief adds an Or fuzz rule to all agent brains
+
+                    creates an Or fuzz node with name "Or" and MAX mode
+
+            \param  editorX x ordinate of label in editor
+            \param  editorY y ordinate of label in editor
+            \return id of the created rule
+    **/
+    quint32 addOrFuzz(quint32 editorX=0, quint32 editorY=0);
     quint32 addOrFuzz(QString name, QString mode, quint32 editorX, quint32 editorY);
+    /** \brief adds an Output fuzz rule to all agent brains
+
+                    creates an output fuzz node with name "Output", no channel assigned, and min and max are set to 0,1
+
+            \param  editorX x ordinate of label in editor
+            \param  editorY y ordinate of label in editor
+            \return id of the created rule
+    **/
+    quint32 addOutputFuzz(quint32 editorX=0, quint32 editorY=0);
     quint32 addOutputFuzz(QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY);
+    /** \brief adds an Input fuzz rule to all agent brains
+
+                    creates an input fuzz node with name "Input", no channel assigned, and min and max are set to 0,1
+
+            \param  editorX x ordinate of label in editor
+            \param  editorY y ordinate of label in editor
+            \return id of the created rule
+    **/
+    quint32 addInputFuzz(quint32 editorX=0, quint32 editorY=0);
     quint32 addInputFuzz(QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY);
+    /** \brief adds a Noise fuzz rule to all agent brains
+
+                    creates a noise fuzz node with name "Noise" and a rate of "1"
+
+            \param  editorX x ordinate of label in editor
+            \param  editorY y ordinate of label in editor
+            \return id of the created rule
+    **/
+    quint32 addNoiseFuzz(quint32 editorX=0, quint32 editorY=0);
     quint32 addNoiseFuzz(QString name, qreal rate, quint32 editorX, quint32 editorY);
-    quint32 addTimerFuzz(quint32 editorX, quint32 editorY);
+    /** \brief adds a Timer fuzz rule to all agent brains
+
+                    creates a timer fuzz node with name "Timer", a rate of "1" and mode "IF STOPPED"
+
+            \param  editorX x ordinate of label in editor
+            \param  editorY y ordinate of label in editor
+            \return id of the created rule
+    **/
+    quint32 addTimerFuzz(quint32 editorX=0, quint32 editorY=0);
     quint32 addTimerFuzz(QString name, qreal rate, QString mode, quint32 editorX, quint32 editorY);
     void addConnector(quint32 childId, quint32 parentId, bool inverted);
 

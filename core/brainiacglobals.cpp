@@ -49,13 +49,16 @@ const qreal BrainiacGlobals::randoms[]={
 const qreal BrainiacGlobals::MAXQREAL=std::numeric_limits<qreal>::max();
 const qreal BrainiacGlobals::MINQREAL=-std::numeric_limits<qreal>::max();
 
-const char* const  BrainiacGlobals::XmlModeAttrib="mode\0";
+const char* const BrainiacGlobals::XmlModeAttrib="mode\0";
 
-const char* const  BrainiacGlobals::FuzzAndModeMin="min\0";
-const char* const  BrainiacGlobals::FuzzAndModeProduct="prod\0";
+const char* const BrainiacGlobals::FuzzAndModeMin="min\0";
+const char* const BrainiacGlobals::FuzzAndModeProduct="prod\0";
 
-const char* const  BrainiacGlobals::FuzzOrModeMax="max\0";
-const char* const  BrainiacGlobals::FuzzOrModeSum="sum\0";
+const char* const BrainiacGlobals::FuzzFuzzModeTrapezoid="trapezoid\0";
+const char* const BrainiacGlobals::FuzzFuzzInterpolationSine="sine\0";
+
+const char* const BrainiacGlobals::FuzzOrModeMax="max\0";
+const char* const BrainiacGlobals::FuzzOrModeSum="sum\0";
 
 const char* const BrainiacGlobals::FuzzTimerModeIfStopped="ifstopped\0";
 const char* const BrainiacGlobals::FuzzTimerModeAlways="always\0";

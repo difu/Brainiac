@@ -105,6 +105,13 @@ void AgentManager::addAndFuzz(quint32 id, QString name, QString mode, quint32 ed
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
 }
 
+quint32 AgentManager::addFuzzFuzz(quint32 editorX, quint32 editorY)
+{
+    quint32 id=m_brainIdGenerator.getNewId();
+    addFuzzFuzz(id,"Fuzz",BrainiacGlobals::FuzzFuzzModeTrapezoid,BrainiacGlobals::FuzzFuzzInterpolationSine,0.3f,0.5f,0.7f,0.9f,editorX,editorY);
+    return id;
+}
+
 quint32 AgentManager::addFuzzFuzz(QString name, QString mode, QString intMode, qreal p1, qreal p2, qreal p3, qreal p4, quint32 editorX, quint32 editorY)
 {
     quint32 id=m_brainIdGenerator.getNewId();
@@ -116,7 +123,7 @@ void AgentManager::addFuzzFuzz(quint32 id, QString name, QString mode, QString i
 {
     FuzzyFuzz::Mode fuzzMode=FuzzyFuzz::TRAPEZOID;;
     FuzzyFuzz::InterpolationMode interMode=FuzzyFuzz::LINEAR;
-    if(QString::compare("trapezoid",mode,Qt::CaseInsensitive )==0) {
+    if(QString::compare(BrainiacGlobals::FuzzFuzzModeTrapezoid,mode,Qt::CaseInsensitive )==0) {
         fuzzMode=FuzzyFuzz::TRAPEZOID;
     } else if(QString::compare("triangle",mode,Qt::CaseInsensitive )==0) {
         fuzzMode=FuzzyFuzz::TRIANGLE;
@@ -132,7 +139,7 @@ void AgentManager::addFuzzFuzz(quint32 id, QString name, QString mode, QString i
 
     if(QString::compare("linear",intMode,Qt::CaseInsensitive )==0) {
         interMode=FuzzyFuzz::LINEAR;
-    } else if(QString::compare("sine",intMode,Qt::CaseInsensitive )==0) {
+    } else if(QString::compare(BrainiacGlobals::FuzzFuzzInterpolationSine,intMode,Qt::CaseInsensitive )==0) {
         interMode=FuzzyFuzz::SINE;
     } else if(QString::compare("quad",intMode,Qt::CaseInsensitive )==0) {
         interMode=FuzzyFuzz::QUAD;
@@ -144,6 +151,13 @@ void AgentManager::addFuzzFuzz(quint32 id, QString name, QString mode, QString i
     }
     m_brainIdGenerator.registerId(id);
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
+}
+
+quint32 AgentManager::addDefuzz(quint32 editorX, quint32 editorY)
+{
+    quint32 id=m_brainIdGenerator.getNewId();
+    addDefuzz(id,"Defuzz",1.0,false,editorX,editorY);
+    return id;
 }
 
 quint32 AgentManager::addDefuzz(QString name, qreal defuzzValue, bool isElse, quint32 editorX, quint32 editorY)
@@ -191,6 +205,13 @@ void AgentManager::addOrFuzz(quint32 id, QString name, QString mode, quint32 edi
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
 }
 
+quint32 AgentManager::addOutputFuzz(quint32 editorX, quint32 editorY)
+{
+    quint32 id=m_brainIdGenerator.getNewId();
+    addOutputFuzz(id,"Output","",0.0f,1.0f,editorX,editorY);
+    return id;
+}
+
 quint32 AgentManager::addOutputFuzz(QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY)
 {
     quint32 id=m_brainIdGenerator.getNewId();
@@ -210,6 +231,13 @@ void AgentManager::addOutputFuzz(quint32 id, QString name, QString channel, qrea
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
 }
 
+quint32 AgentManager::addInputFuzz(quint32 editorX, quint32 editorY)
+{
+    quint32 id=m_brainIdGenerator.getNewId();
+    addInputFuzz(id,"Input","",0.0f,1.0f,editorX,editorY);
+    return id;
+}
+
 quint32 AgentManager::addInputFuzz(QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY)
 {
     quint32 id=m_brainIdGenerator.getNewId();
@@ -227,6 +255,12 @@ void AgentManager::addInputFuzz(quint32 id, QString name, QString channel, qreal
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
 }
 
+quint32 AgentManager::addNoiseFuzz(quint32 editorX, quint32 editorY)
+{
+    quint32 id=m_brainIdGenerator.getNewId();
+    addNoiseFuzz(id,"Noise",1.0f,editorX,editorY);
+    return id;
+}
 
 quint32 AgentManager::addNoiseFuzz(QString name, qreal rate, quint32 editorX, quint32 editorY)
 {
@@ -477,7 +511,7 @@ bool AgentManager::saveConfig()
             stream.writeAttribute("p4",  QString::number(fuzzy->getP4(),'f'));
             switch(fuzzy->getMode()) {
                 case FuzzyFuzz::TRAPEZOID:
-                    stream.writeAttribute(BrainiacGlobals::XmlModeAttrib, "trapezoid");
+                    stream.writeAttribute(BrainiacGlobals::XmlModeAttrib, BrainiacGlobals::FuzzFuzzModeTrapezoid);
                     break;
                 case FuzzyFuzz::TRIANGLE:
                     stream.writeAttribute(BrainiacGlobals::XmlModeAttrib, "triangle");
