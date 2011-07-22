@@ -30,6 +30,7 @@ public:
     static const qint32 relyPos = -50;
     static const qint32 _height = 50;
     static const qint32 _width = 120;
+    static const qint32 _raster = 10;
 
     int type() const {
         // Enable the use of qgraphicsitem_cast with this item.
@@ -40,7 +41,6 @@ protected:
     void *m_object;
     quint32 m_id;
     BrainiacGlobals::ItemType m_type;
-    static const qint32 _raster = 10;
     qreal adjust;
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
     QImage m_symbolPic;

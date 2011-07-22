@@ -95,8 +95,29 @@ BrainEditor::BrainEditor(Scene *scene, AgentManager *agentManager) : EditorBase(
     foreach (QGraphicsItem *item, items()) {
         if (item->type() == BrainEditorItem::Type) {
             BrainEditorItem *eItem=(BrainEditorItem *)item;
-            eItem->setPos(eItem->x()+1,eItem->y());
-            eItem->setPos(eItem->x()-1,eItem->y());
+            eItem->setPos(eItem->x()+EditorItem::_raster,eItem->y());
+            eItem->setPos(eItem->x()-EditorItem::_raster,eItem->y());
+        }
+    }
+}
+
+void BrainEditor::deleteSelectedItems()
+{
+    // First delete connections
+    foreach(QGraphicsItem *item,this->selectedItems()) {
+        if(item->type()==EditorItemConnector::Type) {
+            qDebug() << "Found connector 2b deleted";
+            EditorItemConnector *conn=(EditorItemConnector*)item;
+            EditorItem *startItem=conn->startItem();
+            EditorItem *endItem=conn->endItem();
+            m_agentManager->deleteConnector(endItem->getId(),startItem->getId());
+            removeItem(conn);
+            delete(conn);
+        }
+    }
+    foreach(QGraphicsItem *item,this->selectedItems()) {
+        if(item->type()==EditorItem::Type) {
+            qDebug() << "Found item 2b deleted";
         }
     }
 }
@@ -157,8 +178,8 @@ void BrainEditor::mousePressEvent(QGraphicsSceneMouseEvent *event) {
                         m_agentManager->addConnector(item->getId(),m_connectSourceItem->getId(),false);
                     }
                     //connector->setInverted(fuzzChild->isConnectionInverted(fuzzy->getId()));
-                    item->setPos(item->x()+1,item->y()); //! \bug move item to make it appear
-                    //item->setPos(item->x()-1,item->y());
+                    item->setPos(item->x()+EditorItem::_raster,item->y()); //! \bug move item to make it appear
+                    item->setPos(item->x()-EditorItem::_raster,item->y());
                     addItem(connector);
                     emit statusBarMessageChanged(QString("Connected"));
                     m_connectSourceItem=0;
@@ -190,6 +211,9 @@ void BrainEditor::keyPressEvent(QKeyEvent *event)
     }
     if(event->key()==Qt::Key_Shift) {
       m_shiftPressed=true;
+    }
+    if(event->key()==Qt::Key_Delete) {
+        deleteSelectedItems();
     }
 }
 

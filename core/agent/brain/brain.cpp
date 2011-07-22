@@ -159,6 +159,21 @@ void Brain::connectFuzzies(quint32 childId, quint32 parentId, bool inverted)
     }
 }
 
+void Brain::disconnectFuzzies(quint32 childId, quint32 parentId)
+{
+    FuzzyBase *child=getFuzzy(childId);
+    FuzzyBase *parent=getFuzzy(parentId);
+    if(child && parent) {
+        child->deleteParent(parent);
+        parent->deleteChild(child);
+        disconnect(parent,SIGNAL(resultChanged()), child, SLOT(inputChanged()));
+//        qDebug() << __PRETTY_FUNCTION__ << "Disconnected" << child << parent;
+    } else {
+        qDebug() << __PRETTY_FUNCTION__ << "Whoops! Source or dest are invalid! " << child << parent;
+        qDebug() << __PRETTY_FUNCTION__ << m_agent->getId() << m_agent->getPosition()->x() << m_agent->getPosition()->z();
+    }
+}
+
 Agent* Brain::getAgent()
 {
     return m_agent;

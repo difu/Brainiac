@@ -108,6 +108,7 @@ public:
             \return pointer to new agent instance
     **/
     Agent *cloneAgent(quint32 id);
+    void deleteConnector(quint32 childId, quint32 parentId);
     quint32 getId() { return m_id; }
     qint32 getEditorTranslationX() { return m_editX; }
     qint32 getEditorTranslationY() { return m_editY; }

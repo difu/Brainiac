@@ -276,13 +276,11 @@ void Agent::createChannels()
 
 }
 
-/** \brief deletes channel
+void Agent::deleteConnection(quint32 parentId, quint32 childId)
+{
+    m_brain->disconnectFuzzies(childId,parentId);
+}
 
-                the channel is deleted both from inputs and outputs.
-                also its destructor is invoked
-                @param channel the channel to be deleted
-
-**/
 void Agent::deleteChannel(Channel *channel)
 {
     m_inputs.remove(m_inputs.key(channel));

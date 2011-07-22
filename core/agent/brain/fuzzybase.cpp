@@ -27,6 +27,34 @@ void FuzzyBase::addParent(FuzzyBase *parent, bool isInverted)
     m_parents.append(par);
 }
 
+void FuzzyBase::deleteChild(FuzzyBase *child)
+{
+    if(m_children.contains(child)) {
+        m_children.removeAll(child);
+    } else {
+        qDebug() << __PRETTY_FUNCTION__ << "This fuzz has no such child";
+    }
+}
+
+void FuzzyBase::deleteParent(FuzzyBase *parent)
+{
+    bool found=false;
+    forever{
+        found=false;
+        for (int i = 0; i < m_parents.size(); ++i) {
+            Parent par=m_parents.at(i);
+            if (par.parent ==parent ) {
+                m_parents.removeAt(i);
+                found=true;
+                //qDebug() << __PRETTY_FUNCTION__ << "removed parent" << parent->getName();
+                break;
+            }
+        }
+        if(found==false)
+            break;
+    }
+}
+
 QList<FuzzyBase *> FuzzyBase::getChildren()
 {
     return m_children;
@@ -110,5 +138,14 @@ bool FuzzyBase::setResult(qreal result,bool emitChange)
     }
     else {
         return false;
+    }
+}
+
+FuzzyBase::~FuzzyBase() {
+    foreach(FuzzyBase *child, m_children) {
+        child->deleteParent(this);
+    }
+    foreach(Parent par,m_parents) {
+        par.parent->deleteChild(this);
     }
 }

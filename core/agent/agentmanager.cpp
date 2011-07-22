@@ -320,6 +320,14 @@ Agent* AgentManager::cloneAgent(quint32 id)
     return agent;
 }
 
+void AgentManager::deleteConnector(quint32 childId, quint32 parentId)
+{
+    m_masterAgent->deleteConnection(parentId,childId);
+    foreach(Agent* agent,m_group->getAgents()) {
+        agent->deleteConnection(parentId,childId);
+    }
+}
+
 QHash<quint32, QPoint> AgentManager::getEditorFuzzyLocations()
 {
     return m_editorFuzzyLocations;

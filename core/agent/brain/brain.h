@@ -88,10 +88,18 @@ public:
                 @sa FuzzyBase
     **/
     void connectFuzzies(quint32 childId, quint32 parentId, bool inverted);
+
+    /** \brief disconnect two fuzz nodes
+                disconnects the fuzzies and removes their child/parent entries
+                @param childId the fuzz to receive the output/result
+                @param parentId the fuzz to send it´s result
+                @sa FuzzyBase
+    **/
+    void disconnectFuzzies(quint32 childId, quint32 parentId);
+
     /** \brief returns the agent this brain belongs to
 
                     @returns the agent
-
     **/
     Agent* getAgent();
     /** \brief returns the pointer to the fuzzie´s is

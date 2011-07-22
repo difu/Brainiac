@@ -20,9 +20,12 @@ class FuzzyBase : public QObject
 public:
     enum LogicType{AND=BrainiacGlobals::AND,OR=BrainiacGlobals::OR,OUTPUT=BrainiacGlobals::OUTPUT,INPUT=BrainiacGlobals::INPUT,DEFUZZ=BrainiacGlobals::DEFUZZ,FUZZ=BrainiacGlobals::FUZZ,NOISE=BrainiacGlobals::NOISE,TIMER=BrainiacGlobals::TIMER};
     explicit FuzzyBase(LogicType logicType, Brain *brain, quint32 id, QString name, qreal min, qreal max);
+    virtual ~FuzzyBase();
     void addChild(FuzzyBase *child);
     void addParent(FuzzyBase *parent, bool isInverted=false);
     virtual void calculate()=0;
+    void deleteChild(FuzzyBase *child);
+    void deleteParent(FuzzyBase *parent);
     QList<FuzzyBase *> getChildren();
     quint32 getId() { return m_id; }
     qreal getMinValue() {return m_minValue;}

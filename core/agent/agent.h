@@ -85,7 +85,20 @@ public:
 
     **/
     void advanceCommit();
+
+    /** \brief deletes channel
+
+                    the channel is deleted both from inputs and outputs.
+                    also its destructor is invoked
+                    @param channel the channel to be deleted
+
+    **/
     void deleteChannel(Channel* channel);
+    /** \brief deletes a connection between two fuzzies
+        @param childId the id of the child/the receiver
+        @param parentId the id of the parent/the sender
+    **/
+    void deleteConnection(quint32 parentId, quint32 childId);
     /** \brief returns the body
     **/
     Body *getBody();
