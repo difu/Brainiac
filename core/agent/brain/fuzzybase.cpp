@@ -148,4 +148,5 @@ FuzzyBase::~FuzzyBase() {
     foreach(Parent par,m_parents) {
         par.parent->deleteChild(this);
     }
+    //qDebug() << __PRETTY_FUNCTION__ << "Fuzzy deleted "<< m_id;
 }

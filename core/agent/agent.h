@@ -99,6 +99,15 @@ public:
         @param parentId the id of the parent/the sender
     **/
     void deleteConnection(quint32 parentId, quint32 childId);
+
+    /** \brief deletes a fuzz from this agent´s brain
+
+                    all connecttions from/to this fuzz´ brain are also deleted
+
+            \param  fuzzId the id of the fuzz to be deleted
+    **/
+    void deleteFuzz(quint32 fuzzId);
+
     /** \brief returns the body
     **/
     Body *getBody();

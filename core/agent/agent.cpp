@@ -288,6 +288,11 @@ void Agent::deleteChannel(Channel *channel)
     delete channel;
 }
 
+void Agent::deleteFuzz(quint32 fuzzId)
+{
+    m_brain->deleteFuzz(fuzzId);
+}
+
 Body* Agent::getBody()
 {
     return m_body;

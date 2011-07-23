@@ -159,6 +159,17 @@ void Brain::connectFuzzies(quint32 childId, quint32 parentId, bool inverted)
     }
 }
 
+void Brain::deleteFuzz(quint32 fuzzId)
+{
+    FuzzyBase *fuzz=getFuzzy(fuzzId);
+    if(fuzz) {
+        m_fuzzies.removeAll(fuzz);
+        fuzz->deleteLater();
+    } else {
+        qDebug() << __PRETTY_FUNCTION__ << "Whoops! fuzz id is invalid! ";
+    }
+}
+
 void Brain::disconnectFuzzies(quint32 childId, quint32 parentId)
 {
     FuzzyBase *child=getFuzzy(childId);

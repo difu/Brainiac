@@ -109,6 +109,15 @@ public:
     **/
     Agent *cloneAgent(quint32 id);
     void deleteConnector(quint32 childId, quint32 parentId);
+
+    /** \brief deletes a fuzz from all agent´s brains belonging to this group
+
+                    all connecttions from/to this fuzz´ brain are also deleted
+
+            \param  fuzzId the id of the fuzz to be deleted
+    **/
+    void deleteFuzz(quint32 fuzzId);
+
     quint32 getId() { return m_id; }
     qint32 getEditorTranslationX() { return m_editX; }
     qint32 getEditorTranslationY() { return m_editY; }

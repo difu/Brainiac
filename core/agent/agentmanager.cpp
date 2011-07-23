@@ -328,6 +328,14 @@ void AgentManager::deleteConnector(quint32 childId, quint32 parentId)
     }
 }
 
+void AgentManager::deleteFuzz(quint32 fuzzId)
+{
+    m_masterAgent->deleteFuzz(fuzzId);
+    foreach(Agent* agent,m_group->getAgents()) {
+        agent->deleteFuzz(fuzzId);
+    }
+}
+
 QHash<quint32, QPoint> AgentManager::getEditorFuzzyLocations()
 {
     return m_editorFuzzyLocations;

@@ -89,6 +89,14 @@ public:
     **/
     void connectFuzzies(quint32 childId, quint32 parentId, bool inverted);
 
+    /** \brief deletes a fuzz from this brain
+
+                    all connecttions from/to this fuzz´ brain are also deleted
+
+            \param  fuzzId the id of the fuzz to be deleted
+    **/
+    void deleteFuzz(quint32 fuzzId);
+
     /** \brief disconnect two fuzz nodes
                 disconnects the fuzzies and removes their child/parent entries
                 @param childId the fuzz to receive the output/result
