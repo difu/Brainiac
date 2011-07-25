@@ -712,3 +712,17 @@ void AgentManager::setOutputDefuzzMode(quint32 id, Output::DefuzzMode mode)
     }
 
 }
+
+// Noise Stuff
+void AgentManager::setNoiseRate(quint32 id, qreal rate)
+{
+    if(m_masterAgent->getBrain()->getFuzzy(id)->getType()==FuzzyBase::NOISE) {
+        Noise *masterNoise=(Noise *)m_masterAgent->getBrain()->getFuzzy(id);
+        masterNoise->setRate(rate);
+        foreach(Agent *agent, m_group->getAgents()) {
+            Noise *agentNoise=(Noise *) agent->getBrain()->getFuzzy(id);
+            Q_ASSERT(agentNoise->getType()==FuzzyBase::NOISE);
+            agentNoise->setRate(rate);
+        }
+    }
+}

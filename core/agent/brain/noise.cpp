@@ -36,6 +36,6 @@ qreal Noise::getRate()
 
 void Noise::setRate(qreal rate)
 {
-    m_rate=rate;
+    m_rate=qBound((double)0.0f,rate,(double)this->getMaxRate());
 }
 

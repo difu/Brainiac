@@ -6,6 +6,7 @@
 #include "gui/braineditor/defuzzeditor.h"
 #include "gui/braineditor/inputeditor.h"
 #include "gui/braineditor/outputeditor.h"
+#include "gui/braineditor/noiseeditor.h"
 #include "gui/editorgraphicsview.h"
 #include "gui/sceneeditor/sceneeditor.h"
 #include "gui/sceneeditor/groupeditor.h"
@@ -197,6 +198,9 @@ void MainWindow::createEditorWidgets()
     m_fuzzyEditor=new FuzzyEditor(m_scene,m_logicElementEditWidget);
     m_fuzzyEditor->setVisible(false);
 
+    m_noiseEditor=new NoiseEditor(m_scene,m_logicElementEditWidget);
+    m_noiseEditor->setVisible(false);
+
     foreach(BrainEditor *brainEditor,m_brainEditors) {
         // This signal activates editor in South region
         connect(brainEditor, SIGNAL(itemClicked(ItemEditorWidgetsBase::editMessage)),this,SLOT(editorNodeClick(ItemEditorWidgetsBase::editMessage)));
@@ -210,6 +214,7 @@ void MainWindow::createEditorWidgets()
     connect(m_outputEditor,SIGNAL(updateBrainEditor()),this,SLOT(refreshBrainEditor()));
     connect(m_defuzzEditor,SIGNAL(updateBrainEditor()),this,SLOT(refreshBrainEditor()));
     connect(m_fuzzyEditor,SIGNAL(updateBrainEditor()),this,SLOT(refreshBrainEditor()));
+    connect(m_noiseEditor,SIGNAL(updateBrainEditor()),this,SLOT(refreshBrainEditor()));
     //connect(m_outputEditor,SIGNAL(updateGLContent()),m_sceneDisplay,SLOT(updateGL()));
     m_layout->addWidget(m_logicElementEditWidget,MainWindowLayout::South);
 }
@@ -242,11 +247,6 @@ void MainWindow::editModeComboChange(int index)
 **/
 void MainWindow::editorNodeClick(ItemEditorWidgetsBase::editMessage msg)
 {
-    m_groupEditor->setVisible(msg.type==BrainiacGlobals::GROUP);
-    m_inputEditor->setVisible(msg.type==BrainiacGlobals::INPUT);
-    m_outputEditor->setVisible(msg.type==BrainiacGlobals::OUTPUT);
-    m_defuzzEditor->setVisible(msg.type==BrainiacGlobals::DEFUZZ);
-    m_fuzzyEditor->setVisible(msg.type==BrainiacGlobals::FUZZ);
     Group *grp;
     AgentManager *mgr;
     switch(msg.type) {
@@ -271,10 +271,20 @@ void MainWindow::editorNodeClick(ItemEditorWidgetsBase::editMessage msg)
         mgr=(AgentManager *)msg.object;
         m_fuzzyEditor->setFuzzConfig(mgr,msg.id);
         break;
+    case BrainiacGlobals::NOISE:
+        mgr=(AgentManager *)msg.object;
+        m_noiseEditor->setNoiseConfig(mgr,msg.id);
+        break;
 
     default:
     ;
     }
+    m_groupEditor->setVisible(msg.type==BrainiacGlobals::GROUP);
+    m_inputEditor->setVisible(msg.type==BrainiacGlobals::INPUT);
+    m_outputEditor->setVisible(msg.type==BrainiacGlobals::OUTPUT);
+    m_defuzzEditor->setVisible(msg.type==BrainiacGlobals::DEFUZZ);
+    m_fuzzyEditor->setVisible(msg.type==BrainiacGlobals::FUZZ);
+    m_noiseEditor->setVisible(msg.type==BrainiacGlobals::NOISE);
 }
 
 void MainWindow::refreshBrainEditor()

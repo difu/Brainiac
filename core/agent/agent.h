@@ -31,16 +31,31 @@ class Agent : public QObject
 {
     Q_OBJECT
 public:
+    /** \brief Constructs new Agent instance
+
+                    This constructor is used to create a new agent instance belonging to the scene
+                    @param scene a pointer to the scene
+                    @param id the id of the agent
+
+    **/
     Agent(Scene *scene, quint32 id);
+
+    /** \brief Constructs new Agent instance as a copy of an existing agent
+
+                    This constructor is used to create a new agent which is an exact copy of given agent except the id.
+                    @param agent a pointer to the original agent
+                    @param id the id of the agent
+    **/
     Agent(Agent *agent, quint32 id=0);
+
     /** \brief adds an input channel
 
                     adds an input channel to the agent.
                     If channel already exists nothing is added
                     \return true, if adding was successful, false if not
-
     **/
     bool addInputChannel(Channel* channel, QString name);
+
     /** \brief adds an output channel
 
                     adds an output channel to the agent.
@@ -51,6 +66,14 @@ public:
 
     **/
     bool addOutputChannel(Channel* channel, QString name);
+
+    /** \brief connects to fuzz rules
+
+                    @param child the id of the child of the connection (the receiver)
+                    @param parentId the id of the parent of the connection (the sender)
+                    @param inverted true, if this connection should be inverted (the result will be inverted)
+
+    **/
     void addConnection(quint32 child, quint32 parentId, bool inverted);
     // Fuzz Stuff
     void addAndFuzz(quint32 id, QString name, FuzzyAnd::Mode mode);

@@ -22,6 +22,7 @@ class InputEditor;
 class OutputEditor;
 class DefuzzEditor;
 class FuzzyEditor;
+class NoiseEditor;
 class SceneDisplay;
 
 class AgentManager;
@@ -72,9 +73,10 @@ protected:
     OutputEditor *m_outputEditor;
     DefuzzEditor *m_defuzzEditor;
     FuzzyEditor *m_fuzzyEditor;
+    NoiseEditor *m_noiseEditor;
 
 
-    QHash<AgentManager*, BrainEditor*> m_brainEditors;
+    QHash<AgentManager*, BrainEditor*> m_brainEditors;  //!< all BrainEditors.
     AgentManager *m_activeAgentManager; //!< AgentManager that is edited in brain/body editor
 
     QAction *m_saveAgentAction;

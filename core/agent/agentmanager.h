@@ -175,6 +175,14 @@ public:
                 @sa Defuzz
     **/
     void setOutputDefuzzMode(quint32 id, Output::DefuzzMode mode);
+
+    /** \brief sets the rate of given rate of all agents
+                each agent belonging to this manager is updated including its master agent
+                @param id the noise id
+                @param rate the rate of this noise. A value of "0" returns a fixed pseudo random value
+                @sa Noise
+    **/
+    void setNoiseRate(quint32 id, qreal rate);
     void setId(quint32 id) { m_id=id; }
     void setName( QString name ) { m_name=name; }
     void setFileName( QString fileName ) { m_fileName=fileName; }

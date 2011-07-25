@@ -55,7 +55,8 @@ SOURCES += main.cpp\
     gui/braineditor/fuzzyeditor.cpp \
     gui/braineditor/defuzzeditor.cpp \
     core/agent/brain/timer.cpp \
-    core/idgenerator.cpp
+    core/idgenerator.cpp \
+    gui/braineditor/noiseeditor.cpp
 
 HEADERS  += gui/mainwindow.h \
     core/scene.h \
@@ -101,14 +102,16 @@ HEADERS  += gui/mainwindow.h \
     gui/braineditor/fuzzyeditor.h \
     gui/braineditor/defuzzeditor.h \
     core/agent/brain/timer.h \
-    core/idgenerator.h
+    core/idgenerator.h \
+    gui/braineditor/noiseeditor.h
 
 FORMS    += gui/mainwindow.ui \
     gui/sceneeditor/groupeditor.ui \
     gui/braineditor/outputeditor.ui \
     gui/braineditor/inputeditor.ui \
     gui/braineditor/fuzzyeditor.ui \
-    gui/braineditor/defuzzeditor.ui
+    gui/braineditor/defuzzeditor.ui \
+    gui/braineditor/noiseeditor.ui
 
 LIBS += -framework \
     glut
