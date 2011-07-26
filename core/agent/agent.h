@@ -54,7 +54,7 @@ public:
                     If channel already exists nothing is added
                     \return true, if adding was successful, false if not
     **/
-    bool addInputChannel(Channel* channel, QString name);
+    bool addInputChannel(Channel* channel, const QString &name);
 
     /** \brief adds an output channel
 
@@ -65,7 +65,7 @@ public:
                     \return true, if adding was successful, false if not
 
     **/
-    bool addOutputChannel(Channel* channel, QString name);
+    bool addOutputChannel(Channel* channel, const QString &name);
 
     /** \brief connects to fuzz rules
 
@@ -76,14 +76,14 @@ public:
     **/
     void addConnection(quint32 child, quint32 parentId, bool inverted);
     // Fuzz Stuff
-    void addAndFuzz(quint32 id, QString name, FuzzyAnd::Mode mode);
-    void addDefuzz(quint32 id, QString name, qreal defuzzValue, bool isElse);
-    void addFuzzFuzz(quint32 id, QString name, FuzzyFuzz::Mode mode, FuzzyFuzz::InterpolationMode intMode, qreal p1, qreal p2, qreal p3, qreal p4);
-    void addInputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max);
-    void addOrFuzz(quint32 id, QString name, FuzzyOr::Mode mode);
-    void addOutputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max);
-    void addNoiseFuzz(quint32 id, QString name, qreal rate);
-    void addTimerFuzz(quint32 id, QString name, qreal rate, Timer::TimerMode mode);
+    void addAndFuzz(quint32 id, const QString &name, FuzzyAnd::Mode mode);
+    void addDefuzz(quint32 id, const QString &name, qreal defuzzValue, bool isElse);
+    void addFuzzFuzz(quint32 id, const QString &name, FuzzyFuzz::Mode mode, FuzzyFuzz::InterpolationMode intMode, qreal p1, qreal p2, qreal p3, qreal p4);
+    void addInputFuzz(quint32 id, const QString &name, const QString &channel, qreal min, qreal max);
+    void addOrFuzz(quint32 id, const QString &name, FuzzyOr::Mode mode);
+    void addOutputFuzz(quint32 id, const QString &name, const QString &channel, qreal min, qreal max);
+    void addNoiseFuzz(quint32 id, const QString &name, qreal rate);
+    void addTimerFuzz(quint32 id, const QString &name, qreal rate, Timer::TimerMode mode);
     /** \brief advances this agent
 
                     calling this function makes the agent go one step further in time
@@ -133,47 +133,47 @@ public:
 
     /** \brief returns the body
     **/
-    Body *getBody();
+    Body *getBody() const;
     /** \brief returns the brain
     **/
-    Brain *getBrain();
+    Brain *getBrain() const;
     /** \brief returns the bodie´s color
             by default this value is inherited recursivly to all segments of the body
             @sa Segment::setColorInherited(bool inherited)
     **/
-    Channel *getColor();
+    Channel *getColor() const;
     /** \brief returns input channel
         @param name the name of the input channel
         @returns 0 if channel does not exist
     **/
-    Channel *getInputChannel(QString name);
+    Channel *getInputChannel(const QString &name) const;
     /** \brief returns output channel
         @param name the name of the output channel
         @returns 0 if channel does not exist
     **/
-    Channel *getOutputChannel(QString name);
+    Channel *getOutputChannel(const QString &name);
     /** \brief returns the id of this agent
     **/
-    quint32 getId();
+    quint32 getId() const;
     /** \brief returns the position of the agent in world space
     **/
-    QVector3D *getPosition();
+    const QVector3D *getPosition() const;
     /** \brief returns the rotation of the agent in world space
     **/
-    QVector3D *getRotation();
+    const QVector3D *getRotation() const;
     /** \brief true if sound emmisions should be rendered
     **/
-    bool getRenderSoundEmission();
+    bool getRenderSoundEmission() const;
     /** \brief returns the scene
         @sa Scene
     **/
-    Scene *getScene();
+    Scene *getScene() const;
     /** \brief @returns true if channel exists
     **/
-    bool inputChannelExists(QString name);
+    bool inputChannelExists(const QString &name) const;
     /** \brief @returns true if channel exists
     **/
-    bool outputChannelExists(QString name);
+    bool outputChannelExists(const QString &name) const;
     /** \brief renders the agent in gl context
             calls the bodie´s render function
             it also draws sound emmissions

@@ -31,15 +31,15 @@ public:
     void addAndFuzz(FuzzyAnd *andFuzz);
     /** \brief adds an and fuzzy rule to this brain
     **/
-    void addAndFuzz(quint32 id, QString name, FuzzyAnd::Mode mode);
+    void addAndFuzz(quint32 id, const QString &name, FuzzyAnd::Mode mode);
     /** \brief adds a defuzz fuzzy rule to this brain
                 @param defuzz the defuzz rule to be added
     **/
     void addDefuzz(FuzzyDefuzz *defuzz);
     /** \brief adds a defuzz rule to this brain
     **/
-    void addDefuzz(quint32 id, QString name, qreal defuzzValue, bool isElse);
-    void addFuzzFuzz(quint32 id, QString name, FuzzyFuzz::Mode mode, FuzzyFuzz::InterpolationMode intMode, qreal p1, qreal p2, qreal p3, qreal p4);
+    void addDefuzz(quint32 id, const QString &name, qreal defuzzValue, bool isElse);
+    void addFuzzFuzz(quint32 id, const QString &name, FuzzyFuzz::Mode mode, FuzzyFuzz::InterpolationMode intMode, qreal p1, qreal p2, qreal p3, qreal p4);
     void addFuzzFuzz(FuzzyFuzz *fuzzyFuzz);
     /** \brief adds an input to this brain
                 @param input the input to be added
@@ -52,7 +52,7 @@ public:
                 @param min the min value
                 @param max the max value
     **/
-    void addInputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max);
+    void addInputFuzz(quint32 id, const QString &name, const QString &channel, qreal min, qreal max);
     /** \brief adds an or fuzzy rule to this brain
                 @param orFuzz the or rule to be added
     **/
@@ -60,13 +60,13 @@ public:
     /** \brief adds an or fuzzy rule to this brain
                 @param orFuzz the or rule to be added
     **/
-    void addOrFuzz(quint32 id, QString name, FuzzyOr::Mode mode);
+    void addOrFuzz(quint32 id, const QString &name, FuzzyOr::Mode mode);
     /** \brief adds an output to this brain
     **/
     void addOutputFuzz(Output *out);
     /** \brief adds an output to this brain
     **/
-    void addOutputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max);
+    void addOutputFuzz(quint32 id, const QString &name, const QString &channel, qreal min, qreal max);
     /** \brief adds a noise fuzz to this brain
                 @param noise the noise to be added
     **/
@@ -76,9 +76,9 @@ public:
                 @param name the name of this fuzz node
                 @param the rate of this noise node
     **/
-    void addNoiseFuzz(quint32 id, QString name, qreal rate);
+    void addNoiseFuzz(quint32 id, const QString &name, qreal rate);
     void addTimerFuzz(Timer *timer);
-    void addTimerFuzz(quint32 id, QString name, qreal rate, Timer::TimerMode mode);
+    void addTimerFuzz(quint32 id, const QString &name, qreal rate, Timer::TimerMode mode);
 
     /** \brief connect two fuzz nodes
                 Connect a child to a parent. After the fuzzies are connected, a calculation of the child is issued to fetch the value of the parent(s)
@@ -109,14 +109,14 @@ public:
 
                     @returns the agent
     **/
-    Agent* getAgent();
+    Agent* getAgent() const;
     /** \brief returns the pointer to the fuzzie´s is
 
                     @returns the pointer to the fuzz node
 
     **/
-    FuzzyBase* getFuzzy(quint32 id);
-    QList <FuzzyBase *> getFuzzies();
+    FuzzyBase* getFuzzy(quint32 id) const;
+    QList <FuzzyBase *> getFuzzies() const;
     ~Brain();
 
 protected:

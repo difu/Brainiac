@@ -56,7 +56,7 @@ void Brain::addAndFuzz(FuzzyAnd *andFuzz)
     m_fuzzies.append(andFuzz);
 }
 
-void Brain::addAndFuzz(quint32 id, QString name, FuzzyAnd::Mode mode)
+void Brain::addAndFuzz(quint32 id, const QString &name, FuzzyAnd::Mode mode)
 {
     FuzzyAnd *newAnd=new FuzzyAnd(id, this, name, mode);
     addAndFuzz(newAnd);
@@ -67,14 +67,14 @@ void Brain::addDefuzz(FuzzyDefuzz *defuzz)
     m_fuzzies.append(defuzz);
 }
 
-void Brain::addDefuzz(quint32 id, QString name, qreal defuzzValue, bool isElse)
+void Brain::addDefuzz(quint32 id, const QString &name, qreal defuzzValue, bool isElse)
 {
     FuzzyDefuzz *defuzz=new FuzzyDefuzz(id, this, name, defuzzValue);
     defuzz->setElse(isElse);
     addDefuzz(defuzz);
 }
 
-void Brain::addFuzzFuzz(quint32 id, QString name, FuzzyFuzz::Mode mode, FuzzyFuzz::InterpolationMode intMode, qreal p1, qreal p2, qreal p3, qreal p4)
+void Brain::addFuzzFuzz(quint32 id, const QString &name, FuzzyFuzz::Mode mode, FuzzyFuzz::InterpolationMode intMode, qreal p1, qreal p2, qreal p3, qreal p4)
 {
     FuzzyFuzz *fuzz=new FuzzyFuzz(id, this, name, mode, intMode);
     fuzz->setP1(p1);
@@ -94,7 +94,7 @@ void Brain::addInputFuzz(Input *input)
     m_fuzzies.append(input);
 }
 
-void Brain::addInputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max)
+void Brain::addInputFuzz(quint32 id, const QString &name, const QString &channel, qreal min, qreal max)
 {
     Input *input=new Input(id, this, name, channel, min, max);
     addInputFuzz(input);
@@ -105,7 +105,7 @@ void Brain::addOrFuzz(FuzzyOr *orFuzz)
     m_fuzzies.append(orFuzz);
 }
 
-void Brain::addOrFuzz(quint32 id, QString name, FuzzyOr::Mode mode)
+void Brain::addOrFuzz(quint32 id, const QString &name, FuzzyOr::Mode mode)
 {
     FuzzyOr *newOr=new FuzzyOr(id, this, name, mode);
     addOrFuzz(newOr);
@@ -116,7 +116,7 @@ void Brain::addOutputFuzz(Output *out)
     m_fuzzies.append(out);
 }
 
-void Brain::addOutputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max)
+void Brain::addOutputFuzz(quint32 id, const QString &name, const QString &channel, qreal min, qreal max)
 {
     Output *out=new Output(id, this, name, channel, min, max);
     addOutputFuzz(out);
@@ -127,7 +127,7 @@ void Brain::addNoiseFuzz(Noise *noise)
     m_fuzzies.append(noise);
 }
 
-void Brain::addNoiseFuzz(quint32 id, QString name, qreal rate)
+void Brain::addNoiseFuzz(quint32 id, const QString &name, qreal rate)
 {
     Noise *noise=new Noise(id, this, name, rate);
     addNoiseFuzz(noise);
@@ -138,7 +138,7 @@ void Brain::addTimerFuzz(Timer *timer)
     m_fuzzies.append(timer);
 }
 
-void Brain::addTimerFuzz(quint32 id, QString name, qreal rate, Timer::TimerMode mode)
+void Brain::addTimerFuzz(quint32 id, const QString &name, qreal rate, Timer::TimerMode mode)
 {
     Timer *timer=new Timer(id,this,name,rate,mode);
     addTimerFuzz(timer);
@@ -185,12 +185,12 @@ void Brain::disconnectFuzzies(quint32 childId, quint32 parentId)
     }
 }
 
-Agent* Brain::getAgent()
+Agent* Brain::getAgent() const
 {
     return m_agent;
 }
 
-FuzzyBase* Brain::getFuzzy(quint32 id)
+FuzzyBase* Brain::getFuzzy(quint32 id) const
 {
     foreach(FuzzyBase *fuzzy,m_fuzzies) {
         if(fuzzy->getId()==id) {
@@ -199,7 +199,7 @@ FuzzyBase* Brain::getFuzzy(quint32 id)
     }
     return 0;
 }
-QList<FuzzyBase *> Brain::getFuzzies()
+QList<FuzzyBase *> Brain::getFuzzies() const
 {
     return m_fuzzies;
 }

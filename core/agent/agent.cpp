@@ -48,7 +48,7 @@ Agent::~Agent() {
     m_outputs.clear();
 }
 
-bool Agent::addInputChannel(Channel *channel, QString name)
+bool Agent::addInputChannel(Channel *channel, const QString &name)
 {
     if(m_inputs.contains(name)) {
         qDebug() << __PRETTY_FUNCTION__ << "Channel " << name << "already exists!";
@@ -59,7 +59,7 @@ bool Agent::addInputChannel(Channel *channel, QString name)
     }
 }
 
-bool Agent::addOutputChannel(Channel *channel, QString name)
+bool Agent::addOutputChannel(Channel *channel, const QString &name)
 {
     if(m_outputs.contains(name)) {
         qDebug() << __PRETTY_FUNCTION__ << "Channel " << name << "already exists!";
@@ -75,42 +75,42 @@ void Agent::addConnection(quint32 childId, quint32 parentId, bool inverted)
     m_brain->connectFuzzies(childId, parentId,inverted);
 }
 
-void Agent::addAndFuzz(quint32 id, QString name, FuzzyAnd::Mode mode)
+void Agent::addAndFuzz(quint32 id, const QString &name, FuzzyAnd::Mode mode)
 {
     m_brain->addAndFuzz(id, name, mode);
 }
 
-void Agent::addDefuzz(quint32 id, QString name, qreal defuzzValue, bool isElse)
+void Agent::addDefuzz(quint32 id, const QString &name, qreal defuzzValue, bool isElse)
 {
     m_brain->addDefuzz(id,name,defuzzValue,isElse);
 }
 
-void Agent::addFuzzFuzz(quint32 id, QString name, FuzzyFuzz::Mode mode, FuzzyFuzz::InterpolationMode intMode, qreal p1, qreal p2, qreal p3, qreal p4)
+void Agent::addFuzzFuzz(quint32 id, const QString &name, FuzzyFuzz::Mode mode, FuzzyFuzz::InterpolationMode intMode, qreal p1, qreal p2, qreal p3, qreal p4)
 {
     m_brain->addFuzzFuzz(id,name,mode,intMode,p1,p2,p3,p4);
 }
 
-void Agent::addOrFuzz(quint32 id, QString name, FuzzyOr::Mode mode)
+void Agent::addOrFuzz(quint32 id, const QString &name, FuzzyOr::Mode mode)
 {
     m_brain->addOrFuzz(id, name, mode);
 }
 
-void Agent::addOutputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max)
+void Agent::addOutputFuzz(quint32 id, const QString &name, const QString &channel, qreal min, qreal max)
 {
     m_brain->addOutputFuzz(id, name, channel, min,  max);
 }
 
-void Agent::addInputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max)
+void Agent::addInputFuzz(quint32 id, const QString &name, const QString &channel, qreal min, qreal max)
 {
     m_brain->addInputFuzz(id, name, channel,  min,  max);
 }
 
-void Agent::addNoiseFuzz(quint32 id, QString name, qreal rate)
+void Agent::addNoiseFuzz(quint32 id, const QString &name, qreal rate)
 {
     m_brain->addNoiseFuzz(id, name,rate);
 }
 
-void Agent::addTimerFuzz(quint32 id, QString name, qreal rate, Timer::TimerMode mode)
+void Agent::addTimerFuzz(quint32 id, const QString &name, qreal rate, Timer::TimerMode mode)
 {
     m_brain->addTimerFuzz(id, name, rate, mode);
 }
@@ -293,27 +293,28 @@ void Agent::deleteFuzz(quint32 fuzzId)
     m_brain->deleteFuzz(fuzzId);
 }
 
-Body* Agent::getBody()
+Body* Agent::getBody() const
 {
     return m_body;
 }
 
-Brain* Agent::getBrain()
+Brain* Agent::getBrain() const
 {
     return m_brain;
 }
 
 
-Channel* Agent::getColor()
+Channel* Agent::getColor() const
 {
     return m_color;
 }
 
-quint32 Agent::getId() {
+quint32 Agent::getId() const
+{
     return m_id;
 }
 
-Channel* Agent::getInputChannel(QString name)
+Channel* Agent::getInputChannel(const QString &name) const
 {
     if(this->inputChannelExists(name))
         return(m_inputs.value(name));
@@ -321,7 +322,7 @@ Channel* Agent::getInputChannel(QString name)
         return 0;
 }
 
-Channel* Agent::getOutputChannel(QString name)
+Channel* Agent::getOutputChannel(const QString &name)
 {
     if(this->outputChannelExists(name))
         return(m_outputs.value(name));
@@ -329,27 +330,27 @@ Channel* Agent::getOutputChannel(QString name)
         return 0;
 }
 
-QVector3D* Agent::getPosition()
+const QVector3D* Agent::getPosition() const
 {
     return &m_position;
 }
 
-QVector3D* Agent::getRotation()
+const QVector3D* Agent::getRotation() const
 {
     return &m_rotation;
 }
 
-bool Agent::getRenderSoundEmission()
+bool Agent::getRenderSoundEmission() const
 {
     return m_renderSoundEmission;
 }
 
-Scene* Agent::getScene()
+Scene* Agent::getScene() const
 {
     return m_scene;
 }
 
-bool Agent::inputChannelExists(QString name)
+bool Agent::inputChannelExists(const QString &name) const
 {
     if(m_inputs.count(name)>0)
         return true;
@@ -357,7 +358,7 @@ bool Agent::inputChannelExists(QString name)
         return false;
 }
 
-bool Agent::outputChannelExists(QString name)
+bool Agent::outputChannelExists(const QString &name) const
 {
     if(m_outputs.count(name)>0)
         return true;

@@ -2,7 +2,7 @@
 
 #include "core/agent/brain/brain.h"
 
-FuzzyBase::FuzzyBase(LogicType logicType, Brain *brain, quint32 id, QString name, qreal min=0.0f, qreal max=1.0f) :
+FuzzyBase::FuzzyBase(LogicType logicType, Brain *brain, quint32 id, const QString &name, qreal min=0.0f, qreal max=1.0f) :
     QObject()
 {
     m_brain=brain;
@@ -55,12 +55,12 @@ void FuzzyBase::deleteParent(FuzzyBase *parent)
     }
 }
 
-QList<FuzzyBase *> FuzzyBase::getChildren()
+QList<FuzzyBase *> FuzzyBase::getChildren() const
 {
     return m_children;
 }
 
-QList<FuzzyBase *> FuzzyBase::getParents()
+QList<FuzzyBase *> FuzzyBase::getParents() const
 {
     QList<FuzzyBase *> parents;
     foreach(Parent fuzz, m_parents) {
@@ -69,7 +69,8 @@ QList<FuzzyBase *> FuzzyBase::getParents()
     return parents;
 }
 
-qreal FuzzyBase::getResult(bool inverted) {
+qreal FuzzyBase::getResult(bool inverted) const
+{
     if(!inverted)
         return m_result;
     else
@@ -81,7 +82,7 @@ void FuzzyBase::inputChanged()
     this->calculate();
 }
 
-bool FuzzyBase::hasChildren()
+bool FuzzyBase::hasChildren() const
 {
     if(m_children.count()>0) {
         return true;
@@ -90,7 +91,7 @@ bool FuzzyBase::hasChildren()
 
 }
 
-bool FuzzyBase::hasParents()
+bool FuzzyBase::hasParents() const
 {
     if(m_parents.count()>0) {
         return true;
@@ -99,7 +100,7 @@ bool FuzzyBase::hasParents()
 
 }
 
-bool FuzzyBase::isConnectionInverted(quint32 parentId)
+bool FuzzyBase::isConnectionInverted(quint32 parentId) const
 {
     foreach(Parent parent, m_parents) {
         if(parent.parent->getId()==parentId) {
@@ -122,7 +123,7 @@ void FuzzyBase::setMin(qreal min)
     setResult(m_result); // Crop the current result and emit changes
 }
 
-void FuzzyBase::setName(QString name)
+void FuzzyBase::setName(const QString &name)
 {
     m_name=name;
 }
