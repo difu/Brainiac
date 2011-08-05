@@ -30,7 +30,16 @@ FuzzyEditor::FuzzyEditor(Scene *scene, QWidget *parent) :
     connect(ui->buttonTrapezoid,SIGNAL(clicked()), this, SLOT(modeTrapezoidPressed()));
     connect(ui->buttonDirac,SIGNAL(clicked()), this, SLOT(modeDiracPressed()));
 
+    connect(ui->fuzzyName,SIGNAL(returnPressed()),this,SLOT(manualNameChanged()));
+
     connect(m_editor,SIGNAL(pointChange()),this,SLOT(pointChanged()),Qt::DirectConnection);
+}
+
+void FuzzyEditor::manualNameChanged()
+{
+    m_agentManager->setFuzzyName(m_id,ui->fuzzyName->text());
+    emit updateBrainEditor();
+    updateEditor();
 }
 
 void FuzzyEditor::modeLinearPressed()

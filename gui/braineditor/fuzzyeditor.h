@@ -44,6 +44,7 @@ protected slots:
     void modeDeactivatePressed();
     void modeTrianglePressed();
     void modeTrapezoidPressed();
+    void manualNameChanged();
     void pointChanged();  //!< called when a membership point is moved, NOT finally released
 
 signals:
