@@ -30,6 +30,7 @@ public:
     QList<Camera *> getCameras();
     Group *getGroup(quint32 id);
     QList<Group *> getGroups() { return m_groups; }
+    QString getFileName() {return m_fileName; }
     Simulation *getSimulation() { return m_simulation; }
     bool openConfig(const QString & fileName);
     bool saveConfig(const QString & fileName);

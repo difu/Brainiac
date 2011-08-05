@@ -1,6 +1,8 @@
 #include "group.h"
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
+#include <QFileInfo>
+#include <QDir>
 #include "core/agent/agentmanager.h"
 #include "core/agent/agent.h"
 #include "core/scene.h"
@@ -38,7 +40,7 @@ void Group::loadConfig(QXmlStreamReader *xml)
     xml->skipCurrentElement();
 
     m_agentManager=new AgentManager(m_scene, this);
-    m_agentManager->setFileName(m_agentFileName);
+    m_agentManager->setFileName(m_agentFileNameAbsolute);
     if(m_agentManager->loadConfig()) {
 
     } else {
@@ -61,6 +63,18 @@ void Group::saveConfig(QXmlStreamWriter *xml)
 void::Group::setAgentFileName(QString fileName)
 {
     m_agentFileName=fileName;
+    QFileInfo fileInfo(fileName);
+    if(fileInfo.isAbsolute()) {
+        m_agentFileNameAbsolute=fileInfo.absoluteFilePath();
+    } else {
+        QFileInfo fileInfoScene(m_scene->getFileName());
+        QDir path=fileInfoScene.absoluteDir();
+        m_agentFileNameAbsolute=path.absolutePath();
+        m_agentFileNameAbsolute.append(QDir::separator());
+        m_agentFileNameAbsolute.append(fileName);
+    }
+
+    qDebug() << "FileName "<< m_agentFileName;
 }
 
 void Group::setEditorTranslation(qint32 x, qint32 y)

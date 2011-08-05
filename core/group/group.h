@@ -33,6 +33,7 @@ public:
 protected:
     QString m_name;
     QString m_agentFileName;
+    QString m_agentFileNameAbsolute;
     quint32 m_id;
     quint32 m_editX, m_editY;
     AgentManager *m_agentManager;
