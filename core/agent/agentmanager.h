@@ -4,6 +4,7 @@
 #include <QtCore>
 #include "core/agent/brain/output.h"
 #include "core/idgenerator.h"
+#include "core/agent/brain/fuzzyfuzz.h"
 
 class Agent;
 class Group;
@@ -143,6 +144,30 @@ public:
       @sa Defuzz
     **/
     void setDefuzzValue(quint32 id, qreal value);
+
+    /** \brief sets the fuzzification mode (membership) of given fuzz of all agents
+      @param id the fuzz´ id
+      @param mode the fuzzification mode
+      @sa FuzzyFuzz::Mode
+    **/
+    void setFuzzyFuzzMode(quint32 id, FuzzyFuzz::Mode mode);
+
+    /** \brief sets the interpolation mode  of given fuzz of all agents
+      @param id the fuzz´ id
+      @param mode the interpolation mode
+      @sa FuzzyFuzz::InterpolationMode
+    **/
+    void setFuzzyFuzzInterpolationMode(quint32 id, FuzzyFuzz::InterpolationMode mode);
+
+    /** \brief sets the membership points of given fuzz of all agents
+      It is NOT checked, if point bounds are valid!
+      @param id the fuzz´ id
+      @param p1 first point of the membership curve
+      @param p2 second point of the membership curve
+      @param p3 third point of the membership curve
+      @param p4 4th point of the membership curve
+    **/
+    void setFuzzyFuzzMembershipPoints(quint32 id, qreal p1, qreal p2, qreal p3, qreal p4);
 
     /** \brief sets the channel name of an input/output fuzz of all agents
       @param id the fuzz´ id

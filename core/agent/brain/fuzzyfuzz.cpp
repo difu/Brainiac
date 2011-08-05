@@ -1,13 +1,10 @@
 #include "fuzzyfuzz.h"
 
 FuzzyFuzz::FuzzyFuzz( quint32 id, Brain *brain, QString name, Mode mode, InterpolationMode iMode) :
-    FuzzyBase(FuzzyBase::FUZZ, brain, id, name, 0.0, 1.0),m_mode(mode)
+    FuzzyBase(FuzzyBase::FUZZ, brain, id, name, 0.0, 1.0)
 {
     setInterpolationMode(iMode);
-    m_p1=0.3;
-    m_p2=0.4;
-    m_p3=0.7;
-    m_p4=0.8;
+    setMode(mode);
 }
 
 void FuzzyFuzz::calculate()
@@ -22,12 +19,12 @@ void FuzzyFuzz::calculate()
     }
 }
 
-FuzzyFuzz::Mode FuzzyFuzz::getMode()
+FuzzyFuzz::Mode FuzzyFuzz::getMode() const
 {
     return m_mode;
 }
 
-qreal FuzzyFuzz::getParentMax()
+qreal FuzzyFuzz::getParentMax() const
 {
     if(m_parents.count()>0) {
         Parent par=m_parents.at(0);// Only take the first parent
@@ -37,7 +34,7 @@ qreal FuzzyFuzz::getParentMax()
     }
 }
 
-qreal FuzzyFuzz::getParentMin()
+qreal FuzzyFuzz::getParentMin() const
 {
     if(m_parents.count()>0) {
         Parent par=m_parents.at(0);// Only take the first parent
@@ -47,12 +44,12 @@ qreal FuzzyFuzz::getParentMin()
     }
 }
 
-FuzzyFuzz::InterpolationMode FuzzyFuzz::getInterpolationMode()
+FuzzyFuzz::InterpolationMode FuzzyFuzz::getInterpolationMode() const
 {
     return m_interpolationMode;
 }
 
-qreal FuzzyFuzz::getFuzzOut(qreal val)
+qreal FuzzyFuzz::getFuzzOut(qreal val) const
 {
     if(m_parents.count()>0) {
         Parent par=m_parents.at(0);// Only take the first parent
@@ -65,8 +62,18 @@ qreal FuzzyFuzz::getFuzzOut(qreal val)
 
 }
 
-qreal FuzzyFuzz::getFuzzOut( qreal min, qreal max, qreal val ) {
+qreal FuzzyFuzz::getFuzzOut( qreal min, qreal max, qreal val ) const
+{
     qreal normVal=BrainiacGlobals::norm( min, max, val );
+    if(m_mode==DIRAC) {
+        if(m_p1==normVal) { //!< @todo maybe use some kind of fuzzy compare?
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
     if(normVal<m_p1)
         if(m_mode==DEACTIVATE) {
             return 1;
@@ -109,29 +116,98 @@ qreal FuzzyFuzz::getFuzzOut( qreal min, qreal max, qreal val ) {
 
 }
 
-qreal FuzzyFuzz::getP1()
+qreal FuzzyFuzz::getP1() const
 {
     return m_p1;
 }
 
-qreal FuzzyFuzz::getP2()
+qreal FuzzyFuzz::getP2() const
 {
     return m_p2;
 }
 
-qreal FuzzyFuzz::getP3()
+qreal FuzzyFuzz::getP3() const
 {
     return m_p3;
 }
 
-qreal FuzzyFuzz::getP4()
+qreal FuzzyFuzz::getP4() const
 {
     return m_p4;
+}
+
+qreal FuzzyFuzz::getP1Abs() const
+{
+    if(m_parents.count()>0) {
+        Parent par=m_parents.at(0);// Only take the first parent
+        qreal max=par.parent->getMaxValue();
+        qreal min=par.parent->getMinValue();
+        return BrainiacGlobals::deNorm(min,max,m_p1);
+    } else {
+        return m_p1;
+    }
+}
+
+qreal FuzzyFuzz::getP2Abs() const
+{
+    if(m_parents.count()>0) {
+        Parent par=m_parents.at(0);// Only take the first parent
+        qreal max=par.parent->getMaxValue();
+        qreal min=par.parent->getMinValue();
+        return BrainiacGlobals::deNorm(min,max,m_p2);
+    } else {
+        return m_p2;
+    }
+}
+
+qreal FuzzyFuzz::getP3Abs() const
+{
+    if(m_parents.count()>0) {
+        Parent par=m_parents.at(0);// Only take the first parent
+        qreal max=par.parent->getMaxValue();
+        qreal min=par.parent->getMinValue();
+        return BrainiacGlobals::deNorm(min,max,m_p3);
+    } else {
+        return m_p3;
+    }
+}
+
+qreal FuzzyFuzz::getP4Abs() const
+{
+    if(m_parents.count()>0) {
+        Parent par=m_parents.at(0);// Only take the first parent
+        qreal max=par.parent->getMaxValue();
+        qreal min=par.parent->getMinValue();
+        return BrainiacGlobals::deNorm(min,max,m_p4);
+    } else {
+        return m_p4;
+    }
 }
 
 void FuzzyFuzz::setMode(Mode mode)
 {
     m_mode=mode;
+    switch(m_mode) {
+    case DIRAC:
+        m_p1=0.5f;
+        break;
+    case ACTIVATE:
+    case DEACTIVATE:
+        m_p1=0.3f;
+        m_p2=0.7f;
+        break;
+    case TRIANGLE:
+        m_p1=0.3f;
+        m_p2=0.5f;
+        m_p3=0.7f;
+        break;
+    case TRAPEZOID:
+        m_p1=0.2f;
+        m_p2=0.4f;
+        m_p3=0.6f;
+        m_p4=0.8f;
+        break;
+    }
 }
 
 void FuzzyFuzz::setInterpolationMode(InterpolationMode mode)
@@ -150,22 +226,62 @@ void FuzzyFuzz::setInterpolationMode(InterpolationMode mode)
     }
 }
 
-void FuzzyFuzz::setP1(qreal p1)
+qreal FuzzyFuzz::setP1(qreal p1,bool check)
 {
-    m_p1=p1;
+    if(check) {
+        switch(m_mode) {
+        case DIRAC:
+            m_p1=qBound((qreal)0.0f,p1,(qreal)1.0f);
+            break;
+        default:
+            m_p1=qBound((qreal)0.0f,p1,m_p2-MinDistBetweenPoints);
+        }
+    } else
+        m_p1=p1;
+
+    return m_p1;
 }
 
-void FuzzyFuzz::setP2(qreal p2)
+qreal FuzzyFuzz::setP2(qreal p2,bool check)
 {
-    m_p2=p2;
+    if(check) {
+        switch(m_mode) {
+        case ACTIVATE:
+        case DEACTIVATE:
+            m_p2=qBound(m_p1+MinDistBetweenPoints,p2,(qreal)1.0f);
+            break;
+        case TRIANGLE:
+        case TRAPEZOID:
+            m_p2=qBound(m_p1+MinDistBetweenPoints,p2,m_p3-MinDistBetweenPoints);
+            break;
+        default:
+            m_p2=qBound(m_p1+MinDistBetweenPoints,p2,m_p3-MinDistBetweenPoints);
+        }
+    } else
+        m_p2=p2;
+    return m_p2;
 }
 
-void FuzzyFuzz::setP3(qreal p3)
+qreal FuzzyFuzz::setP3(qreal p3,bool check)
 {
-    m_p3=p3;
+    if(check) {
+        switch(m_mode) {
+        case TRIANGLE:
+            m_p3=qBound(m_p2+MinDistBetweenPoints,p3,(qreal)1.0f);
+            break;
+        default:
+            m_p3=qBound(m_p2+MinDistBetweenPoints,p3,m_p4-MinDistBetweenPoints);
+        }
+    } else
+            m_p3=p3;
+    return m_p3;
 }
 
-void FuzzyFuzz::setP4(qreal p4)
+qreal FuzzyFuzz::setP4(qreal p4,bool check)
 {
-    m_p4=p4;
+    if(check) {
+        m_p4=qBound(m_p3+MinDistBetweenPoints,p4,(qreal)1.0f);
+    } else
+        m_p4=p4;
+    return m_p4;
 }

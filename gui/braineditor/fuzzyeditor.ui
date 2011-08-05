@@ -23,17 +23,17 @@
     </rect>
    </property>
   </widget>
-  <widget class="QGraphicsView" name="graphicsView">
+  <widget class="QGraphicsView" name="curveGraphicsView">
    <property name="geometry">
     <rect>
      <x>420</x>
      <y>20</y>
-     <width>361</width>
-     <height>71</height>
+     <width>360</width>
+     <height>70</height>
     </rect>
    </property>
   </widget>
-  <widget class="QToolButton" name="toolButton">
+  <widget class="QToolButton" name="buttonDirac">
    <property name="geometry">
     <rect>
      <x>430</x>
@@ -43,10 +43,45 @@
     </rect>
    </property>
    <property name="text">
-    <string>...</string>
+    <string>⊥</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
    </property>
   </widget>
-  <widget class="QToolButton" name="toolButton_2">
+  <widget class="QToolButton" name="buttonDeactivate">
+   <property name="geometry">
+    <rect>
+     <x>510</x>
+     <y>100</y>
+     <width>27</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>\</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QToolButton" name="buttonActivate">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>100</y>
+     <width>27</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>/</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QToolButton" name="buttonTriangle">
    <property name="geometry">
     <rect>
      <x>550</x>
@@ -56,23 +91,13 @@
     </rect>
    </property>
    <property name="text">
-    <string>...</string>
+    <string>∧</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
    </property>
   </widget>
-  <widget class="QToolButton" name="toolButton_3">
-   <property name="geometry">
-    <rect>
-     <x>500</x>
-     <y>100</y>
-     <width>27</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>...</string>
-   </property>
-  </widget>
-  <widget class="QToolButton" name="toolButton_4">
+  <widget class="QToolButton" name="buttonTrapezoid">
    <property name="geometry">
     <rect>
      <x>590</x>
@@ -82,20 +107,10 @@
     </rect>
    </property>
    <property name="text">
-    <string>...</string>
+    <string>/¯\</string>
    </property>
-  </widget>
-  <widget class="QToolButton" name="toolButton_5">
-   <property name="geometry">
-    <rect>
-     <x>640</x>
-     <y>100</y>
-     <width>27</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>...</string>
+   <property name="checkable">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QLineEdit" name="value_lineEdit">
@@ -106,6 +121,54 @@
      <width>101</width>
      <height>22</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="QToolButton" name="buttonQuadMode">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>100</y>
+     <width>27</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>QUAD</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QToolButton" name="buttonSineMode">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>100</y>
+     <width>27</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>SIN</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QToolButton" name="buttonLinearMode">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>100</y>
+     <width>27</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>LIN</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
    </property>
   </widget>
  </widget>

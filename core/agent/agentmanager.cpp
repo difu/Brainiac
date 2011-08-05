@@ -108,7 +108,7 @@ void AgentManager::addAndFuzz(quint32 id, QString name, QString mode, quint32 ed
 quint32 AgentManager::addFuzzFuzz(quint32 editorX, quint32 editorY)
 {
     quint32 id=m_brainIdGenerator.getNewId();
-    addFuzzFuzz(id,"Fuzz",BrainiacGlobals::FuzzFuzzModeTrapezoid,BrainiacGlobals::FuzzFuzzInterpolationSine,0.3f,0.5f,0.7f,0.9f,editorX,editorY);
+    addFuzzFuzz(id,"Fuzz",BrainiacGlobals::FuzzFuzzModeTrapezoid,BrainiacGlobals::FuzzFuzzInterpolationSine,0.2f,0.4f,0.6f,0.8f,editorX,editorY);
     return id;
 }
 
@@ -614,6 +614,51 @@ void AgentManager::setFuzzyEditorTranslation(quint32 id, qint32 x, qint32 y)
     point.setX(x);
     point.setY(y);
     m_editorFuzzyLocations.insert(id,point);
+}
+
+void AgentManager::setFuzzyFuzzMode(quint32 id, FuzzyFuzz::Mode mode)
+{
+    if(m_masterAgent->getBrain()->getFuzzy(id)->getType()==FuzzyBase::FUZZ) {
+        FuzzyFuzz *fuzzy=(FuzzyFuzz *)m_masterAgent->getBrain()->getFuzzy(id);
+        fuzzy->setMode(mode);
+        foreach(Agent *agent, m_group->getAgents()) {
+            FuzzyFuzz *agentFuzz=(FuzzyFuzz *) agent->getBrain()->getFuzzy(id);
+            Q_ASSERT(agentFuzz->getType()==FuzzyBase::FUZZ);
+            agentFuzz->setMode(mode);
+        }
+    }
+}
+
+void AgentManager::setFuzzyFuzzMembershipPoints(quint32 id, qreal p1, qreal p2, qreal p3, qreal p4)
+{
+    if(m_masterAgent->getBrain()->getFuzzy(id)->getType()==FuzzyBase::FUZZ) {
+        FuzzyFuzz *fuzzy=(FuzzyFuzz *)m_masterAgent->getBrain()->getFuzzy(id);
+        fuzzy->setP1(p1);
+        fuzzy->setP2(p2);
+        fuzzy->setP3(p3);
+        fuzzy->setP4(p4);
+        foreach(Agent *agent, m_group->getAgents()) {
+            FuzzyFuzz *agentFuzz=(FuzzyFuzz *) agent->getBrain()->getFuzzy(id);
+            Q_ASSERT(agentFuzz->getType()==FuzzyBase::FUZZ);
+            agentFuzz->setP1(p1);
+            agentFuzz->setP2(p2);
+            agentFuzz->setP3(p3);
+            agentFuzz->setP4(p4);
+        }
+    }
+}
+
+void AgentManager::setFuzzyFuzzInterpolationMode(quint32 id, FuzzyFuzz::InterpolationMode mode)
+{
+    if(m_masterAgent->getBrain()->getFuzzy(id)->getType()==FuzzyBase::FUZZ) {
+        FuzzyFuzz *fuzzy=(FuzzyFuzz *)m_masterAgent->getBrain()->getFuzzy(id);
+        fuzzy->setInterpolationMode(mode);
+        foreach(Agent *agent, m_group->getAgents()) {
+            FuzzyFuzz *agentFuzz=(FuzzyFuzz *) agent->getBrain()->getFuzzy(id);
+            Q_ASSERT(agentFuzz->getType()==FuzzyBase::FUZZ);
+            agentFuzz->setInterpolationMode(mode);
+        }
+    }
 }
 
 void AgentManager::setFuzzyChannelName(quint32 id, QString name)

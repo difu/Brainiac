@@ -30,6 +30,7 @@ protected:
     AgentManager *m_agentManager; //!< the agentmanager of this braineditor
 signals:
     void statusBarMessageChanged( const QString & message );
+    void itemsDelete();
 public slots:
 
 };
