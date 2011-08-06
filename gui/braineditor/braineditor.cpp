@@ -110,6 +110,8 @@ void BrainEditor::deleteSelectedItems()
             EditorItem *startItem=conn->startItem();
             EditorItem *endItem=conn->endItem();
             m_agentManager->deleteConnector(endItem->getId(),startItem->getId());
+            conn->startItem()->removeConnector(conn);
+            conn->endItem()->removeConnector(conn);
             removeItem(conn);
             delete(conn);
         }
@@ -118,15 +120,16 @@ void BrainEditor::deleteSelectedItems()
         if(item->type()==EditorItem::Type) {
             EditorItem *eItem=(EditorItem *) item;
             // first delete connections to this item
-            foreach(QGraphicsItem *item_, this->items()) {
-                if(item_->type()==EditorItemConnector::Type) {
-                    EditorItemConnector *conn=(EditorItemConnector*)item_;
-                    if(conn->startItem()->getId()==eItem->getId() || conn->endItem()->getId()==eItem->getId()) {
-                        removeItem(conn);
-                        delete(conn);
-                    }
-                }
-            }
+            eItem->removeConnectors();
+//            foreach(QGraphicsItem *item_, this->items()) {
+//                if(item_->type()==EditorItemConnector::Type) {
+//                    EditorItemConnector *conn=(EditorItemConnector*)item_;
+//                    if(conn->startItem()->getId()==eItem->getId() || conn->endItem()->getId()==eItem->getId()) {
+//                        removeItem(conn);
+//                        delete(conn);
+//                    }
+//                }
+//            }
             m_agentManager->deleteFuzz(eItem->getId());
             removeItem(eItem);
             delete(eItem);
