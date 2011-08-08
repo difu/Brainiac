@@ -141,7 +141,7 @@ void Agent::advance()
         QVector3D loudAgentPosition=QVector3D(otherAgent->getPosition()->x(),otherAgent->getPosition()->y(),otherAgent->getPosition()->z());
         qreal distance=(loudAgentPosition-m_position).length();
         //qDebug() << "Distcance from agent " << m_id << "to " << agent->getId() << " is" << distance;
-        qreal loudAmplitude=otherAgent->getOutputChannel("sound.a")->getValue();
+        qreal loudAmplitude=otherAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_a)->getValue();
         qreal reception=loudAmplitude-distance;
         if(reception>loudestReception) {
             loudestReception=reception;
@@ -194,7 +194,7 @@ void Agent::advance()
 //        qDebug() << "Angle of LA:"<< angle << "dist" << distVect.length() << m_position << "y rotation" << yRotation;
         m_iSoundX->setValue(angle);
         m_iSoundD->setValue(loudestReception/loudestAmplitude);
-        m_iSoundF->setValue(loudestAgent->getOutputChannel("sound.f")->getValue());
+        m_iSoundF->setValue(loudestAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_f)->getValue());
 
     } else { // this agent hasn´t heard any sound
         m_iSoundX->setValue(0.0f);
@@ -260,19 +260,19 @@ void Agent::createChannels()
     addOutputChannel(m_color,"color");
 
     m_oSoundA=new Channel(0);
-    addOutputChannel(m_oSoundA,"sound.a");
+    addOutputChannel(m_oSoundA,BrainiacGlobals::ChannelName_Sound_a);
 
     m_oSoundF=new Channel(0,10,0);
-    addOutputChannel(m_oSoundF,"sound.f");
+    addOutputChannel(m_oSoundF,BrainiacGlobals::ChannelName_Sound_f);
 
     m_iSoundX=new Channel(-180,180,0);
-    addInputChannel(m_iSoundX,"sound.x");
+    addInputChannel(m_iSoundX,BrainiacGlobals::ChannelName_Sound_x);
 
     m_iSoundF=new Channel(0,10,0);
-    addInputChannel(m_iSoundF,"sound.f");
+    addInputChannel(m_iSoundF,BrainiacGlobals::ChannelName_Sound_f);
 
     m_iSoundD=new Channel(0,1,0);
-    addInputChannel(m_iSoundD,"sound.d");
+    addInputChannel(m_iSoundD,BrainiacGlobals::ChannelName_Sound_d);
 
 }
 
@@ -328,6 +328,11 @@ Channel* Agent::getOutputChannel(const QString &name)
         return(m_outputs.value(name));
     else
         return 0;
+}
+
+QVector3D Agent::getOtherAgentRelativePosition(const Agent &otherAgent) const
+{
+    return QVector3D(otherAgent.getPosition()->x(),otherAgent.getPosition()->y(),otherAgent.getPosition()->z())-m_position;
 }
 
 const QVector3D* Agent::getPosition() const

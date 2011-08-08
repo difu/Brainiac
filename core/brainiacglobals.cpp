@@ -62,3 +62,8 @@ const char* const BrainiacGlobals::FuzzOrModeSum="sum\0";
 
 const char* const BrainiacGlobals::FuzzTimerModeIfStopped="ifstopped\0";
 const char* const BrainiacGlobals::FuzzTimerModeAlways="always\0";
+
+const char* const BrainiacGlobals::ChannelName_Sound_x="sound.x\0";
+const char* const BrainiacGlobals::ChannelName_Sound_d="sound.d\0";
+const char* const BrainiacGlobals::ChannelName_Sound_a="sound.a\0";
+const char* const BrainiacGlobals::ChannelName_Sound_f="sound.f\0";

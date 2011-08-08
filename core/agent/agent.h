@@ -155,6 +155,13 @@ public:
     /** \brief returns the id of this agent
     **/
     quint32 getId() const;
+
+    /** \brief returns the position given agent relative to current position
+
+      @param otherAgent the agent to which the position is calculated
+    **/
+    QVector3D getOtherAgentRelativePosition(const Agent &otherAgent) const;
+
     /** \brief returns the position of the agent in world space
     **/
     const QVector3D *getPosition() const;
