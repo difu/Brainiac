@@ -11,5 +11,6 @@
         <file>gui/pics/editor_logo_timer.png</file>
         <file>gui/pics/editor_logo_group.png</file>
         <file>gui/pics/editor_logo_agent.png</file>
+        <file>gui/pics/editor_logo_sound_rule.png</file>
     </qresource>
 </RCC>

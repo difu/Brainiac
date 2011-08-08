@@ -131,6 +131,13 @@ public:
     void setEditorTranslation(qint32 x, qint32 y);
     void setFuzzyEditorTranslation(quint32 id, qint32 x, qint32 y);
 
+    /** \brief sets the sound rule state of the And fuzz of all agents
+      @param id the and fuzz´ id
+      @param isSoundRule true if this and fuzz shall be a sound rule fuzz
+      @sa Defuzz
+    **/
+    void setFuzzyAndIsSoundRule(quint32 id, bool isSoundRule);
+
     /** \brief sets the is else state of the defuzz of all agents
       @param id the defuzz´ id
       @param isElse true if this defuzz shall be an else defuzz
@@ -211,6 +218,8 @@ public:
     void setId(quint32 id) { m_id=id; }
     void setName( QString name ) { m_name=name; }
     void setFileName( QString fileName ) { m_fileName=fileName; }
+
+    void updateSoundConfigs();
 
 protected:
     Agent *m_masterAgent;

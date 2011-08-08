@@ -2,6 +2,7 @@
 
 FuzzyAnd::FuzzyAnd( quint32 id, Brain *brain, QString name, Mode mode) : FuzzyBase(FuzzyBase::AND, brain, id, name, 0, 1), m_mode(mode)
 {
+    m_isSoundRule=false;
 }
 
 void FuzzyAnd::calculate()
@@ -34,4 +35,9 @@ FuzzyAnd::Mode FuzzyAnd::getMode()
 void FuzzyAnd::setMode(Mode mode)
 {
     m_mode=mode;
+}
+
+void FuzzyAnd::setIsSoundRule(bool isSoundRule)
+{
+    m_isSoundRule=isSoundRule;
 }

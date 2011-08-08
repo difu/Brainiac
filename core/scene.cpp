@@ -71,8 +71,11 @@ void Scene::createAgents(Generator *gen)
                 agent->reset();
             }
         }
-
-
+    }
+    foreach(Group *grp, m_groups) {
+        if(grp->getAgentManager()) {
+            grp->getAgentManager()->updateSoundConfigs();
+        }
     }
 }
 

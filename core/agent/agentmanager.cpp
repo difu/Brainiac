@@ -312,6 +312,7 @@ void AgentManager::addConnector(quint32 childId, quint32 parentId, bool inverted
     foreach(Agent* agent,m_group->getAgents()) {
         agent->addConnection(childId, parentId, inverted);
     }
+    updateSoundConfigs();
 }
 
 Agent* AgentManager::cloneAgent(quint32 id)
@@ -326,6 +327,7 @@ void AgentManager::deleteConnector(quint32 childId, quint32 parentId)
     foreach(Agent* agent,m_group->getAgents()) {
         agent->deleteConnection(parentId,childId);
     }
+    updateSoundConfigs();
 }
 
 void AgentManager::deleteFuzz(quint32 fuzzId)
@@ -334,6 +336,7 @@ void AgentManager::deleteFuzz(quint32 fuzzId)
     foreach(Agent* agent,m_group->getAgents()) {
         agent->deleteFuzz(fuzzId);
     }
+    updateSoundConfigs();
 }
 
 QHash<quint32, QPoint> AgentManager::getEditorFuzzyLocations()
@@ -423,6 +426,7 @@ bool AgentManager::loadConfig()
                 reader.skipCurrentElement();
             }
         }
+        //updateSoundConfigs();
         return true;
     }
     return false;
@@ -616,6 +620,19 @@ void AgentManager::setFuzzyEditorTranslation(quint32 id, qint32 x, qint32 y)
     m_editorFuzzyLocations.insert(id,point);
 }
 
+void AgentManager::setFuzzyAndIsSoundRule(quint32 id, bool isSoundRule)
+{
+    if(m_masterAgent->getBrain()->getFuzzy(id)->getType()==FuzzyBase::AND) {
+        FuzzyAnd *fuzzy=(FuzzyAnd *)m_masterAgent->getBrain()->getFuzzy(id);
+        fuzzy->setIsSoundRule(isSoundRule);
+        foreach(Agent *agent, m_group->getAgents()) {
+            FuzzyAnd *agentFuzz=(FuzzyAnd *) agent->getBrain()->getFuzzy(id);
+            Q_ASSERT(agentFuzz->getType()==FuzzyBase::AND);
+            agentFuzz->setIsSoundRule(isSoundRule);
+        }
+    }
+}
+
 void AgentManager::setFuzzyFuzzMode(quint32 id, FuzzyFuzz::Mode mode)
 {
     if(m_masterAgent->getBrain()->getFuzzy(id)->getType()==FuzzyBase::FUZZ) {
@@ -768,6 +785,58 @@ void AgentManager::setNoiseRate(quint32 id, qreal rate)
             Noise *agentNoise=(Noise *) agent->getBrain()->getFuzzy(id);
             Q_ASSERT(agentNoise->getType()==FuzzyBase::NOISE);
             agentNoise->setRate(rate);
+        }
+    }
+}
+
+
+void AgentManager::updateSoundConfigs()
+{
+    qDebug() << __PRETTY_FUNCTION__;
+    bool currentTest;
+    foreach(FuzzyBase *fuzz, m_masterAgent->getBrain()->getFuzzies()) {
+        currentTest=true;
+        if(fuzz->getType()==FuzzyBase::AND || fuzz->getType()==FuzzyBase::OR) {
+            if(!fuzz->hasParents()) {
+                currentTest=false;
+            } else {
+                foreach(FuzzyBase *parentOfAndOr,fuzz->getParents()) {
+
+                    if(parentOfAndOr->getType()==FuzzyBase::FUZZ && currentTest) {
+                        if(!parentOfAndOr->hasParents()) {
+                            currentTest=false;
+                        } else {
+
+                            foreach(FuzzyBase *parentOfFuzz, parentOfAndOr->getParents()) {
+
+                                if(parentOfFuzz->getType()==FuzzyFuzz::INPUT && !parentOfFuzz->hasParents()  && currentTest) {
+                                    //qDebug() << "Found Sound config!" << parentOfFuzz->getName() << parentOfAndOr->getName();
+                                } else {
+                                    currentTest=false;
+                                }
+
+                            }
+                        }
+                    } else {
+                        currentTest=false;
+                    }
+
+                }
+            }
+
+
+
+            if(fuzz->getType()==FuzzyBase::AND) {
+                this->setFuzzyAndIsSoundRule(fuzz->getId(),currentTest);
+                qDebug() << __PRETTY_FUNCTION__ << "set" << currentTest;
+            } else {
+                qDebug() << __PRETTY_FUNCTION__ << "Todo: OR Rule";
+            }
+
+            //currentTest=false;
+
+        } else {
+            continue;
         }
     }
 }
