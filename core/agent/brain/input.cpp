@@ -17,13 +17,6 @@ void Input::calculate()
     }
 }
 
-/** \brief returns the channel name
-
-                Inputs may (and mostly they are) connected to an input channel. This function provides access
-                @sa output
-
-        \return the name of the channel associated with this input
-**/
 QString Input::getChannelName()
 {
     return m_channelName;
@@ -31,6 +24,12 @@ QString Input::getChannelName()
 
 void Input::setChannelName(QString channel)
 {
+    if(     QString::compare(channel,BrainiacGlobals::ChannelName_Sound_a,Qt::CaseInsensitive)==0 ||
+            QString::compare(channel,BrainiacGlobals::ChannelName_Sound_d,Qt::CaseInsensitive)==0 ||
+            QString::compare(channel,BrainiacGlobals::ChannelName_Sound_f,Qt::CaseInsensitive)==0 ||
+            QString::compare(channel,BrainiacGlobals::ChannelName_Sound_x,Qt::CaseInsensitive)==0 ) {
+        m_isSoundInput=true;
+    }
     m_channelName=channel;
     m_channel=m_brain->getAgent()->getInputChannel(m_channelName);
     if(m_channel)

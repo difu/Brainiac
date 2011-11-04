@@ -12,6 +12,7 @@
 #include <glu.h>
 #include <GLUT/glut.h>
 #include <QDebug>
+#include <QtGlobal>
 
 Agent::Agent(Scene *scene, quint32 id) :
     QObject()
@@ -129,7 +130,7 @@ void Agent::advance()
 
     Agent *loudestAgent=0;
     qreal loudestReception=0;
-    qreal loudestAmplitude=0;
+    //qreal loudestAmplitude=0;
     QVector3D loudestAgentPosition;
     foreach(Agent *otherAgent,m_scene->getAgents()) {
         if(otherAgent==this) {
@@ -139,15 +140,15 @@ void Agent::advance()
 
         // Sound Stuff
         QVector3D loudAgentPosition=QVector3D(otherAgent->getPosition()->x(),otherAgent->getPosition()->y(),otherAgent->getPosition()->z());
-        qreal distance=(loudAgentPosition-m_position).length();
-        //qDebug() << "Distcance from agent " << m_id << "to " << agent->getId() << " is" << distance;
-        qreal loudAmplitude=otherAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_a)->getValue();
-        qreal reception=loudAmplitude-distance;
+//        qreal distance=(loudAgentPosition-m_position).length();
+//        //qDebug() << "Distcance from agent " << m_id << "to " << agent->getId() << " is" << distance;
+//        qreal loudAmplitude=otherAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_a)->getValue();
+        qreal reception=getOtherAgentSoundReception(otherAgent);
         if(reception>loudestReception) {
             loudestReception=reception;
             loudestAgent=otherAgent;
             loudestAgentPosition=loudAgentPosition;
-            loudestAmplitude=loudAmplitude;
+            //loudestAmplitude=loudAmplitude;
         }
         // End sound stuff
 
@@ -156,44 +157,11 @@ void Agent::advance()
     // Postprocess sound stuff
     if(loudestAgent) { // has heard something
         // calculate angle about y axis
-        QVector3D distVect=m_position-loudestAgentPosition;
-        qreal scalar=QVector3D::dotProduct(distVect,QVector3D(1.0f,0.0f,0.0f));
-
-        //qDebug() << "loudest agent from agent " << m_id << "is " << loudestAgent->getId() << loudestAgentPosition;
-        qreal yRotation=m_rotation.y(); // we need to normalize that value, so store it in a temp var for norm function
-        BrainiacGlobals::normalizeAngle(&yRotation);
-        if(yRotation<0)
-            yRotation=-yRotation;
-        qreal angle=acos(scalar/(distVect.length())) * ((double)180.0)/BrainiacGlobals::PI + yRotation-270.0f;
-        // determine, if the loudest agent is on this agent´s right or left side
-        // place to points with distance 1 to current position on 90° and 270° and find out which point is closer
-        QVector3D leftPoint;
-        QVector3D rightPoint;
-        leftPoint.setX(m_position.x()+BrainiacGlobals::sinGrad(m_rotation.y()+90.0f));
-        leftPoint.setZ(m_position.z()+BrainiacGlobals::cosGrad(m_rotation.y()+90.0f));
-        leftPoint.setY(0.0f);
-
-        rightPoint.setX(m_position.x()+BrainiacGlobals::sinGrad(m_rotation.y()+270.0f));
-        rightPoint.setZ(m_position.z()+BrainiacGlobals::cosGrad(m_rotation.y()+270.0f));
-        rightPoint.setY(0.0f);
-        //qDebug() << "Position:" << m_position << "left:" << leftPoint << "right:" << rightPoint;
-
-        QVector3D leftDistVec=loudestAgentPosition-leftPoint;
-        QVector3D rightDistVec=loudestAgentPosition-rightPoint;
-//        if(leftDistVec.length()>rightDistVec.length()) {
-//            //angle=-angle;
-//            qDebug() << "Loudest Agent is to the right";
-//        } else {
-//            qDebug() << "Loudest Agent is to the left";
-//        }
-        if(angle>180.0f) {
-            angle=-360.0f+angle;
-        }
-        BrainiacGlobals::normalizeAngle(&angle);
-        //if(angle>180.0f) angle=-angle+270.0f;
+        qreal angle=0;//this->getOtherAgentRelativeAngle(loudestAgent);
 //        qDebug() << "Angle of LA:"<< angle << "dist" << distVect.length() << m_position << "y rotation" << yRotation;
+
         m_iSoundX->setValue(angle);
-        m_iSoundD->setValue(loudestReception/loudestAmplitude);
+        m_iSoundD->setValue(loudestReception/loudestAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_a)->getValue() );
         m_iSoundF->setValue(loudestAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_f)->getValue());
 
     } else { // this agent hasn´t heard any sound
@@ -213,6 +181,11 @@ void Agent::advance()
             timer->advance();
         } else if(fuzz->getType()==FuzzyBase::DEFUZZ ) { // input nodes with parents are triggered implicite by their parents
             fuzz->calculate();
+        } else if(fuzz->getType()==FuzzyBase::AND ) {
+            FuzzyAnd *fuzzyAnd=(FuzzyAnd *)fuzz;
+            if(fuzzyAnd->isSoundRule()) {
+                fuzzyAnd->calculateSound();
+            }
         }
     }
 }
@@ -322,7 +295,7 @@ Channel* Agent::getInputChannel(const QString &name) const
         return 0;
 }
 
-Channel* Agent::getOutputChannel(const QString &name)
+Channel* Agent::getOutputChannel(const QString &name) const
 {
     if(this->outputChannelExists(name))
         return(m_outputs.value(name));
@@ -330,9 +303,97 @@ Channel* Agent::getOutputChannel(const QString &name)
         return 0;
 }
 
-QVector3D Agent::getOtherAgentRelativePosition(const Agent &otherAgent) const
+qreal Agent::getOtherAgentRelativeAngle(const Agent *otherAgent) const
 {
-    return QVector3D(otherAgent.getPosition()->x(),otherAgent.getPosition()->y(),otherAgent.getPosition()->z())-m_position;
+    QVector3D distVect=this->getOtherAgentRelativePosition(otherAgent);
+    qreal scalar=-QVector3D::dotProduct(distVect,QVector3D(1.0f,0.0f,0.0f));
+
+    //qDebug() << "loudest agent from agent " << m_id << "is " << loudestAgent->getId() << loudestAgentPosition;
+
+    // we need to normalize that value, so store it in a temp var for norm function
+    qreal yRotation=-m_rotation.y()+90.0f;
+    BrainiacGlobals::normalizeAngle(&yRotation);
+    if(yRotation<0)
+        yRotation=360.0f+yRotation;
+
+//    if(yRotation>180.0f) {
+//        yRotation-=180.0f;
+//        yRotation=-yRotation;
+//    }
+
+    qreal angle=acos(scalar/(distVect.length())) * ((double)180.0)/BrainiacGlobals::PI;// + yRotation;
+    // determine, if the loudest agent is on this agent´s right or left side
+    // place to points with distance 1 to current position on 90° and 270° and find out which point is closer
+
+    QVector3D leftPoint;
+    QVector3D rightPoint;
+    leftPoint.setX(m_position.x()+BrainiacGlobals::sinGrad(m_rotation.y()+90.0f));
+    leftPoint.setZ(m_position.z()+BrainiacGlobals::cosGrad(m_rotation.y()+90.0f));
+    leftPoint.setY(0.0f);
+
+    rightPoint.setX(m_position.x()+BrainiacGlobals::sinGrad(m_rotation.y()+270.0f));
+    rightPoint.setZ(m_position.z()+BrainiacGlobals::cosGrad(m_rotation.y()+270.0f));
+    rightPoint.setY(0.0f);
+    //qDebug() << "Position:" << m_position << "left:" << leftPoint << "right:" << rightPoint << yRotation;
+
+    QVector3D otherPos(otherAgent->getPosition()->x(),otherAgent->getPosition()->y(),otherAgent->getPosition()->z());
+
+    //qDebug() << "Other Agent Pos" << otherPos;
+
+    QVector3D leftDistVec=otherPos-leftPoint;
+    QVector3D rightDistVec=otherPos-rightPoint;
+    //qDebug() << "UNFILTEREDANGLE" << angle;
+
+    if(m_position.z()<otherAgent->getPosition()->z()) {
+        angle=360.0f-angle;
+    }
+    qreal resAngle=0.0f;
+
+    if(leftDistVec.length()>rightDistVec.length()) {
+        //qDebug() << "Loudest Agent is to the right";
+        if(angle>180.0f) {
+            if(yRotation>angle) { // b>a
+                resAngle=180+angle-yRotation;
+                // qDebug() << "11111111111111111111111111111111";
+            } else {
+                resAngle=angle-180.0f-yRotation;
+                // qDebug() << "222222222222222222222222222222222";
+            }
+        } else {
+            resAngle=180.0f-(yRotation-angle);
+            //qDebug() << "3333333333333333333333333333333333333";
+        }
+    } else {
+        if(angle>180.0f) {
+            resAngle=yRotation-(angle-180.0f);
+            //qDebug() << "11111111111111111111111111111111";
+        } else {
+            if(yRotation<angle) {
+                resAngle=180.0f-(angle-yRotation);
+                //qDebug() << "222222222222222222222222222222222";
+            } else {
+                resAngle=(yRotation-(angle)+180.0f);
+                //qDebug() << "3333333333333333333333333333333333333";
+            }
+        }
+        resAngle=-resAngle;
+        //qDebug() << "Loudest Agent is to the left";
+    }
+    BrainiacGlobals::normalizeAngle(&resAngle);
+    return resAngle;
+}
+
+qreal Agent::getOtherAgentSoundReception(const Agent *otherAgent) const
+{
+    qreal otherAgentAmplitude=otherAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_a)->getValue();
+    qreal distance=this->getOtherAgentRelativePosition(otherAgent).length();
+    qreal reception=otherAgentAmplitude-distance;
+    return qMax((qreal)0.0f,reception);
+}
+
+QVector3D Agent::getOtherAgentRelativePosition(const Agent *otherAgent) const
+{
+    return QVector3D(otherAgent->getPosition()->x(),otherAgent->getPosition()->y(),otherAgent->getPosition()->z())-m_position;
 }
 
 const QVector3D* Agent::getPosition() const

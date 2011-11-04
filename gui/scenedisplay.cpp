@@ -2,6 +2,7 @@
 #include "core/agent/agent.h"
 #include "core/scene.h"
 #include "core/camera.h"
+#include "core/group/group.h"
 #include <QMouseEvent>
 #include <QDebug>
 
@@ -146,6 +147,18 @@ void SceneDisplay::paintGL()
     glPopMatrix();
     foreach(Agent *agent, m_scene->getAgents()) {
         agent->renderGL();
+        QString info;
+        foreach(Group *grp,m_scene->getGroups()) {
+            if(grp->getAgents().contains(agent)) {
+                info.append(QString(grp->getName()));
+            }
+        }
+        info.append(".").append(QString::number(agent->getId()));
+
+        glColor3f(1.0f,0.5f,1.0f);
+        glDisable(GL_DEPTH_TEST);
+        renderText(agent->getPosition()->x(),agent->getPosition()->y(),agent->getPosition()->z(),info);
+        glEnable(GL_DEPTH_TEST);
     }
 }
 

@@ -9,13 +9,17 @@ FuzzyFuzz::FuzzyFuzz( quint32 id, Brain *brain, QString name, Mode mode, Interpo
 
 void FuzzyFuzz::calculate()
 {
+    this->calculate(true);
+}
+
+void FuzzyFuzz::calculate(bool emitChange) {
     if(m_parents.count()>0) {
         Parent par=m_parents.at(0);// Only take the first parent
         qreal max=par.parent->getMaxValue();
         qreal min=par.parent->getMinValue();
-        setResult(this->getFuzzOut(min,max,par.parent->getResult(par.inverted)));
+        setResult(this->getFuzzOut(min,max,par.parent->getResult(par.inverted)),emitChange);
     } else {
-        setResult(0);
+        setResult(0,emitChange);
     }
 }
 

@@ -20,8 +20,24 @@ class Simulation : public QObject
     Q_OBJECT
 public:
     explicit Simulation(Scene *scene);
+
+
+    /**
+     * @brief returns the current frame of the Simulation
+     *
+     * @return quint32 the current frame of the Simulation
+     */
     quint32 getCurrentFrame();
+
+    /**
+     * @brief returns the framerate of the Simulation
+     *
+     * @return quint32 the framerate
+     */
     quint32 getFps();
+    /** \brief @returns true if simulation is running
+    **/
+    bool isRunning() const { return m_running; }
 
 protected:
     quint32 m_fps; //!< frametrate of the sim

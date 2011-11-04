@@ -151,16 +151,29 @@ public:
         @param name the name of the output channel
         @returns 0 if channel does not exist
     **/
-    Channel *getOutputChannel(const QString &name);
+    Channel *getOutputChannel(const QString &name) const;
     /** \brief returns the id of this agent
     **/
     quint32 getId() const;
+
+    /** \brief returns direction(angle) sound is received from horizontally
+
+      polar coordinate about the Y axis of sound source. The unit is degree
+      @param otherAgent the agent to which the relative angle is calculated
+    **/
+    qreal getOtherAgentRelativeAngle(const Agent *otherAgent) const;
+
+    /** \brief returns the sound reception of given agent
+
+      @param otherAgent the agent to which the reception is calculated
+    **/
+    qreal getOtherAgentSoundReception(const Agent *otherAgent) const;
 
     /** \brief returns the position given agent relative to current position
 
       @param otherAgent the agent to which the position is calculated
     **/
-    QVector3D getOtherAgentRelativePosition(const Agent &otherAgent) const;
+    QVector3D getOtherAgentRelativePosition(const Agent *otherAgent) const;
 
     /** \brief returns the position of the agent in world space
     **/

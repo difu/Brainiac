@@ -251,6 +251,7 @@ void AgentManager::addInputFuzz(quint32 id, QString name, QString channel, qreal
     foreach(Agent* agent,m_group->getAgents()) {
         agent->addInputFuzz(id, name, channel, min, max);
     }
+    setFuzzyChannelName(id,channel); //!< @bug @todo Channel name must be set here to determine if an input is a sound input node...
     m_brainIdGenerator.registerId(id);
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
 }
@@ -308,7 +309,7 @@ void AgentManager::addTimerFuzz(quint32 id, QString name, qreal rate, QString mo
 
 void AgentManager::addConnector(quint32 childId, quint32 parentId, bool inverted)
 {
-    m_masterAgent->addConnection(childId, parentId, inverted);
+    m_masterAgent->addConnection(childId, parentId, inverted);//!< @todo check, if connection already exists
     foreach(Agent* agent,m_group->getAgents()) {
         agent->addConnection(childId, parentId, inverted);
     }
@@ -681,12 +682,15 @@ void AgentManager::setFuzzyFuzzInterpolationMode(quint32 id, FuzzyFuzz::Interpol
 void AgentManager::setFuzzyChannelName(quint32 id, QString name)
 {
     FuzzyBase *fuzz=m_masterAgent->getBrain()->getFuzzy(id);
+
     switch(fuzz->getType()) {
     Input *inp;
     Output *out;
+
     case(FuzzyBase::INPUT):
         inp=(Input *) fuzz;
         inp->setChannelName(name);
+
         foreach(Agent *agent, m_group->getAgents()) {
             Input *agentInput=(Input *) agent->getBrain()->getFuzzy(id);
             Q_ASSERT(agentInput->getType()==FuzzyBase::INPUT);

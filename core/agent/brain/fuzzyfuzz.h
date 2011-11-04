@@ -4,7 +4,7 @@
 
 #include "core/agent/brain/fuzzybase.h"
 
-/** \brief  Fuzzy Rule
+/** \brief  Fuzzy fuzz node
 
 **/
 class FuzzyFuzz : public FuzzyBase
@@ -22,6 +22,14 @@ public:
     enum InterpolationMode {LINEAR, SINE, QUAD };
     FuzzyFuzz( quint32 id, Brain *brain, QString name, Mode mode, InterpolationMode iMode);
     void calculate();
+
+    /** \brief  triggers calculation but emitting the resultChanged() Signal is selectable
+
+      Sometimes it is useful not to emit the resultChanged() Signal, e.g. if a sound and node has to determine the best input combinations
+        @sa FuzzyBase::resultChanged()
+    **/
+    void calculate(bool emitChange);
+
     /** \brief  returns the fuzzy value
         if this fuzz is connected to a node, it returns the value with respect to the parent´s bounds
         if not, it sets the bounds to 0 and 1
