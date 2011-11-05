@@ -71,7 +71,11 @@ void FuzzyEditorCurveEditor::updateEditor()
     } else if(m_pointId==1) {
         fuzzValue=m_fuzz->getP2();
         lowerBound=m_fuzz->getP1();
-        upperBound=m_fuzz->getP3();
+        if(m_fuzz->getMode()==FuzzyFuzz::ACTIVATE || m_fuzz->getMode()==FuzzyFuzz::DEACTIVATE ) {
+            upperBound=1;
+        } else {
+            upperBound=m_fuzz->getP3();
+        }
         if(m_fuzz->getMode()==FuzzyFuzz::DEACTIVATE) {
             yPos=downPos;
         } else {
@@ -80,11 +84,13 @@ void FuzzyEditorCurveEditor::updateEditor()
     } else if(m_pointId==2) {
         fuzzValue=m_fuzz->getP3();
         lowerBound=m_fuzz->getP2();
-        upperBound=m_fuzz->getP4();
+
         if(m_fuzz->getMode()==FuzzyFuzz::TRAPEZOID) {
             yPos=upPos;
+            upperBound=m_fuzz->getP4();
         } else {
             yPos=downPos;
+            upperBound=1;
         }
     } else if(m_pointId==3) {
         fuzzValue=m_fuzz->getP4();
