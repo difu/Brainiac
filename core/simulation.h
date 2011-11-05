@@ -57,9 +57,24 @@ signals:
     void simLate(); //!< emitted when simulation is late
 
 public slots:
+    /**
+     * @brief starts the simulation
+     *
+     */
     void startSimulation();
+
+    /**
+     * @brief stops/pauses the simulation
+     *
+     */
     void stopSimulation();
 
+    /**
+     * @brief resets the simulation
+     * the simulation is resetted and stopped
+     * @sa stopSimulation()
+     */
+    void resetSimulation();
 };
 
 #endif // SIMULATION_H

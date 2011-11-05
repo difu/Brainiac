@@ -13,6 +13,11 @@ void advanceAgentCommit(Agent* param_agent)
     param_agent->advanceCommit();
 }
 
+void agentReset(Agent* param_agent)
+{
+    param_agent->reset();
+}
+
 Simulation::Simulation(Scene *scene) :
     QObject(), m_scene(scene)
 {
@@ -49,6 +54,14 @@ quint32 Simulation::getCurrentFrame()
 quint32 Simulation::getFps()
 {
     return m_fps;
+}
+
+void Simulation::resetSimulation() {
+    m_simMutex.lock();
+    QList<Agent *> agents=m_scene->getAgents();
+    stopSimulation();
+    QtConcurrent::blockingMap(agents,&::agentReset);
+    m_simMutex.unlock();
 }
 
 void Simulation::startSimulation()

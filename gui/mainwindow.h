@@ -82,6 +82,7 @@ protected:
     QAction *m_saveAgentAction;
     QAction *m_saveSceneAction;
     QAction *m_runSimulationAction;
+    QAction *m_resetSimulationAction;
     QAction *m_stopSimulationAction;
 
     QMenu *m_fileMenu;

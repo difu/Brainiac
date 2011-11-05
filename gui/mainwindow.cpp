@@ -87,6 +87,8 @@ void MainWindow::createActions()
     connect(m_runSimulationAction,SIGNAL(triggered()),m_scene->getSimulation(),SLOT(startSimulation()));
     m_stopSimulationAction=new QAction(tr("Stop"),this);
     connect(m_stopSimulationAction,SIGNAL(triggered()),m_scene->getSimulation(),SLOT(stopSimulation()));
+    m_resetSimulationAction=new QAction(tr("Reset"), this);
+    connect(m_resetSimulationAction,SIGNAL(triggered()),m_scene->getSimulation(),SLOT(resetSimulation()));
 }
 
 void MainWindow::createEditors()
@@ -230,6 +232,8 @@ void MainWindow::createMenues()
 
     m_simulationMenu=menuBar()->addMenu(tr("&Simulation"));
     m_simulationMenu->addAction(m_runSimulationAction);
+    m_simulationMenu->addAction(m_stopSimulationAction);
+    m_simulationMenu->addAction(m_resetSimulationAction);
 }
 
 void MainWindow::editModeComboChange(int index)
