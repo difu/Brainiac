@@ -152,8 +152,12 @@ public:
         @returns 0 if channel does not exist
     **/
     Channel *getOutputChannel(const QString &name) const;
-    /** \brief returns the id of this agent
-    **/
+
+    /**
+     * @brief returns the id of this agent
+     *
+     * @return quint32 the id
+     */
     quint32 getId() const;
 
     /** \brief returns direction(angle) sound is received from horizontally
@@ -162,6 +166,14 @@ public:
       @param otherAgent the agent to which the relative angle is calculated
     **/
     qreal getOtherAgentRelativeAngle(const Agent *otherAgent) const;
+
+    /**
+     * @brief returns the orientation relative to its own
+     * relative orientation of sound source (which way target is facing relative to self)
+     * @param otherAgent the other agent
+     * @return qreal the relative angle
+     */
+    qreal getOtherAgentRelativeOrientation(const Agent *otherAgent) const;
 
     /** \brief returns the sound reception of given agent
 
@@ -228,6 +240,7 @@ protected:
     Channel *m_oSoundF; //!< Emmited frequency of sound (output)
     Channel *m_oSoundA; //!< Emmited amplitude of sound (output)
     Channel *m_iSoundX; //!< polar coordinate about the Y axis of sound source (input)
+    Channel *m_iSoundOX; //!< relative angle of receiving sound source (input)
     Channel *m_iSoundD; //!< distance of received sound;
     Channel *m_iSoundF; //!< frequency of received sound;
     Scene *m_scene; //!< the scene

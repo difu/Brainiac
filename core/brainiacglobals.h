@@ -54,6 +54,7 @@ public:
     static const char* const FuzzFuzzInterpolationSine;
 
     static const char* const  ChannelName_Sound_x;
+    static const char* const  ChannelName_Sound_ox;
     static const char* const  ChannelName_Sound_d;
     static const char* const  ChannelName_Sound_a;
     static const char* const  ChannelName_Sound_f;
