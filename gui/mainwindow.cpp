@@ -32,6 +32,8 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
 
     ui->setupUi(this);
 
+    readSettings();
+
     m_layout=new MainWindowLayout();
     QWidget *widget = new QWidget;
 
@@ -72,6 +74,12 @@ void MainWindow::addAgentManager(AgentManager *agentManager)
     BrainEditor *editor=new BrainEditor(m_scene,agentManager);
     m_brainEditors.insert(agentManager,editor);
 
+}
+
+void MainWindow::closeEvent(QCloseEvent *ev)
+{
+    Q_UNUSED(ev);
+    writeSettings();
 }
 
 void MainWindow::createActions()
@@ -291,6 +299,16 @@ void MainWindow::editorNodeClick(ItemEditorWidgetsBase::editMessage msg)
     m_noiseEditor->setVisible(msg.type==BrainiacGlobals::NOISE);
 }
 
+void MainWindow::readSettings()
+{
+    QSettings settings("Brainiac SW", "Brainiac");
+
+    settings.beginGroup("MainWindow");
+    resize(settings.value("size", QSize(400, 400)).toSize());
+    move(settings.value("pos", QPoint(200, 200)).toPoint());
+    settings.endGroup();
+}
+
 void MainWindow::refreshBrainEditor()
 {
     m_editorView->scene()->update();
@@ -352,6 +370,16 @@ void MainWindow::setEditMode(EditMode em)
 void MainWindow::statusBarMessageChange(const QString &message)
 {
     this->statusBar()->showMessage(message);
+}
+
+void MainWindow::writeSettings()
+{
+    QSettings settings("Brainiac SW", "Brainiac");
+
+    settings.beginGroup("MainWindow");
+    settings.setValue("size", size());
+    settings.setValue("pos", pos());
+    settings.endGroup();
 }
 
 MainWindow::~MainWindow()

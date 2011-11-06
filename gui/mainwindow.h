@@ -48,12 +48,32 @@ public:
 
 protected:
     void changeEvent(QEvent *e);
+
+    /**
+     * @brief called before colsing the mainwindow
+     *
+     * @param ev the close event
+     */
+    void closeEvent(QCloseEvent *ev);
     void createActions();
     void createEditors();
     void createEditModeWidgets();
     void createEditorItemBars();
     void createEditorWidgets();
     void createMenues();
+
+    /**
+     * @brief reads the window´s geometry
+     *
+     */
+    void readSettings();
+
+    /**
+     * @brief saves the window´s geometry
+     *
+     */
+    void writeSettings();
+
     Scene *m_scene; //!< the scene to be handled
     SceneEditor *m_sceneEditor;
     EditMode m_editMode;
