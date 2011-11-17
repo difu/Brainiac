@@ -23,7 +23,6 @@ class Scene : public QObject
     Q_OBJECT
 public:
     explicit Scene(QObject *parent = 0);
-    void addAgent(Agent *agent);
     void addGroup(Group *group);
     void clear(); //!< deletes all contents from this scene
     QList<Agent *> getAgents();

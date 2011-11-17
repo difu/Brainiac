@@ -18,10 +18,6 @@ Scene::Scene(QObject *parent) :
     m_simulation=new Simulation(this);
 }
 
-void Scene::addAgent(Agent *agent)
-{
-    m_agents.append(agent);
-}
 
 void Scene::addGroup(Group *group)
 {
@@ -59,13 +55,15 @@ void Scene::createAgents(Generator *gen)
 {
     if(gen->getType()==Generator::POINT) {
         PointGenerator *pGen=(PointGenerator *)gen;
-        foreach(PointGenerator::locator loc,*pGen->getLocations()) {
-            Group *grp=getGroup(loc.groupId);
-            QVector4D *trans=loc.locator;
+        gen->generateLocators();
+        Group *bla=pGen->getLocations()->at(0)->getGroup();
+        foreach(Locator *loc,*pGen->getLocations()) {
+            Group *grp=loc->getGroup();
+            QVector4D trans=loc->getLocation();
             if(grp->getAgentManager()) { // only, if we successfully loaded an agent
                 Agent *agent=grp->getAgentManager()->cloneAgent(grp->getNextAgentId());
-                agent->setRestTranslation(trans->x(),trans->y(),trans->z()); //!< \todo add rest rotation
-                agent->setRestRotation(0,trans->w(),0);
+                agent->setRestTranslation(trans.x(),trans.y(),trans.z()); //!< \todo add rest rotation
+                agent->setRestRotation(0,trans.w(),0);
                 m_agents.append(agent);
                 grp->addAgent(agent);
                 agent->reset();
@@ -117,7 +115,8 @@ bool Scene::openConfig(const QString & fileName)
                     if(m_streamReader.name()=="Generators") {
                         while(m_streamReader.readNextStartElement()) {
                             if(m_streamReader.name()=="PointGenerator") {
-                                PointGenerator *pg=new PointGenerator();
+                                //qDebug() << "scene.cpp openconfig openConfigPointgenerator missing!";
+                                PointGenerator *pg=new PointGenerator(this);
                                 pg->loadConfig(&m_streamReader);
                                 m_generators.append(pg);
                             } else {

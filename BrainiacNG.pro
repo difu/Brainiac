@@ -58,7 +58,8 @@ SOURCES += main.cpp\
     core/idgenerator.cpp \
     gui/braineditor/noiseeditor.cpp \
     gui/braineditor/fuzzyeditorcurveeditor.cpp \
-    gui/braineditor/fuzzyeditorcurvepoint.cpp
+    gui/braineditor/fuzzyeditorcurvepoint.cpp \
+    core/generator/locator.cpp
 
 HEADERS  += gui/mainwindow.h \
     core/scene.h \
@@ -107,7 +108,8 @@ HEADERS  += gui/mainwindow.h \
     core/idgenerator.h \
     gui/braineditor/noiseeditor.h \
     gui/braineditor/fuzzyeditorcurveeditor.h \
-    gui/braineditor/fuzzyeditorcurvepoint.h
+    gui/braineditor/fuzzyeditorcurvepoint.h \
+    core/generator/locator.h
 
 FORMS    += gui/mainwindow.ui \
     gui/sceneeditor/groupeditor.ui \
@@ -115,10 +117,14 @@ FORMS    += gui/mainwindow.ui \
     gui/braineditor/inputeditor.ui \
     gui/braineditor/fuzzyeditor.ui \
     gui/braineditor/defuzzeditor.ui \
-    gui/braineditor/noiseeditor.ui
+    gui/braineditor/noiseeditor.ui \
+    gui/placeeditor.ui
 
 LIBS += -framework \
     glut
 
 RESOURCES += \
     brainiac.qrc
+
+
+

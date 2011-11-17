@@ -50,6 +50,21 @@ const qreal BrainiacGlobals::MAXQREAL=std::numeric_limits<qreal>::max();
 const qreal BrainiacGlobals::MINQREAL=-std::numeric_limits<qreal>::max();
 
 const char* const BrainiacGlobals::XmlModeAttrib="mode\0";
+const char* const BrainiacGlobals::XmlNameAttrib="name\0";
+const char* const BrainiacGlobals::XmlXAttrib="x\0";
+const char* const BrainiacGlobals::XmlYAttrib="y\0";
+const char* const BrainiacGlobals::XmlZAttrib="z\0";
+const char* const BrainiacGlobals::XmlAngleVarAttrib="anglevariation\0";
+const char* const BrainiacGlobals::XmlAngleAttrib="angle\0";
+const char* const BrainiacGlobals::XmlDistanceAttrib="distance\0";
+const char* const BrainiacGlobals::XmlGroupsAttrib="groups\0";
+const char* const BrainiacGlobals::XmlGroupRatioAttrib="groupratio\0";
+const char* const BrainiacGlobals::XmlNumberAttrib="number\0";
+const char* const BrainiacGlobals::XmlNoiseAttrib="noise\0";
+const char* const BrainiacGlobals::XmlNoiseFreqAttrib="noisefreq\0";
+const char* const BrainiacGlobals::XmlHeightVarAttrib="heightvariation\0";
+const char* const BrainiacGlobals::XmlHeightAttrib="height\0";
+const char* const BrainiacGlobals::XmlIdAttrib="id\0";
 
 const char* const BrainiacGlobals::FuzzAndModeMin="min\0";
 const char* const BrainiacGlobals::FuzzAndModeProduct="prod\0";

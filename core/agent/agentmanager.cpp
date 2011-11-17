@@ -832,7 +832,7 @@ void AgentManager::updateSoundConfigs()
 
             if(fuzz->getType()==FuzzyBase::AND) {
                 this->setFuzzyAndIsSoundRule(fuzz->getId(),currentTest);
-                qDebug() << __PRETTY_FUNCTION__ << "set" << currentTest;
+                //qDebug() << __PRETTY_FUNCTION__ << "set" << currentTest;
             } else {
                 qDebug() << __PRETTY_FUNCTION__ << "Todo: OR Rule";
             }

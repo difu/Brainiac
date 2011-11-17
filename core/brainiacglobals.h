@@ -40,6 +40,21 @@ public:
     static const qreal randoms[NUMBER_OF_RANDOMS];
 
     static const char* const XmlModeAttrib;
+    static const char* const XmlNameAttrib;
+    static const char* const XmlIdAttrib;
+    static const char* const XmlXAttrib;
+    static const char* const XmlYAttrib;
+    static const char* const XmlZAttrib;
+    static const char* const XmlAngleVarAttrib;
+    static const char* const XmlAngleAttrib;
+    static const char* const XmlDistanceAttrib;
+    static const char* const XmlGroupsAttrib;
+    static const char* const XmlGroupRatioAttrib;
+    static const char* const XmlNumberAttrib;
+    static const char* const XmlNoiseAttrib;
+    static const char* const XmlNoiseFreqAttrib;
+    static const char* const XmlHeightVarAttrib;
+    static const char* const XmlHeightAttrib;
 
     static const char* const FuzzAndModeMin;
     static const char* const FuzzAndModeProduct;
