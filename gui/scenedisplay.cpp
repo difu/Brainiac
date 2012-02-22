@@ -25,6 +25,39 @@ void SceneDisplay::closeEvent(QCloseEvent *event)
     //event->ignore();
 }
 
+void SceneDisplay::drawAgentsInfo(QPainter *painter)
+{
+    GLdouble modelMatrix[16];
+    GLdouble projMatrix[16];
+    GLint viewport[4];
+
+    GLdouble pix_x;
+    GLdouble pix_y;
+    GLdouble pix_z;
+
+
+    int i=0;
+    foreach(Agent *agent, m_scene->getAgents()) {
+        QString info;
+        foreach(Group *grp,m_scene->getGroups()) {
+            if(grp->getAgents().contains(agent)) {
+                info.append(QString(grp->getName()));
+            }
+        }
+        info.append(".").append(QString::number(agent->getId()));
+        glMatrixMode(GL_MODELVIEW);
+        glGetDoublev(GL_MODELVIEW_MATRIX, modelMatrix);
+        glGetDoublev(GL_PROJECTION_MATRIX, projMatrix);
+        glGetIntegerv(GL_VIEWPORT, viewport);
+        gluProject(agent->getPosition()->x(), agent->getPosition()->y(), agent->getPosition()->z(),
+                   modelMatrix, projMatrix, viewport,
+                   &pix_x, &pix_y, &pix_z);
+        QRectF infoRect(pix_x,viewport[3] - (int)pix_y,100,50);
+        if(pix_z<=1.0f)
+            painter->drawText(infoRect,Qt::AlignLeft,info);
+    }
+}
+
 void SceneDisplay::initializeGL()
 {
     glShadeModel(GL_SMOOTH);
@@ -148,28 +181,20 @@ void SceneDisplay::paintEvent(QPaintEvent *)
     glEnd();
     glPopMatrix();
 
+
+
     foreach(Agent *agent, m_scene->getAgents()) {
         agent->renderGL();
-        QString info;
-        foreach(Group *grp,m_scene->getGroups()) {
-            if(grp->getAgents().contains(agent)) {
-                info.append(QString(grp->getName()));
-            }
-        }
-        info.append(".").append(QString::number(agent->getId()));
-
-        glColor3f(1.0f,0.5f,1.0f);
-        glDisable(GL_DEPTH_TEST);
-        renderText(agent->getPosition()->x(),agent->getPosition()->y(),agent->getPosition()->z(),info);
-        glEnable(GL_DEPTH_TEST);
     }
+
     QPainter painter(this);
+    drawAgentsInfo(&painter);
+
     QRectF rect(10,10,500,100);
-    painter.setRenderHint(QPainter::Antialiasing);
     QString frameInfo(tr("Render FPS: "));
     frameInfo.append(QString().setNum(m_scene->getSimulation()->getFpsCalc()*1000,'g',3));
     painter.drawText(rect,Qt::AlignLeft,frameInfo);
-    painter.end();
+    //painter.end();
 }
 
 void SceneDisplay::paintGL()

@@ -24,6 +24,11 @@ public:
 
 protected:
     void closeEvent(QCloseEvent *event);
+    /** \brief  Paints information of each agent
+            @sa QPainter painter
+
+    **/
+    void drawAgentsInfo(QPainter *painter);
     void initializeGL();
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
