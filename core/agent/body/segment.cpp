@@ -7,27 +7,14 @@
 #include <QtOpenGL>
 
 
-Segment::Segment(SegmentType type, quint32 id, Body *body, QString name, QVector3D *restRot, QVector3D *restTrans, Segment *parent)
+Segment::Segment(SegmentType type, quint32 id, Body *body, QString name, QVector3D *rot, QVector3D *trans, Segment *parent)
 {
-    m_type=type;
-    m_id=id;
-    m_parent=parent;
-    //m_scale=1.0;
-    m_body=body;
-    m_name=name;
-    m_restRotation=restRot;
-    m_restTranslation=restTrans;
-    //m_color=new BrainiacColor();
-    //m_color=0.5; //!< \todo color management
-    createSegmentChannels();
-    if(parent) {
-        parent->addChild(this);
-    }
+    init(type,id,body,name,rot,trans,parent);
 }
 Segment::~Segment()
 {
-    delete m_restRotation;
-    delete m_restTranslation;
+    delete m_rotation;
+    delete m_translation;
     m_body->getAgent()->deleteChannel(m_tx);
     m_body->getAgent()->deleteChannel(m_ty);
     m_body->getAgent()->deleteChannel(m_tz);
@@ -61,32 +48,32 @@ void Segment::addChildId(quint32 id)
 void Segment::createSegmentChannels()
 {
     m_tx=new Channel();
-    m_tx->init(m_restTranslation->x());
+    m_tx->init(m_translation->x());
     QString name=m_name % ":tx";
     m_body->getAgent()->addInputChannel(m_tx,name);
 
     m_ty=new Channel();
-    m_ty->init(m_restTranslation->y());
+    m_ty->init(m_translation->y());
     name=m_name % ":ty";
     m_body->getAgent()->addInputChannel(m_ty,name);
 
     m_tz=new Channel();
-    m_tz->init(m_restTranslation->z());
+    m_tz->init(m_translation->z());
     name=m_name % ":tz";
     m_body->getAgent()->addInputChannel(m_tz,name);
 
     m_rx=new Channel();
-    m_rx->init(m_restRotation->x());
+    m_rx->init(m_rotation->x());
     name=m_name % ":rx";
     m_body->getAgent()->addInputChannel(m_rx,name);
 
     m_ry=new Channel();
-    m_ry->init(m_restRotation->y());
+    m_ry->init(m_rotation->y());
     name=m_name % ":ry";
     m_body->getAgent()->addInputChannel(m_ry,name);
 
     m_rz=new Channel();
-    m_rz->init(m_restRotation->z());
+    m_rz->init(m_rotation->z());
     name=m_name % ":rz";
     m_body->getAgent()->addInputChannel(m_rz,name);
 
@@ -106,6 +93,24 @@ quint32 Segment::getParentId()
         return m_body->getSegmentId(m_parent);
     else
         return 0;
+}
+
+void Segment::init(SegmentType type, quint32 id, Body *body, QString name, QVector3D *restRot, QVector3D *restTrans, Segment *parent)
+{
+    m_type=type;
+    m_id=id;
+    m_parent=parent;
+    //m_scale=1.0;
+    m_body=body;
+    m_name=name;
+    m_rotation=restRot;
+    m_translation=restTrans;
+    //m_color=new BrainiacColor();
+    //m_color=0.5; //!< \todo color management
+    createSegmentChannels();
+    if(parent) {
+        parent->addChild(this);
+    }
 }
 
 bool Segment::isColorInherited()
@@ -134,20 +139,15 @@ void Segment::renderGL()
     }
 }
 
-/** \brief reset this segment
-
-                resets this segement´s rotation and translation etc. to its rest pose
-
-**/
 void Segment::reset()
 {
-    m_tx->init(m_restTranslation->x());
-    m_ty->init(m_restTranslation->y());
-    m_tz->init(m_restTranslation->z());
+    m_tx->init(m_translation->x());
+    m_ty->init(m_translation->y());
+    m_tz->init(m_translation->z());
 
-    m_rx->init(m_restRotation->x());
-    m_ry->init(m_restRotation->y());
-    m_rz->init(m_restRotation->z());
+    m_rx->init(m_rotation->x());
+    m_ry->init(m_rotation->y());
+    m_rz->init(m_rotation->z());
 }
 
 void Segment::setColorInherited(bool inherited)
@@ -197,7 +197,7 @@ void Segment::setParent(Segment *segment)
 
 }
 
-void Segment::setRestColor(qreal color)
+void Segment::setSegmentColor(qreal color)
 {
-    m_restColor=qBound((qreal)0.0,color,(qreal)1.0);
+    m_segmentColor=qBound((qreal)0.0,color,(qreal)1.0);
 }

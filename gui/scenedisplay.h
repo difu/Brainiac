@@ -29,6 +29,7 @@ protected:
     void keyReleaseEvent(QKeyEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
+    void paintEvent(QPaintEvent *);
     void paintGL();
     void resizeGL(int width, int height);
     Camera *m_camera; //!< Camera to display

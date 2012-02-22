@@ -6,10 +6,10 @@
 #include <glu.h>
 #include <GLUT/glut.h>
 
-Sphere::Sphere(quint32 id, Body *body, QString name, QVector3D *restRot, QVector3D *restTrans, qreal radius, Segment *parent)
-    :Segment(Segment::SPHERE,id,body,name,restRot,restTrans,parent)
+Sphere::Sphere(quint32 id, Body *body, QString name, QVector3D *rot, QVector3D *trans, qreal radius, Segment *parent)
+    :Segment(Segment::SPHERE,id,body,name,rot,trans,parent)
 {
-    m_restRadius=radius;
+    m_sphereRadius=radius;
     createSegmentChannels();
 }
 
@@ -21,7 +21,7 @@ Sphere::~Sphere()
 void Sphere::createSegmentChannels()
 {
     m_radius=new Channel(0,100);
-    m_radius->init(m_restRadius);
+    m_radius->init(m_sphereRadius);
     QString name=m_name % ":radius";
     m_body->getAgent()->addInputChannel(m_radius,name);
     m_body->getAgent()->addOutputChannel(m_radius,name);
@@ -33,9 +33,9 @@ Channel * Sphere::getRadius()
     return m_radius;
 }
 
-qreal Sphere::getRestRadius()
+qreal Sphere::getSphereRadius()
 {
-    return m_restRadius;
+    return m_sphereRadius;
 }
 
 void Sphere::renderGLSegment()
@@ -46,7 +46,7 @@ void Sphere::renderGLSegment()
 void Sphere::reset()
 {
     Segment::reset();
-    m_radius->init(m_restRadius);
+    m_radius->init(m_sphereRadius);
 }
 
 

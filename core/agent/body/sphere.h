@@ -5,14 +5,14 @@
 class Sphere : public Segment
 {
 public:
-    Sphere(quint32 id, Body *body, QString name, QVector3D *restRot, QVector3D *restTrans, qreal radius, Segment *parent=0) ;
+    Sphere(quint32 id, Body *body, QString name, QVector3D *rot, QVector3D *trans, qreal radius, Segment *parent=0) ;
     virtual ~Sphere();
 
-    qreal getRestRadius() ;
+    qreal getSphereRadius() ;
     Channel* getRadius();
 
 protected:
-    qreal m_restRadius;
+    qreal m_sphereRadius;
     Channel *m_radius;
     virtual void createSegmentChannels();
     virtual void renderGLSegment();

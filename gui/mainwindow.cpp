@@ -52,10 +52,10 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
     setCentralWidget(widget);
 
     m_sceneDisplay=new SceneDisplay(this->m_scene,m_scene->getCameras().first());
-    connect(m_outputEditor,SIGNAL(updateGLContent()),m_sceneDisplay,SLOT(updateGL()));
+    connect(m_outputEditor,SIGNAL(updateGLContent()),m_sceneDisplay,SLOT(update()));
 
     // When a frame has been calculated update display
-    connect(m_scene->getSimulation(),SIGNAL(frameDone()),m_sceneDisplay,SLOT(updateGL()),Qt::DirectConnection);
+    connect(m_scene->getSimulation(),SIGNAL(frameDone()),m_sceneDisplay,SLOT(update()),Qt::DirectConnection);
 
     // Assign each BrainEditor the first of its Agentmanagers Agent as the to be edited agentbrain
     QHashIterator<AgentManager*, BrainEditor*> i(m_brainEditors);

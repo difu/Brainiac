@@ -67,7 +67,7 @@ void AgentManager::addSphereFromConfig(QXmlStreamReader *reader, quint32 id, QSt
 
     Segment *seg=new Sphere(id, m_masterAgent->getBody(),name,rotation,translation,radius,0);
     seg->setColorInherited(colorInherited);
-    seg->setRestColor(color);
+    seg->setSegmentColor(color);
     seg->getColor()->init(color);
     if( parentSeg ) {
         seg->setParentId(parentSeg->getId());
@@ -455,11 +455,11 @@ bool AgentManager::saveConfig()
             Sphere *sphere=(Sphere *)seg;
             stream.writeAttribute("type", "sphere");
             stream.writeStartElement("Radius");
-            stream.writeAttribute("r", QString::number(sphere->getRestRadius(),'f'));
+            stream.writeAttribute("r", QString::number(sphere->getSphereRadius(),'f'));
             stream.writeEndElement(); // Radius
         }
         stream.writeStartElement("Color");
-        stream.writeAttribute("value", QString::number(seg->getRestColor(),'f'));
+        stream.writeAttribute("value", QString::number(seg->getSegmentColor(),'f'));
         if(seg->getColor()->isInherited()) {
             stream.writeAttribute("inherited", "true");
         } else {

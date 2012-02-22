@@ -21,6 +21,7 @@ void agentReset(Agent* param_agent)
 Simulation::Simulation(Scene *scene) :
     QObject(), m_scene(scene)
 {
+    m_frameCalculationTime=0;
     m_currentFrame=0;
     m_late=true;
     m_running=false;
@@ -35,9 +36,13 @@ Simulation::Simulation(Scene *scene) :
 void Simulation::advance()
 {
     if(m_simMutex.tryLock()) {
+        QTime t;
+        t.start();
         QList<Agent *> agents=m_scene->getAgents();
         QtConcurrent::blockingMap(agents,&::advanceAgent);
         QtConcurrent::blockingMap(agents,&::advanceAgentCommit);
+        m_frameCalculationTime=t.elapsed();
+        m_currentFrame++;
         m_simMutex.unlock();
         emit frameDone();
     } else {
@@ -46,14 +51,21 @@ void Simulation::advance()
     }
 }
 
-quint32 Simulation::getCurrentFrame()
+quint32 Simulation::getCurrentFrame() const
 {
     return m_currentFrame;
 }
 
-quint32 Simulation::getFps()
+quint32 Simulation::getFps() const
 {
     return m_fps;
+}
+
+qreal Simulation::getFpsCalc() const {
+    if(m_running && m_frameCalculationTime!=0 ) {
+        return 1.0f/m_frameCalculationTime;
+    } else
+        return 0.0f;
 }
 
 void Simulation::resetSimulation() {
@@ -78,6 +90,5 @@ void Simulation::timerEvent(QTimerEvent *)
 {
     if(m_running) {
         this->advance();
-        m_currentFrame++;
     }
 }

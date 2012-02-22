@@ -1,6 +1,7 @@
 #include "scenedisplay.h"
 #include "core/agent/agent.h"
 #include "core/scene.h"
+#include "core/simulation.h"
 #include "core/camera.h"
 #include "core/group/group.h"
 #include <QMouseEvent>
@@ -59,7 +60,7 @@ void SceneDisplay::mouseMoveEvent(QMouseEvent *event)
         if(m_camera) {
             m_camera->setRotationOffset((qreal)-dy,(qreal)-dx,0.0f);
         }
-        updateGL();
+        update();
     } else if (event->buttons() & Qt::RightButton)  {
         if(m_camera) {
             if(!m_shiftPressed)
@@ -69,7 +70,7 @@ void SceneDisplay::mouseMoveEvent(QMouseEvent *event)
                 m_camera->moveCameraSidewise((qreal)-dx);
             }
         }
-        updateGL();
+        update();
     }
     m_lastPos = event->pos();
 }
@@ -79,8 +80,9 @@ void SceneDisplay::mousePressEvent(QMouseEvent *event)
     m_lastPos = event->pos();
 }
 
-void SceneDisplay::paintGL()
+void SceneDisplay::paintEvent(QPaintEvent *)
 {
+    makeCurrent();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     // set the model transformation
     glMatrixMode(GL_MODELVIEW);
@@ -145,6 +147,7 @@ void SceneDisplay::paintGL()
         glVertex3f(  0.0f, -1.5f, -1000.0f);
     glEnd();
     glPopMatrix();
+
     foreach(Agent *agent, m_scene->getAgents()) {
         agent->renderGL();
         QString info;
@@ -160,6 +163,18 @@ void SceneDisplay::paintGL()
         renderText(agent->getPosition()->x(),agent->getPosition()->y(),agent->getPosition()->z(),info);
         glEnable(GL_DEPTH_TEST);
     }
+    QPainter painter(this);
+    QRectF rect(10,10,500,100);
+    painter.setRenderHint(QPainter::Antialiasing);
+    QString frameInfo(tr("Render FPS: "));
+    frameInfo.append(QString().setNum(m_scene->getSimulation()->getFpsCalc()*1000,'g',3));
+    painter.drawText(rect,Qt::AlignLeft,frameInfo);
+    painter.end();
+}
+
+void SceneDisplay::paintGL()
+{
+
 }
 
 void SceneDisplay::resizeGL(int width, int height)

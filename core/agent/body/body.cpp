@@ -21,7 +21,7 @@ Body::Body(Agent *agent,Body *body)
                 QVector3D *trans=new QVector3D(origSphere->getRestTranslation()->x(),origSphere->getRestTranslation()->y(),origSphere->getRestTranslation()->z());
                 qreal color=origSphere->getColor()->getValue();
                 bool colorInherited=origSphere->isColorInherited();
-                Sphere *newSphere=new Sphere(origSphere->getId(),this,origSphere->getName(),rot,trans,origSphere->getRestRadius());
+                Sphere *newSphere=new Sphere(origSphere->getId(),this,origSphere->getName(),rot,trans,origSphere->getSphereRadius());
                 newSphere->setParentId(origSphere->getParentId());
                 newSphere->getColor()->init(color);
                 newSphere->setColorInherited(colorInherited);

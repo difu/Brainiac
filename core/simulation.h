@@ -27,19 +27,30 @@ public:
      *
      * @return quint32 the current frame of the Simulation
      */
-    quint32 getCurrentFrame();
+    quint32 getCurrentFrame() const;
 
     /**
      * @brief returns the framerate of the Simulation
      *
      * @return quint32 the framerate
      */
-    quint32 getFps();
+    quint32 getFps() const;
+
+    /**
+     * @brief returns the current calculation framerate of the simulation
+     *
+     * The function returns 0 if the simulation is not running
+
+     * @return qreal the actual framerate
+     */
+    qreal getFpsCalc() const;
+
     /** \brief @returns true if simulation is running
     **/
     bool isRunning() const { return m_running; }
 
 protected:
+    int m_frameCalculationTime; //!< time in ms a frame calculation took
     quint32 m_fps; //!< frametrate of the sim
     bool m_running; //!< true, if simulation is currently running
     Scene *m_scene; //!< The scene
