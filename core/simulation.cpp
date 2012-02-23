@@ -62,8 +62,15 @@ quint32 Simulation::getFps() const
 }
 
 qreal Simulation::getFpsCalc() const {
-    if(m_running && m_frameCalculationTime!=0 ) {
-        return 1.0f/m_frameCalculationTime;
+    if(m_running) {
+        if( !qFuzzyCompare(m_frameCalculationTime+1.0f,1.0f)) {
+            qreal fps=1000.0f/m_frameCalculationTime;
+            if(fps>(qreal)m_fps)
+                return (qreal)m_fps;
+            else
+                return fps;
+        }
+        return (qreal)m_fps;
     } else
         return 0.0f;
 }

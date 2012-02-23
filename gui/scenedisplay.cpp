@@ -192,7 +192,7 @@ void SceneDisplay::paintEvent(QPaintEvent *)
 
     QRectF rect(10,10,500,100);
     QString frameInfo(tr("Render FPS: "));
-    frameInfo.append(QString().setNum(m_scene->getSimulation()->getFpsCalc()*1000,'g',3));
+    frameInfo.append(QString().setNum(m_scene->getSimulation()->getFpsCalc(),'g',3));
     painter.drawText(rect,Qt::AlignLeft,frameInfo);
     //painter.end();
 }
