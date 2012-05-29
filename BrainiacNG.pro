@@ -126,5 +126,7 @@ LIBS += -framework \
 RESOURCES += \
     brainiac.qrc
 
+LASTCOMMIT= $$system(git log | head -1 | awk \'{print $2;}\')
+message( Last Commit ($$LASTCOMMIT). )
 
 

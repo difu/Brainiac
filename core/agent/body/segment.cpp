@@ -129,11 +129,57 @@ bool Segment::isRootSegment()
 
 void Segment::renderGL()
 {
+//    static GLint vp[4];
+//    glGetIntegerv(GL_VIEWPORT,vp);
+//    glTranslated(getTransX()->getValue(),getTransY()->getValue(),getTransZ()->getValue());
+//    glLineWidth( 3.0 );
+//    QColor col=BrainiacGlobals::getColorFromBrainiacColorValue(getColor()->getValue());
+//    glColor3f(col.redF(),col.greenF(),col.blueF());
+//    //this->renderGLSegment();
+//    //
+//    glClear(GL_STENCIL_BUFFER_BIT);
+//    int i=0;
+//    int winWidth = vp[2];
+//    int winHeight = vp[3];
+//    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+//    glEnable(GL_STENCIL_TEST);
+//    glStencilFunc(GL_ALWAYS, 1, 1);
+//    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+//    glDisable(GL_DEPTH_TEST);  /* so the depth buffer doesn't change */
+//    for (i = -1; i < 2; i += 2) {  /* set stencil around object */
+//      glViewport(i, 0, winWidth + i, winHeight);
+//      this->renderGLSegment();
+//    }
+//    for (i = -1; i < 2; i += 2) {
+//      glViewport(0, i, winWidth, winHeight + i);
+//      this->renderGLSegment();
+//    }
+
+//    /* cut out stencil where object is */
+//    glViewport(0, 0, winWidth, winHeight);
+//    glStencilFunc(GL_ALWAYS, 0, 0);
+//    this->renderGLSegment();
+
+//    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+
+//    glStencilFunc(GL_EQUAL, 1, 1);
+
+//    glDisable(GL_LIGHTING);
+//glColor3f(1.f, 1.f, 1.f);
+//glRecti(-15000, -15000, 15000, 15000);
+//    glEnable(GL_DEPTH_TEST);
+//    glEnable(GL_LIGHTING);
+//    glDisable(GL_STENCIL_TEST);
+//    //
+
+    // No Silhouette
     glTranslated(getTransX()->getValue(),getTransY()->getValue(),getTransZ()->getValue());
     glLineWidth( 3.0 );
     QColor col=BrainiacGlobals::getColorFromBrainiacColorValue(getColor()->getValue());
     glColor3f(col.redF(),col.greenF(),col.blueF());
     this->renderGLSegment();
+
+
     foreach(Segment *segChild,getChildren()) {
         segChild->renderGL();
     }

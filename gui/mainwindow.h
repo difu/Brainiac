@@ -101,12 +101,17 @@ protected:
 
     QAction *m_saveAgentAction;
     QAction *m_saveSceneAction;
+
     QAction *m_runSimulationAction;
     QAction *m_resetSimulationAction;
     QAction *m_stopSimulationAction;
 
+    QAction *m_viewSoundEmmisions;
+    QAction *m_viewAgentInfos;
+
     QMenu *m_fileMenu;
     QMenu *m_simulationMenu;
+    QMenu *m_viewMenu;
 
     SceneDisplay *m_sceneDisplay; //!< Window that shows the rendered gl scene
 

@@ -97,6 +97,12 @@ void MainWindow::createActions()
     connect(m_stopSimulationAction,SIGNAL(triggered()),m_scene->getSimulation(),SLOT(stopSimulation()));
     m_resetSimulationAction=new QAction(tr("Reset"), this);
     connect(m_resetSimulationAction,SIGNAL(triggered()),m_scene->getSimulation(),SLOT(resetSimulation()));
+
+    //View Menu Actions
+    m_viewSoundEmmisions=new QAction(tr("Sound Emmissions"),this);
+    m_viewSoundEmmisions->setCheckable(true);
+    m_viewAgentInfos=new QAction(tr("View Agent Infos"),this);
+    m_viewAgentInfos->setCheckable(true);
 }
 
 void MainWindow::createEditors()
@@ -242,6 +248,10 @@ void MainWindow::createMenues()
     m_simulationMenu->addAction(m_runSimulationAction);
     m_simulationMenu->addAction(m_stopSimulationAction);
     m_simulationMenu->addAction(m_resetSimulationAction);
+
+    m_viewMenu=menuBar()->addMenu(tr("&View"));
+    m_viewMenu->addAction(m_viewAgentInfos);
+    m_viewMenu->addAction(m_viewSoundEmmisions);
 }
 
 void MainWindow::editModeComboChange(int index)

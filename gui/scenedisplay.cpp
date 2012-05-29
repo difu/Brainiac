@@ -6,6 +6,7 @@
 #include "core/group/group.h"
 #include <QMouseEvent>
 #include <QDebug>
+#include <glu.h>
 
 SceneDisplay::SceneDisplay(Scene *scene, Camera *camera, QWidget *parent) :
     QGLWidget(parent)
@@ -138,8 +139,8 @@ void SceneDisplay::paintEvent(QPaintEvent *)
     // Just a simple reference
 
     glPushMatrix();
-    glRotatef(m_rotation.x(),1,0,0);
-    glRotatef(m_rotation.y(),0,1,0);
+    //glRotatef(m_rotation.x(),1,0,0);
+    //glRotatef(m_rotation.y(),0,1,0);
     //glTranslatef(0,0,0);
     glLineWidth(2.0f);
     glBegin(GL_LINES);
