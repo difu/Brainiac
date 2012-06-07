@@ -65,6 +65,15 @@ const char* const BrainiacGlobals::XmlNoiseFreqAttrib="noisefreq\0";
 const char* const BrainiacGlobals::XmlHeightVarAttrib="heightvariation\0";
 const char* const BrainiacGlobals::XmlHeightAttrib="height\0";
 const char* const BrainiacGlobals::XmlIdAttrib="id\0";
+const char* const BrainiacGlobals::XmlRadiusAttrib="radius\0";
+
+const char* const BrainiacGlobals::XmlScaleTag="Scale\0";
+const char* const BrainiacGlobals::XmlTranslationTag="Translation\0";
+const char* const BrainiacGlobals::XmlRotationTag="Rotation\0";
+const char* const BrainiacGlobals::XmlRestRotationTag="RestRotation\0";
+const char* const BrainiacGlobals::XmlRestTranslationTag="RestTranslation\0";
+const char* const BrainiacGlobals::XmlSphereTag="Sphere\0";
+const char* const BrainiacGlobals::XmlBoxTag="Box\0";
 
 const char* const BrainiacGlobals::FuzzAndModeMin="min\0";
 const char* const BrainiacGlobals::FuzzAndModeProduct="prod\0";

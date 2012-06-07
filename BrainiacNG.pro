@@ -4,8 +4,8 @@
 #
 #-------------------------------------------------
 
-QT       += core gui opengl
-
+QT       += core gui opengl qt warn_on qt3d
+CONFIG += qt3d
 TARGET = BrainiacNG
 TEMPLATE = app
 
@@ -59,7 +59,10 @@ SOURCES += main.cpp\
     gui/braineditor/noiseeditor.cpp \
     gui/braineditor/fuzzyeditorcurveeditor.cpp \
     gui/braineditor/fuzzyeditorcurvepoint.cpp \
-    core/generator/locator.cpp
+    core/generator/locator.cpp \
+    core/agent/body/skeletonnode.cpp \
+    core/agent/body/skeletonnodesphere.cpp \
+    core/agent/body/skeletonnodebox.cpp
 
 HEADERS  += gui/mainwindow.h \
     core/scene.h \
@@ -109,7 +112,10 @@ HEADERS  += gui/mainwindow.h \
     gui/braineditor/noiseeditor.h \
     gui/braineditor/fuzzyeditorcurveeditor.h \
     gui/braineditor/fuzzyeditorcurvepoint.h \
-    core/generator/locator.h
+    core/generator/locator.h \
+    core/agent/body/skeletonnode.h \
+    core/agent/body/skeletonnodesphere.h \
+    core/agent/body/skeletonnodebox.h
 
 FORMS    += gui/mainwindow.ui \
     gui/sceneeditor/groupeditor.ui \

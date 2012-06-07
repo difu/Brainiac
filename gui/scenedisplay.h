@@ -1,12 +1,15 @@
 #ifndef SCENEDISPLAY_H
 #define SCENEDISPLAY_H
 
-#include <QGLWidget>
+#include <qglview.h>
 #include <QCloseEvent>
 #include <QVector3D>
 
 class Camera;
 class Scene;
+class QGLAbstractScene;
+class QGLSceneNode;
+class QGLCamera;
 
 /** \brief  Shows the Scene
 
@@ -15,12 +18,12 @@ class Scene;
         @sa Camera
 
 **/
-class SceneDisplay : public QGLWidget
+class SceneDisplay : public QGLView
 {
     Q_OBJECT
 public:
     explicit SceneDisplay(Scene *scene, Camera *camera, QWidget *parent = 0);
-    void setCamera(Camera *camera);
+    //void setCamera(Camera *camera);
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -29,19 +32,22 @@ protected:
 
     **/
     void drawAgentsInfo(QPainter *painter);
-    void initializeGL();
+    void initializeGL(QGLPainter *painter);
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
-    void paintEvent(QPaintEvent *);
-    void paintGL();
+    //void paintGL();
+    void paintGL(QGLPainter *painter);
     void resizeGL(int width, int height);
-    Camera *m_camera; //!< Camera to display
+    QGLCamera *m_camera; //!< Camera to display
     Scene *m_scene; //!< the scene
     QPoint m_lastPos; //!< last position of moouse to determine position delta
     bool m_shiftPressed; //!< true, if shift key is pressed
     QVector3D m_rotation; //!< Scene rotation
+
+    QGLAbstractScene *p_scene;
+    QGLSceneNode *m_rootSceneNode;
 signals:
 
 

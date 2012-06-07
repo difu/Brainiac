@@ -42,7 +42,6 @@ void PointGenerator::generateLocators()
         qreal y=0;
         qreal yOrient=m_angle+m_angleNoise*BrainiacGlobals::getRand(i+m_id*3)-m_angleNoise/2.0f;
         Locator *newLoc=new Locator(m_scene->getGroup(groupId),x+m_centerPos.x(),y,z+m_centerPos.z(),yOrient);
-        qDebug() << "dfdkfjsldf" << m_id << i << yOrient << newLoc->getLocation();
         //quint32 i=1;
         quint32 j=1; // Correction step
         bool allOk=false;

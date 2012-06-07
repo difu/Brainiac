@@ -244,6 +244,7 @@ protected:
 
     // Body stuff
     void addSphereFromConfig( QXmlStreamReader *reader, quint32 id, QString name, quint32 parent );
+    void addSkeletonNodeFromConfig( QXmlStreamReader *reader, quint32 id, QString name, quint32 parent );
 
 };
 

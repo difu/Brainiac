@@ -55,6 +55,15 @@ public:
     static const char* const XmlNoiseFreqAttrib;
     static const char* const XmlHeightVarAttrib;
     static const char* const XmlHeightAttrib;
+    static const char* const XmlRadiusAttrib;
+
+    static const char* const XmlScaleTag;
+    static const char* const XmlRotationTag;
+    static const char* const XmlTranslationTag;
+    static const char* const XmlRestRotationTag;
+    static const char* const XmlRestTranslationTag;
+    static const char* const XmlSphereTag;
+    static const char* const XmlBoxTag;
 
     static const char* const FuzzAndModeMin;
     static const char* const FuzzAndModeProduct;

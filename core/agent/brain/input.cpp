@@ -30,6 +30,8 @@ void Input::setChannelName(QString channel)
             QString::compare(channel,BrainiacGlobals::ChannelName_Sound_ox,Qt::CaseInsensitive)==0 ||
             QString::compare(channel,BrainiacGlobals::ChannelName_Sound_x,Qt::CaseInsensitive)==0 ) {
         m_isSoundInput=true;
+    } else {
+        m_isSoundInput=false;
     }
     m_channelName=channel;
     m_channel=m_brain->getAgent()->getInputChannel(m_channelName);

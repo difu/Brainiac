@@ -4,6 +4,8 @@
 #include "core/agent/agent.h"
 #include "core/agent/body/body.h"
 #include "core/agent/body/sphere.h"
+#include "core/agent/body/skeletonnodesphere.h"
+#include "core/agent/body/skeletonnodebox.h"
 #include "core/agent/brain/brain.h"
 #include "core/agent/brain/fuzzydefuzz.h"
 #include "core/agent/brain/fuzzyand.h"
@@ -27,6 +29,68 @@ AgentManager::AgentManager(Scene *scene, Group *group)
     m_group=group;
     m_id=0;
     m_masterAgent=new Agent(m_scene,0); // Id 0 is ok, its just a master agent
+}
+
+void AgentManager::addSkeletonNodeFromConfig(QXmlStreamReader *reader, quint32 id, QString name, quint32 parent)
+{
+    QVector3D translation;
+    QVector3D rotation;
+    QVector3D restTranslation;
+    QVector3D restRotation;
+    QVector3D scale;
+    qreal color;
+    bool colorInherited;
+    while(reader->readNextStartElement()) {
+        if(reader->name()==BrainiacGlobals::XmlTranslationTag) {
+            QXmlStreamAttributes attribs = reader->attributes();
+            translation.setX(attribs.value("x").toString().toDouble());
+            translation.setY(attribs.value("y").toString().toDouble());
+            translation.setZ(attribs.value("z").toString().toDouble());
+            reader->skipCurrentElement();
+        } else if(reader->name()==BrainiacGlobals::XmlRotationTag) {
+            QXmlStreamAttributes attribs = reader->attributes();
+            rotation.setX(attribs.value("x").toString().toDouble());
+            rotation.setY(attribs.value("y").toString().toDouble());
+            rotation.setZ(attribs.value("z").toString().toDouble());
+            reader->skipCurrentElement();
+        } else if(reader->name()==BrainiacGlobals::XmlRestTranslationTag) {
+            QXmlStreamAttributes attribs = reader->attributes();
+            restTranslation.setX(attribs.value("x").toString().toDouble());
+            restTranslation.setY(attribs.value("y").toString().toDouble());
+            restTranslation.setZ(attribs.value("z").toString().toDouble());
+            reader->skipCurrentElement();
+        } else if(reader->name()==BrainiacGlobals::XmlRestRotationTag) {
+            QXmlStreamAttributes attribs = reader->attributes();
+
+            reader->skipCurrentElement();
+        } else if(reader->name()=="Color") {
+            QXmlStreamAttributes attribs = reader->attributes();
+            color=attribs.value("value").toString().toDouble();
+            colorInherited=attribs.value("inherited").toString().compare("true",Qt::CaseInsensitive)==0;
+            reader->skipCurrentElement();
+        } else if(reader->name()==BrainiacGlobals::XmlScaleTag) {
+            QXmlStreamAttributes attribs = reader->attributes();
+            scale.setX(attribs.value("x").toString().toDouble());
+            scale.setY(attribs.value("y").toString().toDouble());
+            scale.setZ(attribs.value("z").toString().toDouble());
+            reader->skipCurrentElement();
+        } else if(reader->name()==BrainiacGlobals::XmlSphereTag) {
+            QXmlStreamAttributes attribs = reader->attributes();
+            reader->skipCurrentElement();
+            SkeletonNodeSphere *sphere=new SkeletonNodeSphere(id,name,m_masterAgent->getBody());
+            sphere->setRadius(scale.x());
+            sphere->setRestTranslation(restTranslation);
+            m_masterAgent->getBody()->addSkeletonNode(sphere,parent);
+        } else if(reader->name()==BrainiacGlobals::XmlBoxTag) {
+            QXmlStreamAttributes attribs = reader->attributes();
+            reader->skipCurrentElement();
+            SkeletonNodeBox *box=new SkeletonNodeBox(id,name,m_masterAgent->getBody());
+            box->setScale(scale);
+            box->setRestTranslation(restTranslation);
+            m_masterAgent->getBody()->addSkeletonNode(box,parent);
+        }
+    }
+    qDebug() << __PRETTY_FUNCTION__ << "" << translation << rotation << name << scale << color;
 }
 
 void AgentManager::addSphereFromConfig(QXmlStreamReader *reader, quint32 id, QString name, quint32 parent)
@@ -364,10 +428,11 @@ bool AgentManager::loadConfig()
                                 while(reader.readNextStartElement()) {
                                     if(reader.name()=="Segment") {
                                         QXmlStreamAttributes attribs = reader.attributes();
-                                        if( QString::compare( attribs.value("type").toString(),QString("sphere"),Qt::CaseInsensitive ) == 0 ) {
-                                            addSphereFromConfig(&reader,attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("parent").toString().toInt());
-                                            //reader.skipCurrentElement();
-                                        }
+//                                        if( QString::compare( attribs.value("type").toString(),QString("sphere"),Qt::CaseInsensitive ) == 0 ) {
+//                                            addSphereFromConfig(&reader,attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("parent").toString().toInt());
+//                                            //reader.skipCurrentElement();
+//                                        }
+                                        addSkeletonNodeFromConfig(&reader,attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("parent").toString().toInt());
 
                                     }else {
                                         reader.skipCurrentElement();

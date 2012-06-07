@@ -201,6 +201,8 @@ void Agent::advanceCommit()
     }
     m_position=m_newPosition;
     m_rotation=m_newRotation;
+
+    m_body->updatePosition();
 }
 
 void Agent::createChannels()
@@ -497,6 +499,8 @@ void Agent::reset()
     m_rotation.setX(m_restRotation.x());
     m_rotation.setY(m_restRotation.y());
     m_rotation.setZ(m_restRotation.z());
+
+    m_body->updatePosition();
 }
 
 void Agent::setRotation(qreal x, qreal y, qreal z)
