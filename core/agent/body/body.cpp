@@ -66,7 +66,12 @@ void Body::copySkeletonNode(SkeletonNode *n)
         newNode=newBox;
     }
     if(newNode) {
+        newNode->setParent(getSkeletonNodeById(n->getId()));
         newNode->setRestTranslation(n->getRestTranslation());
+        newNode->setRotation(n->getRotation());
+        newNode->setTranslation(n->getTranslation());
+        newNode->setColor(n->getInitColor());
+        newNode->setColorInherited(n->getColorInherited());
         addSkeletonNode(newNode,n->getParentId());
         //qDebug() << "ADDED SN" << n->getId() << n->getRestTranslation();
         foreach(QGLSceneNode *sn, n->children()) {
@@ -127,6 +132,18 @@ quint32 Body::getSegmentId(Segment *seg)
 QList<Segment *> Body::getSegments()
 {
     return m_segments;
+}
+
+SkeletonNode* Body::getSkeletonNodeById(quint32 id)
+{
+    foreach(QGLSceneNode* n,m_rootSegment->allChildren()) {
+        SkeletonNode *skelNode=dynamic_cast<SkeletonNode *> (n);
+        if(skelNode) {
+            return skelNode;
+        }
+    }
+    return 0;
+
 }
 
 void Body::renderGL()

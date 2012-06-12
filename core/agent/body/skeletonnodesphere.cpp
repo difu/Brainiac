@@ -7,13 +7,14 @@
 SkeletonNodeSphere::SkeletonNodeSphere(quint32 id, const QString &name, Body *body):SkeletonNode(SkeletonNode::SPHERE, id, name, body)
 {
     createChannels();
+    //SkeletonNode::createChannels();
 }
 
 void SkeletonNodeSphere::createChannels()
 {
     m_radius=new Channel(0,100);
     m_radius->init(m_scale.x());
-    QString name=m_name % ":radius";
+    QString name=this->objectName() % ":radius";
     m_body->getAgent()->addInputChannel(m_radius,name);
     m_body->getAgent()->addOutputChannel(m_radius,name);
     connect(m_radius,SIGNAL(valueChanged(qreal)),this,SLOT(channelRadiusChanged(qreal)),Qt::DirectConnection);

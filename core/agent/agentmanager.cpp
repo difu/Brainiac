@@ -38,6 +38,7 @@ void AgentManager::addSkeletonNodeFromConfig(QXmlStreamReader *reader, quint32 i
     QVector3D restTranslation;
     QVector3D restRotation;
     QVector3D scale;
+    SkeletonNode *newNode;
     qreal color;
     bool colorInherited;
     while(reader->readNextStartElement()) {
@@ -77,19 +78,19 @@ void AgentManager::addSkeletonNodeFromConfig(QXmlStreamReader *reader, quint32 i
         } else if(reader->name()==BrainiacGlobals::XmlSphereTag) {
             QXmlStreamAttributes attribs = reader->attributes();
             reader->skipCurrentElement();
-            SkeletonNodeSphere *sphere=new SkeletonNodeSphere(id,name,m_masterAgent->getBody());
-            sphere->setRadius(scale.x());
-            sphere->setRestTranslation(restTranslation);
-            m_masterAgent->getBody()->addSkeletonNode(sphere,parent);
+            newNode=new SkeletonNodeSphere(id,name,m_masterAgent->getBody());
         } else if(reader->name()==BrainiacGlobals::XmlBoxTag) {
             QXmlStreamAttributes attribs = reader->attributes();
             reader->skipCurrentElement();
-            SkeletonNodeBox *box=new SkeletonNodeBox(id,name,m_masterAgent->getBody());
-            box->setScale(scale);
-            box->setRestTranslation(restTranslation);
-            m_masterAgent->getBody()->addSkeletonNode(box,parent);
+            newNode=new SkeletonNodeBox(id,name,m_masterAgent->getBody());
+
         }
     }
+    newNode->setScale(scale);
+    newNode->setColor(color);
+    newNode->setColorInherited(colorInherited);
+    newNode->setRestTranslation(restTranslation);
+    m_masterAgent->getBody()->addSkeletonNode(newNode,parent);
     qDebug() << __PRETTY_FUNCTION__ << "" << translation << rotation << name << scale << color;
 }
 
@@ -511,39 +512,97 @@ bool AgentManager::saveConfig()
     stream.writeAttribute("editorx", QString::number(m_editX));
     stream.writeAttribute("editory", QString::number(m_editY));
     stream.writeStartElement("Body");
-    foreach(Segment *seg,m_masterAgent->getBody()->getSegments()) {
-        stream.writeStartElement("Segment");
-        stream.writeAttribute("id", QString::number(seg->getId()));
-        stream.writeAttribute("parent", QString::number(seg->getParentId()));
-        stream.writeAttribute("name", seg->getName());
-        if(seg->getType()==Segment::SPHERE) {
-            Sphere *sphere=(Sphere *)seg;
-            stream.writeAttribute("type", "sphere");
-            stream.writeStartElement("Radius");
-            stream.writeAttribute("r", QString::number(sphere->getSphereRadius(),'f'));
-            stream.writeEndElement(); // Radius
-        }
-        stream.writeStartElement("Color");
-        stream.writeAttribute("value", QString::number(seg->getSegmentColor(),'f'));
-        if(seg->getColor()->isInherited()) {
-            stream.writeAttribute("inherited", "true");
-        } else {
-            stream.writeAttribute("inherited", "false");
-        }
-        stream.writeEndElement(); //Color
-        stream.writeStartElement("Translation");
-        stream.writeAttribute("x",  QString::number(seg->getRestTranslation()->x(),'f'));
-        stream.writeAttribute("y",  QString::number(seg->getRestTranslation()->y(),'f'));
-        stream.writeAttribute("z",  QString::number(seg->getRestTranslation()->z(),'f'));
-        stream.writeEndElement(); //Translation
-        stream.writeStartElement("Rotation");
-        stream.writeAttribute("x",  QString::number(seg->getRestRotation()->x(),'f'));
-        stream.writeAttribute("y",  QString::number(seg->getRestRotation()->y(),'f'));
-        stream.writeAttribute("z",  QString::number(seg->getRestRotation()->z(),'f'));
-        stream.writeEndElement(); //Rotation
+    foreach(QGLSceneNode *n,m_masterAgent->getBody()->getRootSkeletonNode()->allChildren()) {
+        SkeletonNode *node=dynamic_cast<SkeletonNode *> (n);
+        if(node) {
+             stream.writeStartElement("Segment");
+             stream.writeAttribute("id", QString::number(node->getId()));
+             stream.writeAttribute("parent", QString::number(node->getParentId()));
+             stream.writeAttribute("name", node->objectName());
+             stream.writeStartElement("Color");
+             stream.writeAttribute("value", QString::number(node->getInitColor(),'f'));
+             if(node->getColor()->isInherited()) {
+                 stream.writeAttribute("inherited", "true");
+             } else {
+                 stream.writeAttribute("inherited", "false");
+             }
+             stream.writeEndElement(); //Color
 
-        stream.writeEndElement(); //Segment
+             stream.writeStartElement(BrainiacGlobals::XmlRestTranslationTag);
+             stream.writeAttribute("x",  QString::number(node->getRestTranslation().x(),'f'));
+             stream.writeAttribute("y",  QString::number(node->getRestTranslation().y(),'f'));
+             stream.writeAttribute("z",  QString::number(node->getRestTranslation().z(),'f'));
+             stream.writeEndElement(); //RestTranslation
+             stream.writeStartElement(BrainiacGlobals::XmlRestRotationTag);
+             stream.writeAttribute("x",  QString::number(node->getRestRotation().x(),'f'));
+             stream.writeAttribute("y",  QString::number(node->getRestRotation().y(),'f'));
+             stream.writeAttribute("z",  QString::number(node->getRestRotation().z(),'f'));
+             stream.writeEndElement(); //RestRotation
+
+             stream.writeStartElement(BrainiacGlobals::XmlTranslationTag);
+             stream.writeAttribute("x",  QString::number(node->getTranslation().x(),'f'));
+             stream.writeAttribute("y",  QString::number(node->getTranslation().y(),'f'));
+             stream.writeAttribute("z",  QString::number(node->getTranslation().z(),'f'));
+             stream.writeEndElement(); //Translation
+             stream.writeStartElement(BrainiacGlobals::XmlRotationTag);
+             stream.writeAttribute("x",  QString::number(node->getRotation().x(),'f'));
+             stream.writeAttribute("y",  QString::number(node->getRotation().x(),'f'));
+             stream.writeAttribute("z",  QString::number(node->getRotation().x(),'f'));
+             stream.writeEndElement(); //Rotation
+
+             stream.writeStartElement(BrainiacGlobals::XmlScaleTag);
+             stream.writeAttribute("x",  QString::number(node->getScale().x(),'f'));
+             stream.writeAttribute("y",  QString::number(node->getScale().x(),'f'));
+             stream.writeAttribute("z",  QString::number(node->getScale().x(),'f'));
+             stream.writeEndElement(); // Scale
+
+             if(dynamic_cast<SkeletonNodeSphere *>(node)) {
+                 stream.writeStartElement(BrainiacGlobals::XmlSphereTag);
+                 stream.writeEndElement();
+             } else if (dynamic_cast<SkeletonNodeBox *>(node)) {
+                 stream.writeStartElement(BrainiacGlobals::XmlBoxTag);
+                 stream.writeEndElement();
+             } else {
+                 qCritical() << __PRETTY_FUNCTION__<< "Error while saving: Unknown SkeletonNode type";
+             }
+
+             stream.writeEndElement(); // Segment
+        }
     }
+
+//    foreach(Segment *seg,m_masterAgent->getBody()->getSegments()) {
+//        stream.writeStartElement("Segment");
+//        stream.writeAttribute("id", QString::number(seg->getId()));
+//        stream.writeAttribute("parent", QString::number(seg->getParentId()));
+//        stream.writeAttribute("name", seg->getName());
+//        if(seg->getType()==Segment::SPHERE) {
+//            Sphere *sphere=(Sphere *)seg;
+//            stream.writeAttribute("type", "sphere");
+//            stream.writeStartElement("Radius");
+//            stream.writeAttribute("r", QString::number(sphere->getSphereRadius(),'f'));
+//            stream.writeEndElement(); // Radius
+//        }
+//        stream.writeStartElement("Color");
+//        stream.writeAttribute("value", QString::number(seg->getSegmentColor(),'f'));
+//        if(seg->getColor()->isInherited()) {
+//            stream.writeAttribute("inherited", "true");
+//        } else {
+//            stream.writeAttribute("inherited", "false");
+//        }
+//        stream.writeEndElement(); //Color
+//        stream.writeStartElement("Translation");
+//        stream.writeAttribute("x",  QString::number(seg->getRestTranslation()->x(),'f'));
+//        stream.writeAttribute("y",  QString::number(seg->getRestTranslation()->y(),'f'));
+//        stream.writeAttribute("z",  QString::number(seg->getRestTranslation()->z(),'f'));
+//        stream.writeEndElement(); //Translation
+//        stream.writeStartElement("Rotation");
+//        stream.writeAttribute("x",  QString::number(seg->getRestRotation()->x(),'f'));
+//        stream.writeAttribute("y",  QString::number(seg->getRestRotation()->y(),'f'));
+//        stream.writeAttribute("z",  QString::number(seg->getRestRotation()->z(),'f'));
+//        stream.writeEndElement(); //Rotation
+
+//        stream.writeEndElement(); //Segment
+//    }
     stream.writeEndElement(); // Body
     stream.writeStartElement("Brain");
     foreach(FuzzyBase *fuzz,m_masterAgent->getBrain()->getFuzzies()) {

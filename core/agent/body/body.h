@@ -15,6 +15,7 @@ public:
     void addSegment(Segment *segment);
     void addSkeletonNode( SkeletonNode *node, quint32 parentId );
     SkeletonNode *getRootSkeletonNode() { return m_rootSegment; }
+    SkeletonNode *getSkeletonNodeById(quint32 id);
     Segment * getSegment( quint32 id);
     quint32 getSegmentId(Segment *seg);
     QList<Segment *> getSegments();
