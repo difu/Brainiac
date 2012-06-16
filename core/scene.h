@@ -6,6 +6,8 @@
 #include <QXmlStreamWriter>
 #include <QXmlStreamReader>
 
+#include "core/idgenerator.h"
+
 class Agent;
 class Camera;
 class Generator;
@@ -46,6 +48,7 @@ protected:
     QList<Generator *> m_generators; //!< all agent generators of this scene
     QList<Group *> m_groups; //!< all groups of this scene
     Simulation *m_simulation; //!< simulation
+    IdGenerator m_groupIdGenerator;
 
 signals:
     void groupAdded(Group *group); //!< emitted when a group is added

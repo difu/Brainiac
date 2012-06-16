@@ -28,10 +28,8 @@ SOURCES += main.cpp\
     gui/itemeditorwidgetsbase.cpp \
     core/agent/agent.cpp \
     core/agent/body/body.cpp \
-    core/agent/body/segment.cpp \
     core/brainiaccolor.cpp \
     core/agent/channel.cpp \
-    core/agent/body/sphere.cpp \
     gui/scenedisplay.cpp \
     core/camera.cpp \
     gui/editorbase.cpp \
@@ -62,7 +60,9 @@ SOURCES += main.cpp\
     core/generator/locator.cpp \
     core/agent/body/skeletonnode.cpp \
     core/agent/body/skeletonnodesphere.cpp \
-    core/agent/body/skeletonnodebox.cpp
+    core/agent/body/skeletonnodebox.cpp \
+    gui/bodyeditor/bodyeditor.cpp \
+    gui/bodydisplay.cpp
 
 HEADERS  += gui/mainwindow.h \
     core/scene.h \
@@ -81,10 +81,8 @@ HEADERS  += gui/mainwindow.h \
     gui/itemeditorwidgetsbase.h \
     core/agent/agent.h \
     core/agent/body/body.h \
-    core/agent/body/segment.h \
     core/brainiaccolor.h \
     core/agent/channel.h \
-    core/agent/body/sphere.h \
     gui/scenedisplay.h \
     core/camera.h \
     gui/editorbase.h \
@@ -115,7 +113,9 @@ HEADERS  += gui/mainwindow.h \
     core/generator/locator.h \
     core/agent/body/skeletonnode.h \
     core/agent/body/skeletonnodesphere.h \
-    core/agent/body/skeletonnodebox.h
+    core/agent/body/skeletonnodebox.h \
+    gui/bodyeditor/bodyeditor.h \
+    gui/bodydisplay.h
 
 FORMS    += gui/mainwindow.ui \
     gui/sceneeditor/groupeditor.ui \

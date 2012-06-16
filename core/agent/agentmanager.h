@@ -122,14 +122,24 @@ public:
     quint32 getId() { return m_id; }
     qint32 getEditorTranslationX() { return m_editX; }
     qint32 getEditorTranslationY() { return m_editY; }
+    QHash<quint32, QPoint> getEditorSkeletonNodeLocations();
     QHash<quint32, QPoint> getEditorFuzzyLocations();
     Group* getGroup() { return m_group; }
     Agent* getMasterAgent() {return m_masterAgent; }
     QString & getName() {return m_name;}
     bool loadConfig();
+    /**
+     * @brief loads a skeleton file
+     * Loads a skeleton file. Currently only bvh file format is supported
+     * @todo check and delete if a previous skeleton exists
+     * @param filename the filename of the skeleton file
+     * @return bool
+     */
+    bool loadSkeleton(const QString &filename);
     bool saveConfig();
     void setEditorTranslation(qint32 x, qint32 y);
     void setFuzzyEditorTranslation(quint32 id, qint32 x, qint32 y);
+    void setBodyEditorTranslation(quint32 id, qint32 x, qint32 y);
 
     /** \brief sets the sound rule state of the And fuzz of all agents
       @param id the and fuzz´ id
@@ -230,6 +240,7 @@ protected:
     Group *m_group;
     Scene *m_scene;
     QHash<quint32, QPoint> m_editorFuzzyLocations;
+    QHash<quint32, QPoint> m_editorSkeletonNodeLocations;
     IdGenerator m_brainIdGenerator;
 
     // Brain stuff
@@ -243,9 +254,8 @@ protected:
     void addTimerFuzz(quint32 id, QString name, qreal rate, QString mode, quint32 editorX, quint32 editorY);
 
     // Body stuff
-    void addSphereFromConfig( QXmlStreamReader *reader, quint32 id, QString name, quint32 parent );
-    void addSkeletonNodeFromConfig( QXmlStreamReader *reader, quint32 id, QString name, quint32 parent );
-
+    void addSkeletonNodeFromConfig( QXmlStreamReader *reader, quint32 id, QString name, quint32 parent, quint32 editorX, quint32 editorY );
+    bool loadSkeletonBVH(QFile &file);
 };
 
 #endif // AGENTMANAGER_H

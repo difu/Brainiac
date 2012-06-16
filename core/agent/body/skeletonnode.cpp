@@ -61,7 +61,6 @@ SkeletonNode::SkeletonNode(SegmentType type, quint32 id, const QString &name, Bo
 }
 
 void SkeletonNode::channelRxChanged(qreal value){
-    qDebug() << "changed "<< this->objectName();
     m_segRestRotX->setAngle(m_restRotation.x()+value);
 }
 
@@ -141,7 +140,6 @@ void SkeletonNode::setColorInherited(bool inherited)
         }
         m_color->setInherited(((SkeletonNode *)this->parent())->getColor(),inherited);
     } else {
-        qDebug() << "bla";
         if(inherited) {
             m_color->changeValue(m_body->getAgent()->getColor()->getValue());
         }
@@ -153,7 +151,9 @@ void SkeletonNode::setRestRotation(const QVector3D &rotation)
 {
     if(m_restRotation!=rotation) {
         m_restRotation=rotation;
-        //m_segRestRot->set
+        m_segRestRotX->setAngle(m_restRotation.x());
+        m_segRestRotY->setAngle(m_restRotation.y());
+        m_segRestRotZ->setAngle(m_restRotation.z());
     }
 }
 

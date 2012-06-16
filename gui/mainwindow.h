@@ -24,9 +24,11 @@ class DefuzzEditor;
 class FuzzyEditor;
 class NoiseEditor;
 class SceneDisplay;
+class BodyDisplay;
 
 class AgentManager;
 class BrainEditor;
+class BodyEditor;
 
 /** \brief  Main User Interface
 
@@ -97,6 +99,7 @@ protected:
 
 
     QHash<AgentManager*, BrainEditor*> m_brainEditors;  //!< all BrainEditors.
+    QHash<AgentManager*, BodyEditor*> m_bodyEditors;  //!< all BrainEditors
     AgentManager *m_activeAgentManager; //!< AgentManager that is edited in brain/body editor
 
     QAction *m_saveAgentAction;
@@ -114,6 +117,8 @@ protected:
     QMenu *m_viewMenu;
 
     SceneDisplay *m_sceneDisplay; //!< Window that shows the rendered gl scene
+    BodyDisplay *m_bodyDisplay; //!< Window that shows the body of selected agent
+
 
 public slots:
     void statusBarMessageChange( const QString & message );

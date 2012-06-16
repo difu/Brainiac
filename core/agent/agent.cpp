@@ -3,8 +3,6 @@
 #include "brain/fuzzybase.h"
 #include "brain/timer.h"
 #include "body/body.h"
-#include "body/segment.h"
-#include "body/sphere.h"
 #include "core/brainiacglobals.h"
 #include "channel.h"
 #include "core/scene.h"
@@ -462,7 +460,7 @@ bool Agent::outputChannelExists(const QString &name) const
 
 void Agent::renderGL()
 {
-    m_body->renderGL();
+    //m_body->renderGL();
     // Draw sound emission
     if(m_renderSoundEmission) {
         glPushMatrix();

@@ -1,7 +1,5 @@
 #include "body.h"
 #include "core/agent/agent.h"
-#include "core/agent/body/segment.h"
-#include "core/agent/body/sphere.h"
 #include "core/agent/body/skeletonnode.h"
 #include "core/agent/body/skeletonnodesphere.h"
 #include "core/agent/body/skeletonnodebox.h"
@@ -18,7 +16,7 @@
 Body::Body(Agent *agent,Body *body)
 {
     m_agent=agent;
-    m_rootSegment=new SkeletonNode(SkeletonNode::NOPRIMITIVE,0,QString("root"),this);
+    m_rootSkeletonNode=new SkeletonNode(SkeletonNode::NOPRIMITIVE,0,QString("root"),this);
     // if we have a body, clone it
     if(body) {
 //        foreach(Segment *seg, body->getSegments()) {
@@ -37,18 +35,26 @@ Body::Body(Agent *agent,Body *body)
 //                qDebug() <<  __PRETTY_FUNCTION__ << "missing segment type" << seg->getType();
 //            }
 //        }
-        foreach(QGLSceneNode *n, body->getRootSkeletonNode()->children()) {
-            SkeletonNode *skelNode=dynamic_cast<SkeletonNode *> (n);
-            if(skelNode) {
-                copySkeletonNode(skelNode);
-            }
-            //qDebug() << "Copied all" << m_rootSegment->allChildren().count();
-            //qDumpScene(m_rootSegment);
-        }
+        copyBody(body);
     } else {
     }
 
     //m_rootSegment->addNode(new SkeletonNodeSphere(1));
+}
+
+void Body::copyBody(Body *body)
+{
+    foreach(QGLSceneNode* n, m_rootSkeletonNode->allChildren()) {
+        n->deleteLater();
+    }
+    foreach(QGLSceneNode *n, body->getRootSkeletonNode()->children()) {
+        SkeletonNode *skelNode=dynamic_cast<SkeletonNode *> (n);
+        if(skelNode) {
+            copySkeletonNode(skelNode);
+        }
+        //qDebug() << "Copied all" << m_rootSegment->allChildren().count();
+        //qDumpScene(m_rootSegment);
+    }
 }
 
 void Body::copySkeletonNode(SkeletonNode *n)
@@ -66,7 +72,7 @@ void Body::copySkeletonNode(SkeletonNode *n)
         newNode=newBox;
     }
     if(newNode) {
-        newNode->setParent(getSkeletonNodeById(n->getId()));
+        newNode->setParent(getSkeletonNodeById(((SkeletonNode*)n->parent())->getId()));
         newNode->setRestTranslation(n->getRestTranslation());
         newNode->setRotation(n->getRotation());
         newNode->setTranslation(n->getTranslation());
@@ -82,18 +88,13 @@ void Body::copySkeletonNode(SkeletonNode *n)
     }
 }
 
-void Body::addSegment(Segment *segment)
-{
-    m_segments.append(segment);
-}
-
 void Body::addSkeletonNode(SkeletonNode *node, quint32 parentId)
 {
     if(parentId==0) {
-        m_rootSegment->addNode(node);
+        m_rootSkeletonNode->addNode(node);
         return;
     }
-    foreach(QGLSceneNode* n,m_rootSegment->allChildren()) {
+    foreach(QGLSceneNode* n,m_rootSkeletonNode->allChildren()) {
         SkeletonNode *skelNode=dynamic_cast<SkeletonNode *> (n);
         if(skelNode) {
             if(skelNode->getId()==parentId) {
@@ -111,67 +112,39 @@ Agent* Body::getAgent()
     return m_agent;
 }
 
-Segment * Body::getSegment(quint32 id)
+QList<SkeletonNode *> Body::getAllSkeletonNodes()
 {
-    foreach(Segment *seg,m_segments) {
-        if(seg->getId()==id)
-            return seg;
+    QList<SkeletonNode *> skelNodes;
+    foreach(QGLSceneNode *n, m_rootSkeletonNode->allChildren()) {
+        SkeletonNode *sn=dynamic_cast<SkeletonNode *>(n);
+        if(sn)
+            skelNodes.append(sn);
     }
-    return 0;
-}
-
-quint32 Body::getSegmentId(Segment *seg)
-{
-    foreach(Segment *segment,m_segments) {
-        if(segment==seg)
-            return seg->getId();
-    }
-    return 0;
-}
-
-QList<Segment *> Body::getSegments()
-{
-    return m_segments;
+    return skelNodes;
 }
 
 SkeletonNode* Body::getSkeletonNodeById(quint32 id)
 {
-    foreach(QGLSceneNode* n,m_rootSegment->allChildren()) {
+    foreach(QGLSceneNode* n,m_rootSkeletonNode->allChildren()) {
         SkeletonNode *skelNode=dynamic_cast<SkeletonNode *> (n);
         if(skelNode) {
-            return skelNode;
+            if(skelNode->getId()==id)
+                return skelNode;
         }
     }
     return 0;
 
 }
 
-void Body::renderGL()
-{
-    foreach(Segment *seg, this->getSegments()) {
-        if(seg->isRootSegment()) {
-            glPushMatrix();
-//            glRotated(m_agent->getRotation()->x(),1,0,0);
-//            glRotated(m_agent->getRotation()->y(),0,1,0);
-//            glRotated(m_agent->getRotation()->z(),0,0,1);
-            glTranslated(m_agent->getPosition()->x(),m_agent->getPosition()->y(),m_agent->getPosition()->z());
-            glRotated(m_agent->getRotation()->x(),1,0,0);
-            glRotated(m_agent->getRotation()->y(),0,1,0);
-            glRotated(m_agent->getRotation()->z(),0,0,1);
-            seg->renderGL();
-            glPopMatrix();
-        }
-    }
-}
-
 void Body::updatePosition() {
-   m_rootSegment->setPosition(*m_agent->getPosition());
+    if(m_agent)
+        m_rootSkeletonNode->setPosition(*m_agent->getPosition());
 
 }
 
 Body::~Body()
 {
-    foreach(Segment *seg, this->getSegments()) {
-        delete seg;
+    foreach(QGLSceneNode* n, m_rootSkeletonNode->allChildren()) {
+        n->deleteLater();
     }
 }

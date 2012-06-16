@@ -14,6 +14,12 @@ class Group
 {
 public:
     Group(Scene *scene);
+    /**
+     * @brief adds an agent to this group
+     *
+     * @todo remove this funtion. It is dangerous to add an agent via pointer as you cannot be sure it is the same type of this group!
+     * @param agent
+     */
     void addAgent(Agent *agent);
     QList <Agent *> getAgents() {return m_agents;}
     quint32 getId() { return m_id; }

@@ -3,7 +3,6 @@
 #include "core/scene.h"
 #include "core/agent/agent.h"
 #include "core/agent/body/body.h"
-#include "core/agent/body/sphere.h"
 #include "core/agent/body/skeletonnodesphere.h"
 #include "core/agent/body/skeletonnodebox.h"
 #include "core/agent/brain/brain.h"
@@ -31,7 +30,7 @@ AgentManager::AgentManager(Scene *scene, Group *group)
     m_masterAgent=new Agent(m_scene,0); // Id 0 is ok, its just a master agent
 }
 
-void AgentManager::addSkeletonNodeFromConfig(QXmlStreamReader *reader, quint32 id, QString name, quint32 parent)
+void AgentManager::addSkeletonNodeFromConfig(QXmlStreamReader *reader, quint32 id, QString name, quint32 parent, quint32 editorX, quint32 editorY)
 {
     QVector3D translation;
     QVector3D rotation;
@@ -91,55 +90,8 @@ void AgentManager::addSkeletonNodeFromConfig(QXmlStreamReader *reader, quint32 i
     newNode->setColorInherited(colorInherited);
     newNode->setRestTranslation(restTranslation);
     m_masterAgent->getBody()->addSkeletonNode(newNode,parent);
-    qDebug() << __PRETTY_FUNCTION__ << "" << translation << rotation << name << scale << color;
-}
-
-void AgentManager::addSphereFromConfig(QXmlStreamReader *reader, quint32 id, QString name, quint32 parent)
-{
-    QVector3D *translation;
-    QVector3D *rotation;
-    qreal radius;
-    qreal color;
-    bool colorInherited;
-
-    while(reader->readNextStartElement()) {
-        if(reader->name()=="Translation") {
-            QXmlStreamAttributes attribs = reader->attributes();
-            translation= new QVector3D();
-            translation->setX(attribs.value("x").toString().toDouble());
-            translation->setY(attribs.value("y").toString().toDouble());
-            translation->setZ(attribs.value("z").toString().toDouble());
-            reader->skipCurrentElement();
-        } else if(reader->name()=="Rotation") {
-            QXmlStreamAttributes attribs = reader->attributes();
-            rotation= new QVector3D();
-            rotation->setX(attribs.value("x").toString().toDouble());
-            rotation->setY(attribs.value("y").toString().toDouble());
-            rotation->setZ(attribs.value("z").toString().toDouble());
-            reader->skipCurrentElement();
-        } else if(reader->name()=="Radius") {
-            QXmlStreamAttributes attribs = reader->attributes();
-            radius=attribs.value("r").toString().toDouble();
-            reader->skipCurrentElement();
-        }  else if(reader->name()=="Color") {
-            QXmlStreamAttributes attribs = reader->attributes();
-            color=attribs.value("value").toString().toDouble();
-            colorInherited=attribs.value("inherited").toString().compare("true",Qt::CaseInsensitive)==0;
-            reader->skipCurrentElement();
-        }
-    }
-    Segment *parentSeg=m_masterAgent->getBody()->getSegment(parent);
-
-    Segment *seg=new Sphere(id, m_masterAgent->getBody(),name,rotation,translation,radius,0);
-    seg->setColorInherited(colorInherited);
-    seg->setSegmentColor(color);
-    seg->getColor()->init(color);
-    if( parentSeg ) {
-        seg->setParentId(parentSeg->getId());
-    }
-    m_masterAgent->getBody()->addSegment(seg);
-    //reader->skipCurrentElement();
-
+    setBodyEditorTranslation(id,editorX,editorY);
+    qDebug() << __PRETTY_FUNCTION__ << "" << translation << rotation << name << scale << color << editorX << editorY;
 }
 
 quint32 AgentManager::addAndFuzz(quint32 editorX, quint32 editorY)
@@ -405,6 +357,11 @@ void AgentManager::deleteFuzz(quint32 fuzzId)
     updateSoundConfigs();
 }
 
+QHash<quint32, QPoint> AgentManager::getEditorSkeletonNodeLocations()
+{
+    return m_editorSkeletonNodeLocations;
+}
+
 QHash<quint32, QPoint> AgentManager::getEditorFuzzyLocations()
 {
     return m_editorFuzzyLocations;
@@ -433,7 +390,7 @@ bool AgentManager::loadConfig()
 //                                            addSphereFromConfig(&reader,attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("parent").toString().toInt());
 //                                            //reader.skipCurrentElement();
 //                                        }
-                                        addSkeletonNodeFromConfig(&reader,attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("parent").toString().toInt());
+                                        addSkeletonNodeFromConfig(&reader,attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("parent").toString().toInt(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
 
                                     }else {
                                         reader.skipCurrentElement();
@@ -499,6 +456,85 @@ bool AgentManager::loadConfig()
     return false;
 }
 
+bool AgentManager::loadSkeleton(const QString &filename)
+{
+    QFile file(filename);
+    if(!file.open(QIODevice::ReadOnly)) {
+        qDebug() << "Error while opening file " << filename;
+        return false;
+    }
+    QFileInfo fInfo(file);
+    //if(!fInfo.completeSuffix().compare(QString("bvh"))==0) {
+        loadSkeletonBVH(file);
+    //}
+
+}
+
+bool AgentManager::loadSkeletonBVH( QFile &file)
+{
+//    SkeletonNodeBox *box=new SkeletonNodeBox(1,"Hallo",m_masterAgent->getBody());
+//    m_masterAgent->getBody()->addSkeletonNode(box,0);
+//    //qDumpScene(m_masterAgent->getBody()->getRootSkeletonNode());
+//    box->setColor(0.9f);
+//    box->setScale(QVector3D(1,1,4));
+
+//    SkeletonNodeBox *box2=new SkeletonNodeBox(2,"Hallo",m_masterAgent->getBody());
+//    m_masterAgent->getBody()->addSkeletonNode(box2,1);
+//    //qDumpScene(m_masterAgent->getBody()->getRootSkeletonNode());
+//    box2->setColor(0.3f);
+//    box2->setTranslation(QVector3D(2,2,2));
+//    box2->setScale(QVector3D(2,2,2));
+
+    quint32 nodeId=1;
+    QString nodeName;
+    bool isEndSite=false;
+    QList<SkeletonNode *> nodeStack;
+    while (!file.atEnd()) {
+        QByteArray line = file.readLine().trimmed();
+        if(line.startsWith("End Site")) {
+            isEndSite=true;
+            continue;
+        }
+        if(line.startsWith("ROOT") || line.startsWith("JOINT")) {
+            nodeName=line.split(' ').last();
+            qDebug() << line << nodeName;
+            SkeletonNodeBox *box=new SkeletonNodeBox(nodeId++,nodeName,m_masterAgent->getBody());
+            box->setColor(0.1f);
+            if(nodeStack.isEmpty()) {
+                m_masterAgent->getBody()->addSkeletonNode(box,0);
+            } else {
+                //box->setParent(nodeStack.last());
+                //m_masterAgent->getBody()->addSkeletonNode(box,nodeStack.last()->getId());
+                nodeStack.last()->addNode(box);
+            }
+            nodeStack.push_back(box);
+        } else if(line.startsWith("OFFSET")) {
+            if(!isEndSite) {
+                QVector3D translation;
+                translation.setX(line.split(' ').at(1).toDouble());
+                translation.setY(line.split(' ').at(2).toDouble());
+                translation.setZ(line.split(' ').at(3).toDouble());
+                nodeStack.last()->setRestTranslation(translation);
+                qDebug() << __PRETTY_FUNCTION__ << translation;
+                //nodeStack.last()->setScale(QVector3D(3,3,3));
+            }
+        } else if(line.startsWith("}")) {
+            if(isEndSite) {
+                isEndSite=false;
+                continue;
+            } else if(!nodeStack.isEmpty()) {
+                nodeStack.removeLast();
+            } else {
+                qWarning() << __PRETTY_FUNCTION__ << "error while parsing "<< line << "NodeId" << nodeName;
+                return false;
+            }
+        }
+        //qDebug() << line;
+    }
+    qDumpScene(m_masterAgent->getBody()->getRootSkeletonNode());
+    return true;
+}
+
 bool AgentManager::saveConfig()
 {
     QFile file(m_fileName);
@@ -519,6 +555,8 @@ bool AgentManager::saveConfig()
              stream.writeAttribute("id", QString::number(node->getId()));
              stream.writeAttribute("parent", QString::number(node->getParentId()));
              stream.writeAttribute("name", node->objectName());
+             stream.writeAttribute("editorx",QString::number(m_editorSkeletonNodeLocations.value(node->getId()).x()));
+             stream.writeAttribute("editory",QString::number(m_editorSkeletonNodeLocations.value(node->getId()).y()));
              stream.writeStartElement("Color");
              stream.writeAttribute("value", QString::number(node->getInitColor(),'f'));
              if(node->getColor()->isInherited()) {
@@ -739,12 +777,20 @@ void AgentManager::setEditorTranslation(qint32 x, qint32 y)
 
 void AgentManager::setFuzzyEditorTranslation(quint32 id, qint32 x, qint32 y)
 {
-    QPoint point=m_editorFuzzyLocations.value(id);
+    QPoint point;//=m_editorFuzzyLocations.value(id);
     point.setX(x);
     point.setY(y);
     m_editorFuzzyLocations.insert(id,point);
 }
 
+
+void AgentManager::setBodyEditorTranslation(quint32 id, qint32 x, qint32 y)
+{
+    QPoint point;//=m_editorFuzzyLocations.value(id);
+    point.setX(x);
+    point.setY(y);
+    m_editorSkeletonNodeLocations.insert(id,point);
+}
 void AgentManager::setFuzzyAndIsSoundRule(quint32 id, bool isSoundRule)
 {
     if(m_masterAgent->getBrain()->getFuzzy(id)->getType()==FuzzyBase::AND) {

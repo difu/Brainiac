@@ -11,7 +11,8 @@ Group::Group(Scene *scene)
 {
     m_scene=scene;
     m_id=m_editX=m_editY=0;
-    m_agentManager=0;
+    m_agentManager=new AgentManager(m_scene, this);
+    m_scene->addGroup(this);
 }
 
 void Group::addAgent(Agent *agent)
@@ -39,7 +40,7 @@ void Group::loadConfig(QXmlStreamReader *xml)
     setEditorTranslation(attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
     xml->skipCurrentElement();
 
-    m_agentManager=new AgentManager(m_scene, this);
+    //m_agentManager=new AgentManager(m_scene, this);
     m_agentManager->setFileName(m_agentFileNameAbsolute);
     if(m_agentManager->loadConfig()) {
 

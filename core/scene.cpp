@@ -21,6 +21,7 @@ Scene::Scene(QObject *parent) :
 
 void Scene::addGroup(Group *group)
 {
+    m_groupIdGenerator.registerId(group->getId());
     m_groups.append(group);
     emit groupAdded(group);
 }
@@ -38,12 +39,6 @@ void Scene::clear()
     m_groups.clear();
 }
 
-
-/** \brief creates all agents of this scene
-
-
-
-**/
 void Scene::createAgents()
 {
     foreach(Generator *gen, m_generators) {
@@ -56,7 +51,6 @@ void Scene::createAgents(Generator *gen)
     if(gen->getType()==Generator::POINT) {
         PointGenerator *pGen=(PointGenerator *)gen;
         gen->generateLocators();
-        Group *bla=pGen->getLocations()->at(0)->getGroup();
         foreach(Locator *loc,*pGen->getLocations()) {
             Group *grp=loc->getGroup();
             QVector4D trans=loc->getLocation();
@@ -129,7 +123,7 @@ bool Scene::openConfig(const QString & fileName)
                             if(m_streamReader.name()=="Group") {
                                 Group *grp=new Group(this);
                                 grp->loadConfig(&m_streamReader);
-                                addGroup(grp);
+                                //addGroup(grp);
                                 //m_groups.append(grp);
                             } else {
                                 m_streamReader.skipCurrentElement();

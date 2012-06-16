@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "mainwindowlayout.h"
+#include "gui/bodyeditor/bodyeditor.h"
 #include "gui/braineditor/braineditor.h"
 #include "gui/braineditor/fuzzyeditor.h"
 #include "gui/braineditor/defuzzeditor.h"
@@ -11,6 +12,7 @@
 #include "gui/sceneeditor/sceneeditor.h"
 #include "gui/sceneeditor/groupeditor.h"
 #include "gui/scenedisplay.h"
+#include "gui/bodydisplay.h"
 #include "editorlabel.h"
 #include "core/agent/agentmanager.h"
 #include "core/agent/agent.h"
@@ -37,6 +39,13 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
     m_layout=new MainWindowLayout();
     QWidget *widget = new QWidget;
 
+    /* Test */
+    Group *testGrp=new Group(m_scene);
+    testGrp->setId(10);
+    testGrp->getAgentManager()->loadSkeleton("/Users/dirkfuchs/Desktop/bvh_player/Male1_A1_Stand_copy.bvh");
+    testGrp->setEditorTranslation(2200,2000);
+    /* /Test */
+
     createEditorItemBars();
     createEditors();
     createEditorWidgets();
@@ -50,6 +59,8 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
 
     widget->setLayout(m_layout);
     setCentralWidget(widget);
+
+    m_bodyDisplay=new BodyDisplay(this->m_scene);
 
     m_sceneDisplay=new SceneDisplay(this->m_scene,m_scene->getCameras().first());
     connect(m_outputEditor,SIGNAL(updateGLContent()),m_sceneDisplay,SLOT(update()));
@@ -73,6 +84,14 @@ void MainWindow::addAgentManager(AgentManager *agentManager)
 {
     BrainEditor *editor=new BrainEditor(m_scene,agentManager);
     m_brainEditors.insert(agentManager,editor);
+    // This signal activates editor in South region
+    connect(editor, SIGNAL(itemClicked(ItemEditorWidgetsBase::editMessage)),this,SLOT(editorNodeClick(ItemEditorWidgetsBase::editMessage)));
+    // When a frame has been calculated update the braineditors to display the new values
+    connect(m_scene->getSimulation(),SIGNAL(frameDone()),editor,SLOT(update()),Qt::DirectConnection);
+    // Display statusbar messages
+    connect(editor, SIGNAL(statusBarMessageChanged(QString)),this,SLOT(statusBarMessageChange(QString)));
+    BodyEditor *bodyEditor=new BodyEditor(m_scene,agentManager);
+    m_bodyEditors.insert(agentManager,bodyEditor);
 
 }
 
@@ -217,14 +236,14 @@ void MainWindow::createEditorWidgets()
     m_noiseEditor=new NoiseEditor(m_scene,m_logicElementEditWidget);
     m_noiseEditor->setVisible(false);
 
-    foreach(BrainEditor *brainEditor,m_brainEditors) {
-        // This signal activates editor in South region
-        connect(brainEditor, SIGNAL(itemClicked(ItemEditorWidgetsBase::editMessage)),this,SLOT(editorNodeClick(ItemEditorWidgetsBase::editMessage)));
-        // When a frame has been calculated update the braineditors to display the new values
-        connect(m_scene->getSimulation(),SIGNAL(frameDone()),brainEditor,SLOT(update()),Qt::DirectConnection);
-        // Display statusbar messages
-        connect(brainEditor, SIGNAL(statusBarMessageChanged(QString)),this,SLOT(statusBarMessageChange(QString)));
-    }
+//    foreach(BrainEditor *brainEditor,m_brainEditors) {
+//        // This signal activates editor in South region
+//        connect(brainEditor, SIGNAL(itemClicked(ItemEditorWidgetsBase::editMessage)),this,SLOT(editorNodeClick(ItemEditorWidgetsBase::editMessage)));
+//        // When a frame has been calculated update the braineditors to display the new values
+//        connect(m_scene->getSimulation(),SIGNAL(frameDone()),brainEditor,SLOT(update()),Qt::DirectConnection);
+//        // Display statusbar messages
+//        connect(brainEditor, SIGNAL(statusBarMessageChanged(QString)),this,SLOT(statusBarMessageChange(QString)));
+//    }
     //
     connect(m_inputEditor, SIGNAL(updateBrainEditor()),this,SLOT(refreshBrainEditor()));
     connect(m_outputEditor,SIGNAL(updateBrainEditor()),this,SLOT(refreshBrainEditor()));
@@ -276,6 +295,7 @@ void MainWindow::editorNodeClick(ItemEditorWidgetsBase::editMessage msg)
         grp=(Group *)msg.object;
         m_groupEditor->setGroup(grp);
         m_activeAgentManager=grp->getAgentManager();
+        m_bodyDisplay->setAgentManager(m_activeAgentManager);
         break;
     case BrainiacGlobals::OUTPUT:
         mgr=(AgentManager *)msg.object;
@@ -366,6 +386,13 @@ void MainWindow::setEditMode(EditMode em)
         m_editorView->setScene(m_sceneEditor);
         break;
     case MainWindow::BODY:
+        m_bodyDisplay->setAgentManager(m_activeAgentManager);
+        if(m_bodyEditors.contains(m_activeAgentManager))
+            m_editorView->setScene(m_bodyEditors.value(m_activeAgentManager));
+        else {
+            m_editorView->setScene(0);
+        }
+        break;
     case MainWindow::BRAIN:
         if(m_brainEditors.contains(m_activeAgentManager))
             m_editorView->setScene(m_brainEditors.value(m_activeAgentManager));
