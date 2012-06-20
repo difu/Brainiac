@@ -127,6 +127,12 @@ public:
     Group* getGroup() { return m_group; }
     Agent* getMasterAgent() {return m_masterAgent; }
     QString & getName() {return m_name;}
+    /**
+     * @brief check, if a filame is set
+     *
+     * @return bool true, if filename is set
+     */
+    bool isFileNameSet() const { return m_fileName.size()>0; }
     bool loadConfig();
     /**
      * @brief loads a skeleton file
@@ -255,6 +261,13 @@ protected:
 
     // Body stuff
     void addSkeletonNodeFromConfig( QXmlStreamReader *reader, quint32 id, QString name, quint32 parent, quint32 editorX, quint32 editorY );
+    /**
+     * @brief loads a bvh skeleton
+     *
+     * @param file the bvh file to load
+     * @return bool true, if loading was successful
+     * @todo color management, editorItem position of root element, positioning of editoritems (optimized, no static offsets...), Site handling
+     */
     bool loadSkeletonBVH(QFile &file);
 };
 

@@ -23,6 +23,7 @@
 #include <QComboBox>
 #include <QDialog>
 #include <QLabel>
+#include <QFileDialog>
 
 MainWindow::MainWindow(Scene *scene, QWidget *parent) :
     QMainWindow(parent),
@@ -39,12 +40,12 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
     m_layout=new MainWindowLayout();
     QWidget *widget = new QWidget;
 
-    /* Test */
-    Group *testGrp=new Group(m_scene);
-    testGrp->setId(10);
-    testGrp->getAgentManager()->loadSkeleton("/Users/dirkfuchs/Desktop/bvh_player/Male1_A1_Stand_copy.bvh");
-    testGrp->setEditorTranslation(2200,2000);
-    /* /Test */
+//    /* Test */
+//    Group *testGrp=new Group(m_scene);
+//    testGrp->setId(10);
+//    testGrp->getAgentManager()->loadSkeleton("/Users/dirkfuchs/Desktop/bvh_player/Male1_A1_Stand.bvh");
+//    testGrp->setEditorTranslation(2200,2000);
+//    /* /Test */
 
     createEditorItemBars();
     createEditors();
@@ -351,6 +352,13 @@ void MainWindow::saveAgent()
 {
     if(m_activeAgentManager) {
         m_brainEditors.value(m_activeAgentManager)->updateItemLocations();
+        m_bodyEditors.value(m_activeAgentManager)->updateItemLocations();
+        if(!m_activeAgentManager->isFileNameSet()) {
+            QString fileName = QFileDialog::getSaveFileName(this, tr("Save Agent as"),
+                                        "",
+                                        tr("XML (*.xml)"));
+            m_activeAgentManager->setFileName(fileName);
+        }
         m_activeAgentManager->saveConfig();
     }
 }

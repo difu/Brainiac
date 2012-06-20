@@ -465,7 +465,7 @@ bool AgentManager::loadSkeleton(const QString &filename)
     }
     QFileInfo fInfo(file);
     //if(!fInfo.completeSuffix().compare(QString("bvh"))==0) {
-        loadSkeletonBVH(file);
+        return loadSkeletonBVH(file);
     //}
 
 }
@@ -497,7 +497,6 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
         }
         if(line.startsWith("ROOT") || line.startsWith("JOINT")) {
             nodeName=line.split(' ').last();
-            qDebug() << line << nodeName;
             SkeletonNodeBox *box=new SkeletonNodeBox(nodeId++,nodeName,m_masterAgent->getBody());
             box->setColor(0.1f);
             if(nodeStack.isEmpty()) {
@@ -507,6 +506,7 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
                 //m_masterAgent->getBody()->addSkeletonNode(box,nodeStack.last()->getId());
                 nodeStack.last()->addNode(box);
             }
+            setBodyEditorTranslation(nodeId,1800+nodeId*10,1800+nodeId*10);
             nodeStack.push_back(box);
         } else if(line.startsWith("OFFSET")) {
             if(!isEndSite) {

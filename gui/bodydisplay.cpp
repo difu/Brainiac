@@ -29,6 +29,7 @@ void BodyDisplay::paintGL(QGLPainter *painter)
     painter->setStandardEffect(QGL::LitMaterial);
     //painter->setFaceColor(QGL::AllFaces, QColor(170, 202, 0));
     //m_rootSceneNode->draw(painter);
-    if(m_rootSceneNode)
+    if(m_rootSceneNode) {
         m_rootSceneNode->draw(painter);
+    }
 }

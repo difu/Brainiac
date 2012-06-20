@@ -11,7 +11,7 @@ class BodyEditor : public EditorBase
     Q_OBJECT
 public:
     explicit BodyEditor(Scene *scene, AgentManager *agentManager);
-    
+    void updateItemLocations();
 protected:
     AgentManager *m_agentManager; //!< the agentmanager
 signals:

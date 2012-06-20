@@ -10,6 +10,8 @@
 #include "core/agent/agent.h"
 #include "core/agent/brain/brain.h"
 #include "core/agent/brain/output.h"
+#include "core/agent/body/skeletonnode.h"
+#include "core/agent/body/body.h"
 
 EditorItem::EditorItem(BrainiacGlobals::ItemType type, void *object,quint32 id)
 {
@@ -124,6 +126,12 @@ void EditorItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     } else if(m_type==BrainiacGlobals::TIMER) {
         AgentManager *myManager=(AgentManager*)m_object;
         painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,myManager->getMasterAgent()->getBrain()->getFuzzy(m_id)->getName());
+    } else if(m_type==BrainiacGlobals::CUBE) {
+        AgentManager *myManager=(AgentManager*)m_object;
+        painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,myManager->getMasterAgent()->getBody()->getSkeletonNodeById(m_id)->objectName());
+    } else if(m_type==BrainiacGlobals::SPHERE) {
+        AgentManager *myManager=(AgentManager*)m_object;
+        painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,myManager->getMasterAgent()->getBody()->getSkeletonNodeById(m_id)->objectName());
     }
     painter->drawImage(QPoint(relxPos+4,relyPos+6),m_symbolPic);
 
