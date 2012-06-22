@@ -19,10 +19,12 @@ public:
     void setAgentManager( AgentManager *manager );
 
 protected:
+    void keyPressEvent(QKeyEvent *e);
     void paintGL(QGLPainter *painter);
     QGLSceneNode *m_rootSceneNode;
     Scene *m_scene;
     AgentManager *m_agentManager;
+    bool m_renderSilhouettes;
 };
 
 #endif // BODYDISPLAY_H

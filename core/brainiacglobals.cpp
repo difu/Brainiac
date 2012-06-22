@@ -92,3 +92,7 @@ const char* const BrainiacGlobals::ChannelName_Sound_ox="sound.ox\0";
 const char* const BrainiacGlobals::ChannelName_Sound_d="sound.d\0";
 const char* const BrainiacGlobals::ChannelName_Sound_a="sound.a\0";
 const char* const BrainiacGlobals::ChannelName_Sound_f="sound.f\0";
+
+QColor BrainiacGlobals::defaultXColor=QColor(255,0,0);
+QColor BrainiacGlobals::defaultYColor=QColor(0,255,0);
+QColor BrainiacGlobals::defaultZColor=QColor(0,0,255);

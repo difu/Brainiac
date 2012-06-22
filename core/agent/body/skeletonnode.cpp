@@ -2,35 +2,53 @@
 #include "core/agent/agent.h"
 #include "core/agent/body/body.h"
 #include "core/agent/channel.h"
+#include "core/agent/body/skeletongeometrynode.h"
 
 #include "qglbuilder.h"
 #include "qglcube.h"
 #include "qglsphere.h"
+#include "qglcylinder.h"
 #include <qgraphicstranslation3d.h>
 #include <qgraphicsrotation3d.h>
 #include <qgraphicsscale3d.h>
 #include "qglpainter.h"
 #include <QColor>
+#include "qgeometrydata.h">
 
 SkeletonNode::SkeletonNode(SegmentType type, quint32 id, const QString &name, Body *body, QObject *parent) : QGLSceneNode(parent), m_type(type), m_body(body)
 {
     setObjectName(name);
     m_id=id;
+    bool hasGeometry=true;
     QGLBuilder builder;
+    QGLSceneNode *node;
+    SkeletonGeometryNode *nodeExtractedGeometry=new SkeletonGeometryNode();
     switch(type) {
     case BOX:
         builder << QGL::Faceted;
         builder << QGLCube(1.0f);
+        node=builder.finalizedSceneNode();
+        nodeExtractedGeometry->setGeometry(node->children().at(0)->geometry());
+        nodeExtractedGeometry->setCount(node->children().at(0)->count());
+        nodeExtractedGeometry->setObjectName("Geometry Node BOX");
         break;
     case SPHERE:
         builder << QGL::Faceted;
         builder << QGLSphere(1.0f);
+
+        node=builder.finalizedSceneNode();
+        nodeExtractedGeometry->setGeometry(node->children().at(0)->geometry());
+        nodeExtractedGeometry->setCount(node->children().at(0)->count());
+        nodeExtractedGeometry->setObjectName("Geometry Node SPHERE");
         break;
     default:
-        m_segmentNode=0;
+        node=builder.finalizedSceneNode();
+        hasGeometry=false;
+        break;
     }
-    m_segmentNode = builder.finalizedSceneNode();
-    this->addNode(m_segmentNode);
+    delete node;
+    m_geometryNode = nodeExtractedGeometry;
+    this->addNode(nodeExtractedGeometry);
 
     m_segRestTrans=new QGraphicsTranslation3D();
     m_segRestRotX=new QGraphicsRotation3D();
@@ -47,15 +65,15 @@ SkeletonNode::SkeletonNode(SegmentType type, quint32 id, const QString &name, Bo
 
     m_segScale=new QGraphicsScale3D();
     m_scale=QVector3D(m_segScale->scale());
-    m_segmentNode->addTransform(m_segScale);
+    m_geometryNode->addTransform(m_segScale);
 
     m_segRotX=new QGraphicsRotation3D();
     m_segRotY=new QGraphicsRotation3D();
     m_segRotZ=new QGraphicsRotation3D();
     m_segRotX->setAxis(QVector3D(1.0f,0.0f,0.0f));
-    m_segmentNode->addTransform(m_segRotX);
-    m_segmentNode->addTransform(m_segRotY);
-    m_segmentNode->addTransform(m_segRotZ);
+    m_geometryNode->addTransform(m_segRotX);
+    m_geometryNode->addTransform(m_segRotY);
+    m_geometryNode->addTransform(m_segRotZ);
 
     createChannels();
 }
@@ -92,9 +110,16 @@ void SkeletonNode::createChannels()
 
 }
 
-void SkeletonNode::draw(QGLPainter *painter) {
-    painter->setFaceColor(QGL::AllFaces, BrainiacGlobals::getColorFromBrainiacColorValue(m_color->getValue()));
-    QGLSceneNode::draw(painter);
+//void SkeletonNode::draw(QGLPainter *painter) {
+//    //painter->setFaceColor(QGL::AllFaces, BrainiacGlobals::getColorFromBrainiacColorValue(m_color->getValue()));
+//    QGLSceneNode::draw(painter);
+//}
+
+void SkeletonNode::drawGeometry(QGLPainter *painter)
+{
+    qDebug()<< __PRETTY_FUNCTION__ << "";
+    QGLSceneNode::drawGeometry(painter);
+
 }
 
 bool SkeletonNode::getColorInherited() const
@@ -130,6 +155,10 @@ void SkeletonNode::setColor(qreal color)
 {
     m_initColor=color;
     m_color->setValue(qBound((qreal)0.0,color,(qreal)1.0));
+    SkeletonGeometryNode *n=dynamic_cast<SkeletonGeometryNode *>(m_geometryNode);
+    if(n) {
+        n->setColor(BrainiacGlobals::getColorFromBrainiacColorValue(m_color->getValue()));
+    }
 }
 
 void SkeletonNode::setColorInherited(bool inherited)

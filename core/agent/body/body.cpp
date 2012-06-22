@@ -3,6 +3,7 @@
 #include "core/agent/body/skeletonnode.h"
 #include "core/agent/body/skeletonnodesphere.h"
 #include "core/agent/body/skeletonnodebox.h"
+#include "core/agent/body/skeletongeometrynode.h"
 #include "core/agent/channel.h"
 
 #include <QtOpenGL>
@@ -134,6 +135,16 @@ SkeletonNode* Body::getSkeletonNodeById(quint32 id)
     }
     return 0;
 
+}
+
+void Body::renderSilhouettes(bool render)
+{
+    foreach(QGLSceneNode *n,m_rootSkeletonNode->allChildren()) {
+        SkeletonGeometryNode *geoNode=dynamic_cast<SkeletonGeometryNode *>(n);
+        if(geoNode) {
+            geoNode->showSilhouette(render);
+        }
+    }
 }
 
 void Body::updatePosition() {

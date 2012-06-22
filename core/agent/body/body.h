@@ -23,6 +23,7 @@ public:
     SkeletonNode *getRootSkeletonNode() { return m_rootSkeletonNode; }
     SkeletonNode *getSkeletonNodeById(quint32 id);
     Agent* getAgent();
+    void renderSilhouettes(bool render);
     void updatePosition();
     ~Body();
 protected:

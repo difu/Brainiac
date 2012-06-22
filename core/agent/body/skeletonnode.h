@@ -11,21 +11,27 @@ class QGraphicsRotation3D;
 class QGraphicsTranslation3D;
 class QGraphicsScale3D;
 
+/**
+ * @brief
+ * @class SkeletonNode skeletonnode.h "core/agent/body/skeletonnode.h"
+ */
 class SkeletonNode : public QGLSceneNode
 {
     Q_OBJECT
 public:
     enum SegmentType {SPHERE=BrainiacGlobals::SPHERE, BOX=BrainiacGlobals::CUBE, NOPRIMITIVE};
     SkeletonNode( SegmentType type, quint32 id, const QString &name, Body *body, QObject *parent = 0 );
-    void draw(QGLPainter *painter);
+    //void draw(QGLPainter *painter);
     /**
      * @brief returns the color of this SkeletonNode
+
      * This is the default color of this node.
      * @return Channel
      */
     qreal getInitColor() const { return m_initColor; }
     /**
      * @brief returns color Channel of this SkeletonNode
+
      * the value is the actual color
      * @return Channel
      */
@@ -41,6 +47,7 @@ public:
     QVector3D getScale() const;
     /**
      * @brief sets the color of this SkeletonNode
+
      * this is the default color
      * @param color the color of this SkeletonNode
      */
@@ -48,6 +55,7 @@ public:
     void setColorInherited(bool inherited);
     /**
      * @brief sets the rest translation
+
      * The rest translation is the pivot point of this Skeleton node
      * To change translation via brain use the channels of this SkeletonNode
      * @param translation the translation of this node
@@ -55,6 +63,7 @@ public:
     void setRestTranslation(const QVector3D &translation);
     /**
      * @brief sets the rest rotation
+
      * The rest rotation is the rotation around the pivot point of this Skeleton node
      * To change rotation via brain use the channels of this SkeletonNode
      * @param rotation the rotaion of this node
@@ -65,14 +74,14 @@ public:
 
     /**
      * @brief sets translation of the geometry relative to pivot point
-     *
+
      * @param translation the translation
      * @sa setRotation();
      */
     void setTranslation(const QVector3D &translation);
     /**
      * @brief sets rotation of the geometry
-     *
+
      * @param translation the translation
      * @sa setTranslation();
      */
@@ -81,7 +90,8 @@ public:
 
 protected:
     virtual void createChannels();
-    QGLSceneNode *m_segmentNode; /**< this SkeletonNode´s geometry */
+    virtual void drawGeometry(QGLPainter *painter);
+    QGLSceneNode *m_geometryNode; /**< this SkeletonNode´s geometry @sa SkeletonGeometryNode */
     SegmentType m_type;
     QVector3D m_rotation; //!< Rotation of SkeletonNode
     QVector3D m_translation; //!< Translation of SkeletonNode

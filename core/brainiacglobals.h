@@ -83,6 +83,10 @@ public:
     static const char* const  ChannelName_Sound_a;
     static const char* const  ChannelName_Sound_f;
 
+    static QColor defaultXColor;
+    static QColor defaultYColor;
+    static QColor defaultZColor;
+
     static qreal getRand( quint32 index ) { return randoms[index%NUMBER_OF_RANDOMS]; }
 };
 #endif // BRAINIACGLOBALS_H
