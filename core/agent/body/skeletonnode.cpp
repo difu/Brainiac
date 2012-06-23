@@ -47,10 +47,23 @@ SkeletonNode::SkeletonNode(SegmentType type, quint32 id, const QString &name, Bo
         break;
     }
     delete node;
+
+    if(type!=SkeletonNode::NOPRIMITIVE) {
+        QGLBuilder b2;
+        b2 << QGL::Faceted;
+        b2 << QGLCube(0.5f);
+        QGLSceneNode *node=b2.finalizedSceneNode()->children().at(0);
+        setGeometry(node->geometry());
+        setCount(node->count());
+        //this->addNode(b2.finalizedSceneNode());
+        delete node;
+    }
+
     m_geometryNode = nodeExtractedGeometry;
     this->addNode(nodeExtractedGeometry);
 
     m_segRestTrans=new QGraphicsTranslation3D();
+
     m_segRestRotX=new QGraphicsRotation3D();
     m_segRestRotY=new QGraphicsRotation3D();
     m_segRestRotZ=new QGraphicsRotation3D();
@@ -71,9 +84,15 @@ SkeletonNode::SkeletonNode(SegmentType type, quint32 id, const QString &name, Bo
     m_segRotY=new QGraphicsRotation3D();
     m_segRotZ=new QGraphicsRotation3D();
     m_segRotX->setAxis(QVector3D(1.0f,0.0f,0.0f));
+    m_segRotY->setAxis(QVector3D(0.0f,1.0f,0.0f));
+    m_segRotZ->setAxis(QVector3D(0.0f,0.0f,1.0f));
     m_geometryNode->addTransform(m_segRotX);
     m_geometryNode->addTransform(m_segRotY);
     m_geometryNode->addTransform(m_segRotZ);
+
+    m_segTrans=new QGraphicsTranslation3D();
+    m_segTrans->setTranslate(m_translation);
+    m_geometryNode->addTransform(m_segTrans);
 
     createChannels();
 }
@@ -110,16 +129,9 @@ void SkeletonNode::createChannels()
 
 }
 
-//void SkeletonNode::draw(QGLPainter *painter) {
-//    //painter->setFaceColor(QGL::AllFaces, BrainiacGlobals::getColorFromBrainiacColorValue(m_color->getValue()));
-//    QGLSceneNode::draw(painter);
-//}
-
 void SkeletonNode::drawGeometry(QGLPainter *painter)
 {
-    qDebug()<< __PRETTY_FUNCTION__ << "";
     QGLSceneNode::drawGeometry(painter);
-
 }
 
 bool SkeletonNode::getColorInherited() const
@@ -198,7 +210,9 @@ void SkeletonNode::setRotation(const QVector3D &rotation)
 {
     if(m_rotation!=rotation) {
         m_rotation=rotation;
-        //m_segRestRot->set
+        m_segRotX->setAngle(m_rotation.x());
+        m_segRotY->setAngle(m_rotation.y());
+        m_segRotZ->setAngle(m_rotation.z());
     }
 }
 
@@ -206,7 +220,7 @@ void SkeletonNode::setTranslation(const QVector3D &translation)
 {
     if(translation!=m_translation) {
         m_translation=translation;
-        //m_seg->setTranslate(translation);
+        m_segTrans->setTranslate(m_translation);
     }
 }
 

@@ -24,15 +24,15 @@ void SkeletonGeometryNode::drawGeometry(QGLPainter *painter)
         qreal halfY=box.size().y()/2.0f;
         qreal halfZ=box.size().z()/2.0f;
 
-        qreal crossLength=qMin(halfX,qMin(halfY,halfZ))*0.9f;
+//        qreal crossLength=qMin(halfX,qMin(halfY,halfZ))*0.9f;
 
-        // Coord Cross Vertices
-        vertices.append(0,0,0);
-        vertices.append(crossLength,0,0);
-        vertices.append(0,0,0);
-        vertices.append(0,crossLength,0);
-        vertices.append(0,0,0);
-        vertices.append(0,0,crossLength);
+//        // Coord Cross Vertices
+//        vertices.append(0,0,0);
+//        vertices.append(crossLength,0,0);
+//        vertices.append(0,0,0);
+//        vertices.append(0,crossLength,0);
+//        vertices.append(0,0,0);
+//        vertices.append(0,0,crossLength);
 
         // Bounding Box Vertices
 
@@ -62,22 +62,22 @@ void SkeletonGeometryNode::drawGeometry(QGLPainter *painter)
         painter->setStandardEffect(QGL::FlatColor);
         painter->setVertexAttribute(QGL::Position, vertices);
 
-        // Draw Coordinate Cross
-        painter->setColor(BrainiacGlobals::defaultXColor);
-        painter->draw(QGL::Lines, 2);
-        painter->setColor(BrainiacGlobals::defaultYColor);
-        painter->draw(QGL::Lines, 2,2);
-        painter->setColor(BrainiacGlobals::defaultZColor);
-        painter->draw(QGL::Lines, 2,4);
+//        // Draw Coordinate Cross
+//        painter->setColor(BrainiacGlobals::defaultXColor);
+//        painter->draw(QGL::Lines, 2);
+//        painter->setColor(BrainiacGlobals::defaultYColor);
+//        painter->draw(QGL::Lines, 2,2);
+//        painter->setColor(BrainiacGlobals::defaultZColor);
+//        painter->draw(QGL::Lines, 2,4);
 
         // Draw bounding box
         painter->setColor(QColor(200,200,200));
-        painter->draw(QGL::LineLoop,4,6);
-        painter->draw(QGL::LineLoop,4,10);
+        painter->draw(QGL::LineLoop,4,0);
+        painter->draw(QGL::LineLoop,4,4);
+        painter->draw(QGL::Lines, 2,8);
+        painter->draw(QGL::Lines, 2,10);
+        painter->draw(QGL::Lines, 2,12);
         painter->draw(QGL::Lines, 2,14);
-        painter->draw(QGL::Lines, 2,16);
-        painter->draw(QGL::Lines, 2,18);
-        painter->draw(QGL::Lines, 2,20);
 
     }
 }

@@ -136,6 +136,7 @@ public:
     bool loadConfig();
     /**
      * @brief loads a skeleton file
+
      * Loads a skeleton file. Currently only bvh file format is supported
      * @todo check and delete if a previous skeleton exists
      * @param filename the filename of the skeleton file
@@ -146,6 +147,53 @@ public:
     void setEditorTranslation(qint32 x, qint32 y);
     void setFuzzyEditorTranslation(quint32 id, qint32 x, qint32 y);
     void setBodyEditorTranslation(quint32 id, qint32 x, qint32 y);
+    /**
+     * @brief sets the rest rotation of segment with given id
+
+     *
+     * @fn setSegmentRestRotation
+     * @param id
+     * @param x
+     * @param y
+     * @param z
+     */
+    void setSegmentRestRotation(quint32 id, qreal x, qreal y, qreal z);
+
+    /**
+     * @brief sets the rest translation of segment with given id
+
+     *
+     * @fn setSegmentRestTranslation
+     * @param id
+     * @param x
+     * @param y
+     * @param z
+     */
+    void setSegmentRestTranslation(quint32 id, qreal x, qreal y, qreal z);
+
+    /**
+     * @brief sets the rotation of segment with given id
+
+     *
+     * @fn setSegmentRotation
+     * @param id
+     * @param x
+     * @param y
+     * @param z
+     */
+    void setSegmentRotation(quint32 id, qreal x, qreal y, qreal z);
+
+    /**
+     * @brief sets the translation of segment with given id
+
+     *
+     * @fn setSegmentTranslation
+     * @param id
+     * @param x
+     * @param y
+     * @param z
+     */
+    void setSegmentTranslation(quint32 id, qreal x, qreal y, qreal z);
 
     /** \brief sets the sound rule state of the And fuzz of all agents
       @param id the and fuzz´ id

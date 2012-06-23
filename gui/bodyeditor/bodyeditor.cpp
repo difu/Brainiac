@@ -9,6 +9,8 @@
 #include "gui/bodyeditor/bodyeditoritem.h"
 #include "gui/editoritemconnector.h"
 
+#include <QGraphicsSceneMouseEvent>
+
 BodyEditor::BodyEditor(Scene *scene, AgentManager *agentManager) : EditorBase(scene)
 {
     m_agentManager=agentManager;
@@ -51,6 +53,21 @@ BodyEditor::BodyEditor(Scene *scene, AgentManager *agentManager) : EditorBase(sc
             BodyEditorItem *eItem=(BodyEditorItem *)item;
             eItem->setPos(eItem->x()+EditorItem::_raster,eItem->y());
             eItem->setPos(eItem->x()-EditorItem::_raster,eItem->y());
+        }
+    }
+}
+
+void BodyEditor::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    QGraphicsScene::mousePressEvent(event);
+    BodyEditorItem *item=qgraphicsitem_cast<BodyEditorItem *>(itemAt( event->scenePos().x(), event->scenePos().y()) );
+    ItemEditorWidgetsBase::editMessage msg;
+    if( item ) {
+        if(item->getType() == BrainiacGlobals::CUBE) {
+            msg.object=item->getObject();
+            msg.type=BrainiacGlobals::CUBE;
+            msg.id=item->getId();
+            emit itemClicked(msg);
         }
     }
 }

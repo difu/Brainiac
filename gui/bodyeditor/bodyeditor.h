@@ -14,6 +14,7 @@ public:
     void updateItemLocations();
 protected:
     AgentManager *m_agentManager; //!< the agentmanager
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
 signals:
     
 public slots:

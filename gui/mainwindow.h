@@ -25,6 +25,7 @@ class FuzzyEditor;
 class NoiseEditor;
 class SceneDisplay;
 class BodyDisplay;
+class SegmentEditor;
 
 class AgentManager;
 class BrainEditor;
@@ -96,6 +97,7 @@ protected:
     DefuzzEditor *m_defuzzEditor;
     FuzzyEditor *m_fuzzyEditor;
     NoiseEditor *m_noiseEditor;
+    SegmentEditor *m_segmentEditor;
 
 
     QHash<AgentManager*, BrainEditor*> m_brainEditors;  //!< all BrainEditors.

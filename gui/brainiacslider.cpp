@@ -8,7 +8,7 @@
 
 BrainiacSlider::BrainiacSlider(QWidget *parent):QWidget(parent)
 {
-    setGeometry(0,0,350,40);
+    QWidget::setGeometry(0,0,350,40);
     m_slider=new BrainiacSliderFrame(this);
     m_lineEdit=new QLineEdit(this);
     m_lineEdit->setValidator(new QDoubleValidator(m_lineEdit));
@@ -34,6 +34,14 @@ void BrainiacSlider::setEnabled(bool param_enabled)
     m_enabled=param_enabled;
     m_lineEdit->setEnabled(param_enabled);
     m_slider->setEnabled(param_enabled);
+}
+
+void BrainiacSlider::setGeometry(int x, int y, int w, int h) {
+    QWidget::setGeometry(x,y,w,h);
+    quint32 newW=(quint32)(0.5f*(qreal)w);
+    //quint32 newW=(quint32)(0,7f*(qreal)w);
+    m_slider->setGeometry(0,0,newW,h-10);
+    m_lineEdit->setGeometry(newW,0,100,30);
 }
 
 void BrainiacSlider::setRange(qreal param_min, qreal param_max)

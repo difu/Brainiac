@@ -143,6 +143,7 @@ void SceneDisplay::mouseMoveEvent(QMouseEvent *event)
     } else if (event->buttons() & Qt::RightButton)  {
         if(m_shiftPressed) {
             m_camera->translateEye((qreal)dx,0.0f,(qreal)dy);
+            qDebug() << __PRETTY_FUNCTION__ << m_camera->eye() << m_camera->center();
         } else {
             m_camera->translateCenter(-(qreal)dx/2.0f,(qreal)dy/2.0f,0.0f);
         }

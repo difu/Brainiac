@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "mainwindowlayout.h"
 #include "gui/bodyeditor/bodyeditor.h"
+#include "gui/bodyeditor/segmenteditor.h"
 #include "gui/braineditor/braineditor.h"
 #include "gui/braineditor/fuzzyeditor.h"
 #include "gui/braineditor/defuzzeditor.h"
@@ -65,6 +66,7 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
 
     m_sceneDisplay=new SceneDisplay(this->m_scene,m_scene->getCameras().first());
     connect(m_outputEditor,SIGNAL(updateGLContent()),m_sceneDisplay,SLOT(update()));
+    connect(m_segmentEditor,SIGNAL(updateGLContent()),m_bodyDisplay,SLOT(update()));
 
     // When a frame has been calculated update display
     connect(m_scene->getSimulation(),SIGNAL(frameDone()),m_sceneDisplay,SLOT(update()),Qt::DirectConnection);
@@ -93,6 +95,7 @@ void MainWindow::addAgentManager(AgentManager *agentManager)
     connect(editor, SIGNAL(statusBarMessageChanged(QString)),this,SLOT(statusBarMessageChange(QString)));
     BodyEditor *bodyEditor=new BodyEditor(m_scene,agentManager);
     m_bodyEditors.insert(agentManager,bodyEditor);
+    connect(bodyEditor,SIGNAL(itemClicked(ItemEditorWidgetsBase::editMessage)),this,SLOT(editorNodeClick(ItemEditorWidgetsBase::editMessage)));
 
 }
 
@@ -237,6 +240,9 @@ void MainWindow::createEditorWidgets()
     m_noiseEditor=new NoiseEditor(m_scene,m_logicElementEditWidget);
     m_noiseEditor->setVisible(false);
 
+    m_segmentEditor=new SegmentEditor(m_scene,m_logicElementEditWidget);
+    m_segmentEditor->setVisible(false);
+
 //    foreach(BrainEditor *brainEditor,m_brainEditors) {
 //        // This signal activates editor in South region
 //        connect(brainEditor, SIGNAL(itemClicked(ItemEditorWidgetsBase::editMessage)),this,SLOT(editorNodeClick(ItemEditorWidgetsBase::editMessage)));
@@ -252,6 +258,9 @@ void MainWindow::createEditorWidgets()
     connect(m_fuzzyEditor,SIGNAL(updateBrainEditor()),this,SLOT(refreshBrainEditor()));
     connect(m_noiseEditor,SIGNAL(updateBrainEditor()),this,SLOT(refreshBrainEditor()));
     //connect(m_outputEditor,SIGNAL(updateGLContent()),m_sceneDisplay,SLOT(updateGL()));
+
+
+
     m_layout->addWidget(m_logicElementEditWidget,MainWindowLayout::South);
 }
 
@@ -318,7 +327,11 @@ void MainWindow::editorNodeClick(ItemEditorWidgetsBase::editMessage msg)
         mgr=(AgentManager *)msg.object;
         m_noiseEditor->setNoiseConfig(mgr,msg.id);
         break;
-
+    case BrainiacGlobals::CUBE:
+        case BrainiacGlobals::SPHERE:
+        mgr=(AgentManager *)msg.object;
+        m_segmentEditor->setSegmentConfig(mgr,msg.id);
+        break;
     default:
     ;
     }
@@ -328,6 +341,7 @@ void MainWindow::editorNodeClick(ItemEditorWidgetsBase::editMessage msg)
     m_defuzzEditor->setVisible(msg.type==BrainiacGlobals::DEFUZZ);
     m_fuzzyEditor->setVisible(msg.type==BrainiacGlobals::FUZZ);
     m_noiseEditor->setVisible(msg.type==BrainiacGlobals::NOISE);
+    m_segmentEditor->setVisible(msg.type==BrainiacGlobals::CUBE || msg.type==BrainiacGlobals::SPHERE);
 }
 
 void MainWindow::readSettings()

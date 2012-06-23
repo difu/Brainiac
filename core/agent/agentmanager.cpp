@@ -791,6 +791,40 @@ void AgentManager::setBodyEditorTranslation(quint32 id, qint32 x, qint32 y)
     point.setY(y);
     m_editorSkeletonNodeLocations.insert(id,point);
 }
+
+void AgentManager::setSegmentRestRotation(quint32 id, qreal x, qreal y, qreal z)
+{
+    m_masterAgent->getBody()->getSkeletonNodeById(id)->setRestRotation(QVector3D(x,y,z));
+    foreach(Agent *agent, m_group->getAgents()) {
+        agent->getBody()->getSkeletonNodeById(id)->setRestRotation(QVector3D(x,y,z));
+    }
+}
+
+void AgentManager::setSegmentRestTranslation(quint32 id, qreal x, qreal y, qreal z)
+{
+    m_masterAgent->getBody()->getSkeletonNodeById(id)->setRestTranslation(QVector3D(x,y,z));
+    foreach(Agent *agent, m_group->getAgents()) {
+        agent->getBody()->getSkeletonNodeById(id)->setRestTranslation(QVector3D(x,y,z));
+    }
+        qDebug()<< __PRETTY_FUNCTION__;
+}
+
+void AgentManager::setSegmentRotation(quint32 id, qreal x, qreal y, qreal z)
+{
+    m_masterAgent->getBody()->getSkeletonNodeById(id)->setRotation(QVector3D(x,y,z));
+    foreach(Agent *agent, m_group->getAgents()) {
+        agent->getBody()->getSkeletonNodeById(id)->setRotation(QVector3D(x,y,z));
+    }
+}
+
+void AgentManager::setSegmentTranslation(quint32 id, qreal x, qreal y, qreal z)
+{
+    m_masterAgent->getBody()->getSkeletonNodeById(id)->setTranslation(QVector3D(x,y,z));
+    foreach(Agent *agent, m_group->getAgents()) {
+        agent->getBody()->getSkeletonNodeById(id)->setTranslation(QVector3D(x,y,z));
+    }
+}
+
 void AgentManager::setFuzzyAndIsSoundRule(quint32 id, bool isSoundRule)
 {
     if(m_masterAgent->getBrain()->getFuzzy(id)->getType()==FuzzyBase::AND) {

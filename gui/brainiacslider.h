@@ -15,6 +15,7 @@ public:
     void setValue(qreal param_value);
     double getValue() {return m_value; }
     void setEnabled(bool param_enabled);
+    void setGeometry(int x, int y, int w, int h);
     void setText(QString param_text);
     void setSliderColor(QColor param_color) {m_slider->setSliderColor(param_color);}
     void notifyReleaseButton(bool param_notify) {m_notify=param_notify;} //!< If true, emit changed only, if mousebutton is released.. Otherwise emit signal whenever slider is moved

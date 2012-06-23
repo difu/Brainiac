@@ -64,7 +64,8 @@ SOURCES += main.cpp\
     gui/bodyeditor/bodyeditor.cpp \
     gui/bodydisplay.cpp \
     gui/bodyeditor/bodyeditoritem.cpp \
-    core/agent/body/skeletongeometrynode.cpp
+    core/agent/body/skeletongeometrynode.cpp \
+    gui/bodyeditor/segmenteditor.cpp
 
 HEADERS  += gui/mainwindow.h \
     core/scene.h \
@@ -119,7 +120,8 @@ HEADERS  += gui/mainwindow.h \
     gui/bodyeditor/bodyeditor.h \
     gui/bodydisplay.h \
     gui/bodyeditor/bodyeditoritem.h \
-    core/agent/body/skeletongeometrynode.h
+    core/agent/body/skeletongeometrynode.h \
+    gui/bodyeditor/segmenteditor.h
 
 FORMS    += gui/mainwindow.ui \
     gui/sceneeditor/groupeditor.ui \
@@ -128,7 +130,8 @@ FORMS    += gui/mainwindow.ui \
     gui/braineditor/fuzzyeditor.ui \
     gui/braineditor/defuzzeditor.ui \
     gui/braineditor/noiseeditor.ui \
-    gui/placeeditor.ui
+    gui/placeeditor.ui \
+    gui/bodyeditor/segmenteditor.ui
 
 LIBS += -framework \
     glut

@@ -14,6 +14,9 @@ class QGraphicsScale3D;
 /**
  * @brief
  * @class SkeletonNode skeletonnode.h "core/agent/body/skeletonnode.h"
+    @todo Better implemetation of coordcross
+    @todo Limits/DOF
+    @todo rotation/translation order
  */
 class SkeletonNode : public QGLSceneNode
 {
@@ -108,6 +111,7 @@ protected:
     QGraphicsRotation3D *m_segRotZ;
 
     QGraphicsTranslation3D *m_segRestTrans;
+    QGraphicsTranslation3D *m_segTrans;
     QGraphicsScale3D *m_segScale;
 
     Channel *m_color; //!< segement´s color Channel
