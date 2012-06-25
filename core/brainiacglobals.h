@@ -9,7 +9,7 @@ class BrainiacGlobals
 public:
     static const qreal PI=3.14159265;
     enum ItemType {AND, OR, FUZZ, DEFUZZ, OUTPUT, INPUT, NOISE, TIMER, SPHERE, CUBE, GROUP, AGENT};
-    enum RotationOrder {XYZ, XZY, YXZ, YZX, ZXY, ZYX };
+    enum RotTrans {RX, RY, RZ, TX, TY, TZ };
     static QColor getColorFromBrainiacColorValue(qreal colVal);
     static void normalizeAngle(qreal *angle)
     {
@@ -64,6 +64,7 @@ public:
     static const char* const XmlRestTranslationTag;
     static const char* const XmlSphereTag;
     static const char* const XmlBoxTag;
+    static const char* const XmlRotTransOrderTag;
 
     static const char* const FuzzAndModeMin;
     static const char* const FuzzAndModeProduct;

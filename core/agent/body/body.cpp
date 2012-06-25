@@ -79,6 +79,7 @@ void Body::copySkeletonNode(SkeletonNode *n)
         newNode->setTranslation(n->getTranslation());
         newNode->setColor(n->getInitColor());
         newNode->setColorInherited(n->getColorInherited());
+        newNode->setRotTransOrder(n->getRotationTranslationOrder());
         addSkeletonNode(newNode,n->getParentId());
         //qDebug() << "ADDED SN" << n->getId() << n->getRestTranslation();
         foreach(QGLSceneNode *sn, n->children()) {

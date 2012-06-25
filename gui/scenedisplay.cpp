@@ -27,7 +27,8 @@ SceneDisplay::SceneDisplay(Scene *scene, Camera *camera, QWidget *parent) :
     m_shiftPressed=false;
     m_rotation=QVector3D(0,0,0);
 
-    m_camera->setFarPlane(10000);
+    m_camera->setFarPlane(1000000);
+    //m_camera->setNearPlane(100);
     setCamera(m_camera);
     setOption(QGLView::CameraNavigation,false);
 }
@@ -142,7 +143,8 @@ void SceneDisplay::mouseMoveEvent(QMouseEvent *event)
 
     } else if (event->buttons() & Qt::RightButton)  {
         if(m_shiftPressed) {
-            m_camera->translateEye((qreal)dx,0.0f,(qreal)dy);
+            m_camera->translateEye(-(qreal)0,0.0f,(qreal)dx);
+            m_camera->translateCenter(-(qreal)0,0.0f,(qreal)dx);
             qDebug() << __PRETTY_FUNCTION__ << m_camera->eye() << m_camera->center();
         } else {
             m_camera->translateCenter(-(qreal)dx/2.0f,(qreal)dy/2.0f,0.0f);

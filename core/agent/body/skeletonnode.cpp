@@ -46,7 +46,7 @@ SkeletonNode::SkeletonNode(SegmentType type, quint32 id, const QString &name, Bo
         hasGeometry=false;
         break;
     }
-    delete node;
+    node->deleteLater();
 
     if(type!=SkeletonNode::NOPRIMITIVE) {
         QGLBuilder b2;
@@ -62,7 +62,9 @@ SkeletonNode::SkeletonNode(SegmentType type, quint32 id, const QString &name, Bo
     m_geometryNode = nodeExtractedGeometry;
     this->addNode(nodeExtractedGeometry);
 
-    m_segRestTrans=new QGraphicsTranslation3D();
+    m_segRestTransX=new QGraphicsTranslation3D();
+    m_segRestTransY=new QGraphicsTranslation3D();
+    m_segRestTransZ=new QGraphicsTranslation3D();
 
     m_segRestRotX=new QGraphicsRotation3D();
     m_segRestRotY=new QGraphicsRotation3D();
@@ -74,7 +76,10 @@ SkeletonNode::SkeletonNode(SegmentType type, quint32 id, const QString &name, Bo
     addTransform(m_segRestRotZ);
     addTransform(m_segRestRotY);
     addTransform(m_segRestRotX);
-    addTransform(m_segRestTrans);
+
+    addTransform(m_segRestTransX);
+    addTransform(m_segRestTransY);
+    addTransform(m_segRestTransZ);
 
     m_segScale=new QGraphicsScale3D();
     m_scale=QVector3D(m_segScale->scale());
@@ -163,6 +168,29 @@ QVector3D SkeletonNode::getRestTranslation() const
     return m_restTranslation;
 }
 
+QList<BrainiacGlobals::RotTrans> SkeletonNode::getRotationTranslationOrder() const
+{
+    QList<BrainiacGlobals::RotTrans> l;
+    foreach(QGraphicsTransform3D *rt,this->transforms()) {
+        if(rt==m_segRestRotX) {
+            l.append(BrainiacGlobals::RX);
+        } else if(rt==m_segRestRotY) {
+            l.append(BrainiacGlobals::RY);
+        } else if(rt==m_segRestRotZ) {
+            l.append(BrainiacGlobals::RZ);
+        } else if(rt==m_segRestTransX) {
+            l.append(BrainiacGlobals::TX);
+        } else if(rt==m_segRestTransY) {
+            l.append(BrainiacGlobals::TY);
+        } else if(rt==m_segRestTransZ) {
+            l.append(BrainiacGlobals::TZ);
+        }
+    }
+    if(l.count()!=6)
+        qWarning()<< __PRETTY_FUNCTION__ << "There are less or more than 6 rots/trans! Agent ID" << m_body->getAgent()->getId();
+    return l;
+}
+
 void SkeletonNode::setColor(qreal color)
 {
     m_initColor=color;
@@ -202,7 +230,9 @@ void SkeletonNode::setRestTranslation(const QVector3D &translation)
 {
     if(translation!=m_restTranslation) {
         m_restTranslation=translation;
-        m_segRestTrans->setTranslate(translation);
+        m_segRestTransX->setTranslate(QVector3D(translation.x(),0.0f,0.0f));
+        m_segRestTransY->setTranslate(QVector3D(0.0f,translation.y(),0.0f));
+        m_segRestTransZ->setTranslate(QVector3D(0.0f,0.0f,translation.z()));
     }
 }
 
@@ -230,4 +260,63 @@ void SkeletonNode::setScale(const QVector3D &scale)
         m_scale=scale;
         m_segScale->setScale(scale);
     }
+}
+
+void SkeletonNode::setRotTransOrder(const QList<BrainiacGlobals::RotTrans> &l)
+{
+    if(l.count()!=6) {
+        qWarning()<< __PRETTY_FUNCTION__ << "there are less or more than SIX rot trans items! nothing is changed! Agent Id "<< m_body->getAgent()->getId();
+        return;
+    }
+    QList<QGraphicsTransform3D *> newOrderList;
+    foreach(BrainiacGlobals::RotTrans rt, l) {
+        switch (rt) {
+        case BrainiacGlobals::RX:
+            newOrderList.append(m_segRestRotX);
+            break;
+        case BrainiacGlobals::RY:
+            newOrderList.append(m_segRestRotY);
+            break;
+        case BrainiacGlobals::RZ:
+            newOrderList.append(m_segRestRotZ);
+            break;
+        case BrainiacGlobals::TX:
+            newOrderList.append(m_segRestTransX);
+            break;
+        case BrainiacGlobals::TY:
+            newOrderList.append(m_segRestTransY);
+            break;
+        case BrainiacGlobals::TZ:
+            newOrderList.append(m_segRestTransZ);
+            break;
+        }
+    }
+    setTransforms(newOrderList);
+}
+
+SkeletonNode::~SkeletonNode()
+{
+    delete m_segRestRotX;
+    delete m_segRestRotY;
+    delete m_segRestRotZ;
+
+    delete m_segRotX;
+    delete m_segRotY;
+    delete m_segRotZ;
+
+    delete m_segRestTransX;
+    delete m_segRestTransY;
+    delete m_segRestTransZ;
+
+    delete m_segTrans;
+    delete m_segScale;
+
+    m_body->getAgent()->deleteChannel(m_color);
+
+//    m_body->getAgent()->deleteChannel(m_channelTx);
+//    m_body->getAgent()->deleteChannel(m_channelTy);
+//    m_body->getAgent()->deleteChannel(m_channelTz);
+    m_body->getAgent()->deleteChannel(m_channelRx);
+    m_body->getAgent()->deleteChannel(m_channelRy);
+    m_body->getAgent()->deleteChannel(m_channelRz);
 }

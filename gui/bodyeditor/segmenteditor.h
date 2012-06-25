@@ -58,6 +58,13 @@ protected:
      */
     void createTxSliders();
 
+    /**
+     * @brief creates all dimensionsliders, also radius slider of sphere primitive
+     *
+     * @fn createDimensionSliders
+     */
+    void createDimensionSliders();
+
     AgentManager *m_agentManager;
     quint32 m_id;
 
@@ -76,6 +83,10 @@ protected:
     BrainiacSlider *m_SliderRestTx;
     BrainiacSlider *m_SliderRestTy;
     BrainiacSlider *m_SliderRestTz;
+
+    BrainiacSlider *m_SliderDimensionX;
+    BrainiacSlider *m_SliderDimensionY;
+    BrainiacSlider *m_SliderDimensionZ;
 protected slots:
     /**
      * @brief called when any rest translation has changed e.g. by slider
@@ -105,6 +116,14 @@ protected slots:
      * @param value
      */
     void manualTransChanged(qreal value);
+
+    /**
+     * @brief alled when any dimension (except radius!) has changed e.g. by slider
+     *
+     * @fn manualDimensionsChanged
+     * @param value
+     */
+    void manualDimensionsChanged(qreal value);
 private:
     Ui::SegmentEditor *ui;
 

@@ -37,6 +37,7 @@ void AgentManager::addSkeletonNodeFromConfig(QXmlStreamReader *reader, quint32 i
     QVector3D restTranslation;
     QVector3D restRotation;
     QVector3D scale;
+    QList<BrainiacGlobals::RotTrans> rotTransOrder;
     SkeletonNode *newNode;
     qreal color;
     bool colorInherited;
@@ -61,7 +62,9 @@ void AgentManager::addSkeletonNodeFromConfig(QXmlStreamReader *reader, quint32 i
             reader->skipCurrentElement();
         } else if(reader->name()==BrainiacGlobals::XmlRestRotationTag) {
             QXmlStreamAttributes attribs = reader->attributes();
-
+            restRotation.setX(attribs.value("x").toString().toDouble());
+            restRotation.setY(attribs.value("y").toString().toDouble());
+            restRotation.setZ(attribs.value("z").toString().toDouble());
             reader->skipCurrentElement();
         } else if(reader->name()=="Color") {
             QXmlStreamAttributes attribs = reader->attributes();
@@ -73,6 +76,26 @@ void AgentManager::addSkeletonNodeFromConfig(QXmlStreamReader *reader, quint32 i
             scale.setX(attribs.value("x").toString().toDouble());
             scale.setY(attribs.value("y").toString().toDouble());
             scale.setZ(attribs.value("z").toString().toDouble());
+            reader->skipCurrentElement();
+        } else if(reader->name()==BrainiacGlobals::XmlRotTransOrderTag) {
+            QXmlStreamAttributes attribs = reader->attributes();
+            QStringRef orderRef=attribs.value("order");
+            QString order(orderRef.toString());
+            foreach(QString rt,order.split(" ")) {
+                if(rt=="RX") {
+                    rotTransOrder.append(BrainiacGlobals::RX);
+                } else if(rt=="RY") {
+                    rotTransOrder.append(BrainiacGlobals::RY);
+                } else if(rt=="RZ") {
+                    rotTransOrder.append(BrainiacGlobals::RZ);
+                } else if(rt=="TX") {
+                    rotTransOrder.append(BrainiacGlobals::TX);
+                } else if(rt=="TY") {
+                    rotTransOrder.append(BrainiacGlobals::TY);
+                } else if(rt=="TZ") {
+                    rotTransOrder.append(BrainiacGlobals::TZ);
+                }
+            }
             reader->skipCurrentElement();
         } else if(reader->name()==BrainiacGlobals::XmlSphereTag) {
             QXmlStreamAttributes attribs = reader->attributes();
@@ -89,6 +112,8 @@ void AgentManager::addSkeletonNodeFromConfig(QXmlStreamReader *reader, quint32 i
     newNode->setColor(color);
     newNode->setColorInherited(colorInherited);
     newNode->setRestTranslation(restTranslation);
+    newNode->setRestRotation(restRotation);
+    newNode->setRotTransOrder(rotTransOrder);
     m_masterAgent->getBody()->addSkeletonNode(newNode,parent);
     setBodyEditorTranslation(id,editorX,editorY);
     qDebug() << __PRETTY_FUNCTION__ << "" << translation << rotation << name << scale << color << editorX << editorY;
@@ -472,20 +497,7 @@ bool AgentManager::loadSkeleton(const QString &filename)
 
 bool AgentManager::loadSkeletonBVH( QFile &file)
 {
-//    SkeletonNodeBox *box=new SkeletonNodeBox(1,"Hallo",m_masterAgent->getBody());
-//    m_masterAgent->getBody()->addSkeletonNode(box,0);
-//    //qDumpScene(m_masterAgent->getBody()->getRootSkeletonNode());
-//    box->setColor(0.9f);
-//    box->setScale(QVector3D(1,1,4));
-
-//    SkeletonNodeBox *box2=new SkeletonNodeBox(2,"Hallo",m_masterAgent->getBody());
-//    m_masterAgent->getBody()->addSkeletonNode(box2,1);
-//    //qDumpScene(m_masterAgent->getBody()->getRootSkeletonNode());
-//    box2->setColor(0.3f);
-//    box2->setTranslation(QVector3D(2,2,2));
-//    box2->setScale(QVector3D(2,2,2));
-
-    quint32 nodeId=1;
+    quint32 nodeId=0;
     QString nodeName;
     bool isEndSite=false;
     QList<SkeletonNode *> nodeStack;
@@ -496,8 +508,9 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
             continue;
         }
         if(line.startsWith("ROOT") || line.startsWith("JOINT")) {
+            nodeId++;
             nodeName=line.split(' ').last();
-            SkeletonNodeBox *box=new SkeletonNodeBox(nodeId++,nodeName,m_masterAgent->getBody());
+            SkeletonNodeBox *box=new SkeletonNodeBox(nodeId,nodeName,m_masterAgent->getBody());
             box->setColor(0.1f);
             if(nodeStack.isEmpty()) {
                 m_masterAgent->getBody()->addSkeletonNode(box,0);
@@ -506,7 +519,7 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
                 //m_masterAgent->getBody()->addSkeletonNode(box,nodeStack.last()->getId());
                 nodeStack.last()->addNode(box);
             }
-            setBodyEditorTranslation(nodeId,1800+nodeId*10,1800+nodeId*10);
+            setBodyEditorTranslation(nodeId,1800+nodeId*5,1800+nodeId*5);
             nodeStack.push_back(box);
         } else if(line.startsWith("OFFSET")) {
             if(!isEndSite) {
@@ -515,7 +528,7 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
                 translation.setY(line.split(' ').at(2).toDouble());
                 translation.setZ(line.split(' ').at(3).toDouble());
                 nodeStack.last()->setRestTranslation(translation);
-                qDebug() << __PRETTY_FUNCTION__ << translation;
+                //qDebug() << __PRETTY_FUNCTION__ << translation;
                 //nodeStack.last()->setScale(QVector3D(3,3,3));
             }
         } else if(line.startsWith("}")) {
@@ -528,6 +541,24 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
                 qWarning() << __PRETTY_FUNCTION__ << "error while parsing "<< line << "NodeId" << nodeName;
                 return false;
             }
+        } else if(line.startsWith("CHANNELS")) {
+            QList<BrainiacGlobals::RotTrans> rt;
+            foreach(QByteArray channelItem,line.split(' ')) {
+                if(channelItem=="Xrotation")
+                    rt.append(BrainiacGlobals::RX);
+                else if(channelItem=="Yrotation")
+                    rt.append(BrainiacGlobals::RY);
+                else if(channelItem=="Zrotation")
+                    rt.append(BrainiacGlobals::RZ);
+                else if(channelItem=="Xposition")
+                    rt.append(BrainiacGlobals::TX);
+                else if(channelItem=="Yposition")
+                    rt.append(BrainiacGlobals::TY);
+                else if(channelItem=="Zposition")
+                    rt.append(BrainiacGlobals::TZ);
+            }
+            setSegmentRotationTranslationOrder(nodeId,rt);
+            //qDebug() <<  __PRETTY_FUNCTION__ << "Rot Trans order" << nodeStack.last()->objectName() << "" << rt;
         }
         //qDebug() << line;
     }
@@ -584,15 +615,37 @@ bool AgentManager::saveConfig()
              stream.writeEndElement(); //Translation
              stream.writeStartElement(BrainiacGlobals::XmlRotationTag);
              stream.writeAttribute("x",  QString::number(node->getRotation().x(),'f'));
-             stream.writeAttribute("y",  QString::number(node->getRotation().x(),'f'));
-             stream.writeAttribute("z",  QString::number(node->getRotation().x(),'f'));
+             stream.writeAttribute("y",  QString::number(node->getRotation().y(),'f'));
+             stream.writeAttribute("z",  QString::number(node->getRotation().z(),'f'));
              stream.writeEndElement(); //Rotation
 
              stream.writeStartElement(BrainiacGlobals::XmlScaleTag);
              stream.writeAttribute("x",  QString::number(node->getScale().x(),'f'));
-             stream.writeAttribute("y",  QString::number(node->getScale().x(),'f'));
-             stream.writeAttribute("z",  QString::number(node->getScale().x(),'f'));
+             stream.writeAttribute("y",  QString::number(node->getScale().y(),'f'));
+             stream.writeAttribute("z",  QString::number(node->getScale().z(),'f'));
              stream.writeEndElement(); // Scale
+
+             stream.writeStartElement(BrainiacGlobals::XmlRotTransOrderTag);
+             QString rotTrans;
+             foreach(BrainiacGlobals::RotTrans rt,node->getRotationTranslationOrder()) {
+                 if(rt==BrainiacGlobals::RX) {
+                     rotTrans.append("RX");
+                 } else if(rt==BrainiacGlobals::RY) {
+                     rotTrans.append("RY");
+                 } else if(rt==BrainiacGlobals::RZ) {
+                     rotTrans.append("RZ");
+                 } else if(rt==BrainiacGlobals::TX) {
+                     rotTrans.append("TX");
+                 } else if(rt==BrainiacGlobals::TY) {
+                     rotTrans.append("TY");
+                 } else if(rt==BrainiacGlobals::TZ) {
+                     rotTrans.append("TZ");
+                 }
+                 rotTrans.append(" ");
+             }
+             stream.writeAttribute("order",rotTrans);
+
+             stream.writeEndElement(); // RotTransOrder
 
              if(dynamic_cast<SkeletonNodeSphere *>(node)) {
                  stream.writeStartElement(BrainiacGlobals::XmlSphereTag);
@@ -790,6 +843,42 @@ void AgentManager::setBodyEditorTranslation(quint32 id, qint32 x, qint32 y)
     point.setX(x);
     point.setY(y);
     m_editorSkeletonNodeLocations.insert(id,point);
+}
+
+void AgentManager::setSegmentDimensions(quint32 id, qreal x, qreal y, qreal z)
+{
+    SkeletonNode *n=m_masterAgent->getBody()->getSkeletonNodeById(id);
+    SkeletonNodeBox *node=dynamic_cast<SkeletonNodeBox *>(n);
+    if(node) {
+        node->setScale(QVector3D(x,y,z));
+        foreach(Agent *agent, m_group->getAgents()) {
+            agent->getBody()->getSkeletonNodeById(id)->setScale(QVector3D(x,y,z));
+        }
+    } else {
+        qWarning()<< __PRETTY_FUNCTION__ << "Segment with id "<<id<<"is not a Cube!";
+    }
+}
+
+void AgentManager::setSegmentRotationTranslationOrder(quint32 id, QList<BrainiacGlobals::RotTrans> list)
+{
+    if(!list.contains(BrainiacGlobals::RX))
+        list.append(BrainiacGlobals::RX);
+    if(!list.contains(BrainiacGlobals::RY))
+        list.append(BrainiacGlobals::RY);
+    if(!list.contains(BrainiacGlobals::RZ))
+        list.append(BrainiacGlobals::RZ);
+
+    if(!list.contains(BrainiacGlobals::TX))
+        list.append(BrainiacGlobals::TX);
+    if(!list.contains(BrainiacGlobals::TY))
+        list.append(BrainiacGlobals::TY);
+    if(!list.contains(BrainiacGlobals::TZ))
+        list.append(BrainiacGlobals::TZ);
+
+    m_masterAgent->getBody()->getSkeletonNodeById(id)->setRotTransOrder(list);
+    foreach(Agent *agent, m_group->getAgents()) {
+        agent->getBody()->getSkeletonNodeById(id)->setRotTransOrder(list);
+    }
 }
 
 void AgentManager::setSegmentRestRotation(quint32 id, qreal x, qreal y, qreal z)

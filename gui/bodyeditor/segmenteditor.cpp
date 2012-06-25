@@ -18,6 +18,7 @@ SegmentEditor::SegmentEditor(Scene *scene, QWidget *parent) :
     createTxSliders();
     createRestRxSliders();
     createRestTxSliders();
+    createDimensionSliders();
 }
 
 void SegmentEditor::createRestRxSliders()
@@ -128,6 +129,40 @@ void SegmentEditor::createTxSliders()
     connect(m_SliderTz,SIGNAL(valueChanged(qreal)),this,SLOT(manualTransChanged(qreal)));
 }
 
+void SegmentEditor::createDimensionSliders()
+{
+    m_SliderDimensionX=new BrainiacSlider(ui->frameShapeDims);
+    m_SliderDimensionY=new BrainiacSlider(ui->frameShapeDims);
+    m_SliderDimensionZ=new BrainiacSlider(ui->frameShapeDims);
+
+    m_SliderDimensionX->setSliderColor(BrainiacGlobals::defaultXColor);
+    m_SliderDimensionY->setSliderColor(BrainiacGlobals::defaultYColor);
+    m_SliderDimensionZ->setSliderColor(BrainiacGlobals::defaultZColor);
+
+    m_SliderDimensionX->setGeometry(0,2,300,40);
+    m_SliderDimensionY->setGeometry(0,35,300,40);
+    m_SliderDimensionZ->setGeometry(0,69,300,40);
+
+    m_SliderDimensionX->setText("x");
+    m_SliderDimensionY->setText("y");
+    m_SliderDimensionZ->setText("z");
+
+    m_SliderDimensionX->setRange(0.0f,50.0f);
+    m_SliderDimensionY->setRange(0.0f,50.0f);
+    m_SliderDimensionZ->setRange(0.0f,50.0f);
+
+    connect(m_SliderDimensionX,SIGNAL(valueChanged(qreal)),this,SLOT(manualDimensionsChanged(qreal)));
+    connect(m_SliderDimensionY,SIGNAL(valueChanged(qreal)),this,SLOT(manualDimensionsChanged(qreal)));
+    connect(m_SliderDimensionZ,SIGNAL(valueChanged(qreal)),this,SLOT(manualDimensionsChanged(qreal)));
+}
+
+void SegmentEditor::manualDimensionsChanged(qreal value) {
+    Q_UNUSED(value);
+    m_agentManager->setSegmentDimensions(m_id,m_SliderDimensionX->getValue(),m_SliderDimensionY->getValue(),m_SliderDimensionZ->getValue());
+    emit updateGLContent();
+    this->updateEditor();
+}
+
 void SegmentEditor::manualRestRotChanged(qreal value)
 {
     Q_UNUSED(value);
@@ -184,6 +219,10 @@ void SegmentEditor::updateEditor()
     m_SliderRestTx->setValue(m_agentManager->getMasterAgent()->getBody()->getSkeletonNodeById(m_id)->getRestTranslation().x());
     m_SliderRestTy->setValue(m_agentManager->getMasterAgent()->getBody()->getSkeletonNodeById(m_id)->getRestTranslation().y());
     m_SliderRestTz->setValue(m_agentManager->getMasterAgent()->getBody()->getSkeletonNodeById(m_id)->getRestTranslation().z());
+
+    m_SliderDimensionX->setValue(m_agentManager->getMasterAgent()->getBody()->getSkeletonNodeById(m_id)->getScale().x());
+    m_SliderDimensionY->setValue(m_agentManager->getMasterAgent()->getBody()->getSkeletonNodeById(m_id)->getScale().y());
+    m_SliderDimensionZ->setValue(m_agentManager->getMasterAgent()->getBody()->getSkeletonNodeById(m_id)->getScale().z());
 }
 
 SegmentEditor::~SegmentEditor()

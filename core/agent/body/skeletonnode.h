@@ -24,6 +24,7 @@ class SkeletonNode : public QGLSceneNode
 public:
     enum SegmentType {SPHERE=BrainiacGlobals::SPHERE, BOX=BrainiacGlobals::CUBE, NOPRIMITIVE};
     SkeletonNode( SegmentType type, quint32 id, const QString &name, Body *body, QObject *parent = 0 );
+    ~SkeletonNode();
     //void draw(QGLPainter *painter);
     /**
      * @brief returns the color of this SkeletonNode
@@ -48,6 +49,9 @@ public:
     QVector3D getRotation() const {return m_rotation;}
     QVector3D getTranslation() const {return m_translation;}
     QVector3D getScale() const;
+
+    QList<BrainiacGlobals::RotTrans> getRotationTranslationOrder() const;
+
     /**
      * @brief sets the color of this SkeletonNode
 
@@ -90,6 +94,13 @@ public:
      */
     void setRotation(const QVector3D &rotation);
 
+    /**
+     * @brief sets the order of rotations and translations of this SkeletonNode
+     *
+     * @fn setRotTransOrder
+     * @param l the list containing the rotation and translation order
+     */
+    void setRotTransOrder( const QList<BrainiacGlobals::RotTrans> &l);
 
 protected:
     virtual void createChannels();
@@ -110,8 +121,13 @@ protected:
     QGraphicsRotation3D *m_segRotY;
     QGraphicsRotation3D *m_segRotZ;
 
-    QGraphicsTranslation3D *m_segRestTrans;
+    // We need 3 translations because we must be able to change rotation x,y,z and translation x,y,z orders
+    QGraphicsTranslation3D *m_segRestTransX;
+    QGraphicsTranslation3D *m_segRestTransY;
+    QGraphicsTranslation3D *m_segRestTransZ;
+
     QGraphicsTranslation3D *m_segTrans;
+
     QGraphicsScale3D *m_segScale;
 
     Channel *m_color; //!< segement´s color Channel

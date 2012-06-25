@@ -147,6 +147,19 @@ public:
     void setEditorTranslation(qint32 x, qint32 y);
     void setFuzzyEditorTranslation(quint32 id, qint32 x, qint32 y);
     void setBodyEditorTranslation(quint32 id, qint32 x, qint32 y);
+
+    /**
+     * @brief sets the dimensions of a primitive (except for a sphere)
+     *
+     * for a sphere call setSphereRadius instead
+     * @fn setSegmentDimensions
+     * @param id
+     * @param x
+     * @param y
+     * @param z
+     */
+    void setSegmentDimensions(quint32 id, qreal x, qreal y, qreal z);
+
     /**
      * @brief sets the rest rotation of segment with given id
 
@@ -158,6 +171,16 @@ public:
      * @param z
      */
     void setSegmentRestRotation(quint32 id, qreal x, qreal y, qreal z);
+
+    /**
+     * @brief sets the order for rotations and translations
+     *
+     * if the array does not contain all 3 rotations or 3 translations, the missing transforms are added to the end
+     * @fn setSegmentRotationTranslationOrder
+     * @param id the id of the segment
+     * @param list the list containing the transformation order
+     */
+    void setSegmentRotationTranslationOrder(quint32 id, QList <BrainiacGlobals::RotTrans> list );
 
     /**
      * @brief sets the rest translation of segment with given id

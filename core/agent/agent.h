@@ -25,6 +25,8 @@ class Segment;
         @sa Body
         @sa Brain
         @sa Scene
+        @todo rename of "rest" members/function
+        @todo rename channel functions to "getChannel*" etc
 
 **/
 class Agent : public QObject
