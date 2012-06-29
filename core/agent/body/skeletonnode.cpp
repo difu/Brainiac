@@ -168,6 +168,16 @@ QVector3D SkeletonNode::getRestTranslation() const
     return m_restTranslation;
 }
 
+QMatrix4x4 SkeletonNode::transform() const
+{
+    QMatrix4x4 m;
+    if (!this->localTransform().isIdentity())
+        m *= this->localTransform();
+    for (int index = this->transforms().size() - 1; index >= 0; --index)
+        this->transforms().at(index)->applyTo(&m);
+    return m;
+}
+
 QList<BrainiacGlobals::RotTrans> SkeletonNode::getRotationTranslationOrder() const
 {
     QList<BrainiacGlobals::RotTrans> l;

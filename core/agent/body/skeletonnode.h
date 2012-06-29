@@ -3,6 +3,7 @@
 
 #include "core/brainiacglobals.h"
 #include "qglscenenode.h"
+#include <QMatrix4x4>
 
 class Body;
 class Channel;
@@ -49,6 +50,14 @@ public:
     QVector3D getRotation() const {return m_rotation;}
     QVector3D getTranslation() const {return m_translation;}
     QVector3D getScale() const;
+    /**
+     * @brief returns true, if this SkeletonNode has a primitive
+     *
+     * @fn hasPrimitive
+     * @return bool true, if this SkeletonNode has a primitive
+     */
+    bool hasPrimitive() const { return m_type!=NOPRIMITIVE; }
+    QMatrix4x4 transform() const ;
 
     QList<BrainiacGlobals::RotTrans> getRotationTranslationOrder() const;
 

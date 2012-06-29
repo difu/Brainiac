@@ -1,17 +1,17 @@
 #ifndef BODYDISPLAY_H
 #define BODYDISPLAY_H
 
-#include <qglview.h>
+#include "gui/brainiacdisplay.h"
 #include <QCloseEvent>
 
 class Camera;
 class Scene;
 class QGLAbstractScene;
-class QGLSceneNode;
+class SkeletonNode;
 class QGLCamera;
 class AgentManager;
 
-class BodyDisplay : public QGLView
+class BodyDisplay : public BrainiacDisplay
 {
     Q_OBJECT
 public:
@@ -21,10 +21,21 @@ public:
 protected:
     void keyPressEvent(QKeyEvent *e);
     void paintGL(QGLPainter *painter);
-    QGLSceneNode *m_rootSceneNode;
+
+    /**
+     * @brief Renders the skeleton
+     *
+     * Renders recursivly the skeleton of an agent
+     * @fn renderSkeleton
+     * @param painter the QGLPainter to paint on
+     * @param node the root node of an agent
+     */
+    void renderSkeleton(QGLPainter *painter, SkeletonNode *node);
+    SkeletonNode *m_rootSkeletonNode;
     Scene *m_scene;
     AgentManager *m_agentManager;
     bool m_renderSilhouettes;
+    bool m_renderSkeleton;
 };
 
 #endif // BODYDISPLAY_H

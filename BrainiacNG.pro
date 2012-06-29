@@ -65,7 +65,8 @@ SOURCES += main.cpp\
     gui/bodydisplay.cpp \
     gui/bodyeditor/bodyeditoritem.cpp \
     core/agent/body/skeletongeometrynode.cpp \
-    gui/bodyeditor/segmenteditor.cpp
+    gui/bodyeditor/segmenteditor.cpp \
+    gui/brainiacdisplay.cpp
 
 HEADERS  += gui/mainwindow.h \
     core/scene.h \
@@ -121,7 +122,8 @@ HEADERS  += gui/mainwindow.h \
     gui/bodydisplay.h \
     gui/bodyeditor/bodyeditoritem.h \
     core/agent/body/skeletongeometrynode.h \
-    gui/bodyeditor/segmenteditor.h
+    gui/bodyeditor/segmenteditor.h \
+    gui/brainiacdisplay.h
 
 FORMS    += gui/mainwindow.ui \
     gui/sceneeditor/groupeditor.ui \

@@ -4,7 +4,7 @@
 #include <qglview.h>
 #include <QCloseEvent>
 #include <QVector3D>
-
+#include "gui/brainiacdisplay.h"
 class Camera;
 class Scene;
 class QGLAbstractScene;
@@ -18,7 +18,7 @@ class QGLCamera;
         @sa Camera
 
 **/
-class SceneDisplay : public QGLView
+class SceneDisplay : public BrainiacDisplay
 {
     Q_OBJECT
 public:
@@ -33,17 +33,14 @@ protected:
     **/
     void drawAgentsInfo(QPainter *painter);
     void initializeGL(QGLPainter *painter);
-    void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     //void paintGL();
     void paintGL(QGLPainter *painter);
     void resizeGL(int width, int height);
-    QGLCamera *m_camera; //!< Camera to display
+
     Scene *m_scene; //!< the scene
-    QPoint m_lastPos; //!< last position of moouse to determine position delta
-    bool m_shiftPressed; //!< true, if shift key is pressed
     QVector3D m_rotation; //!< Scene rotation
 
     QGLAbstractScene *p_scene;
