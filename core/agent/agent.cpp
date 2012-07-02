@@ -16,10 +16,10 @@ Agent::Agent(Scene *scene, quint32 id) :
     QObject()
 {
     m_id=id;
+    m_scene=scene;
     createChannels();
     m_body=new Body(this,0);
     m_brain=new Brain(this,0);
-    m_scene=scene;
     m_renderSoundEmission=true;
 }
 
