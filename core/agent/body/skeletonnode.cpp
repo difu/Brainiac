@@ -114,6 +114,18 @@ void SkeletonNode::channelRzChanged(qreal value){
     m_segRestRotZ->setAngle(m_restRotation.z()+value);
 }
 
+void SkeletonNode::channelTxChanged(qreal value){
+    m_segRestTransX->setTranslate(QVector3D(m_restTranslation.x()+value,0,0));
+}
+
+void SkeletonNode::channelTyChanged(qreal value){
+     m_segRestTransY->setTranslate(QVector3D(0,m_restTranslation.y()+value,0));
+}
+
+void SkeletonNode::channelTzChanged(qreal value){
+     m_segRestTransZ->setTranslate(QVector3D(0,0,m_restTranslation.z()+value));
+}
+
 void SkeletonNode::createChannels()
 {
     m_channelRx=new Channel();
@@ -127,6 +139,18 @@ void SkeletonNode::createChannels()
     m_channelRz=new Channel();
     connect(m_channelRz,SIGNAL(valueChanged(qreal)),this,SLOT(channelRzChanged(qreal)),Qt::DirectConnection);
     m_body->getAgent()->addOutputChannel(m_channelRz,this->objectName() % ":rz");
+
+    m_channelTx=new Channel();
+    connect(m_channelTx,SIGNAL(valueChanged(qreal)),this,SLOT(channelTxChanged(qreal)),Qt::DirectConnection);
+    m_body->getAgent()->addOutputChannel(m_channelTx,this->objectName() % ":tx");
+
+    m_channelTy=new Channel();
+    connect(m_channelTy,SIGNAL(valueChanged(qreal)),this,SLOT(channelTyChanged(qreal)),Qt::DirectConnection);
+    m_body->getAgent()->addOutputChannel(m_channelTy,this->objectName() % ":ty");
+
+    m_channelTz=new Channel();
+    connect(m_channelTz,SIGNAL(valueChanged(qreal)),this,SLOT(channelTzChanged(qreal)),Qt::DirectConnection);
+    m_body->getAgent()->addOutputChannel(m_channelTz,this->objectName() % ":tz");
 
     m_color=new Channel();
     m_color->init(0);

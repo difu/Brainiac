@@ -222,6 +222,13 @@ public:
     void setTranslation(qreal x, qreal y, qreal z);
     void setRestRotation(qreal x, qreal y, qreal z);
     void setRestTranslation(qreal x, qreal y, qreal z);
+
+    /**
+     * @brief dumps list of all channels
+     *
+     * @fn dDumpChannels
+     */
+    void dDumpChannels();
     virtual ~Agent();
 
 protected:

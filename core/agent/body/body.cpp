@@ -1,5 +1,8 @@
 #include "body.h"
+#include "core/scene.h"
+#include "core/simulation.h"
 #include "core/agent/agent.h"
+#include "core/agent/body/animation/animationplayer.h"
 #include "core/agent/body/skeletonnode.h"
 #include "core/agent/body/skeletonnodesphere.h"
 #include "core/agent/body/skeletonnodebox.h"
@@ -7,6 +10,7 @@
 #include "core/agent/channel.h"
 
 #include <QtOpenGL>
+#include "qglpainter.h"
 #include <QColor>
 #include <glu.h>
 #include <GLUT/glut.h>
@@ -18,28 +22,12 @@ Body::Body(Agent *agent,Body *body)
 {
     m_agent=agent;
     m_rootSkeletonNode=new SkeletonNode(SkeletonNode::NOPRIMITIVE,0,QString("root"),this);
+    m_animationPlayer=new AnimationPlayer(this);
     // if we have a body, clone it
     if(body) {
-//        foreach(Segment *seg, body->getSegments()) {
-//            if(seg->getType()==Segment::SPHERE) {
-//                Sphere *origSphere=(Sphere*)seg;
-//                QVector3D *rot=new QVector3D(origSphere->getRestRotation()->x(),origSphere->getRestRotation()->y(),origSphere->getRestRotation()->z());
-//                QVector3D *trans=new QVector3D(origSphere->getRestTranslation()->x(),origSphere->getRestTranslation()->y(),origSphere->getRestTranslation()->z());
-//                qreal color=origSphere->getColor()->getValue();
-//                bool colorInherited=origSphere->isColorInherited();
-//                Sphere *newSphere=new Sphere(origSphere->getId(),this,origSphere->getName(),rot,trans,origSphere->getSphereRadius());
-//                newSphere->setParentId(origSphere->getParentId());
-//                newSphere->getColor()->init(color);
-//                newSphere->setColorInherited(colorInherited);
-//                this->addSegment(newSphere);
-//            } else {
-//                qDebug() <<  __PRETTY_FUNCTION__ << "missing segment type" << seg->getType();
-//            }
-//        }
         copyBody(body);
     } else {
     }
-
     //m_rootSegment->addNode(new SkeletonNodeSphere(1));
 }
 
@@ -56,6 +44,7 @@ void Body::copyBody(Body *body)
         //qDebug() << "Copied all" << m_rootSegment->allChildren().count();
         //qDumpScene(m_rootSegment);
     }
+    m_animationPlayer->setAnimations(body->getAnimations());
 }
 
 void Body::copySkeletonNode(SkeletonNode *n)
@@ -114,6 +103,11 @@ Agent* Body::getAgent()
     return m_agent;
 }
 
+QHash<quint32,Animation *> * Body::getAnimations()
+{
+    return m_animationPlayer->getAnimations();
+}
+
 QList<SkeletonNode *> Body::getAllSkeletonNodes()
 {
     QList<SkeletonNode *> skelNodes;
@@ -138,7 +132,43 @@ SkeletonNode* Body::getSkeletonNodeById(quint32 id)
 
 }
 
-void Body::renderSilhouettes(bool render)
+void Body::renderSkeleton(QGLPainter *painter)
+{
+    renderSkeleton(painter,this->getRootSkeletonNode());
+}
+
+void Body::renderSkeleton(QGLPainter *painter, SkeletonNode *node) const
+{
+    //painter->modelViewMatrix().push();
+    foreach(QGLSceneNode *n,node->children()) {
+        SkeletonNode *skelChildNode=dynamic_cast<SkeletonNode *>(n);
+        if(skelChildNode) {
+            painter->modelViewMatrix().push();
+            QVector3DArray verts;
+            painter->modelViewMatrix()*=node->transform();
+            if(node->hasPrimitive()) {
+                QMatrix4x4 m = skelChildNode->transform();
+                QVector3D endVertex=m.map(QVector3D(0,0,0));
+                verts.append(QVector3D(0,0,0));
+                verts.append(endVertex);
+                painter->clearAttributes();
+                painter->setStandardEffect(QGL::FlatColor);
+                painter->setColor(QColor(170, 202, 0));
+                painter->setVertexAttribute(QGL::Position, verts);
+                painter->draw(QGL::Lines, 2);
+            }
+            renderSkeleton(painter,skelChildNode);
+            painter->modelViewMatrix().pop();
+        }
+    }
+}
+
+void Body::setAnimations(QHash<quint32, Animation *> *animations)
+{
+    m_animationPlayer->setAnimations(animations);
+}
+
+void Body::showSilhouettes(bool render)
 {
     foreach(QGLSceneNode *n,m_rootSkeletonNode->allChildren()) {
         SkeletonGeometryNode *geoNode=dynamic_cast<SkeletonGeometryNode *>(n);

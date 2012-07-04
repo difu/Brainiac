@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="tabShape">
     <attribute name="title">
@@ -94,7 +94,6 @@
         <property name="frameShadow">
          <enum>QFrame::Raised</enum>
         </property>
-        <zorder>frameShapeRestRots</zorder>
        </widget>
       </item>
       <item row="2" column="3">

@@ -2,10 +2,13 @@
 #define BODY_H
 
 #include <QList>
+#include <QHash>
 
 class Agent;
-
+class AnimationPlayer;
 class SkeletonNode;
+class Animation;
+class QGLPainter;
 
 class Body
 {
@@ -20,17 +23,48 @@ public:
      * @return QList<SkeletonNode *>
      */
     QList<SkeletonNode *> getAllSkeletonNodes();
+    QHash<quint32,Animation *> * getAnimations();
+    AnimationPlayer* getAnimationPlayer() {return m_animationPlayer; }
+
+    /**
+     * @brief paints the skeleton on the QGLPainter
+     *
+     * @fn renderSkeleton
+     * @param painter the painter to paint on
+     */
+    void renderSkeleton(QGLPainter *painter);
+
+    /**
+     * @brief sets the current set of animations
+     *
+     * this allows setting of different animation sets of individual agents. Normally each agent instance of a group has a common set of animations. This allows setting of an individial set e.g. when editing in the action editor
+     * @fn setAnimations
+     * @param QHash<quint32
+     * @param animations
+     */
+    void setAnimations(QHash<quint32,Animation *> *animations);
     SkeletonNode *getRootSkeletonNode() { return m_rootSkeletonNode; }
     SkeletonNode *getSkeletonNodeById(quint32 id);
     Agent* getAgent();
-    void renderSilhouettes(bool render);
+    void showSilhouettes(bool render);
     void updatePosition();
     ~Body();
 protected:
     void copySkeletonNode(SkeletonNode *n);
+
+    /**
+     * @brief Renders the skeleton
+     *
+     * Renders recursivly the skeleton of an agent
+     * @fn renderSkeleton
+     * @param painter the QGLPainter to paint on
+     * @param node the root node of an agent
+     */
+    void renderSkeleton(QGLPainter *painter, SkeletonNode *node) const;
     Agent *m_agent;
 
     SkeletonNode *m_rootSkeletonNode;
+    AnimationPlayer *m_animationPlayer;
 };
 
 #endif // BODY_H

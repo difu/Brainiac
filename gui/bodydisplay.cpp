@@ -35,7 +35,7 @@ void BodyDisplay::keyPressEvent(QKeyEvent *e)
         if(!m_shiftPressed) {
             if(m_agentManager) {
                 m_renderSilhouettes=!m_renderSilhouettes;
-                m_agentManager->getMasterAgent()->getBody()->renderSilhouettes(m_renderSilhouettes);
+                m_agentManager->getMasterAgent()->getBody()->showSilhouettes(m_renderSilhouettes);
                 updateGL();
             }
         } else {
@@ -53,42 +53,8 @@ void BodyDisplay::paintGL(QGLPainter *painter)
     if(m_rootSkeletonNode) {
         m_rootSkeletonNode->draw(painter);
         if(m_renderSkeleton) {
-            renderSkeleton(painter,m_rootSkeletonNode);
+            m_agentManager->getMasterAgent()->getBody()->renderSkeleton(painter);
         }
     }
 }
 
-void BodyDisplay::renderSkeleton(QGLPainter *painter, SkeletonNode *node)
-{
-    //painter->modelViewMatrix().push();
-    foreach(QGLSceneNode *n,node->children()) {
-        SkeletonNode *skelChildNode=dynamic_cast<SkeletonNode *>(n);
-        if(skelChildNode) {
-            painter->modelViewMatrix().push();
-            QVector3DArray verts;
-            painter->modelViewMatrix()*=node->transform();
-            if(node->hasPrimitive()) {
-                QMatrix4x4 m = skelChildNode->transform();
-                QVector3D endVertex=m.map(QVector3D(0,0,0));
-                verts.append(QVector3D(0,0,0));
-                verts.append(endVertex);
-                painter->clearAttributes();
-                painter->setStandardEffect(QGL::FlatColor);
-                painter->setColor(QColor(170, 202, 0));
-
-
-                painter->setVertexAttribute(QGL::Position, verts);
-                painter->draw(QGL::Lines, 2);
-            }
-        //painter->clearAttributes();
-            qDebug()<< node->objectName() << node->localTransform();
-            renderSkeleton(painter,skelChildNode);
-            painter->modelViewMatrix().pop();
-        }
-    }
-
-
-
-
-
-}

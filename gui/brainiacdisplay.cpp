@@ -29,7 +29,6 @@ void BrainiacDisplay::keyReleaseEvent(QKeyEvent *event) {
 
 void BrainiacDisplay::mouseMoveEvent(QMouseEvent *event)
 {
-    QGLView::mousePressEvent(event);
     int dx = event->x() - m_lastPos.x();
     int dy = event->y() - m_lastPos.y();
     if (event->buttons() & Qt::MidButton) {
@@ -38,7 +37,7 @@ void BrainiacDisplay::mouseMoveEvent(QMouseEvent *event)
         if(m_shiftPressed) {
             m_camera->translateEye(-(qreal)0,0.0f,(qreal)dx);
             m_camera->translateCenter(-(qreal)0,0.0f,(qreal)dx);
-            qDebug() << __PRETTY_FUNCTION__ << m_camera->eye() << m_camera->center();
+            //qDebug() << __PRETTY_FUNCTION__ << m_camera->eye() << m_camera->center();
         } else {
             m_camera->translateCenter(-(qreal)dx/2.0f,(qreal)dy/2.0f,0.0f);
         }
@@ -49,7 +48,6 @@ void BrainiacDisplay::mouseMoveEvent(QMouseEvent *event)
 
 void BrainiacDisplay::mousePressEvent(QMouseEvent *event)
 {
-    qDebug() << __PRETTY_FUNCTION__;
     QGLView::mouseMoveEvent(event);
     m_lastPos = event->pos();
     this->setFocus();

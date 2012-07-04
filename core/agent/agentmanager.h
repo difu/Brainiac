@@ -10,6 +10,7 @@ class Agent;
 class Group;
 class QXmlStreamReader;
 class Scene;
+class Animation;
 
 class AgentManager
 {
@@ -119,6 +120,7 @@ public:
     **/
     void deleteFuzz(quint32 fuzzId);
 
+    QHash<quint32,Animation *>* getAnimations() {return &m_animations;}
     quint32 getId() { return m_id; }
     qint32 getEditorTranslationX() { return m_editX; }
     qint32 getEditorTranslationY() { return m_editY; }
@@ -134,6 +136,15 @@ public:
      */
     bool isFileNameSet() const { return m_fileName.size()>0; }
     bool loadConfig();
+
+    /**
+     * @brief loads an animation
+     *
+     * @fn loadAnimation
+     * @param filename the animation file to load
+     * @return bool
+     */
+    bool loadAnimation(const QString &filename);
     /**
      * @brief loads a skeleton file
 
@@ -319,6 +330,8 @@ protected:
     QHash<quint32, QPoint> m_editorFuzzyLocations;
     QHash<quint32, QPoint> m_editorSkeletonNodeLocations;
     IdGenerator m_brainIdGenerator;
+    IdGenerator m_animationIdGenerator;
+    QHash<quint32,Animation *> m_animations;
 
     // Brain stuff
     void addAndFuzz(quint32 id, QString name, QString mode, quint32 editorX, quint32 editorY);
@@ -337,9 +350,18 @@ protected:
      *
      * @param file the bvh file to load
      * @return bool true, if loading was successful
-     * @todo color management, editorItem position of root element, positioning of editoritems (optimized, no static offsets...), Site handling
+     * @todo color management, positioning of editoritems (optimized, no static offsets...), Site handling
      */
     bool loadSkeletonBVH(QFile &file);
+
+    /**
+     * @brief loads a bvh animation
+     *
+     * @fn loadAnmationBVH
+     * @param file the bvh animation file to load
+     * @return bool if loading was successful
+     */
+    bool loadAnmationBVH(QFile &file);
 };
 
 #endif // AGENTMANAGER_H

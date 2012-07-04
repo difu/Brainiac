@@ -1,3 +1,4 @@
+#include <iostream>
 #include "agent.h"
 #include "brain/brain.h"
 #include "brain/fuzzybase.h"
@@ -533,4 +534,20 @@ void Agent::setRestTranslation(qreal x, qreal y, qreal z)
     m_restPosition.setX(x);
     m_restPosition.setY(y);
     m_restPosition.setZ(z);
+}
+
+void Agent::dDumpChannels()
+{
+    std::cout << "Input Channels" << std::endl;
+    QHashIterator<QString, Channel *> ii(m_inputs) ;
+    while(ii.hasNext()) {
+        ii.next();
+        std::cout << ii.key().toStdString() << " Value " << ii.value()->getValue() << std::endl;
+    }
+    std::cout << "Output Channels" << std::endl;
+    QHashIterator<QString, Channel *> io(m_outputs) ;
+    while(io.hasNext()) {
+        io.next();
+        std::cout <<io.key().toStdString() << " Value " << io.value()->getValue() << std::endl;
+    }
 }

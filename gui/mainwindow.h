@@ -26,6 +26,7 @@ class NoiseEditor;
 class SceneDisplay;
 class BodyDisplay;
 class SegmentEditor;
+class ActionEditor;
 
 class AgentManager;
 class BrainEditor;
@@ -107,6 +108,8 @@ protected:
     QAction *m_saveAgentAction;
     QAction *m_saveSceneAction;
 
+    QAction *m_showActionEditorAction;
+
     QAction *m_runSimulationAction;
     QAction *m_resetSimulationAction;
     QAction *m_stopSimulationAction;
@@ -115,12 +118,13 @@ protected:
     QAction *m_viewAgentInfos;
 
     QMenu *m_fileMenu;
+    QMenu *m_editMenu;
     QMenu *m_simulationMenu;
     QMenu *m_viewMenu;
 
     SceneDisplay *m_sceneDisplay; //!< Window that shows the rendered gl scene
     BodyDisplay *m_bodyDisplay; //!< Window that shows the body of selected agent
-
+    ActionEditor *m_actionEditor;  /**< Window of ActionEditor */
 
 public slots:
     void statusBarMessageChange( const QString & message );
@@ -132,7 +136,7 @@ protected slots:
     void refreshBrainEditor();
     void saveAgent();
     void saveScene();
-
+    void showActionEditor();
 private:
     Ui::MainWindow *ui;
 };

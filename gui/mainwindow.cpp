@@ -14,6 +14,7 @@
 #include "gui/sceneeditor/groupeditor.h"
 #include "gui/scenedisplay.h"
 #include "gui/bodydisplay.h"
+#include "gui/Animation/actioneditor.h"
 #include "editorlabel.h"
 #include "core/agent/agentmanager.h"
 #include "core/agent/agent.h"
@@ -41,12 +42,16 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
     m_layout=new MainWindowLayout();
     QWidget *widget = new QWidget;
 
-//    /* Test */
-//    Group *testGrp=new Group(m_scene);
-//    testGrp->setId(10);
-//    testGrp->getAgentManager()->loadSkeleton("/Users/dirkfuchs/Desktop/bvh_player/Male1_A1_Stand.bvh");
-//    testGrp->setEditorTranslation(2200,2000);
-//    /* /Test */
+    /* Test */
+    Group *testGrp=new Group(m_scene);
+    testGrp->setId(10);
+    testGrp->setName("BVHImportTest");
+    testGrp->getAgentManager()->loadSkeleton("/Users/dirkfuchs/Programming/bvh_player/Male1_A1_Stand.bvh");
+//    testGrp->getAgentManager()->setFileName("/Users/dirkfuchs/Programming/BrainiacNG/tmpTestData/agent4_bvh.xml");
+    //bool bla=testGrp->getAgentManager()->loadConfig();
+    //testGrp->getAgentManager()->loadAnimation("/Users/dirkfuchs/Programming/bvh_player/Male1_A1_Stand.bvh");
+    testGrp->setEditorTranslation(2200,2000);
+    /* /Test */
 
     createEditorItemBars();
     createEditors();
@@ -113,6 +118,10 @@ void MainWindow::createActions()
     m_saveSceneAction = new QAction(tr("Save Scene"),this);
     connect(m_saveSceneAction,SIGNAL(triggered()),this,SLOT(saveScene()));
 
+    // Edit Menu Actions
+    m_showActionEditorAction=new QAction(tr("Action Editor"),this);
+    connect(m_showActionEditorAction,SIGNAL(triggered()),this,SLOT(showActionEditor()));
+
     // Simulation Menu Actions
     m_runSimulationAction=new QAction(tr("Run"), this);
     connect(m_runSimulationAction,SIGNAL(triggered()),m_scene->getSimulation(),SLOT(startSimulation()));
@@ -140,7 +149,7 @@ void MainWindow::createEditors()
         addAgentManager(mngr);
         m_activeAgentManager=mngr;
     }
-
+    m_actionEditor=new ActionEditor(m_scene,this);
 }
 
 void MainWindow::createEditModeWidgets()
@@ -272,6 +281,9 @@ void MainWindow::createMenues()
     m_fileMenu=menuBar()->addMenu(tr("&File"));
     m_fileMenu->addAction(m_saveAgentAction);
     m_fileMenu->addAction(m_saveSceneAction);
+
+    m_editMenu=menuBar()->addMenu(tr("&Edit"));
+    m_editMenu->addAction(m_showActionEditorAction);
 
     m_simulationMenu=menuBar()->addMenu(tr("&Simulation"));
     m_simulationMenu->addAction(m_runSimulationAction);
@@ -424,6 +436,12 @@ void MainWindow::setEditMode(EditMode em)
         break;
     }
     m_editorView->centerOn(m_editorView->scene()->width()/2,m_editorView->scene()->height()/2);
+}
+
+void MainWindow::showActionEditor()
+{
+        m_actionEditor->setAgentManager(m_activeAgentManager);
+        m_actionEditor->show();
 }
 
 void MainWindow::statusBarMessageChange(const QString &message)

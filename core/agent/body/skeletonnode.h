@@ -156,6 +156,10 @@ protected slots:
     void channelRxChanged(qreal value);
     void channelRyChanged(qreal value);
     void channelRzChanged(qreal value);
+
+    void channelTxChanged(qreal value);
+    void channelTyChanged(qreal value);
+    void channelTzChanged(qreal value);
 };
 
 #endif // SKELETONNODE_H

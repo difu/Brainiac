@@ -1,6 +1,5 @@
-#ifndef BODYDISPLAY_H
-#define BODYDISPLAY_H
-
+#ifndef ACTIONDISPLAY_H
+#define ACTIONDISPLAY_H
 #include "gui/brainiacdisplay.h"
 #include <QCloseEvent>
 
@@ -11,11 +10,17 @@ class SkeletonNode;
 class QGLCamera;
 class AgentManager;
 
-class BodyDisplay : public BrainiacDisplay
+/**
+ * @brief
+ *
+ * @class ActionDisplay actiondisplay.h "gui/actiondisplay.h"
+ * @bug paintGL() m_rootSkeletonNode->draw(painter); does not work....
+ */
+class ActionDisplay  : public BrainiacDisplay
 {
     Q_OBJECT
 public:
-    BodyDisplay(Scene *scene);
+    ActionDisplay(QWidget *parent);
     void setAgentManager( AgentManager *manager );
 
 protected:
@@ -29,4 +34,4 @@ protected:
     bool m_renderSkeleton;
 };
 
-#endif // BODYDISPLAY_H
+#endif // ACTIONDISPLAY_H

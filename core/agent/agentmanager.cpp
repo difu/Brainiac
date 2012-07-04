@@ -16,6 +16,8 @@
 #include "core/agent/brain/fuzzyfuzz.h"
 #include "core/agent/channel.h"
 #include "core/group/group.h"
+#include "core/agent/body/animation/animationcurve.h"
+#include "core/agent/body/animation/animation.h"
 #include <QFile>
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
@@ -28,6 +30,7 @@ AgentManager::AgentManager(Scene *scene, Group *group)
     m_group=group;
     m_id=0;
     m_masterAgent=new Agent(m_scene,0); // Id 0 is ok, its just a master agent
+    m_masterAgent->getBody()->setAnimations(&m_animations);
 }
 
 void AgentManager::addSkeletonNodeFromConfig(QXmlStreamReader *reader, quint32 id, QString name, quint32 parent, quint32 editorX, quint32 editorY)
@@ -481,6 +484,94 @@ bool AgentManager::loadConfig()
     return false;
 }
 
+bool AgentManager::loadAnimation(const QString &filename)
+{
+    QFile file(filename);
+    if(!file.open(QIODevice::ReadOnly)) {
+        qDebug() << "Error while opening file " << filename;
+        return false;
+    }
+    return loadAnmationBVH(file);
+}
+
+bool AgentManager::loadAnmationBVH(QFile &file)
+{
+//    AnimationCurve *tst=new AnimationCurve();
+//    tst->addKeyFrame(0,1.01f);
+//    tst->addKeyFrame(1,2);
+//    tst->addKeyFrame(2,4);
+//    tst->addKeyFrame(3,8);
+//    tst->dPrintKeyFrames();
+//    qDebug() << tst->getValue(0.5f) << tst->getValue(1.5f) << tst->getValue(0) << tst->getValue(4);
+    QString nodeName;
+    QHash<QString, AnimationCurve*> animCurves;
+    QList<AnimationCurve *> curveIndex;
+    qreal timeDelta=0.0f;
+    quint32 valuesLine=0;
+    bool animationDataStarts=false;
+    while (!file.atEnd()) {
+        QByteArray line = file.readLine().trimmed();
+        if(!animationDataStarts) {
+            if(line.startsWith("ROOT") || line.startsWith("JOINT")) {
+                nodeName=line.split(' ').last();
+            } else if(line.startsWith("CHANNELS")) {
+                // quint32 numChannels=line.split(' ').at(1).toInt();
+                // qDebug() << "Node" << nodeName << "has " << numChannels <<"Channels";
+                foreach(QByteArray channelItem,line.split(' ')) {
+                    if(channelItem=="Xrotation") {
+                        AnimationCurve *curve=new AnimationCurve();
+                        animCurves.insert(nodeName%":rx",curve);
+                        curveIndex.append(curve);
+                    } else if(channelItem=="Yrotation") {
+                        AnimationCurve *curve=new AnimationCurve();
+                        animCurves.insert(nodeName%":ry",curve);
+                        curveIndex.append(curve);
+                    } else if(channelItem=="Zrotation") {
+                        AnimationCurve *curve=new AnimationCurve();
+                        animCurves.insert(nodeName%":rz",curve);
+                        curveIndex.append(curve);
+                    } else if(channelItem=="Xposition") {
+                        AnimationCurve *curve=new AnimationCurve();
+                        animCurves.insert(nodeName%":tx",curve);
+                        curveIndex.append(curve);
+                    } else if(channelItem=="Yposition") {
+                        AnimationCurve *curve=new AnimationCurve();
+                        animCurves.insert(nodeName%":ty",curve);
+                        curveIndex.append(curve);
+                    } else if(channelItem=="Zposition") {
+                        AnimationCurve *curve=new AnimationCurve();
+                        animCurves.insert(nodeName%":tz",curve);
+                        curveIndex.append(curve);
+                    }
+                }
+            } else if(line.startsWith("Frame Time")) {
+                animationDataStarts=true;
+                timeDelta=line.split(':').at(1).toDouble();
+            }
+        } else {// if(!animationDataStarts) {
+            int index=0;
+            foreach(QByteArray animValue,line.split(' ')) {
+                curveIndex.at(index)->addKeyFrame((qreal)valuesLine*timeDelta,animValue.toDouble());
+                index++;
+            }
+            valuesLine++;
+        }
+        //return true;
+    }
+    Animation *anim=new Animation(animCurves,file.fileName());
+    m_animations.insert(m_animationIdGenerator.getNewId(),anim);
+//    foreach(Animation *anim,m_animations) {
+//        qDebug() << anim->name();
+//        QHashIterator<QString, AnimationCurve *> i(anim->curves()) ;
+//        while(i.hasNext()) {
+//            i.next();
+//            qDebug() << i.key();
+//            i.value()->dPrintKeyFrames(0,3);
+//        }
+//    }
+    return true;
+}
+
 bool AgentManager::loadSkeleton(const QString &filename)
 {
     QFile file(filename);
@@ -545,24 +636,24 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
             QList<BrainiacGlobals::RotTrans> rt;
             foreach(QByteArray channelItem,line.split(' ')) {
                 if(channelItem=="Xrotation")
-                    rt.append(BrainiacGlobals::RX);
+                    rt.prepend(BrainiacGlobals::RX);
                 else if(channelItem=="Yrotation")
-                    rt.append(BrainiacGlobals::RY);
+                    rt.prepend(BrainiacGlobals::RY);
                 else if(channelItem=="Zrotation")
-                    rt.append(BrainiacGlobals::RZ);
+                    rt.prepend(BrainiacGlobals::RZ);
                 else if(channelItem=="Xposition")
-                    rt.append(BrainiacGlobals::TX);
+                    rt.prepend(BrainiacGlobals::TX);
                 else if(channelItem=="Yposition")
-                    rt.append(BrainiacGlobals::TY);
+                    rt.prepend(BrainiacGlobals::TY);
                 else if(channelItem=="Zposition")
-                    rt.append(BrainiacGlobals::TZ);
+                    rt.prepend(BrainiacGlobals::TZ);
             }
             setSegmentRotationTranslationOrder(nodeId,rt);
             //qDebug() <<  __PRETTY_FUNCTION__ << "Rot Trans order" << nodeStack.last()->objectName() << "" << rt;
         }
         //qDebug() << line;
     }
-    qDumpScene(m_masterAgent->getBody()->getRootSkeletonNode());
+    //qDumpScene(m_masterAgent->getBody()->getRootSkeletonNode());
     return true;
 }
 
