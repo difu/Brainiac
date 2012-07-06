@@ -158,8 +158,43 @@ void SkeletonNode::createChannels()
 
 }
 
+void SkeletonNode::draw(QGLPainter *painter)
+{
+    if(!hasPrimitive()) {
+        drawCoordinateCross(30,painter);
+    }
+    QGLSceneNode::draw(painter);
+}
+
+void SkeletonNode::drawCoordinateCross(qreal crossLength, QGLPainter *painter)
+{
+    QVector3DArray vertices;
+    painter->clearAttributes();
+    vertices.clear();
+
+    vertices.append(0,1,0);
+    vertices.append(crossLength,1,0);
+    vertices.append(0,0,0);
+    vertices.append(0,crossLength,0);
+    vertices.append(0,1,0);
+    vertices.append(0,1,crossLength);
+
+    painter->setStandardEffect(QGL::FlatColor);
+    painter->setVertexAttribute(QGL::Position, vertices);
+
+    painter->setColor(BrainiacGlobals::defaultXColor);
+    painter->draw(QGL::Lines,2,0);
+    painter->setColor(BrainiacGlobals::defaultYColor);
+    painter->draw(QGL::Lines,2,2);
+    painter->setColor(BrainiacGlobals::defaultZColor);
+    painter->draw(QGL::Lines,2,4);
+}
+
 void SkeletonNode::drawGeometry(QGLPainter *painter)
 {
+    if(hasPrimitive()==true) {
+        drawCoordinateCross(10,painter);
+    }
     QGLSceneNode::drawGeometry(painter);
 }
 

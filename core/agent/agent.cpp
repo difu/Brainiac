@@ -39,11 +39,11 @@ Agent::~Agent() {
     delete m_body;
     delete m_brain;
     foreach(Channel *chan,m_inputs) {
-        delete chan;
+        chan->deleteLater();
     }
     m_inputs.clear();
     foreach(Channel *chan,m_outputs) {
-        delete chan;
+        chan->deleteLater();
     }
     m_outputs.clear();
 }
@@ -261,8 +261,12 @@ void Agent::deleteConnection(quint32 parentId, quint32 childId)
 
 void Agent::deleteChannel(Channel *channel)
 {
-    m_inputs.remove(m_inputs.key(channel));
-    m_outputs.remove(m_inputs.key(channel));
+    QString name = m_inputs.key(channel);
+    if(m_inputs.contains(name))
+        m_inputs.remove(name);
+    name = m_outputs.key(channel);
+    if(m_outputs.contains(name))
+        m_outputs.remove(name);
     delete channel;
 }
 

@@ -26,6 +26,7 @@ ActionEditor::ActionEditor(Scene *scene, QWidget *parent) :
     connect(ui->listAnimation,SIGNAL(currentRowChanged(int)),this,SLOT(animationSelectionChanged(int)));
     m_actionDisplay=new ActionDisplay(this);
     startTimer(1000/m_scene->getSimulation()->getFps());
+    m_agent=0;
 }
 
 void ActionEditor::addCurvesToList(SkeletonNode *node, quint32 level)
@@ -85,7 +86,7 @@ void ActionEditor::setAgentManager(AgentManager *manager)
     ui->listAnimation->clear();
     ui->listCurves->clear();
     ui->tabWidgetMain->setTabEnabled(0,true);
-        m_agentManager->loadAnimation("/Users/dirkfuchs/Programming/BrainiacNG/tmpTestData/newBodyFormatAction/Male1_A2_Sway.bvh");
+        m_agentManager->loadAnimation("/Users/dirkfuchs/Programming/BrainiacNG/tmpTestData/newBodyFormatAction/Male1_B3_Walk.bvh");
     QHashIterator<quint32,Animation *> i(*m_agentManager->getAnimations()) ;
 
     while(i.hasNext()) {
@@ -99,7 +100,13 @@ void ActionEditor::setAgentManager(AgentManager *manager)
         ui->listAnimation->setCurrentRow(0);
     } else {
     }
-    m_actionDisplay->setAgentManager(m_agentManager);
+    //m_actionDisplay->setAgentManager(m_agentManager);
+    if(m_agent) {
+        delete m_agent;
+    }
+    m_agent=m_agentManager->cloneAgent(0);
+    m_agent->setObjectName("ActionEditorAgent");
+    m_actionDisplay->setAgent(m_agent);
 
 }
 
@@ -121,7 +128,7 @@ void ActionEditor::timerEvent(QTimerEvent *)
     time=time+1.0f/(qreal)m_scene->getSimulation()->getFps();
     if(time>10) time=0;
     if(m_activeAnimation&&this->isVisible()) {
-        m_agentManager->getMasterAgent()->getBody()->getAnimationPlayer()->apply(*m_activeAnimation,time);
+        m_agent->getBody()->getAnimationPlayer()->apply(*m_activeAnimation,time);
         m_actionDisplay->updateGL();
     }
 }

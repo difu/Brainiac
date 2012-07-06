@@ -186,7 +186,8 @@ void Body::updatePosition() {
 
 Body::~Body()
 {
-    foreach(QGLSceneNode* n, m_rootSkeletonNode->allChildren()) {
-        n->deleteLater();
-    }
+//    foreach(QGLSceneNode* n, m_rootSkeletonNode->allChildren()) {
+//        delete n;
+//    }
+    delete m_rootSkeletonNode;
 }

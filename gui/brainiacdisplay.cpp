@@ -1,5 +1,6 @@
 #include "brainiacdisplay.h"
 #include <QMouseEvent>
+#include "core/brainiacglobals.h"
 
 BrainiacDisplay::BrainiacDisplay(QWidget *parent) :
     QGLView(parent)
@@ -9,7 +10,11 @@ BrainiacDisplay::BrainiacDisplay(QWidget *parent) :
     setGeometry(this->geometry().x(),this->geometry().y(),600,400);
     m_camera->setFarPlane(1000000);
     setCamera(m_camera);
+    m_camera->setCenter(QVector3D(0,100,0));
+    m_camera->setEye(QVector3D(-500,100,0));
     setOption(QGLView::CameraNavigation,false);
+    m_shiftPressed=false;
+    m_showCoordCross=false;
 }
 
 void BrainiacDisplay::keyPressEvent(QKeyEvent *event)
@@ -17,6 +22,8 @@ void BrainiacDisplay::keyPressEvent(QKeyEvent *event)
     QGLView::keyPressEvent(event);
     if(event->key()==Qt::Key_Shift) {
         m_shiftPressed=true;
+    } else if(event->key()==Qt::Key_C) {
+        m_showCoordCross=!m_showCoordCross;
     }
 }
 
@@ -35,11 +42,17 @@ void BrainiacDisplay::mouseMoveEvent(QMouseEvent *event)
 
     } else if (event->buttons() & Qt::RightButton)  {
         if(m_shiftPressed) {
-            m_camera->translateEye(-(qreal)0,0.0f,(qreal)dx);
-            m_camera->translateCenter(-(qreal)0,0.0f,(qreal)dx);
+            QVector3D v=m_camera->eye()-m_camera->center();
+            v*=.02f*-dx;
+            v=m_camera->translation(v.x(),v.y(),v.z());
+            m_camera->translateEye(v.x(),v.y(),v.z());
+            m_camera->translateCenter(v.x(),v.y(),v.z());
             //qDebug() << __PRETTY_FUNCTION__ << m_camera->eye() << m_camera->center();
         } else {
-            m_camera->translateCenter(-(qreal)dx/2.0f,(qreal)dy/2.0f,0.0f);
+            //m_camera->rotateEye(m_camera->pan((qreal)dx/2.0f) * m_camera->tilt( (qreal)dy/2.0f));
+            m_camera->rotateEye(m_camera->tilt( (qreal)dy/2.0f));
+            m_camera->rotateEye(m_camera->pan((qreal)dx/2.0f));
+            //m_camera->setUpVector(QVector3D(0,1,0));
         }
         update();
     }
@@ -51,4 +64,55 @@ void BrainiacDisplay::mousePressEvent(QMouseEvent *event)
     QGLView::mouseMoveEvent(event);
     m_lastPos = event->pos();
     this->setFocus();
+}
+
+void BrainiacDisplay::paintGL(QGLPainter *painter)
+{
+    QVector3DArray vertices;
+    static qreal size=1000.0f;
+    static qreal width=10.0f;
+    vertices.append(size,0,size);
+    vertices.append(size,0,-size);
+    vertices.append(-size,0,-size);
+    vertices.append(-size,0,size);
+
+    int count=0;
+    for(qreal i=0.0f;i<size*2.f;i+=width) {
+        vertices.append(-size+i,0,size);
+        vertices.append(-size+i,0,-size);
+        vertices.append(size,0,-size+i);
+        vertices.append(-size,0,-size+i);
+        count++;
+    }
+
+    painter->clearAttributes();
+    painter->setStandardEffect(QGL::FlatColor);
+    painter->setVertexAttribute(QGL::Position, vertices);
+    painter->setColor(QColor(30,30,30));
+    painter->draw(QGL::LineLoop,4,0);
+    painter->draw(QGL::Lines,count*4,4);
+
+    painter->clearAttributes();
+    vertices.clear();
+
+    static qreal crossLength=150.0f;
+
+    if(m_showCoordCross) {
+        vertices.append(0,1,0);
+        vertices.append(crossLength,1,0);
+        vertices.append(0,0,0);
+        vertices.append(0,crossLength,0);
+        vertices.append(0,1,0);
+        vertices.append(0,1,crossLength);
+
+        painter->setStandardEffect(QGL::FlatColor);
+        painter->setVertexAttribute(QGL::Position, vertices);
+
+        painter->setColor(BrainiacGlobals::defaultXColor);
+        painter->draw(QGL::Lines,2,0);
+        painter->setColor(BrainiacGlobals::defaultYColor);
+        painter->draw(QGL::Lines,2,2);
+        painter->setColor(BrainiacGlobals::defaultZColor);
+        painter->draw(QGL::Lines,2,4);
+    }
 }

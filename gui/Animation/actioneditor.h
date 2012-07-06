@@ -3,6 +3,7 @@
 
 #include <QDialog>
 
+class Agent;
 class AgentManager;
 class Animation;
 class SkeletonNode;
@@ -13,6 +14,11 @@ namespace Ui {
 class ActionEditor;
 }
 
+/**
+ * @brief the ActionEditor to edit the actions (Animation) of an Agent
+ *
+ * @class ActionEditor actioneditor.h "gui/Animation/actioneditor.h"
+ */
 class ActionEditor : public QDialog
 {
     Q_OBJECT
@@ -30,8 +36,9 @@ protected:
     void addCurvesToList(SkeletonNode *node, quint32 level);
     void timerEvent(QTimerEvent *);
     AgentManager *m_agentManager;
+    Agent *m_agent;
     Animation *m_activeAnimation;
-    ActionDisplay *m_actionDisplay;
+    ActionDisplay *m_actionDisplay; /**< TODO */
     Scene *m_scene;
 protected slots:
     void animationSelectionChanged(int rowId);

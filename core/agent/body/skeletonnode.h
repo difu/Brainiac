@@ -13,7 +13,7 @@ class QGraphicsTranslation3D;
 class QGraphicsScale3D;
 
 /**
- * @brief
+ * @brief A Node of the Agent s skeleton
  * @class SkeletonNode skeletonnode.h "core/agent/body/skeletonnode.h"
     @todo Better implemetation of coordcross
     @todo Limits/DOF
@@ -58,7 +58,7 @@ public:
      */
     bool hasPrimitive() const { return m_type!=NOPRIMITIVE; }
     QMatrix4x4 transform() const ;
-
+    virtual void draw(QGLPainter *painter);
     QList<BrainiacGlobals::RotTrans> getRotationTranslationOrder() const;
 
     /**
@@ -113,6 +113,7 @@ public:
 
 protected:
     virtual void createChannels();
+    void drawCoordinateCross(qreal crossLength, QGLPainter *painter);
     virtual void drawGeometry(QGLPainter *painter);
     QGLSceneNode *m_geometryNode; /**< this SkeletonNode´s geometry @sa SkeletonGeometryNode */
     SegmentType m_type;

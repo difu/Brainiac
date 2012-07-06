@@ -3,6 +3,7 @@
 #include "gui/brainiacdisplay.h"
 #include <QCloseEvent>
 
+class Agent;
 class Camera;
 class Scene;
 class QGLAbstractScene;
@@ -11,25 +12,29 @@ class QGLCamera;
 class AgentManager;
 
 /**
- * @brief
+ * @brief The OpenGL view of the agent which agents are edited by the ActionEditor
  *
+ * @sa ActionEditor
  * @class ActionDisplay actiondisplay.h "gui/actiondisplay.h"
- * @bug paintGL() m_rootSkeletonNode->draw(painter); does not work....
  */
 class ActionDisplay  : public BrainiacDisplay
 {
     Q_OBJECT
 public:
     ActionDisplay(QWidget *parent);
-    void setAgentManager( AgentManager *manager );
+    /**
+     * @brief sets the Agent to display
+     *
+     * @fn setAgent
+     * @param agent the agent
+     */
+    void setAgent(Agent *agent);
 
 protected:
     void keyPressEvent(QKeyEvent *e);
     void paintGL(QGLPainter *painter);
 
-    SkeletonNode *m_rootSkeletonNode;
-    Scene *m_scene;
-    AgentManager *m_agentManager;
+    Agent *m_agent;
     bool m_renderSilhouettes;
     bool m_renderSkeleton;
 };

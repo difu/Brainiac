@@ -207,6 +207,6 @@ QList<FuzzyBase *> Brain::getFuzzies() const
 Brain::~Brain()
 {
     foreach(FuzzyBase *fuzz, m_fuzzies) {
-        delete fuzz;
+        fuzz->deleteLater();
     }
 }

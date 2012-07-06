@@ -47,6 +47,7 @@ void BodyDisplay::keyPressEvent(QKeyEvent *e)
 
 void BodyDisplay::paintGL(QGLPainter *painter)
 {
+    BrainiacDisplay::paintGL(painter);
     painter->setStandardEffect(QGL::LitMaterial);
     //painter->setFaceColor(QGL::AllFaces, QColor(170, 202, 0));
     //m_rootSceneNode->draw(painter);
