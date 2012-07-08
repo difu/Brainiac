@@ -43,7 +43,24 @@ public:
      * @param animations
      */
     void setAnimations(QHash<quint32,Animation *> *animations);
+
+    /**
+     * @brief returns the root SkeletonNode
+     *
+     * the root SkeletonNode is NOT the first bone! It is more like a virtual point to which the rest refers
+     * @fn getRootSkeletonNode
+     * @return SkeletonNode
+     */
     SkeletonNode *getRootSkeletonNode() { return m_rootSkeletonNode; }
+
+    /**
+     * @brief returns the root bone
+     *
+     * the root bone is the first bone node of the skeleton. (e.g. the ROOT element of a bvh file)
+     * @fn getRootBone
+     * @return SkeletonNode
+     */
+    SkeletonNode *getRootBone();
     SkeletonNode *getSkeletonNodeById(quint32 id);
     Agent* getAgent();
     void showSilhouettes(bool render);

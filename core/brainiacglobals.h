@@ -10,6 +10,7 @@ public:
     static const qreal PI=3.14159265;
     enum ItemType {AND, OR, FUZZ, DEFUZZ, OUTPUT, INPUT, NOISE, TIMER, SPHERE, CUBE, GROUP, AGENT};
     enum RotTrans {RX, RY, RZ, TX, TY, TZ };
+    enum AnimationType{ STATIC, LOCOMOTION, RAMP, TURNING, NOTYPE };
     static QColor getColorFromBrainiacColorValue(qreal colVal);
     static void normalizeAngle(qreal *angle)
     {

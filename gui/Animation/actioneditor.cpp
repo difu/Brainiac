@@ -10,9 +10,12 @@
 #include "core/agent/body/animation/animation.h"
 #include "core/agent/body/animation/animationcurve.h"
 #include "core/agent/body/animation/animationplayer.h"
+#include "core/agent/body/animation/modifiableanimation.h"
 #include "gui/actiondisplay.h"
+#include "gui/Animation/loopeditorscene.h"
 #include <QListWidgetItem>
 #include <QHashIterator>
+#include <QDoubleValidator>
 
 ActionEditor::ActionEditor(Scene *scene, QWidget *parent) :
     QDialog(parent),
@@ -25,8 +28,29 @@ ActionEditor::ActionEditor(Scene *scene, QWidget *parent) :
     //setWindowModality(Qt::Tool);
     connect(ui->listAnimation,SIGNAL(currentRowChanged(int)),this,SLOT(animationSelectionChanged(int)));
     m_actionDisplay=new ActionDisplay(this);
+    connect(m_actionDisplay,SIGNAL(animationOneFrameBackward()),this,SLOT(animationOneFrameBackward()));
+    connect(m_actionDisplay,SIGNAL(animationOneFrameForward()),this,SLOT(animationOneFrameForward()));
+    connect(m_actionDisplay,SIGNAL(animationRunningToggled()),this,SLOT(animationRunningToggle()));
     startTimer(1000/m_scene->getSimulation()->getFps());
     m_agent=0;
+    m_animationTime=0;
+    m_animationRunning=true;
+
+    // Loop Tab UI
+    m_loopEditorScene=new LoopEditorScene();
+    ui->loopGraphicsView->setScene(m_loopEditorScene);
+    ui->loopGraphicsView->show();
+    m_doubleValidator=new QDoubleValidator();
+    ui->le_crossFadeTime->setValidator(m_doubleValidator);
+    ui->le_startTime->setValidator(m_doubleValidator);
+    ui->le_endTime->setValidator(m_doubleValidator);
+    connect(ui->le_startTime,SIGNAL(returnPressed()),this,SLOT(uiLoopTimesChanged()));
+    connect(ui->le_endTime,SIGNAL(returnPressed()),this,SLOT(uiLoopTimesChanged()));
+    connect(ui->le_crossFadeTime,SIGNAL(returnPressed()),this,SLOT(uiLoopTimesChanged()));
+    connect(ui->pb_Locomotion,SIGNAL(clicked()),this,SLOT(uiLoopAnimModeLocomotion()));
+    connect(ui->pb_Ramp,SIGNAL(clicked()),this,SLOT(uiLoopAnimModeRamp()));
+    connect(ui->pb_Static,SIGNAL(clicked()),this,SLOT(uiLoopAnimModeStatic()));
+    connect(ui->pb_Turning,SIGNAL(clicked()),this,SLOT(uiLoopAnimModeTurning()));
 }
 
 void ActionEditor::addCurvesToList(SkeletonNode *node, quint32 level)
@@ -75,13 +99,25 @@ void ActionEditor::animationSelectionChanged(int rowId)
 
 void ActionEditor::setActiveAnimation(quint32 animId)
 {
-    m_activeAnimation=m_agentManager->getAnimations()->value(animId);
+    QMutexLocker locker(&m_animationChangeMutex);
+    Q_UNUSED(locker);
+    delete m_activeAnimation;
+    m_activeAnimation=new ModifiableAnimation(*m_agentManager->getAnimations()->value(animId),m_agent->getBody());
+    //m_activeAnimation=m_agentManager->getAnimations()->value(animId);
     addCurvesToList(m_agentManager->getMasterAgent()->getBody()->getRootSkeletonNode(),0);
+    m_loopEditorScene->setAnimation(m_activeAnimation);
+    updateLoopUI();
 }
 
 void ActionEditor::setAgentManager(AgentManager *manager)
 {
     m_agentManager=manager;
+    if(m_agent) {
+        delete m_agent;
+    }
+    m_agent=m_agentManager->cloneAgent(0);
+    m_agent->setObjectName("ActionEditorAgent");
+    m_actionDisplay->setAgent(m_agent);
     qDebug() << __PRETTY_FUNCTION__ << "Active AgentManager" << manager->getGroup()->getName();
     ui->listAnimation->clear();
     ui->listCurves->clear();
@@ -101,12 +137,6 @@ void ActionEditor::setAgentManager(AgentManager *manager)
     } else {
     }
     //m_actionDisplay->setAgentManager(m_agentManager);
-    if(m_agent) {
-        delete m_agent;
-    }
-    m_agent=m_agentManager->cloneAgent(0);
-    m_agent->setObjectName("ActionEditorAgent");
-    m_actionDisplay->setAgent(m_agent);
 
 }
 
@@ -122,15 +152,107 @@ void ActionEditor::show()
     m_actionDisplay->show();
 }
 
+void ActionEditor::animationOneFrameBackward()
+{
+    m_animationTime=m_animationTime-1.0f/(qreal)m_scene->getSimulation()->getFps();
+}
+
+void ActionEditor::animationOneFrameForward()
+{
+    m_animationTime=m_animationTime+1.0f/(qreal)m_scene->getSimulation()->getFps();
+}
+
+void ActionEditor::animationStart()
+{
+    m_animationRunning=true;
+}
+
+void ActionEditor::animationStop()
+{
+    m_animationRunning=false;
+}
+
+void ActionEditor::animationRunningToggle() {
+    m_animationRunning=!m_animationRunning;
+}
+
+void ActionEditor::applyAnimation()
+{
+    if(m_activeAnimation) {
+
+        if(m_animationTime>m_activeAnimation->getEndTime())
+            m_animationTime=m_activeAnimation->getStartTime();
+        else if(m_animationTime<m_activeAnimation->getStartTime())
+            m_animationTime=m_activeAnimation->getEndTime();
+
+        if(this->isVisible()) {
+            m_agent->getBody()->getAnimationPlayer()->apply(*m_activeAnimation,m_animationTime);
+            m_actionDisplay->setCameraOffset(m_activeAnimation->getRootBoneTranslation(m_animationTime));
+            m_actionDisplay->updateGL();
+            m_loopEditorScene->updateTime(m_animationTime);
+        }
+    }
+}
+
 void ActionEditor::timerEvent(QTimerEvent *)
 {
-    static qreal time=0;
-    time=time+1.0f/(qreal)m_scene->getSimulation()->getFps();
-    if(time>10) time=0;
-    if(m_activeAnimation&&this->isVisible()) {
-        m_agent->getBody()->getAnimationPlayer()->apply(*m_activeAnimation,time);
-        m_actionDisplay->updateGL();
+    QMutexLocker locker(&m_animationChangeMutex);
+    Q_UNUSED(locker);
+    if(m_animationRunning) {
+        animationOneFrameForward();
     }
+    ui->label_CurrentTime->setText(QString::number(m_animationTime));
+    applyAnimation();
+}
+
+void ActionEditor::updateLoopUI()
+{
+    ui->le_crossFadeTime->setText(QString::number(m_activeAnimation->getCrossFade()));
+    ui->le_startTime->setText(QString::number(m_activeAnimation->getStartTime()));
+    ui->le_endTime->setText(QString::number(m_activeAnimation->getEndTime()));
+    m_loopEditorScene->update();
+    ui->pb_Locomotion->setChecked(m_activeAnimation->animationType()==BrainiacGlobals::LOCOMOTION);
+    ui->pb_Static->setChecked(m_activeAnimation->animationType()==BrainiacGlobals::STATIC);
+    ui->pb_Ramp->setChecked(m_activeAnimation->animationType()==BrainiacGlobals::RAMP);
+    ui->pb_Turning->setChecked(m_activeAnimation->animationType()==BrainiacGlobals::TURNING);
+    ui->tb_loopRx->setChecked(m_activeAnimation->crossFadeRx());
+    ui->tb_loopRy->setChecked(m_activeAnimation->crossFadeRy());
+    ui->tb_loopRz->setChecked(m_activeAnimation->crossFadeRz());
+    ui->tb_loopTx->setChecked(m_activeAnimation->crossFadeTx());
+    ui->tb_loopTy->setChecked(m_activeAnimation->crossFadeTy());
+    ui->tb_loopTz->setChecked(m_activeAnimation->crossFadeTz());
+}
+
+void ActionEditor::uiLoopTimesChanged()
+{
+    m_activeAnimation->setStartTime(ui->le_startTime->text().toDouble());
+    m_activeAnimation->setEndTime(ui->le_endTime->text().toDouble());
+    m_activeAnimation->setCrossFade(ui->le_crossFadeTime->text().toDouble());
+    updateLoopUI();
+}
+
+void ActionEditor::uiLoopAnimModeStatic()
+{
+    m_activeAnimation->setAnimationType(BrainiacGlobals::STATIC);
+    updateLoopUI();
+}
+
+void ActionEditor::uiLoopAnimModeRamp()
+{
+    m_activeAnimation->setAnimationType(BrainiacGlobals::RAMP);
+    updateLoopUI();
+}
+
+void ActionEditor::uiLoopAnimModeLocomotion()
+{
+    m_activeAnimation->setAnimationType(BrainiacGlobals::LOCOMOTION);
+    updateLoopUI();
+}
+
+void ActionEditor::uiLoopAnimModeTurning()
+{
+    m_activeAnimation->setAnimationType(BrainiacGlobals::TURNING);
+    updateLoopUI();
 }
 
 ActionEditor::~ActionEditor()

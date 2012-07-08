@@ -34,11 +34,31 @@ public:
     Animation(QHash<QString, AnimationCurve*> curves, QString name);
 
     /**
+     * @brief calculate the length of this Animation
+     *
+     * The length is calculated as the max keyframe time of the longest AnimationCurve
+     * @fn calculateLength
+     */
+    void calculateLength();
+
+    /**
+     * @brief returns the length of this Animation
+     *
+     * the length of an Animation is always the maximum time value of all keyframes of all AnimatoinCurve s
+     * @fn getLength
+     * @param calculateNew true if the length should re calculated, false if a cached length should be returned
+     * @return qreal the length of this Animation
+     */
+    qreal getLength(bool calculateNew=false);
+    /**
      * @brief returns, if this is a looped Animation
      *
      * @fn isLoopedAnimation
      * @return bool true, if this Animation is a loop animation
      */
+
+    virtual qreal getValue(const QString &curve, qreal time) const;
+
     bool isLoopedAnimation() const { return m_isLoopedAnimation; }
     /**
      * @brief the name of this Animation
@@ -57,6 +77,7 @@ public:
     QHash<QString, AnimationCurve*> curves() const {return m_curves;}
     virtual ~Animation();
 protected:
+    qreal m_length;
     QHash<QString, AnimationCurve*> m_curves; /**< all AnimationCurves, QString is the curve name, that correspondents to the agent´s SkeletonNode channel @sa SkeletonNode @sa Channel */
     QString m_name; /**< name of this Animation */
     bool m_isLoopedAnimation;

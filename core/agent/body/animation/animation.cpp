@@ -3,6 +3,7 @@
 
 Animation::Animation()
 {
+   calculateLength();
 }
 
 Animation::Animation(const Animation &animation)
@@ -14,6 +15,7 @@ Animation::Animation(const Animation &animation)
         AnimationCurve *newCurve= new AnimationCurve(*i.value());
         m_curves.insert(i.key(),newCurve);
     }
+    calculateLength();
 }
 
 Animation::Animation(QHash<QString, AnimationCurve *> curves, QString name="")
@@ -21,6 +23,35 @@ Animation::Animation(QHash<QString, AnimationCurve *> curves, QString name="")
     m_name=name;
     m_curves=curves;
     m_isLoopedAnimation=true;
+    calculateLength();
+}
+
+void Animation::calculateLength()
+{
+    m_length=0;
+    foreach(AnimationCurve *c,m_curves) {
+        qreal time=c->keyFrames().last().x();
+        if( time > m_length) {
+            m_length=time;
+        }
+    }
+}
+
+qreal Animation::getLength(bool calculateNew)
+{
+    if(calculateNew) {
+        calculateLength();
+    }
+    return m_length;
+}
+
+qreal Animation::getValue(const QString &curve, qreal time) const
+{
+    AnimationCurve *c=m_curves.value(curve,0);
+    if(c) {
+        return c->getValue(time);
+    } else return 0.0f;
+
 }
 
 Animation::~Animation()

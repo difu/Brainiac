@@ -2,13 +2,18 @@
 #define ACTIONEDITOR_H
 
 #include <QDialog>
+#include <QMutex>
 
 class Agent;
 class AgentManager;
 class Animation;
+class LoopEditorScene;
+class ModifiableAnimation;
 class SkeletonNode;
 class ActionDisplay;
 class Scene;
+
+class QDoubleValidator;
 
 namespace Ui {
 class ActionEditor;
@@ -31,17 +36,35 @@ public:
 public slots:
     void hide();
     void show();
+    void animationStart();
+    void animationStop();
+    void animationRunningToggle();
+    void animationOneFrameForward();
+    void animationOneFrameBackward();
 protected:
+    void applyAnimation();
     void setActiveAnimation(quint32 animId);
     void addCurvesToList(SkeletonNode *node, quint32 level);
+    void updateLoopUI();
     void timerEvent(QTimerEvent *);
     AgentManager *m_agentManager;
     Agent *m_agent;
-    Animation *m_activeAnimation;
+    ModifiableAnimation *m_activeAnimation;
     ActionDisplay *m_actionDisplay; /**< TODO */
     Scene *m_scene;
+    QMutex m_animationChangeMutex;
+    LoopEditorScene *m_loopEditorScene;
+    QDoubleValidator *m_doubleValidator;
+    qreal m_animationTime;
+    bool m_animationRunning;
 protected slots:
     void animationSelectionChanged(int rowId);
+    // Loop Tab Stuff
+    void uiLoopTimesChanged();
+    void uiLoopAnimModeLocomotion();
+    void uiLoopAnimModeStatic();
+    void uiLoopAnimModeTurning();
+    void uiLoopAnimModeRamp();
 private:
     Ui::ActionEditor *ui;
 };

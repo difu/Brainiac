@@ -119,6 +119,23 @@ QList<SkeletonNode *> Body::getAllSkeletonNodes()
     return skelNodes;
 }
 
+SkeletonNode* Body::getRootBone()
+{
+    SkeletonNode *returnNode=0;
+    quint32 count=0;
+    foreach(QGLSceneNode *n, m_rootSkeletonNode->children()) {
+        SkeletonNode *sn=dynamic_cast<SkeletonNode *> (n);
+        if(sn) {
+            returnNode=sn;
+            count++;
+        }
+    }
+    if(count>1) {
+        qWarning() << __PRETTY_FUNCTION__ << "Body has 2 or more root bones!!! returning the last one";
+    }
+    return returnNode;
+}
+
 SkeletonNode* Body::getSkeletonNodeById(quint32 id)
 {
     foreach(QGLSceneNode* n,m_rootSkeletonNode->allChildren()) {

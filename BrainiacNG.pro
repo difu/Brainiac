@@ -71,7 +71,10 @@ SOURCES += main.cpp\
     core/agent/body/animation/animationcurve.cpp \
     core/agent/body/animation/animationplayer.cpp \
     gui/Animation/actioneditor.cpp \
-    gui/actiondisplay.cpp
+    gui/actiondisplay.cpp \
+    core/agent/body/animation/modifiableanimation.cpp \
+    gui/Animation/loopeditorscene.cpp \
+    gui/Animation/editorlineitem.cpp
 
 HEADERS  += gui/mainwindow.h \
     core/scene.h \
@@ -133,7 +136,11 @@ HEADERS  += gui/mainwindow.h \
     core/agent/body/animation/animationcurve.h \
     core/agent/body/animation/animationplayer.h \
     gui/Animation/actioneditor.h \
-    gui/actiondisplay.h
+    gui/actiondisplay.h \
+    core/agent/body/animation/modifiableanimation.h \
+    core/agent/body/animation/loopeditorscene.h \
+    gui/Animation/loopeditorscene.h \
+    gui/Animation/editorlineitem.h
 
 FORMS    += gui/mainwindow.ui \
     gui/sceneeditor/groupeditor.ui \

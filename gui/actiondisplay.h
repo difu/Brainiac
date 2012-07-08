@@ -29,14 +29,22 @@ public:
      * @param agent the agent
      */
     void setAgent(Agent *agent);
+    void setCameraOffset(const QVector3D &offset);
 
 protected:
     void keyPressEvent(QKeyEvent *e);
     void paintGL(QGLPainter *painter);
+    QVector3D m_cameraCenterPos;
+    QVector3D m_cameraEyePos;
 
     Agent *m_agent;
+    bool m_followAgent;
     bool m_renderSilhouettes;
     bool m_renderSkeleton;
+signals:
+    void animationRunningToggled();
+    void animationOneFrameForward();
+    void animationOneFrameBackward();
 };
 
 #endif // ACTIONDISPLAY_H

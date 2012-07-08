@@ -32,7 +32,7 @@ void AnimationPlayer::apply(const Animation &animation, qreal time)
             //qDebug() << __PRETTY_FUNCTION__ << "applying for channel" << i.key();
             Channel *c=m_body->getAgent()->getOutputChannel(i.key());
             if(c) {
-                m_body->getAgent()->getOutputChannel(i.key())->setValue(i.value()->getValue(time));
+                m_body->getAgent()->getOutputChannel(i.key())->setValue(animation.getValue(i.key(),time));
                 //qDebug() << __PRETTY_FUNCTION__ << "applying for channel" << i.key()  << i.value()->getValue(time);
             } else {
                 qDebug() << __PRETTY_FUNCTION__ << "Channel " << i.key() << "not found!";
