@@ -28,6 +28,9 @@ void ActionDisplay::keyPressEvent(QKeyEvent *e)
     } else if(e->key()==Qt::Key_Right) {
         emit animationOneFrameForward();
     }
+    if(m_agent) {
+        m_agent->getBody()->showBoneCoordCrosses(m_showAgentBoneCoordCrosses);
+    }
 }
 
 void ActionDisplay::paintGL(QGLPainter *painter)
@@ -37,7 +40,9 @@ void ActionDisplay::paintGL(QGLPainter *painter)
 
     if(m_agent)
     {
-        m_agent->getBody()->renderSkeleton(painter);
+        if(m_renderSkeleton) {
+            m_agent->getBody()->renderSkeleton(painter);
+        }
         m_agent->getBody()->getRootSkeletonNode()->draw(painter);
     }
     if(!m_followAgent) {

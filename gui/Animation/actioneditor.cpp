@@ -25,6 +25,7 @@ ActionEditor::ActionEditor(Scene *scene, QWidget *parent) :
     ui->setupUi(this);
     setWindowFlags(Qt::Tool);
     m_activeAnimation=0;
+    m_activeAnimationId=0;
     //setWindowModality(Qt::Tool);
     connect(ui->listAnimation,SIGNAL(currentRowChanged(int)),this,SLOT(animationSelectionChanged(int)));
     m_actionDisplay=new ActionDisplay(this);
@@ -97,12 +98,19 @@ void ActionEditor::animationSelectionChanged(int rowId)
     }
 }
 
+QString ActionEditor::getActiveAnimationName() const {
+    if(m_activeAnimation) {
+        return m_activeAnimation->name();
+    } else return QString();
+}
+
 void ActionEditor::setActiveAnimation(quint32 animId)
 {
     QMutexLocker locker(&m_animationChangeMutex);
     Q_UNUSED(locker);
     delete m_activeAnimation;
     m_activeAnimation=new ModifiableAnimation(*m_agentManager->getAnimations()->value(animId),m_agent->getBody());
+    m_activeAnimationId=animId;
     //m_activeAnimation=m_agentManager->getAnimations()->value(animId);
     addCurvesToList(m_agentManager->getMasterAgent()->getBody()->getRootSkeletonNode(),0);
     m_loopEditorScene->setAnimation(m_activeAnimation);
@@ -115,6 +123,7 @@ void ActionEditor::setAgentManager(AgentManager *manager)
     if(m_agent) {
         delete m_agent;
     }
+    m_activeAnimationId=0;
     m_agent=m_agentManager->cloneAgent(0);
     m_agent->setObjectName("ActionEditorAgent");
     m_actionDisplay->setAgent(m_agent);
@@ -122,7 +131,7 @@ void ActionEditor::setAgentManager(AgentManager *manager)
     ui->listAnimation->clear();
     ui->listCurves->clear();
     ui->tabWidgetMain->setTabEnabled(0,true);
-        m_agentManager->loadAnimation("/Users/dirkfuchs/Programming/BrainiacNG/tmpTestData/newBodyFormatAction/Male1_B3_Walk.bvh");
+        //m_agentManager->loadAnimation("/Users/dirkfuchs/Programming/BrainiacNG/tmpTestData/newBodyFormatAction/Male1_B3_Walk.bvh");
     QHashIterator<quint32,Animation *> i(*m_agentManager->getAnimations()) ;
 
     while(i.hasNext()) {
@@ -133,8 +142,12 @@ void ActionEditor::setAgentManager(AgentManager *manager)
         animItem->setText(i.value()->name());
     }
     if(ui->listAnimation->count()) {
+        //Enable all tabs
+        ui->tabWidgetMain->setEnabled(true);
         ui->listAnimation->setCurrentRow(0);
     } else {
+        // Disable all tabs
+        ui->tabWidgetMain->setEnabled(false);
     }
     //m_actionDisplay->setAgentManager(m_agentManager);
 
@@ -150,6 +163,7 @@ void ActionEditor::show()
 {
     QDialog::show();
     m_actionDisplay->show();
+    ui->tabWidgetMain->setCurrentIndex(0);
 }
 
 void ActionEditor::animationOneFrameBackward()

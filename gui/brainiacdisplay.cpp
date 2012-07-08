@@ -14,7 +14,9 @@ BrainiacDisplay::BrainiacDisplay(QWidget *parent) :
     m_camera->setEye(QVector3D(-500,100,0));
     setOption(QGLView::CameraNavigation,false);
     m_shiftPressed=false;
+    m_renderSkeleton=false;
     m_showCoordCross=false;
+    m_showAgentBoneCoordCrosses=false;
 }
 
 void BrainiacDisplay::keyPressEvent(QKeyEvent *event)
@@ -23,7 +25,17 @@ void BrainiacDisplay::keyPressEvent(QKeyEvent *event)
     if(event->key()==Qt::Key_Shift) {
         m_shiftPressed=true;
     } else if(event->key()==Qt::Key_C) {
-        m_showCoordCross=!m_showCoordCross;
+        if(m_shiftPressed) {
+            m_showCoordCross=!m_showCoordCross;
+        } else {
+            m_showAgentBoneCoordCrosses=!m_showAgentBoneCoordCrosses;
+        }
+    } else if(event->key()==Qt::Key_S) {
+        if(!m_shiftPressed) {
+            m_renderSilhouettes=!m_renderSilhouettes;
+        } else {
+            m_renderSkeleton=!m_renderSkeleton;
+        }
     }
 }
 

@@ -31,6 +31,8 @@ class ActionEditor : public QDialog
 public:
     explicit ActionEditor(Scene *scene, QWidget *parent = 0);
     void setAgentManager(AgentManager *manager);
+    QString getActiveAnimationName() const;
+    quint32 getActiveAnimationId() const {return m_activeAnimationId;}
     ~ActionEditor();
 
 public slots:
@@ -50,6 +52,7 @@ protected:
     AgentManager *m_agentManager;
     Agent *m_agent;
     ModifiableAnimation *m_activeAnimation;
+    quint32 m_activeAnimationId;
     ActionDisplay *m_actionDisplay; /**< TODO */
     Scene *m_scene;
     QMutex m_animationChangeMutex;

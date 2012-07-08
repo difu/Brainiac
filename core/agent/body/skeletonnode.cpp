@@ -20,6 +20,7 @@ SkeletonNode::SkeletonNode(SegmentType type, quint32 id, const QString &name, Bo
     setObjectName(name);
     m_id=id;
     bool hasGeometry=true;
+    m_showCoordCross=false;
     QGLBuilder builder;
     QGLSceneNode *node;
     SkeletonGeometryNode *nodeExtractedGeometry=new SkeletonGeometryNode();
@@ -160,8 +161,8 @@ void SkeletonNode::createChannels()
 
 void SkeletonNode::draw(QGLPainter *painter)
 {
-    if(!hasPrimitive()) {
-        drawCoordinateCross(30,painter);
+    if(!hasPrimitive() && m_showCoordCross) {
+            drawCoordinateCross(30,painter);
     }
     QGLSceneNode::draw(painter);
 }
@@ -192,7 +193,7 @@ void SkeletonNode::drawCoordinateCross(qreal crossLength, QGLPainter *painter)
 
 void SkeletonNode::drawGeometry(QGLPainter *painter)
 {
-    if(hasPrimitive()==true) {
+    if(hasPrimitive()==true && m_showCoordCross) {
         drawCoordinateCross(10,painter);
     }
     QGLSceneNode::drawGeometry(painter);
@@ -225,6 +226,11 @@ QVector3D SkeletonNode::getRestRotation() const
 QVector3D SkeletonNode::getRestTranslation() const
 {
     return m_restTranslation;
+}
+
+void SkeletonNode::showCoordCross(bool show)
+{
+    m_showCoordCross=show;
 }
 
 QMatrix4x4 SkeletonNode::transform() const

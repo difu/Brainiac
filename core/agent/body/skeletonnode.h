@@ -111,6 +111,8 @@ public:
      */
     void setRotTransOrder( const QList<BrainiacGlobals::RotTrans> &l);
 
+    void showCoordCross(bool show);
+
 protected:
     virtual void createChannels();
     void drawCoordinateCross(qreal crossLength, QGLPainter *painter);
@@ -150,6 +152,8 @@ protected:
 
     Body *m_body;
     qreal m_initColor;
+
+    bool m_showCoordCross;
 
     quint32 m_id;
 

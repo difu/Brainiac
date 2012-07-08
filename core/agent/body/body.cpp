@@ -185,12 +185,23 @@ void Body::setAnimations(QHash<quint32, Animation *> *animations)
     m_animationPlayer->setAnimations(animations);
 }
 
-void Body::showSilhouettes(bool render)
+void Body::showBoneCoordCrosses(bool show)
+{
+    foreach(QGLSceneNode *n,m_rootSkeletonNode->allChildren()) {
+        SkeletonNode *node=dynamic_cast<SkeletonNode *>(n);
+        if(node) {
+            node->showCoordCross(show);
+        }
+        m_rootSkeletonNode->showCoordCross(show);
+    }
+}
+
+void Body::showSilhouettes(bool show)
 {
     foreach(QGLSceneNode *n,m_rootSkeletonNode->allChildren()) {
         SkeletonGeometryNode *geoNode=dynamic_cast<SkeletonGeometryNode *>(n);
         if(geoNode) {
-            geoNode->showSilhouette(render);
+            geoNode->showSilhouette(show);
         }
     }
 }

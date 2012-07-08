@@ -107,6 +107,8 @@ protected:
 
     QAction *m_saveAgentAction;
     QAction *m_saveSceneAction;
+    QAction *m_loadAnimationsAction;
+    QAction *m_saveAnimationAction;
 
     QAction *m_showActionEditorAction;
 
@@ -134,6 +136,8 @@ protected slots:
     void editModeComboChange(int index);
     void editorNodeClick(ItemEditorWidgetsBase::editMessage msg);
     void refreshBrainEditor();
+    void loadAnimation();
+    void saveAnimation();
     void saveAgent();
     void saveScene();
     void showActionEditor();

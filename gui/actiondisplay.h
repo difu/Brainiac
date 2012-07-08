@@ -39,8 +39,6 @@ protected:
 
     Agent *m_agent;
     bool m_followAgent;
-    bool m_renderSilhouettes;
-    bool m_renderSkeleton;
 signals:
     void animationRunningToggled();
     void animationOneFrameForward();

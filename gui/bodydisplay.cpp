@@ -33,18 +33,23 @@ void BodyDisplay::setAgentManager(AgentManager *manager)
 void BodyDisplay::keyPressEvent(QKeyEvent *e)
 {
     BrainiacDisplay::keyPressEvent(e);
-    if(e->key()==Qt::Key_S) {
-        if(!m_shiftPressed) {
-            if(m_agentManager) {
-                m_renderSilhouettes=!m_renderSilhouettes;
-                m_agentManager->getMasterAgent()->getBody()->showSilhouettes(m_renderSilhouettes);
-                updateGL();
-            }
-        } else {
-            m_renderSkeleton=!m_renderSkeleton;
-            updateGL();
-        }
+    if(m_agentManager) {
+        m_agentManager->getMasterAgent()->getBody()->showSilhouettes(m_renderSilhouettes);
+        m_agentManager->getMasterAgent()->getBody()->showBoneCoordCrosses(m_showAgentBoneCoordCrosses);
+        updateGL();
     }
+//    if(e->key()==Qt::Key_S) {
+//        if(!m_shiftPressed) {
+//            if(m_agentManager) {
+//                m_renderSilhouettes=!m_renderSilhouettes;
+//                m_agentManager->getMasterAgent()->getBody()->showSilhouettes(m_renderSilhouettes);
+//                updateGL();
+//            }
+//        } else {
+//            m_renderSkeleton=!m_renderSkeleton;
+//            updateGL();
+//        }
+//    }
 }
 
 void BodyDisplay::paintGL(QGLPainter *painter)

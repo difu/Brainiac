@@ -21,11 +21,13 @@
 #include "core/scene.h"
 #include "core/simulation.h"
 #include "core/group/group.h"
+#include "core/agent/body/animation/animation.h"
 #include <QDebug>
 #include <QComboBox>
 #include <QDialog>
 #include <QLabel>
 #include <QFileDialog>
+#include <QMessageBox>
 
 MainWindow::MainWindow(Scene *scene, QWidget *parent) :
     QMainWindow(parent),
@@ -42,16 +44,16 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
     m_layout=new MainWindowLayout();
     QWidget *widget = new QWidget;
 
-    /* Test */
-    Group *testGrp=new Group(m_scene);
-    testGrp->setId(10);
-    testGrp->setName("BVHImportTest");
-    testGrp->getAgentManager()->loadSkeleton("/Users/dirkfuchs/Programming/bvh_player/Male1_A1_Stand.bvh");
-//    testGrp->getAgentManager()->setFileName("/Users/dirkfuchs/Programming/BrainiacNG/tmpTestData/agent4_bvh.xml");
-    //bool bla=testGrp->getAgentManager()->loadConfig();
-    //testGrp->getAgentManager()->loadAnimation("/Users/dirkfuchs/Programming/bvh_player/Male1_A1_Stand.bvh");
-    testGrp->setEditorTranslation(2200,2000);
-    /* /Test */
+//    /* Test */
+//    Group *testGrp=new Group(m_scene);
+//    testGrp->setId(10);
+//    testGrp->setName("BVHImportTest");
+//    testGrp->getAgentManager()->loadSkeleton("/Users/dirkfuchs/Programming/bvh_player/Male1_A1_Stand.bvh");
+////    testGrp->getAgentManager()->setFileName("/Users/dirkfuchs/Programming/BrainiacNG/tmpTestData/agent4_bvh.xml");
+//    //bool bla=testGrp->getAgentManager()->loadConfig();
+//    //testGrp->getAgentManager()->loadAnimation("/Users/dirkfuchs/Programming/bvh_player/Male1_A1_Stand.bvh");
+//    testGrp->setEditorTranslation(2200,2000);
+//    /* /Test */
 
     createEditorItemBars();
     createEditors();
@@ -117,6 +119,10 @@ void MainWindow::createActions()
     connect(m_saveAgentAction,SIGNAL(triggered()),this,SLOT(saveAgent()));
     m_saveSceneAction = new QAction(tr("Save Scene"),this);
     connect(m_saveSceneAction,SIGNAL(triggered()),this,SLOT(saveScene()));
+    m_loadAnimationsAction =new QAction(tr("Load Animations"),this);
+    connect(m_loadAnimationsAction,SIGNAL(triggered()),this,SLOT(loadAnimation()));
+    m_saveAnimationAction=new QAction(tr("Save Animation"),this);
+    connect(m_saveAnimationAction,SIGNAL(triggered()),this,SLOT(saveAnimation()));
 
     // Edit Menu Actions
     m_showActionEditorAction=new QAction(tr("Action Editor"),this);
@@ -281,6 +287,9 @@ void MainWindow::createMenues()
     m_fileMenu=menuBar()->addMenu(tr("&File"));
     m_fileMenu->addAction(m_saveAgentAction);
     m_fileMenu->addAction(m_saveSceneAction);
+    m_fileMenu->addSeparator();
+    m_fileMenu->addAction(m_loadAnimationsAction);
+    m_fileMenu->addAction(m_saveAnimationAction);
 
     m_editMenu=menuBar()->addMenu(tr("&Edit"));
     m_editMenu->addAction(m_showActionEditorAction);
@@ -369,6 +378,46 @@ void MainWindow::readSettings()
 void MainWindow::refreshBrainEditor()
 {
     m_editorView->scene()->update();
+}
+
+void MainWindow::loadAnimation()
+{
+    QFileDialog::Options options;
+    options |= QFileDialog::DontUseNativeDialog;
+    QString selectedFilter;
+    QFileInfo fInfo(m_scene->getFileName());
+    QStringList fileNames = QFileDialog::getOpenFileNames(this,tr("Select one or more animations to import"),fInfo.absolutePath(),tr("BVH (*.bvh)"),&selectedFilter,options);
+    foreach(QString file, fileNames) {
+        if(m_activeAgentManager) {
+            m_activeAgentManager->loadAnimation(file);
+        }
+    }
+    // Refresh the Editor
+    m_actionEditor->setAgentManager(m_activeAgentManager);
+}
+
+void MainWindow::saveAnimation()
+{
+    if(m_actionEditor->isVisible()) {
+        qDebug() << "Saving " << m_actionEditor->getActiveAnimationId();
+        if(m_activeAgentManager) {
+            Animation *anim=m_activeAgentManager->getAnimations()->value(m_actionEditor->getActiveAnimationId());
+            if(anim) {
+                if(!anim->relativeFileName().length()) {
+                    QFileDialog::Options options;
+                    options |= QFileDialog::DontUseNativeDialog;
+                    QString selectedFilter;
+                    QFileInfo fInfo(m_scene->getFileName());
+                    QString fileName=QFileDialog::getSaveFileName(this,tr("Select a file to save the animation"),fInfo.absolutePath(),tr("Brainiac Animation (*.xml)"),&selectedFilter,options);
+                }
+            } else {
+                QMessageBox::warning(this,"No animation selected","Select an animation first!");
+            }
+        }
+    } else {
+        QMessageBox::warning(this,"No animation selected","Select an animation first!");
+    }
+
 }
 
 /** \brief saves the selected agent

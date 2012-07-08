@@ -25,8 +25,6 @@ protected:
     SkeletonNode *m_rootSkeletonNode;
     Scene *m_scene;
     AgentManager *m_agentManager;
-    bool m_renderSilhouettes;
-    bool m_renderSkeleton;
 };
 
 #endif // BODYDISPLAY_H

@@ -560,7 +560,8 @@ bool AgentManager::loadAnmationBVH(QFile &file)
         }
         //return true;
     }
-    Animation *anim=new Animation(animCurves,file.fileName());
+    QFileInfo fInfo(file);
+    Animation *anim=new Animation(animCurves,fInfo.fileName().split('.').first());
     m_animations.insert(m_animationIdGenerator.getNewId(),anim);
 //    foreach(Animation *anim,m_animations) {
 //        qDebug() << anim->name();

@@ -63,7 +63,8 @@ public:
     SkeletonNode *getRootBone();
     SkeletonNode *getSkeletonNodeById(quint32 id);
     Agent* getAgent();
-    void showSilhouettes(bool render);
+    void showBoneCoordCrosses(bool show);
+    void showSilhouettes(bool show);
     void updatePosition();
     ~Body();
 protected:

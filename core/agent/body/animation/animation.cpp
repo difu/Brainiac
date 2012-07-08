@@ -16,6 +16,9 @@ Animation::Animation(const Animation &animation)
         m_curves.insert(i.key(),newCurve);
     }
     calculateLength();
+    m_name=animation.name();
+    m_fileName=animation.relativeFileName();
+    m_isLoopedAnimation=animation.isLoopedAnimation();
 }
 
 Animation::Animation(QHash<QString, AnimationCurve *> curves, QString name="")

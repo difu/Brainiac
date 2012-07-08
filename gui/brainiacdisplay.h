@@ -23,9 +23,12 @@ protected:
     virtual void paintGL(QGLPainter *painter);
 
 
-    QPoint m_lastPos; //!< last position of moouse to determine position delta
+    QPoint m_lastPos; //!< last position of mouse to determine position delta
     bool m_shiftPressed; //!< true, if shift key is pressed
-    bool m_showCoordCross;
+    bool m_showCoordCross;  /**< true, if worldspace coord cross should be drawn */
+    bool m_showAgentBoneCoordCrosses;
+    bool m_renderSilhouettes;
+    bool m_renderSkeleton;
 };
 
 #endif // BRAINIACDISPLAY_H

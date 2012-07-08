@@ -60,6 +60,16 @@ public:
     virtual qreal getValue(const QString &curve, qreal time) const;
 
     bool isLoopedAnimation() const { return m_isLoopedAnimation; }
+
+    /**
+     * @brief returns the filename
+     *
+     * the filename relative to the scenefile location
+     * @fn fileName
+     * @return QString
+     */
+    QString relativeFileName() const {return m_fileName; }
+
     /**
      * @brief the name of this Animation
      *
@@ -67,6 +77,7 @@ public:
      * @return QString the name
      */
     QString name() const { return m_name;}
+
     /**
      * @brief returns a modifiable reference to this Animation
      *
@@ -75,11 +86,22 @@ public:
      */
     QHash<QString, AnimationCurve*>& curves() {return m_curves;}
     QHash<QString, AnimationCurve*> curves() const {return m_curves;}
+
+    /**
+     * @brief sets the filename of this Animation
+     *
+     * the filename should be relative to the scene file location
+     * the absolute path is calculated outside
+     * @fn setFileName
+     * @param fileName
+     */
+    void setRelativeFileName(QString relativeFileName) {m_fileName=relativeFileName;}
     virtual ~Animation();
 protected:
     qreal m_length;
     QHash<QString, AnimationCurve*> m_curves; /**< all AnimationCurves, QString is the curve name, that correspondents to the agent´s SkeletonNode channel @sa SkeletonNode @sa Channel */
     QString m_name; /**< name of this Animation */
+    QString m_fileName; /**< filename relative to scenefile */
     bool m_isLoopedAnimation;
 };
 
