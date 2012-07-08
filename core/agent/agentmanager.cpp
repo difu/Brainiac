@@ -117,6 +117,8 @@ void AgentManager::addSkeletonNodeFromConfig(QXmlStreamReader *reader, quint32 i
     newNode->setRestTranslation(restTranslation);
     newNode->setRestRotation(restRotation);
     newNode->setRotTransOrder(rotTransOrder);
+    newNode->setTranslation(translation);
+    newNode->setRotation(rotation);
     m_masterAgent->getBody()->addSkeletonNode(newNode,parent);
     setBodyEditorTranslation(id,editorX,editorY);
     qDebug() << __PRETTY_FUNCTION__ << "" << translation << rotation << name << scale << color << editorX << editorY;
