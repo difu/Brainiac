@@ -17,6 +17,7 @@ BodyDisplay::BodyDisplay(Scene *scene): BrainiacDisplay(0)
 //    setWindowFlags(Qt::Tool);
 //    setGeometry(this->geometry().x(),this->geometry().y(),600,400);
    show();
+   setWindowTitle("Body");
 }
 
 void BodyDisplay::setAgentManager(AgentManager *manager)
@@ -26,6 +27,7 @@ void BodyDisplay::setAgentManager(AgentManager *manager)
         m_rootSkeletonNode=m_agentManager->getMasterAgent()->getBody()->getRootSkeletonNode();
         qDebug() << m_agentManager->getName() << "in BodyDisplay";
     }
+    setWindowTitle("Body: "%m_agentManager->getName());
 }
 
 void BodyDisplay::keyPressEvent(QKeyEvent *e)

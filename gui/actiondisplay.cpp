@@ -13,6 +13,7 @@ ActionDisplay::ActionDisplay(QWidget *parent): BrainiacDisplay(parent)
     m_renderSilhouettes=false;
     m_renderSkeleton=false;
     hide();
+    setWindowTitle("Action Editor");
 }
 
 void ActionDisplay::keyPressEvent(QKeyEvent *e)

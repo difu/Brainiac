@@ -24,6 +24,7 @@ SceneDisplay::SceneDisplay(Scene *scene, Camera *camera, QWidget *parent) :
     m_rotation=QVector3D(0,0,0);
 
     show();
+    setWindowTitle("Scene");
     //m_camera->setNearPlane(100);
 
 }
