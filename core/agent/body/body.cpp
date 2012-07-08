@@ -146,7 +146,18 @@ SkeletonNode* Body::getSkeletonNodeById(quint32 id)
         }
     }
     return 0;
+}
 
+SkeletonNode* Body::getSkeletonNodeByName(const QString &name)
+{
+    foreach(QGLSceneNode* n,m_rootSkeletonNode->allChildren()) {
+        SkeletonNode *skelNode=dynamic_cast<SkeletonNode *> (n);
+        if(skelNode) {
+            if(skelNode->objectName()==name)
+                return skelNode;
+        }
+    }
+    return 0;
 }
 
 void Body::renderSkeleton(QGLPainter *painter)

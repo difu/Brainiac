@@ -25,8 +25,18 @@ class SegmentEditor : public QWidget, public ItemEditorWidgetsBase
 public:
     explicit SegmentEditor(Scene *scene, QWidget *parent = 0);
     ~SegmentEditor();
+    bool editSymetric() const { return m_editSymetric; }
     void setSegmentConfig(AgentManager *manager, quint32 id);
     void updateEditor();
+
+public slots:
+    /**
+     * @brief enables/disables symetric editing
+     *
+     * @fn editSymetric
+     * @param editSymetric
+     */
+    void editSymetric(bool editSymetric);
 
 protected:
 
@@ -65,8 +75,11 @@ protected:
      */
     void createDimensionSliders();
 
+    quint32 getSymetricSegmentId() const;
+
     AgentManager *m_agentManager;
     quint32 m_id;
+    bool m_editSymetric;
 
     BrainiacSlider *m_SliderRestRx;
     BrainiacSlider *m_SliderRestRy;

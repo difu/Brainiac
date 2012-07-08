@@ -62,6 +62,7 @@ public:
      */
     SkeletonNode *getRootBone();
     SkeletonNode *getSkeletonNodeById(quint32 id);
+    SkeletonNode *getSkeletonNodeByName(const QString &name);
     Agent* getAgent();
     void showBoneCoordCrosses(bool show);
     void showSilhouettes(bool show);

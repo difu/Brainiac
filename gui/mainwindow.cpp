@@ -127,6 +127,10 @@ void MainWindow::createActions()
     // Edit Menu Actions
     m_showActionEditorAction=new QAction(tr("Action Editor"),this);
     connect(m_showActionEditorAction,SIGNAL(triggered()),this,SLOT(showActionEditor()));
+    m_editSymetricAction=new QAction(tr("Symetric"),this);
+    m_editSymetricAction->setCheckable(true);
+    m_editSymetricAction->setChecked(m_segmentEditor->editSymetric());
+    connect(m_editSymetricAction,SIGNAL(toggled(bool)),m_segmentEditor,SLOT(editSymetric(bool)));
 
     // Simulation Menu Actions
     m_runSimulationAction=new QAction(tr("Run"), this);
@@ -293,6 +297,7 @@ void MainWindow::createMenues()
 
     m_editMenu=menuBar()->addMenu(tr("&Edit"));
     m_editMenu->addAction(m_showActionEditorAction);
+    m_editMenu->addAction(m_editSymetricAction);
 
     m_simulationMenu=menuBar()->addMenu(tr("&Simulation"));
     m_simulationMenu->addAction(m_runSimulationAction);

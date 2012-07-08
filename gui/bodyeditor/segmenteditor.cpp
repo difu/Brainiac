@@ -19,6 +19,7 @@ SegmentEditor::SegmentEditor(Scene *scene, QWidget *parent) :
     createRestRxSliders();
     createRestTxSliders();
     createDimensionSliders();
+    m_editSymetric=true;
 }
 
 void SegmentEditor::createRestRxSliders()
@@ -156,9 +157,43 @@ void SegmentEditor::createDimensionSliders()
     connect(m_SliderDimensionZ,SIGNAL(valueChanged(qreal)),this,SLOT(manualDimensionsChanged(qreal)));
 }
 
+void SegmentEditor::editSymetric(bool editSymetric)
+{
+    m_editSymetric=editSymetric;
+}
+
+quint32 SegmentEditor::getSymetricSegmentId() const
+{
+    SkeletonNode *node=m_agentManager->getMasterAgent()->getBody()->getSkeletonNodeById(m_id);
+    if(node) {
+        QString name=node->objectName();
+        QString otherName;
+        if(name.startsWith('r')) {
+            otherName="l";
+        } else if(name.startsWith('l')) {
+            otherName="r";
+        } else {
+            return 0;
+        }
+        otherName=otherName%name.mid(1);
+        SkeletonNode *node=m_agentManager->getMasterAgent()->getBody()->getSkeletonNodeByName(otherName);
+        if(node) {
+            return node->getId();
+        }
+    } else {
+        qWarning() << __PRETTY_FUNCTION__ << "No segment with id "<< m_id << "found!";
+        return 0;
+    }
+    return 0;
+}
+
 void SegmentEditor::manualDimensionsChanged(qreal value) {
     Q_UNUSED(value);
     m_agentManager->setSegmentDimensions(m_id,m_SliderDimensionX->getValue(),m_SliderDimensionY->getValue(),m_SliderDimensionZ->getValue());
+    if(m_editSymetric) {
+        quint32 otherId=getSymetricSegmentId();
+        m_agentManager->setSegmentDimensions(otherId,m_SliderDimensionX->getValue(),m_SliderDimensionY->getValue(),m_SliderDimensionZ->getValue());
+    }
     emit updateGLContent();
     this->updateEditor();
 }
@@ -183,6 +218,11 @@ void SegmentEditor::manualRotChanged(qreal value)
 {
     Q_UNUSED(value);
     m_agentManager->setSegmentRotation(m_id,m_SliderRx->getValue(),m_SliderRy->getValue(),m_SliderRz->getValue());
+    if(m_editSymetric) {
+        quint32 otherId=getSymetricSegmentId();
+        m_agentManager->setSegmentRotation(otherId,m_SliderRx->getValue(),m_SliderRy->getValue(),m_SliderRz->getValue());
+    }
+
     emit updateGLContent();
     this->updateEditor();
 }
@@ -191,6 +231,10 @@ void SegmentEditor::manualTransChanged(qreal value)
 {
     Q_UNUSED(value);
     m_agentManager->setSegmentTranslation(m_id,m_SliderTx->getValue(),m_SliderTy->getValue(),m_SliderTz->getValue());
+    if(m_editSymetric) {
+        quint32 otherId=getSymetricSegmentId();
+        m_agentManager->setSegmentTranslation(otherId,m_SliderTx->getValue(),m_SliderTy->getValue(),-m_SliderTz->getValue());
+    }
     emit updateGLContent();
     this->updateEditor();
 }

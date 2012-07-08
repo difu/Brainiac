@@ -105,17 +105,22 @@ protected:
     QHash<AgentManager*, BodyEditor*> m_bodyEditors;  //!< all BrainEditors
     AgentManager *m_activeAgentManager; //!< AgentManager that is edited in brain/body editor
 
+    // File menu actions
     QAction *m_saveAgentAction;
     QAction *m_saveSceneAction;
     QAction *m_loadAnimationsAction;
     QAction *m_saveAnimationAction;
 
+    // Edit menu actions
     QAction *m_showActionEditorAction;
+    QAction *m_editSymetricAction;
 
+    // Simulation menu actions
     QAction *m_runSimulationAction;
     QAction *m_resetSimulationAction;
     QAction *m_stopSimulationAction;
 
+    // View menu actions
     QAction *m_viewSoundEmmisions;
     QAction *m_viewAgentInfos;
 
