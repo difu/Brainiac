@@ -110,6 +110,7 @@ protected:
     QAction *m_saveSceneAction;
     QAction *m_loadAnimationsAction;
     QAction *m_saveAnimationAction;
+    QAction *m_loadSkeletonAction;
 
     // Edit menu actions
     QAction *m_showActionEditorAction;
@@ -140,9 +141,19 @@ protected slots:
     void addAgentManager(AgentManager *agentManager);
     void editModeComboChange(int index);
     void editorNodeClick(ItemEditorWidgetsBase::editMessage msg);
+    /**
+     * @brief called, when any item is clicked (selected or deselected)
+     *
+     * this is used to determine the import skeleton menu state
+     * @sa loadSkeleton()
+     * @sa m_loadSkeletonAction
+     * @fn sceneEditorItemClicked
+     */
+    void sceneEditorItemClicked();
     void refreshBrainEditor();
     void loadAnimation();
     void saveAnimation();
+    void loadSkeleton();
     void saveAgent();
     void saveScene();
     void showActionEditor();

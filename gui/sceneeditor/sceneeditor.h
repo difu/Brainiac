@@ -19,6 +19,7 @@ class SceneEditor : public EditorBase
     Q_OBJECT
 public:
     SceneEditor(Scene *scene);
+    void refresh();
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);

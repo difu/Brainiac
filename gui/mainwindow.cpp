@@ -78,6 +78,8 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
     // When a frame has been calculated update display
     connect(m_scene->getSimulation(),SIGNAL(frameDone()),m_sceneDisplay,SLOT(update()),Qt::DirectConnection);
 
+    connect(m_sceneEditor,SIGNAL(selectionChanged()),this,SLOT(sceneEditorItemClicked()));
+
     // Assign each BrainEditor the first of its Agentmanagers Agent as the to be edited agentbrain
     QHashIterator<AgentManager*, BrainEditor*> i(m_brainEditors);
     while (i.hasNext()) {
@@ -123,6 +125,8 @@ void MainWindow::createActions()
     connect(m_loadAnimationsAction,SIGNAL(triggered()),this,SLOT(loadAnimation()));
     m_saveAnimationAction=new QAction(tr("Save Animation"),this);
     connect(m_saveAnimationAction,SIGNAL(triggered()),this,SLOT(saveAnimation()));
+    m_loadSkeletonAction=new QAction(tr("Load Skeleton"),this);
+    connect(m_loadSkeletonAction,SIGNAL(triggered()),this,SLOT(loadSkeleton()));
 
     // Edit Menu Actions
     m_showActionEditorAction=new QAction(tr("Action Editor"),this);
@@ -294,6 +298,7 @@ void MainWindow::createMenues()
     m_fileMenu->addSeparator();
     m_fileMenu->addAction(m_loadAnimationsAction);
     m_fileMenu->addAction(m_saveAnimationAction);
+    m_fileMenu->addAction(m_loadSkeletonAction);
 
     m_editMenu=menuBar()->addMenu(tr("&Edit"));
     m_editMenu->addAction(m_showActionEditorAction);
@@ -425,6 +430,23 @@ void MainWindow::saveAnimation()
 
 }
 
+void MainWindow::loadSkeleton()
+{
+    QFileDialog::Options options;
+    options |= QFileDialog::DontUseNativeDialog;
+    QString selectedFilter;
+    QFileInfo fInfo(m_scene->getFileName());
+    QString fileName = QFileDialog::getOpenFileName(this,tr("Select a skeleton to import"),fInfo.absolutePath(),tr("BVH (*.bvh)"),&selectedFilter,options);
+    Group *newGroup=new Group(m_scene);
+    newGroup->setId(10);
+    newGroup->setName("BVHImportTest");
+    newGroup->getAgentManager()->loadSkeleton(fileName);
+    newGroup->setEditorTranslation(2200,2000);
+    m_sceneEditor->refresh();
+    addAgentManager(newGroup->getAgentManager());
+
+}
+
 /** \brief saves the selected agent
 
 **/
@@ -449,6 +471,15 @@ void MainWindow::saveAgent()
 void MainWindow::saveScene()
 {
     m_scene->saveConfig();
+}
+
+void MainWindow::sceneEditorItemClicked()
+{
+    int numItemsSelected=m_sceneEditor->selectedItems().count();
+    if(numItemsSelected<=1)
+        m_loadSkeletonAction->setEnabled(true);
+    else
+        m_loadSkeletonAction->setEnabled(false);
 }
 
 /** \brief changes the mainwindow´s edit mode

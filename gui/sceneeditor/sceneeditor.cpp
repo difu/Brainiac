@@ -10,6 +10,16 @@
 
 SceneEditor::SceneEditor(Scene *scene) : EditorBase(scene)
 {
+    refresh();
+}
+
+void SceneEditor::refresh()
+{
+    foreach(QGraphicsItem* item, this->items()) {
+        this->removeItem(item);
+        delete item;
+    }
+
     foreach(Group *grp,m_scene->getGroups()) {
         //qDebug() << "Group in editor added" << grp->getId();
         SceneEditorItem *item=new SceneEditorItem(BrainiacGlobals::GROUP,grp);
