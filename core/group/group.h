@@ -41,7 +41,8 @@ protected:
     QString m_agentFileName;
     QString m_agentFileNameAbsolute;
     quint32 m_id;
-    quint32 m_editX, m_editY;
+    quint32 m_editX, /**< x position of group item in SceneEditor */
+            m_editY; /**< y position of group item in SceneEditor */
     AgentManager *m_agentManager;
     Scene *m_scene;
     QList <Agent *> m_agents;

@@ -408,7 +408,6 @@ bool AgentManager::loadConfig()
                 while(reader.readNextStartElement()) {
                     if(reader.name()=="Agent") {
                         QXmlStreamAttributes attribs = reader.attributes();
-                        setEditorTranslation(attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
                         setId(attribs.value("id").toString().toInt());
                         setName(attribs.value("name").toString());
                         while(reader.readNextStartElement()) {
@@ -670,8 +669,8 @@ bool AgentManager::saveConfig()
     stream.writeStartElement("Agentconfig");
     stream.writeStartElement("Agent");
     stream.writeAttribute("name", m_name);
-    stream.writeAttribute("editorx", QString::number(m_editX));
-    stream.writeAttribute("editory", QString::number(m_editY));
+//    stream.writeAttribute("editorx", QString::number(m_editX));
+//    stream.writeAttribute("editory", QString::number(m_editY));
     stream.writeStartElement("Body");
     foreach(QGLSceneNode *n,m_masterAgent->getBody()->getRootSkeletonNode()->allChildren()) {
         SkeletonNode *node=dynamic_cast<SkeletonNode *> (n);

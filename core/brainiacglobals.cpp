@@ -66,6 +66,8 @@ const char* const BrainiacGlobals::XmlHeightVarAttrib="heightvariation\0";
 const char* const BrainiacGlobals::XmlHeightAttrib="height\0";
 const char* const BrainiacGlobals::XmlIdAttrib="id\0";
 const char* const BrainiacGlobals::XmlRadiusAttrib="radius\0";
+const char* const BrainiacGlobals::XmlEditorXPosAttrib="editorX\0";
+const char* const BrainiacGlobals::XmlEditorYPosAttrib="editorY\0";
 
 const char* const BrainiacGlobals::XmlScaleTag="Scale\0";
 const char* const BrainiacGlobals::XmlTranslationTag="Translation\0";

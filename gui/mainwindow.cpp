@@ -12,6 +12,7 @@
 #include "gui/editorgraphicsview.h"
 #include "gui/sceneeditor/sceneeditor.h"
 #include "gui/sceneeditor/groupeditor.h"
+#include "gui/editoritem.h"
 #include "gui/scenedisplay.h"
 #include "gui/bodydisplay.h"
 #include "gui/Animation/actioneditor.h"
@@ -470,6 +471,21 @@ void MainWindow::saveAgent()
 **/
 void MainWindow::saveScene()
 {
+    // Update EditorItem position
+    foreach(QGraphicsItem *item, m_sceneEditor->items()) {
+        EditorItem *sItem=dynamic_cast<EditorItem *> (item);
+        if(sItem) {
+            if(sItem->getType()==BrainiacGlobals::GROUP) {
+                Group *grp=(Group *) sItem->getObject();
+                grp->setEditorTranslation(item->pos().x(),item->pos().y());
+                qDebug() << item->pos();
+            } else if(sItem->getType()==BrainiacGlobals::AGENT) {
+                AgentManager *mgr=(AgentManager*) sItem->getObject();
+                mgr->setEditorTranslation(item->pos().x(),item->pos().y());
+            }
+        }
+    }
+
     m_scene->saveConfig();
 }
 

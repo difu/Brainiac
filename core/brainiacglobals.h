@@ -57,6 +57,8 @@ public:
     static const char* const XmlHeightVarAttrib;
     static const char* const XmlHeightAttrib;
     static const char* const XmlRadiusAttrib;
+    static const char* const XmlEditorXPosAttrib; /**< X Position in an editor */
+    static const char* const XmlEditorYPosAttrib; /**< Y Position in an editor */
 
     static const char* const XmlScaleTag;
     static const char* const XmlRotationTag;

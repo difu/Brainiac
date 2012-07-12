@@ -38,6 +38,7 @@ void Group::loadConfig(QXmlStreamReader *xml)
     setName(attribs.value("name").toString());
     setAgentFileName(attribs.value("agentFile").toString());
     setEditorTranslation(attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
+    m_agentManager->setEditorTranslation(attribs.value("agentEditorX").toString().toInt(),attribs.value("agentEditorY").toString().toInt());
     xml->skipCurrentElement();
 
     //m_agentManager=new AgentManager(m_scene, this);
@@ -57,6 +58,8 @@ void Group::saveConfig(QXmlStreamWriter *xml)
     xml->writeAttribute("id",QString::number(m_id));
     xml->writeAttribute("editorx",QString::number(m_editX));
     xml->writeAttribute("editory",QString::number(m_editY));
+    xml->writeAttribute("agentEditorX",QString::number(m_agentManager->getEditorTranslationX()));
+    xml->writeAttribute("agentEditorY",QString::number(m_agentManager->getEditorTranslationY()));
     xml->writeAttribute("agentFile",m_agentFileName);
     xml->writeEndElement();
 }
