@@ -23,6 +23,7 @@
 #include <QXmlStreamWriter>
 #include <QDebug>
 #include <QVector3D>
+#include "qglscenenode.h"
 
 AgentManager::AgentManager(Scene *scene, Group *group)
 {
@@ -604,6 +605,7 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
             nodeId++;
             nodeName=line.split(' ').last();
             SkeletonNodeBox *box=new SkeletonNodeBox(nodeId,nodeName,m_masterAgent->getBody());
+            //SkeletonNode *box=new SkeletonNode(SkeletonNode::TUBE,nodeId,nodeName,m_masterAgent->getBody());
             box->setColor(0.1f);
             if(nodeStack.isEmpty()) {
                 m_masterAgent->getBody()->addSkeletonNode(box,0);
@@ -655,6 +657,16 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
         }
         //qDebug() << line;
     }
+    foreach(SkeletonNode *n,m_masterAgent->getBody()->getAllSkeletonNodes()) {
+        foreach(QGLSceneNode *childNode,n->children()) {
+            SkeletonNode *childSkelNode=dynamic_cast<SkeletonNode *>(childNode);
+            if(childSkelNode) {
+                n->setTranslation(childSkelNode->getRestTranslation()/2.0f);
+                n->setScale(QVector3D(1.0f,1.0f,childSkelNode->getRestTranslation().length()));
+            }
+        }
+    }
+
     //qDumpScene(m_masterAgent->getBody()->getRootSkeletonNode());
     return true;
 }

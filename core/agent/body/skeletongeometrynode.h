@@ -12,6 +12,7 @@ class SkeletonGeometryNode : public QGLSceneNode
 {
 public:
     SkeletonGeometryNode();
+    virtual void draw(QGLPainter *painter);
     void showSilhouette(bool show);
     void setColor(QColor col) {m_color=col;showSilhouette(m_showSilhouette);}
 

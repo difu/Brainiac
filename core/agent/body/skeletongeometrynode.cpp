@@ -8,13 +8,21 @@ SkeletonGeometryNode::SkeletonGeometryNode():QGLSceneNode()
     setEffect(QGL::LitMaterial);
 }
 
+void SkeletonGeometryNode::draw(QGLPainter *painter)
+{
+    if(!m_showSilhouette){
+        QGLSceneNode::draw(painter);
+    }
+    drawGeometry(painter);
+}
+
 void SkeletonGeometryNode::drawGeometry(QGLPainter *painter)
 {
     //painter->setStandardEffect(QGL::LitMaterial);
     painter->setFaceColor(QGL::AllFaces,m_color);
     painter->setColor(m_color);
     if(!m_showSilhouette) {
-        QGLSceneNode::drawGeometry(painter);
+        //QGLSceneNode::drawGeometry(painter);
     } else {
         QBox3D box=this->boundingBox();
         //QGLSceneNode::drawGeometry(painter);

@@ -23,45 +23,55 @@ SkeletonNode::SkeletonNode(SegmentType type, quint32 id, const QString &name, Bo
     m_showCoordCross=false;
     QGLBuilder builder;
     QGLSceneNode *node;
-    SkeletonGeometryNode *nodeExtractedGeometry=new SkeletonGeometryNode();
+   // SkeletonGeometryNode *nodeExtractedGeometry=new SkeletonGeometryNode();
     switch(type) {
     case BOX:
         builder << QGL::Faceted;
         builder << QGLCube(1.0f);
         node=builder.finalizedSceneNode();
-        nodeExtractedGeometry->setGeometry(node->children().at(0)->geometry());
-        nodeExtractedGeometry->setCount(node->children().at(0)->count());
-        nodeExtractedGeometry->setObjectName("Geometry Node BOX");
+//        nodeExtractedGeometry->setGeometry(node->children().at(0)->geometry());
+//        nodeExtractedGeometry->setCount(node->children().at(0)->count());
+//        nodeExtractedGeometry->setObjectName("Geometry Node BOX");
         break;
     case SPHERE:
         builder << QGL::Faceted;
         builder << QGLSphere(1.0f);
 
         node=builder.finalizedSceneNode();
-        nodeExtractedGeometry->setGeometry(node->children().at(0)->geometry());
-        nodeExtractedGeometry->setCount(node->children().at(0)->count());
-        nodeExtractedGeometry->setObjectName("Geometry Node SPHERE");
+//        nodeExtractedGeometry->setGeometry(node->children().at(0)->geometry());
+//        nodeExtractedGeometry->setCount(node->children().at(0)->count());
+//        nodeExtractedGeometry->setObjectName("Geometry Node SPHERE");
         break;
+    case TUBE:
+        builder << QGL::Faceted;
+        builder << QGLCylinder(1.0f,1.0f,1.0f,18);
+
+        node=builder.finalizedSceneNode();
+//        nodeExtractedGeometry->setGeometry(node->children().at(0)->geometry());
+//        nodeExtractedGeometry->setCount(node->children().at(0)->count());
+//        nodeExtractedGeometry->setObjectName("Geometry Node SPHERE");
+        break;
+
     default:
         node=builder.finalizedSceneNode();
         hasGeometry=false;
         break;
     }
-    node->deleteLater();
+    //node->deleteLater();
 
-    if(type!=SkeletonNode::NOPRIMITIVE) {
-        QGLBuilder b2;
-        b2 << QGL::Faceted;
-        b2 << QGLCube(0.5f);
-        QGLSceneNode *node=b2.finalizedSceneNode()->children().at(0);
-        setGeometry(node->geometry());
-        setCount(node->count());
-        //this->addNode(b2.finalizedSceneNode());
-        delete node;
-    }
-
-    m_geometryNode = nodeExtractedGeometry;
-    this->addNode(nodeExtractedGeometry);
+//    if(type!=SkeletonNode::NOPRIMITIVE) {
+//        QGLBuilder b2;
+//        b2 << QGL::Faceted;
+//        b2 << QGLCube(0.5f);
+//        QGLSceneNode *node=b2.finalizedSceneNode()->children().at(0);
+//        setGeometry(node->geometry());
+//        setCount(node->count());
+//        //this->addNode(b2.finalizedSceneNode());
+//        delete node;
+//    }
+    m_geometryNode=new SkeletonGeometryNode();
+    m_geometryNode->addNode(node);
+    this->addNode(m_geometryNode);
 
     m_segRestTransX=new QGraphicsTranslation3D();
     m_segRestTransY=new QGraphicsTranslation3D();

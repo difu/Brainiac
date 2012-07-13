@@ -11,7 +11,7 @@ class Channel;
 class QGraphicsRotation3D;
 class QGraphicsTranslation3D;
 class QGraphicsScale3D;
-
+class SkeletonGeometryNode;
 /**
  * @brief A Node of the Agent s skeleton
  * @class SkeletonNode skeletonnode.h "core/agent/body/skeletonnode.h"
@@ -23,7 +23,7 @@ class SkeletonNode : public QGLSceneNode
 {
     Q_OBJECT
 public:
-    enum SegmentType {SPHERE=BrainiacGlobals::SPHERE, BOX=BrainiacGlobals::CUBE, NOPRIMITIVE};
+    enum SegmentType {SPHERE=BrainiacGlobals::SPHERE, BOX=BrainiacGlobals::CUBE, TUBE=BrainiacGlobals::TUBE, NOPRIMITIVE};
     SkeletonNode( SegmentType type, quint32 id, const QString &name, Body *body, QObject *parent = 0 );
     ~SkeletonNode();
     //void draw(QGLPainter *painter);
@@ -117,7 +117,7 @@ protected:
     virtual void createChannels();
     void drawCoordinateCross(qreal crossLength, QGLPainter *painter);
     virtual void drawGeometry(QGLPainter *painter);
-    QGLSceneNode *m_geometryNode; /**< this SkeletonNode´s geometry @sa SkeletonGeometryNode */
+    SkeletonGeometryNode *m_geometryNode; /**< this SkeletonNode´s geometry @sa SkeletonGeometryNode */
     SegmentType m_type;
     QVector3D m_rotation; //!< Rotation of SkeletonNode
     QVector3D m_translation; //!< Translation of SkeletonNode
