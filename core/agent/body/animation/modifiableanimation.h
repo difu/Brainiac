@@ -118,6 +118,15 @@ public:
      */
     void setCrossFadeRootCurves(bool rx, bool ry, bool rz, bool tx, bool ty, bool tz);
 
+    /**
+     * @brief sets the name of this ModifiableAnimation
+     *
+     * This function alters also the name of the original Animation
+     * @fn setName
+     * @param name
+     */
+    virtual void setName(QString name) {Animation::setName(name);m_origAnimation->setName(name);}
+
     qreal getCrossFade() const {return m_crossFadeTime;}
     qreal getStartTime() const {return m_startTime;}
     qreal getEndTime() const {return m_endTime;}

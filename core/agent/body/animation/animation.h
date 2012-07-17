@@ -107,6 +107,7 @@ public:
     QHash<QString, AnimationCurve*>& curves() {return m_curves;}
     QHash<QString, AnimationCurve*> curves() const {return m_curves;}
 
+    bool saveAnimation();
     bool saveAnimation(QString &fileName);
 
     /**
@@ -116,6 +117,14 @@ public:
      * @param fileName
      */
     void setFileName(QString relativeFileName) {m_fileName=relativeFileName;}
+
+    /**
+     * @brief sets the name of this Animation
+     *
+     * @fn setName
+     * @param name
+     */
+    virtual void setName(QString name) { m_name=name; }
     virtual ~Animation();
 protected:
     qreal m_length;

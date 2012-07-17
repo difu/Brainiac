@@ -62,6 +62,7 @@ protected:
     bool m_animationRunning;
 protected slots:
     void animationSelectionChanged(int rowId);
+    void animationNameChanged();
     // Loop Tab Stuff
     void uiLoopTimesChanged();
     void uiLoopAnimModeLocomotion();

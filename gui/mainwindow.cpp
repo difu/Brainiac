@@ -397,7 +397,7 @@ void MainWindow::loadAnimation()
     options |= QFileDialog::DontUseNativeDialog;
     QString selectedFilter;
     QFileInfo fInfo(m_scene->getFileName());
-    QStringList fileNames = QFileDialog::getOpenFileNames(this,tr("Select one or more animations to import"),fInfo.absolutePath(),tr("BVH (*.bvh), Brainiac Animation Format (*.baf)"),&selectedFilter,options);
+    QStringList fileNames = QFileDialog::getOpenFileNames(this,tr("Select one or more animations to import"),fInfo.absolutePath(),tr("BVH (*.bvh);;Brainiac Animation Format (*.baf)"),&selectedFilter,options);
     foreach(QString file, fileNames) {
         if(m_activeAgentManager) {
             m_activeAgentManager->loadAnimation(file);
@@ -421,6 +421,8 @@ void MainWindow::saveAnimation()
                     QFileInfo fInfo(m_scene->getFileName());
                     QString fileName=QFileDialog::getSaveFileName(this,tr("Select a file to save the animation"),fInfo.absolutePath(),tr("Brainiac Animation Format(*.baf)"),&selectedFilter,options);
                     anim->saveAnimation(fileName);
+                } else {
+                    anim->saveAnimation();
                 }
             } else {
                 QMessageBox::warning(this,"No animation selected","Select an animation first!");

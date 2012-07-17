@@ -468,7 +468,25 @@ bool AgentManager::loadConfig()
                                         reader.skipCurrentElement();
                                     }
                                 }
-                            } else {
+                            } else if(reader.name()=="Animations") {
+                                while(reader.readNextStartElement()) {
+                                    if(reader.name()=="Animation") {
+                                        QXmlStreamAttributes attribs = reader.attributes();
+                                        QString animFileName=attribs.value(BrainiacGlobals::XmlFileNameAttrib).toString();
+                                        QString animAbsoluteFileName=m_scene->getAbsoluteFileDir()%"/"%animFileName;
+                                        Animation *anim=Animation::loadAnimation(animAbsoluteFileName);
+                                        quint32 id=attribs.value(BrainiacGlobals::XmlIdAttrib).toString().toUInt();
+                                        if(id<=0) {
+                                            qWarning() <<__PRETTY_FUNCTION__ << "Wrong animation id";
+                                        }
+                                        m_animations.insert(id,anim);
+                                        m_animationIdGenerator.registerId(id);
+                                        reader.skipCurrentElement();
+                                    }else {
+                                        reader.skipCurrentElement();
+                                    }
+                                }
+                            }else {
                                 reader.skipCurrentElement();
                             }
                         }
@@ -780,39 +798,7 @@ bool AgentManager::saveConfig()
         }
     }
 
-//    foreach(Segment *seg,m_masterAgent->getBody()->getSegments()) {
-//        stream.writeStartElement("Segment");
-//        stream.writeAttribute("id", QString::number(seg->getId()));
-//        stream.writeAttribute("parent", QString::number(seg->getParentId()));
-//        stream.writeAttribute("name", seg->getName());
-//        if(seg->getType()==Segment::SPHERE) {
-//            Sphere *sphere=(Sphere *)seg;
-//            stream.writeAttribute("type", "sphere");
-//            stream.writeStartElement("Radius");
-//            stream.writeAttribute("r", QString::number(sphere->getSphereRadius(),'f'));
-//            stream.writeEndElement(); // Radius
-//        }
-//        stream.writeStartElement("Color");
-//        stream.writeAttribute("value", QString::number(seg->getSegmentColor(),'f'));
-//        if(seg->getColor()->isInherited()) {
-//            stream.writeAttribute("inherited", "true");
-//        } else {
-//            stream.writeAttribute("inherited", "false");
-//        }
-//        stream.writeEndElement(); //Color
-//        stream.writeStartElement("Translation");
-//        stream.writeAttribute("x",  QString::number(seg->getRestTranslation()->x(),'f'));
-//        stream.writeAttribute("y",  QString::number(seg->getRestTranslation()->y(),'f'));
-//        stream.writeAttribute("z",  QString::number(seg->getRestTranslation()->z(),'f'));
-//        stream.writeEndElement(); //Translation
-//        stream.writeStartElement("Rotation");
-//        stream.writeAttribute("x",  QString::number(seg->getRestRotation()->x(),'f'));
-//        stream.writeAttribute("y",  QString::number(seg->getRestRotation()->y(),'f'));
-//        stream.writeAttribute("z",  QString::number(seg->getRestRotation()->z(),'f'));
-//        stream.writeEndElement(); //Rotation
 
-//        stream.writeEndElement(); //Segment
-//    }
     stream.writeEndElement(); // Body
     stream.writeStartElement("Animations");
     QHashIterator<quint32, Animation *> i(m_animations) ;
@@ -823,7 +809,8 @@ bool AgentManager::saveConfig()
         if(anim->fileName().length()>0) {
             stream.writeStartElement("Animation");
             stream.writeAttribute(BrainiacGlobals::XmlIdAttrib,QString::number(i.key()));
-            stream.writeAttribute(BrainiacGlobals::XmlFileNameAttrib,anim->fileName());
+            QString relFileName=m_scene->getRelativeFileDir(anim->fileName());
+            stream.writeAttribute(BrainiacGlobals::XmlFileNameAttrib,relFileName);
             stream.writeEndElement(); // Animation
         }
     }

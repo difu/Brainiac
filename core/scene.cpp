@@ -71,6 +71,17 @@ void Scene::createAgents(Generator *gen)
     }
 }
 
+QString Scene::getAbsoluteFileDir() const {
+    QFileInfo fInfo(m_fileName);
+    return fInfo.absolutePath();
+}
+
+QString Scene::getRelativeFileDir(QString file) const
+{
+    QDir dir(getAbsoluteFileDir());
+    return dir.relativeFilePath(file);
+}
+
 QList<Agent *> Scene::getAgents()
 {
     return m_agents;

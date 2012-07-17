@@ -32,6 +32,7 @@ ActionEditor::ActionEditor(Scene *scene, QWidget *parent) :
     connect(m_actionDisplay,SIGNAL(animationOneFrameBackward()),this,SLOT(animationOneFrameBackward()));
     connect(m_actionDisplay,SIGNAL(animationOneFrameForward()),this,SLOT(animationOneFrameForward()));
     connect(m_actionDisplay,SIGNAL(animationRunningToggled()),this,SLOT(animationRunningToggle()));
+    connect(ui->lineEditAnimationName,SIGNAL(returnPressed()),this,SLOT(animationNameChanged()));
     startTimer(1000/m_scene->getSimulation()->getFps());
     m_agent=0;
     m_animationTime=0;
@@ -91,6 +92,15 @@ void ActionEditor::addCurvesToList(SkeletonNode *node, quint32 level)
 
 }
 
+void ActionEditor::animationNameChanged()
+{
+    if(m_activeAnimation) {
+        m_activeAnimation->setName(ui->lineEditAnimationName->text());
+        QListWidgetItem *item=ui->listAnimation->selectedItems().first();
+        item->setText(m_activeAnimation->name());
+    }
+}
+
 void ActionEditor::animationSelectionChanged(int rowId)
 {
     if(rowId >=0) {
@@ -112,6 +122,7 @@ void ActionEditor::setActiveAnimation(quint32 animId)
         delete m_activeAnimation;
     m_activeAnimation=new ModifiableAnimation(m_agentManager->getAnimations()->value(animId),m_agent->getBody());
     m_activeAnimationId=animId;
+    ui->lineEditAnimationName->setText(m_activeAnimation->name());
     //m_activeAnimation=m_agentManager->getAnimations()->value(animId);
     addCurvesToList(m_agentManager->getMasterAgent()->getBody()->getRootSkeletonNode(),0);
     m_loopEditorScene->setAnimation(m_activeAnimation);

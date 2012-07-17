@@ -19,7 +19,11 @@ ModifiableAnimation::ModifiableAnimation( Animation *animation, Body *body) : An
 
 void ModifiableAnimation::bake()
 {
+    QHashIterator<QString, AnimationCurve*> i(m_curves) ;
+    while(i.hasNext()) {
+        i.next();
 
+    }
 }
 
 qreal ModifiableAnimation::getValue(const QString &curve, qreal time) const

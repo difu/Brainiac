@@ -2,6 +2,7 @@
 #define SCENE_H
 
 #include <QObject>
+#include <QDir>
 
 #include <QXmlStreamWriter>
 #include <QXmlStreamReader>
@@ -32,6 +33,24 @@ public:
     Group *getGroup(quint32 id);
     QList<Group *> getGroups() { return m_groups; }
     QString getFileName() {return m_fileName; }
+
+    /**
+     * @brief returns the absolute directory of the scene file
+     *
+     * @fn getAbsoluteFileDir
+     * @return QString
+     */
+    QString getAbsoluteFileDir() const;
+
+    /**
+     * @brief returns the relative path of given file to the location of the scene file
+     *
+     * all files are saved relative to the scenefile
+     * @fn getRelativeFileDir
+     * @param file
+     * @return QString
+     */
+    QString getRelativeFileDir(QString file) const;
     Simulation *getSimulation() { return m_simulation; }
     bool openConfig(const QString & fileName);
     bool saveConfig(const QString & fileName);

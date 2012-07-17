@@ -126,6 +126,11 @@ Animation* Animation::loadAnimation(QString fileName)
     return anim;
 }
 
+bool Animation::saveAnimation()
+{
+    return saveAnimation(m_fileName);
+}
+
 bool Animation::saveAnimation(QString &fileName)
 {
     QFile file(fileName);
@@ -154,6 +159,7 @@ bool Animation::saveAnimation(QString &fileName)
             out << kf.x() << kf.y();
         }
     }
+    m_fileName=fileName;
     return true;
 }
 
