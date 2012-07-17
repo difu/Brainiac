@@ -24,7 +24,7 @@ public:
  * @fn AnimationCurve
  * @param curve
  */
-    AnimationCurve(const AnimationCurve& curve);
+    AnimationCurve(AnimationCurve *curve);
     /**
      * @brief adds a keyframe to this AnimationCurve
      *

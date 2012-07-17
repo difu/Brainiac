@@ -493,7 +493,21 @@ bool AgentManager::loadAnimation(const QString &filename)
         qDebug() << "Error while opening file " << filename;
         return false;
     }
-    return loadAnmationBVH(file);
+    if(filename.endsWith(".bvh",Qt::CaseInsensitive)) {
+        return loadAnmationBVH(file);
+    } else if(filename.endsWith(".baf")) {
+        Animation *anim=Animation::loadAnimation(filename);
+        if(anim) {
+            m_animations.insert(m_animationIdGenerator.getNewId(),anim);
+        } else {
+            qWarning() << __PRETTY_FUNCTION__ << "Could not load "<< filename;
+        }
+        qDebug() << "anim";
+    } else {
+        qWarning() << __PRETTY_FUNCTION__ << "File format not supported " << filename;
+    }
+    return false;
+
 }
 
 bool AgentManager::loadAnmationBVH(QFile &file)
@@ -800,6 +814,21 @@ bool AgentManager::saveConfig()
 //        stream.writeEndElement(); //Segment
 //    }
     stream.writeEndElement(); // Body
+    stream.writeStartElement("Animations");
+    QHashIterator<quint32, Animation *> i(m_animations) ;
+
+    while(i.hasNext()) {
+        i.next();
+        Animation *anim=i.value();
+        if(anim->fileName().length()>0) {
+            stream.writeStartElement("Animation");
+            stream.writeAttribute(BrainiacGlobals::XmlIdAttrib,QString::number(i.key()));
+            stream.writeAttribute(BrainiacGlobals::XmlFileNameAttrib,anim->fileName());
+            stream.writeEndElement(); // Animation
+        }
+    }
+    stream.writeEndElement(); // Animations
+
     stream.writeStartElement("Brain");
     foreach(FuzzyBase *fuzz,m_masterAgent->getBrain()->getFuzzies()) {
         if(fuzz->getType()==FuzzyBase::AND) {

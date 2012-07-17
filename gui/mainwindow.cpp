@@ -397,7 +397,7 @@ void MainWindow::loadAnimation()
     options |= QFileDialog::DontUseNativeDialog;
     QString selectedFilter;
     QFileInfo fInfo(m_scene->getFileName());
-    QStringList fileNames = QFileDialog::getOpenFileNames(this,tr("Select one or more animations to import"),fInfo.absolutePath(),tr("BVH (*.bvh)"),&selectedFilter,options);
+    QStringList fileNames = QFileDialog::getOpenFileNames(this,tr("Select one or more animations to import"),fInfo.absolutePath(),tr("BVH (*.bvh), Brainiac Animation Format (*.baf)"),&selectedFilter,options);
     foreach(QString file, fileNames) {
         if(m_activeAgentManager) {
             m_activeAgentManager->loadAnimation(file);
@@ -414,12 +414,13 @@ void MainWindow::saveAnimation()
         if(m_activeAgentManager) {
             Animation *anim=m_activeAgentManager->getAnimations()->value(m_actionEditor->getActiveAnimationId());
             if(anim) {
-                if(!anim->relativeFileName().length()) {
+                if(!anim->fileName().length()) {
                     QFileDialog::Options options;
                     options |= QFileDialog::DontUseNativeDialog;
                     QString selectedFilter;
                     QFileInfo fInfo(m_scene->getFileName());
-                    QString fileName=QFileDialog::getSaveFileName(this,tr("Select a file to save the animation"),fInfo.absolutePath(),tr("Brainiac Animation (*.xml)"),&selectedFilter,options);
+                    QString fileName=QFileDialog::getSaveFileName(this,tr("Select a file to save the animation"),fInfo.absolutePath(),tr("Brainiac Animation Format(*.baf)"),&selectedFilter,options);
+                    anim->saveAnimation(fileName);
                 }
             } else {
                 QMessageBox::warning(this,"No animation selected","Select an animation first!");

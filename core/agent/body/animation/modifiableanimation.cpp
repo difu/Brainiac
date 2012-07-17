@@ -1,17 +1,25 @@
 #include "modifiableanimation.h"
+
 #include <QDebug>
 #include "core/agent/body/body.h"
 #include "core/agent/body/skeletonnode.h"
+#include "core/agent/body/animation/animationcurve.h"
 
-ModifiableAnimation::ModifiableAnimation(const Animation &animation, Body *body) : Animation(animation)
+ModifiableAnimation::ModifiableAnimation( Animation *animation, Body *body) : Animation(animation)
 {
     m_startTime=0.0f;
     m_endTime=getLength(true);
     m_crossFadeTime=0;
     m_body=body;
+    m_origAnimation=(animation);
     setAnimationType(BrainiacGlobals::NOTYPE);
     qDebug() << __PRETTY_FUNCTION__ << "Root bone node " << m_body->getRootBone()->getName();
     qDebug() << __PRETTY_FUNCTION__ << "Startime" << m_startTime << "End Time" << m_endTime;
+}
+
+void ModifiableAnimation::bake()
+{
+
 }
 
 qreal ModifiableAnimation::getValue(const QString &curve, qreal time) const
@@ -143,4 +151,8 @@ void ModifiableAnimation::setStartTime(qreal startTime)
 void ModifiableAnimation::setEndTime(qreal endTime)
 {
     m_endTime=qBound(m_startTime+minDistTime,endTime,getLength(true));
+}
+
+ModifiableAnimation::~ModifiableAnimation(){
+
 }

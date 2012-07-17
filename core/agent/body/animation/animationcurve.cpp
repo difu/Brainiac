@@ -5,15 +5,24 @@ AnimationCurve::AnimationCurve()
 {
 }
 
-AnimationCurve::AnimationCurve(const AnimationCurve &curve)
+AnimationCurve::AnimationCurve(AnimationCurve *curve)
 {
-    foreach(QVector2D vec,curve.keyFrames()) {
+    foreach(QVector2D vec,curve->keyFrames()) {
         addKeyFrame(vec.x(),vec.y());
     }
 }
 
 void AnimationCurve::addKeyFrame(qreal time, qreal value)
 {
+    // check, if we have already a keyframe at given time.
+    // if so, change its value
+    for(int i=0; i<m_keyFrames.count();i++) {
+        if(qFuzzyCompare(m_keyFrames.at(i).x(),time)) {
+            m_keyFrames[i].setY(value);
+            return;
+        }
+    }
+
     if(m_keyFrames.count()==0) {
         m_keyFrames.append(QVector2D(time,value));
         return;
@@ -56,7 +65,7 @@ qreal AnimationCurve::getValue(qreal time) const
 void AnimationCurve::dPrintKeyFrames(quint32 start=0, quint32 end=1000) const
 {
     qDebug() << __PRETTY_FUNCTION__;
-    for(quint32 i=start;i<m_keyFrames.count()&& i < end;++i) {
+    for(int i=start;i<m_keyFrames.count()&& i < end;++i) {
         qDebug() <<"Keyframe " << i << " Time: " << m_keyFrames.at(i).x() << "Value" << m_keyFrames.at(i).y();
     }
 }

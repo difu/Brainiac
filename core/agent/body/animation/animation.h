@@ -22,7 +22,7 @@ public:
  */
     Animation();
 
-    Animation(const Animation& animation);
+    Animation(Animation *animation);
 /**
  * @brief
  *
@@ -41,6 +41,18 @@ public:
      */
     void calculateLength();
 
+    /**
+     * @brief deletes the curve with name curve
+     *
+     * @param curveName the name of the curve to be deleted
+     */
+    void deleteCurve(const QString &curveName);
+
+    /**
+     * @brief deletes all curves
+     *
+     */
+    void deleteCurves();
     /**
      * @brief returns the length of this Animation
      *
@@ -61,14 +73,22 @@ public:
 
     bool isLoopedAnimation() const { return m_isLoopedAnimation; }
 
+
+    /**
+     * @brief loads a brainiac animation file
+     *
+     * @param fileName
+     * @return Animation
+     */
+    static Animation* loadAnimation(QString fileName);
     /**
      * @brief returns the filename
      *
-     * the filename relative to the scenefile location
+     * the filename
      * @fn fileName
      * @return QString
      */
-    QString relativeFileName() const {return m_fileName; }
+    QString fileName() const {return m_fileName; }
 
     /**
      * @brief the name of this Animation
@@ -87,15 +107,15 @@ public:
     QHash<QString, AnimationCurve*>& curves() {return m_curves;}
     QHash<QString, AnimationCurve*> curves() const {return m_curves;}
 
+    bool saveAnimation(QString &fileName);
+
     /**
      * @brief sets the filename of this Animation
      *
-     * the filename should be relative to the scene file location
-     * the absolute path is calculated outside
      * @fn setFileName
      * @param fileName
      */
-    void setRelativeFileName(QString relativeFileName) {m_fileName=relativeFileName;}
+    void setFileName(QString relativeFileName) {m_fileName=relativeFileName;}
     virtual ~Animation();
 protected:
     qreal m_length;

@@ -59,6 +59,7 @@ const char* const BrainiacGlobals::XmlAngleAttrib="angle\0";
 const char* const BrainiacGlobals::XmlDistanceAttrib="distance\0";
 const char* const BrainiacGlobals::XmlGroupsAttrib="groups\0";
 const char* const BrainiacGlobals::XmlGroupRatioAttrib="groupratio\0";
+const char* const BrainiacGlobals::XmlFileNameAttrib="fileName\0";
 const char* const BrainiacGlobals::XmlNumberAttrib="number\0";
 const char* const BrainiacGlobals::XmlNoiseAttrib="noise\0";
 const char* const BrainiacGlobals::XmlNoiseFreqAttrib="noisefreq\0";

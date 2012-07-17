@@ -49,6 +49,7 @@ public:
     static const char* const XmlAngleVarAttrib;
     static const char* const XmlAngleAttrib;
     static const char* const XmlDistanceAttrib;
+    static const char* const XmlFileNameAttrib;
     static const char* const XmlGroupsAttrib;
     static const char* const XmlGroupRatioAttrib;
     static const char* const XmlNumberAttrib;
@@ -90,6 +91,9 @@ public:
     static QColor defaultXColor;
     static QColor defaultYColor;
     static QColor defaultZColor;
+
+    static const quint32 animationFileFormatMagicNumber=0xA1B2C3D4; /**< Magic number to identify the Brainiac Animation Fileformat */
+    static const qint32 animationFileFormatVersion=100; /**< Version of Brainiac Animation File Format */
 
     static qreal getRand( quint32 index ) { return randoms[index%NUMBER_OF_RANDOMS]; }
 };

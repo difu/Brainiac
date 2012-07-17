@@ -19,9 +19,15 @@ public:
  * @fn ModifiableAnimation
  * @param animation
  */
-    ModifiableAnimation(const Animation& animation, Body *body);
-
+    ModifiableAnimation(Animation *animation, Body *body);
+    virtual ~ModifiableAnimation();
     BrainiacGlobals::AnimationType animationType() const { return m_animType; }
+
+    /**
+     * @brief Bakes the applied changes to the curve
+     *
+     */
+    void bake();
 
     /**
      * @brief returns if root rx curve should be cross faded
@@ -139,6 +145,7 @@ protected:
     bool m_crossFadeTy;
     bool m_crossFadeTz;
     Body *m_body;
+    Animation *m_origAnimation;
     BrainiacGlobals::AnimationType m_animType;
 };
 

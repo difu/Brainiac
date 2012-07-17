@@ -108,8 +108,9 @@ void ActionEditor::setActiveAnimation(quint32 animId)
 {
     QMutexLocker locker(&m_animationChangeMutex);
     Q_UNUSED(locker);
-    delete m_activeAnimation;
-    m_activeAnimation=new ModifiableAnimation(*m_agentManager->getAnimations()->value(animId),m_agent->getBody());
+    if(m_activeAnimation)
+        delete m_activeAnimation;
+    m_activeAnimation=new ModifiableAnimation(m_agentManager->getAnimations()->value(animId),m_agent->getBody());
     m_activeAnimationId=animId;
     //m_activeAnimation=m_agentManager->getAnimations()->value(animId);
     addCurvesToList(m_agentManager->getMasterAgent()->getBody()->getRootSkeletonNode(),0);
