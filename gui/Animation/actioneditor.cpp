@@ -53,14 +53,14 @@ ActionEditor::ActionEditor(Scene *scene, QWidget *parent) :
     connect(ui->pb_Ramp,SIGNAL(clicked()),this,SLOT(uiLoopAnimModeRamp()));
     connect(ui->pb_Static,SIGNAL(clicked()),this,SLOT(uiLoopAnimModeStatic()));
     connect(ui->pb_Turning,SIGNAL(clicked()),this,SLOT(uiLoopAnimModeTurning()));
+    connect(ui->pb_BakeLoop,SIGNAL(clicked()),this,SLOT(bakeLoop()));
 }
 
 void ActionEditor::addCurvesToList(SkeletonNode *node, quint32 level)
 {
-    QHashIterator<QString, AnimationCurve*> i(m_activeAnimation->curves());
-    while(i.hasNext()) {
-        i.next();
-        QString completeName=i.key();
+    //QHashIterator<QString, AnimationCurve*> i(m_activeAnimation->curves());
+    foreach(QString curveName,m_activeAnimation->curveNames()) {
+        QString completeName=curveName;
         QString channelName=completeName.split(':').at(0);
         QString channelType=completeName.split(':').at(1);
 
@@ -218,6 +218,12 @@ void ActionEditor::applyAnimation()
             m_loopEditorScene->updateTime(m_animationTime);
         }
     }
+}
+
+void ActionEditor::bakeLoop()
+{
+    m_activeAnimation->bake();
+    updateLoopUI();
 }
 
 void ActionEditor::timerEvent(QTimerEvent *)

@@ -69,6 +69,7 @@ protected slots:
     void uiLoopAnimModeStatic();
     void uiLoopAnimModeTurning();
     void uiLoopAnimModeRamp();
+    void bakeLoop();
 private:
     Ui::ActionEditor *ui;
 };

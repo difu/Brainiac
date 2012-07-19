@@ -24,21 +24,29 @@ void AnimationPlayer::apply2(const Animation &animation, qreal val)
 
 void AnimationPlayer::apply(const Animation &animation, qreal time)
 {
-    if(animation.curves().count()>0) {
-        QHashIterator<QString, AnimationCurve *> i(animation.curves()) ;
-        //m_body->getAgent()->dDumpChannels();
-        while(i.hasNext()) {
-            i.next();
-            //qDebug() << __PRETTY_FUNCTION__ << "applying for channel" << i.key();
-            Channel *c=m_body->getAgent()->getOutputChannel(i.key());
-            if(c) {
-                m_body->getAgent()->getOutputChannel(i.key())->setValue(animation.getValue(i.key(),time));
-                //qDebug() << __PRETTY_FUNCTION__ << "applying for channel" << i.key()  << i.value()->getValue(time);
-            } else {
-                qDebug() << __PRETTY_FUNCTION__ << "Channel " << i.key() << "not found!";
-            }
+//    if(animation.curves().count()>0) {
+//        QHashIterator<QString, AnimationCurve *> i(animation.curves()) ;
+//        //m_body->getAgent()->dDumpChannels();
+//        while(i.hasNext()) {
+//            i.next();
+//            //qDebug() << __PRETTY_FUNCTION__ << "applying for channel" << i.key();
+//            Channel *c=m_body->getAgent()->getOutputChannel(i.key());
+//            if(c) {
+//                m_body->getAgent()->getOutputChannel(i.key())->setValue(animation.getValue(i.key(),time));
+//                //qDebug() << __PRETTY_FUNCTION__ << "applying for channel" << i.key()  << i.value()->getValue(time);
+//            } else {
+//                qDebug() << __PRETTY_FUNCTION__ << "Channel " << i.key() << "not found!";
+//            }
+//        }
+//    }
+    foreach(QString curveName,animation.curveNames()) {
+
+        Channel *c=m_body->getAgent()->getOutputChannel(curveName);
+        if(c) {
+            c->setValue(animation.getValue(curveName,time));
         }
     }
+
     //animation.curves().value("ToSpine:ry")->dPrintKeyFrames(0,10);
 }
 

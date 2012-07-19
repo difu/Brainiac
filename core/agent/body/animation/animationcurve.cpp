@@ -38,6 +38,35 @@ void AnimationCurve::addKeyFrame(qreal time, qreal value)
 
 }
 
+AnimationCurve* AnimationCurve::clone()
+{
+    AnimationCurve *c=new AnimationCurve(this);
+    return c;
+}
+
+void AnimationCurve::deleteAfterTime(qreal time)
+{
+    if(!m_keyFrames.isEmpty()) {
+        for(int i=m_keyFrames.count()-1;i>=0;i--) {
+            if(m_keyFrames.at(i).x()>time) {
+                m_keyFrames.removeAt(i);
+            }
+        }
+    }
+}
+
+void AnimationCurve::deleteBeforeTime(qreal time)
+{
+    while(true) {
+        if(m_keyFrames.isEmpty()) {
+            return;
+        } else {
+            if(m_keyFrames.first().x()<time)
+                m_keyFrames.takeFirst();
+        }
+    }
+}
+
 qreal AnimationCurve::getValue(qreal time) const
 {
     qreal retVal=0;
@@ -48,6 +77,9 @@ qreal AnimationCurve::getValue(qreal time) const
             return m_keyFrames.first().y();
         } else {
             for(int i=1;i<m_keyFrames.size();++i) {
+                if(qFuzzyCompare(time,m_keyFrames.at(i-1).x())) {
+                    return m_keyFrames.at(i-1).y();
+                }
                 qreal lower=m_keyFrames.at(i-1).x();
                 qreal upper=m_keyFrames.at(i).x();
                 if(time>lower && time<upper) {

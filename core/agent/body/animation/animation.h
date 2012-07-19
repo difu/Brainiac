@@ -2,6 +2,7 @@
 #define ANIMATION_H
 
 #include<QHash>
+#include<QReadWriteLock>
 
 class AnimationCurve;
 
@@ -41,6 +42,8 @@ public:
      */
     void calculateLength();
 
+    void copyFromAnimationCurves(QHash<QString, AnimationCurve*> curves);
+
     /**
      * @brief deletes the curve with name curve
      *
@@ -53,6 +56,7 @@ public:
      *
      */
     void deleteCurves();
+
     /**
      * @brief returns the length of this Animation
      *
@@ -62,15 +66,16 @@ public:
      * @return qreal the length of this Animation
      */
     qreal getLength(bool calculateNew=false);
+
+
+    virtual qreal getValue(const QString &curve, qreal time) const;
+
     /**
      * @brief returns, if this is a looped Animation
      *
      * @fn isLoopedAnimation
      * @return bool true, if this Animation is a loop animation
      */
-
-    virtual qreal getValue(const QString &curve, qreal time) const;
-
     bool isLoopedAnimation() const { return m_isLoopedAnimation; }
 
 
@@ -91,6 +96,16 @@ public:
     QString fileName() const {return m_fileName; }
 
     /**
+     * @brief adds a new keyframe into the AnimationCurve curve
+     *
+     * @fn addKeyFrame
+     * @param curveName the name of the AnimationCurve
+     * @param time
+     * @param value
+     */
+    void addKeyFrame(QString &curveName, qreal time, qreal value);
+
+    /**
      * @brief the name of this Animation
      *
      * @fn name
@@ -107,7 +122,25 @@ public:
     QHash<QString, AnimationCurve*>& curves() {return m_curves;}
     QHash<QString, AnimationCurve*> curves() const {return m_curves;}
 
+    /**
+     * @brief returns a list of all AnimationCurve names
+     *
+     * @fn curveNames
+     * @return QList<QString>
+     */
+    QList<QString> curveNames() const;
+
     bool saveAnimation();
+
+    /**
+     * @brief saves the animation with given absolute filename
+     *
+     * the filename also becomes the default filename
+     * @sa saveAnimation()
+     * @fn saveAnimation
+     * @param fileName
+     * @return bool
+     */
     bool saveAnimation(QString &fileName);
 
     /**
@@ -132,6 +165,7 @@ protected:
     QString m_name; /**< name of this Animation */
     QString m_fileName; /**< filename relative to scenefile */
     bool m_isLoopedAnimation;
+    mutable QReadWriteLock m_rwLock; /**< Lock to prevent reading from curves when the curves are changed */
 };
 
 #endif // ANIMATION_H

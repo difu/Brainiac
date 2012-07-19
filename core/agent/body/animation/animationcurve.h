@@ -34,6 +34,24 @@ public:
      */
     void addKeyFrame(qreal time, qreal value);
 
+    AnimationCurve* clone();
+
+    /**
+     * @brief deletes all keyframes before time
+     *
+     * @fn deleteBeforeTime
+     * @param time the time before all keyframes will be deleted
+     */
+    void deleteBeforeTime(qreal time);
+
+    /**
+     * @brief deletes all keyframes after time
+     *
+     * @fn deleteAfterTime
+     * @param time the time after all keyframes will be deleted
+     */
+    void deleteAfterTime(qreal time);
+
     /**
      * @brief returns the interpolated value for given time
      *

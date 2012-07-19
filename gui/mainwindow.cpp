@@ -410,7 +410,7 @@ void MainWindow::loadAnimation()
 void MainWindow::saveAnimation()
 {
     if(m_actionEditor->isVisible()) {
-        qDebug() << "Saving " << m_actionEditor->getActiveAnimationId();
+        qDebug() << __PRETTY_FUNCTION__ << "Saving " << m_actionEditor->getActiveAnimationId();
         if(m_activeAgentManager) {
             Animation *anim=m_activeAgentManager->getAnimations()->value(m_actionEditor->getActiveAnimationId());
             if(anim) {

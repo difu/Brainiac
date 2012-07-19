@@ -35,8 +35,24 @@ Animation::Animation(QHash<QString, AnimationCurve *> curves, QString name="")
     calculateLength();
 }
 
+void Animation::copyFromAnimationCurves(QHash<QString, AnimationCurve *> curves)
+{
+    deleteCurves();
+    QHashIterator<QString, AnimationCurve *> i(curves) ;
+
+    while(i.hasNext()) {
+        i.next();
+        AnimationCurve *c=i.value();
+        AnimationCurve *newCurve= new AnimationCurve(c);
+        m_curves.insert(i.key(),newCurve);
+    }
+    calculateLength();
+}
+
 void Animation::calculateLength()
 {
+    QReadLocker rLocker(&m_rwLock);
+    Q_UNUSED(rLocker);
     m_length=0;
     foreach(AnimationCurve *c,m_curves) {
         qreal time=c->keyFrames().last().x();
@@ -46,8 +62,17 @@ void Animation::calculateLength()
     }
 }
 
+QList<QString> Animation::curveNames() const
+{
+    QReadLocker rLocker(&m_rwLock);
+    Q_UNUSED(rLocker);
+    return m_curves.keys();
+}
+
 void Animation::deleteCurve(const QString &curveName)
 {
+    QWriteLocker wLocker(&m_rwLock);
+    Q_UNUSED(wLocker);
     AnimationCurve *curve=m_curves.value(curveName,0);
     if(curve) {
         delete curve;
@@ -57,6 +82,8 @@ void Animation::deleteCurve(const QString &curveName)
 
 void Animation::deleteCurves()
 {
+    QWriteLocker wLocker(&m_rwLock);
+    Q_UNUSED(wLocker);
     foreach(AnimationCurve *curve,m_curves) {
         delete curve;
     }
@@ -73,11 +100,23 @@ qreal Animation::getLength(bool calculateNew)
 
 qreal Animation::getValue(const QString &curve, qreal time) const
 {
+    QReadLocker rLocker(&m_rwLock);
+    Q_UNUSED(rLocker);
     AnimationCurve *c=m_curves.value(curve,0);
     if(c) {
         return c->getValue(time);
     } else return 0.0f;
 
+}
+
+void Animation::addKeyFrame(QString &curveName, qreal time, qreal value)
+{
+    QWriteLocker wLocker(&m_rwLock);
+    Q_UNUSED(wLocker);
+    AnimationCurve *curve=m_curves.value(curveName,0);
+    if(curve) {
+        curve->addKeyFrame(time,value);
+    }
 }
 
 Animation* Animation::loadAnimation(QString fileName)
@@ -133,6 +172,8 @@ bool Animation::saveAnimation()
 
 bool Animation::saveAnimation(QString &fileName)
 {
+    QReadLocker rLocker(&m_rwLock);
+    Q_UNUSED(rLocker);
     QFile file(fileName);
     if(!file.open(QIODevice::WriteOnly)){
         qWarning() << __PRETTY_FUNCTION__ << "Could not open file "<< fileName << "for writing";

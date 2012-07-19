@@ -19,11 +19,43 @@ ModifiableAnimation::ModifiableAnimation( Animation *animation, Body *body) : An
 
 void ModifiableAnimation::bake()
 {
-    QHashIterator<QString, AnimationCurve*> i(m_curves) ;
-    while(i.hasNext()) {
-        i.next();
-
+//    QWriteLocker wLocker(&m_rwLock);
+//    Q_UNUSED(wLocker);
+    QHash<QString, AnimationCurve*> newCurves;
+    foreach(QString curveName,curveNames()) {
+        AnimationCurve *newCurve=new AnimationCurve();
+        AnimationCurve *origCuve=m_curves.value(curveName,0);
+        newCurve->addKeyFrame(0.0f,getValue(curveName,m_startTime));
+        newCurve->addKeyFrame(m_endTime-m_startTime,this->getValue(curveName,m_endTime));
+        foreach(QVector2D kf, origCuve->keyFrames()) {
+            if(kf.x()>m_startTime && kf.x() < m_endTime) {
+                newCurve->addKeyFrame(kf.x()-m_startTime,this->getValue(curveName,kf.x()));
+                qDebug() << __PRETTY_FUNCTION__ << curveName << kf.x() << kf.y() << this->getValue(curveName,kf.x()) << Animation::getValue(curveName,kf.x());
+            }
+        }
+        qDebug() << __PRETTY_FUNCTION__ << curveName <<" oldKF" << origCuve->keyFrames().count() << "NewKF" << newCurve->keyFrames().count();
+        newCurves.insert(curveName,newCurve);
     }
+    QWriteLocker wLocker(&m_rwLock);
+    Q_UNUSED(wLocker);
+    //m_curves.clear();
+    m_curves=newCurves;
+    qDebug() << __PRETTY_FUNCTION__ ;
+    m_origAnimation->copyFromAnimationCurves(m_curves);
+    setAnimationType(BrainiacGlobals::NOTYPE);
+    wLocker.unlock();
+    m_startTime=0.0f;
+    m_crossFadeTime=0.0f;
+    m_endTime=getLength(true);
+
+
+//    QHashIterator<QString, AnimationCurve*> i(m_curves) ;
+//    while(i.hasNext()) {
+//        i.next();
+//        AnimationCurve *c=i.value();
+//        c->addKeyFrame(m_startTime,getValue(i.key(),m_startTime));
+//        c->addKeyFrame(m_endTime,getValue(i.key(),m_endTime));
+//    }
 }
 
 qreal ModifiableAnimation::getValue(const QString &curve, qreal time) const
@@ -31,7 +63,8 @@ qreal ModifiableAnimation::getValue(const QString &curve, qreal time) const
     if(qFuzzyCompare(m_crossFadeTime,(qreal)0.0f)) {
         return Animation::getValue(curve,time);
     } else if(time>=0.0f) {
-
+        QReadLocker rLocker(&m_rwLock);
+        Q_UNUSED(rLocker);
         // Do we have a root bone curve?
         // if yes, check if it has to be crossfaded
         if( isRootBoneCurve(curve) ) {
