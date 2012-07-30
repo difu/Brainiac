@@ -33,6 +33,16 @@ class Agent : public QObject
 {
     Q_OBJECT
 public:
+    /**
+     * @brief describes the processing
+     *
+     * @enum AdvanceMode
+     */
+    enum AdvanceMode {
+        NONE=0, //!< Nothing is calculated
+        BRAIN=1 //!< Brain calculation
+    };
+
     /** \brief Constructs new Agent instance
 
                     This constructor is used to create a new agent instance belonging to the scene
@@ -102,7 +112,7 @@ public:
                     @sa Agent::advanceCommit()
 
     **/
-    void advance();
+    void advance(int mode=Agent::BRAIN);
     /** \brief commits all changes calculated by advance
 
                     all calculated channels etc are written down and are "baked", the new values becoming the actual values

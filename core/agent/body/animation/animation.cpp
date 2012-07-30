@@ -13,6 +13,20 @@ Animation::Animation()
 
 Animation::Animation( Animation *animation)
 {
+    copyFromAnimation(animation);
+}
+
+Animation::Animation(QHash<QString, AnimationCurve *> curves, QString name="")
+{
+    m_name=name;
+    m_curves=curves;
+    m_isLoopedAnimation=true;
+    calculateLength();
+}
+
+void Animation::copyFromAnimation(Animation *animation)
+{
+    deleteCurves();
     QHashIterator<QString, AnimationCurve *> i(animation->curves()) ;
 
     while(i.hasNext()) {
@@ -25,14 +39,6 @@ Animation::Animation( Animation *animation)
     m_name=animation->name();
     m_fileName=animation->fileName();
     m_isLoopedAnimation=animation->isLoopedAnimation();
-}
-
-Animation::Animation(QHash<QString, AnimationCurve *> curves, QString name="")
-{
-    m_name=name;
-    m_curves=curves;
-    m_isLoopedAnimation=true;
-    calculateLength();
 }
 
 void Animation::copyFromAnimationCurves(QHash<QString, AnimationCurve *> curves)
@@ -54,7 +60,10 @@ void Animation::calculateLength()
     QReadLocker rLocker(&m_rwLock);
     Q_UNUSED(rLocker);
     m_length=0;
+
     foreach(AnimationCurve *c,m_curves) {
+        if(c->keyFrames().isEmpty())
+            continue;
         qreal time=c->keyFrames().last().x();
         if( time > m_length) {
             m_length=time;
@@ -107,6 +116,18 @@ qreal Animation::getValue(const QString &curve, qreal time) const
         return c->getValue(time);
     } else return 0.0f;
 
+}
+
+bool Animation::hasAgentCurves() const
+{
+    foreach(QString name, m_curves.keys()) {
+        if(name=="rx" || name=="tx" ||
+           name=="ry" || name=="ty" ||
+           name=="rz" || name=="tz") {
+            return true;
+        }
+    }
+    return false;
 }
 
 void Animation::addKeyFrame(QString &curveName, qreal time, qreal value)

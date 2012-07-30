@@ -47,6 +47,7 @@ protected:
     void applyAnimation();
     void setActiveAnimation(quint32 animId);
     void addCurvesToList(SkeletonNode *node, quint32 level);
+    void refreshCurveList();
     void updateLoopUI();
     void timerEvent(QTimerEvent *);
     AgentManager *m_agentManager;
@@ -60,9 +61,17 @@ protected:
     QDoubleValidator *m_doubleValidator;
     qreal m_animationTime;
     bool m_animationRunning;
+    /**
+     * @brief index of tabs
+     *
+     * @enum Tabs
+     */
+    enum Tabs{ACTIONS=0,CURVES=1,EDIT=2,LOOP=3,AGENT=4};
+    int m_lastTabIndex;
 protected slots:
     void animationSelectionChanged(int rowId);
     void animationNameChanged();
+    void uiTabChanged(int tabIndex);
     // Loop Tab Stuff
     void uiLoopTimesChanged();
     void uiLoopAnimModeLocomotion();
@@ -70,6 +79,9 @@ protected slots:
     void uiLoopAnimModeTurning();
     void uiLoopAnimModeRamp();
     void bakeLoop();
+    void bakeAgentCurves();
+
+    // Action Tab Stuff
 private:
     Ui::ActionEditor *ui;
 };

@@ -115,7 +115,7 @@ void Agent::addTimerFuzz(quint32 id, const QString &name, qreal rate, Timer::Tim
     m_brain->addTimerFuzz(id, name, rate, mode);
 }
 
-void Agent::advance()
+void Agent::advance(int mode)
 {
     //qDebug() << __PRETTY_FUNCTION__<< "Agent " << m_id;
     // Process movement
@@ -123,68 +123,70 @@ void Agent::advance()
     m_newRotation.setY(m_rotation.y()+ m_ry->getValue());
     m_newRotation.setZ(m_rotation.z()+ m_rz->getValue());
 
-    m_newPosition.setX(m_position.x()+m_tz->getValue()*BrainiacGlobals::sinGrad(m_newRotation.y()));
+    m_newPosition.setX(m_position.x()+m_tz->getValue()*BrainiacGlobals::sinGrad(m_newRotation.y())+m_tx->getValue()*BrainiacGlobals::cosGrad(m_newRotation.y()));
     m_newPosition.setY(m_position.y()); //!< @todo Implement this!
-    m_newPosition.setZ(m_position.z()+m_tz->getValue()*BrainiacGlobals::cosGrad(m_newRotation.y()));
+    m_newPosition.setZ(m_position.z()+m_tz->getValue()*BrainiacGlobals::cosGrad(m_newRotation.y())+m_tx->getValue()*BrainiacGlobals::sinGrad(m_newRotation.y()));
 
-    Agent *loudestAgent=0;
-    qreal loudestReception=0;
-    //qreal loudestAmplitude=0;
-    QVector3D loudestAgentPosition;
-    foreach(Agent *otherAgent,m_scene->getAgents()) {
-        if(otherAgent==this) {
-            //qDebug() << "found myself"  << agent->getId() << m_id;
-            continue;
+    if(mode&Agent::BRAIN) {
+        Agent *loudestAgent=0;
+        qreal loudestReception=0;
+        //qreal loudestAmplitude=0;
+        QVector3D loudestAgentPosition;
+        foreach(Agent *otherAgent,m_scene->getAgents()) {
+            if(otherAgent==this) {
+                //qDebug() << "found myself"  << agent->getId() << m_id;
+                continue;
+            }
+
+            // Sound Stuff
+            QVector3D loudAgentPosition=QVector3D(otherAgent->getPosition()->x(),otherAgent->getPosition()->y(),otherAgent->getPosition()->z());
+            //        qreal distance=(loudAgentPosition-m_position).length();
+            //        //qDebug() << "Distcance from agent " << m_id << "to " << agent->getId() << " is" << distance;
+            //        qreal loudAmplitude=otherAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_a)->getValue();
+            qreal reception=getOtherAgentSoundReception(otherAgent);
+            if(reception>loudestReception) {
+                loudestReception=reception;
+                loudestAgent=otherAgent;
+                loudestAgentPosition=loudAgentPosition;
+                //loudestAmplitude=loudAmplitude;
+            }
+            // End sound stuff
+
         }
 
-        // Sound Stuff
-        QVector3D loudAgentPosition=QVector3D(otherAgent->getPosition()->x(),otherAgent->getPosition()->y(),otherAgent->getPosition()->z());
-//        qreal distance=(loudAgentPosition-m_position).length();
-//        //qDebug() << "Distcance from agent " << m_id << "to " << agent->getId() << " is" << distance;
-//        qreal loudAmplitude=otherAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_a)->getValue();
-        qreal reception=getOtherAgentSoundReception(otherAgent);
-        if(reception>loudestReception) {
-            loudestReception=reception;
-            loudestAgent=otherAgent;
-            loudestAgentPosition=loudAgentPosition;
-            //loudestAmplitude=loudAmplitude;
+        // Postprocess sound stuff
+        if(loudestAgent) { // has heard something
+            // calculate angle about y axis
+            qreal angle=this->getOtherAgentRelativeAngle(loudestAgent);
+            //        qDebug() << "Angle of LA:"<< angle << "dist" << distVect.length() << m_position << "y rotation" << yRotation;
+
+            m_iSoundX->setValue(angle);
+            m_iSoundD->setValue(loudestReception/loudestAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_a)->getValue() );
+            m_iSoundF->setValue(loudestAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_f)->getValue());
+            m_iSoundOX->setValue(getOtherAgentRelativeOrientation(loudestAgent));
+        } else { // this agent hasn´t heard any sound
+            m_iSoundX->setValue(0.0f);
+            m_iSoundD->setValue(0.0f);
+            m_iSoundF->setValue(0.0f);
+            m_iSoundOX->setValue(0.0f);
         }
-        // End sound stuff
+        //
 
-    }
-
-    // Postprocess sound stuff
-    if(loudestAgent) { // has heard something
-        // calculate angle about y axis
-        qreal angle=this->getOtherAgentRelativeAngle(loudestAgent);
-//        qDebug() << "Angle of LA:"<< angle << "dist" << distVect.length() << m_position << "y rotation" << yRotation;
-
-        m_iSoundX->setValue(angle);
-        m_iSoundD->setValue(loudestReception/loudestAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_a)->getValue() );
-        m_iSoundF->setValue(loudestAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_f)->getValue());
-        m_iSoundOX->setValue(getOtherAgentRelativeOrientation(loudestAgent));
-    } else { // this agent hasn´t heard any sound
-        m_iSoundX->setValue(0.0f);
-        m_iSoundD->setValue(0.0f);
-        m_iSoundF->setValue(0.0f);
-        m_iSoundOX->setValue(0.0f);
-    }
-    //
-
-    foreach(FuzzyBase *fuzz, m_brain->getFuzzies()) {
-        if(fuzz->getType()==FuzzyBase::NOISE) { // noise nodes depend only on frame information
-            fuzz->calculate();
-        } else if(fuzz->getType()==FuzzyBase::INPUT  && !fuzz->hasParents()) { // input nodes with parents are triggered implicite by their parents
-            fuzz->calculate();
-        } else if(fuzz->getType()==FuzzyBase::TIMER) {
-            Timer *timer=(Timer *)fuzz;
-            timer->advance();
-        } else if(fuzz->getType()==FuzzyBase::DEFUZZ ) { // input nodes with parents are triggered implicite by their parents
-            fuzz->calculate();
-        } else if(fuzz->getType()==FuzzyBase::AND ) {
-            FuzzyAnd *fuzzyAnd=(FuzzyAnd *)fuzz;
-            if(fuzzyAnd->isSoundRule()) {
-                fuzzyAnd->calculateSound();
+        foreach(FuzzyBase *fuzz, m_brain->getFuzzies()) {
+            if(fuzz->getType()==FuzzyBase::NOISE) { // noise nodes depend only on frame information
+                fuzz->calculate();
+            } else if(fuzz->getType()==FuzzyBase::INPUT  && !fuzz->hasParents()) { // input nodes with parents are triggered implicite by their parents
+                fuzz->calculate();
+            } else if(fuzz->getType()==FuzzyBase::TIMER) {
+                Timer *timer=(Timer *)fuzz;
+                timer->advance();
+            } else if(fuzz->getType()==FuzzyBase::DEFUZZ ) { // input nodes with parents are triggered implicite by their parents
+                fuzz->calculate();
+            } else if(fuzz->getType()==FuzzyBase::AND ) {
+                FuzzyAnd *fuzzyAnd=(FuzzyAnd *)fuzz;
+                if(fuzzyAnd->isSoundRule()) {
+                    fuzzyAnd->calculateSound();
+                }
             }
         }
     }
@@ -202,6 +204,7 @@ void Agent::advanceCommit()
     m_rotation=m_newRotation;
 
     m_body->updatePosition();
+    //qDebug() << __PRETTY_FUNCTION__ << m_position;
 }
 
 void Agent::createChannels()

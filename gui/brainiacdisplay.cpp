@@ -51,7 +51,7 @@ void BrainiacDisplay::mouseMoveEvent(QMouseEvent *event)
     int dx = event->x() - m_lastPos.x();
     int dy = event->y() - m_lastPos.y();
     if (event->buttons() & Qt::MidButton) {
-
+        m_camera->rotateCenter(m_camera->pan((qreal)dx/2.0f));
     } else if (event->buttons() & Qt::RightButton)  {
         if(m_shiftPressed) {
             QVector3D v=m_camera->eye()-m_camera->center();

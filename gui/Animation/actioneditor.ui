@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>648</width>
-    <height>480</height>
+    <width>657</width>
+    <height>526</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -28,7 +28,7 @@
      <x>10</x>
      <y>10</y>
      <width>621</width>
-     <height>421</height>
+     <height>461</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
@@ -45,7 +45,7 @@
     <item row="1" column="0">
      <widget class="QTabWidget" name="tabWidgetMain">
       <property name="currentIndex">
-       <number>3</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="tabD">
        <attribute name="title">
@@ -108,12 +108,12 @@
           <x>0</x>
           <y>220</y>
           <width>611</width>
-          <height>111</height>
+          <height>138</height>
          </rect>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <property name="sizeConstraint">
-          <enum>QLayout::SetMinAndMaxSize</enum>
+          <enum>QLayout::SetFixedSize</enum>
          </property>
          <item>
           <layout class="QGridLayout" name="gridLayout_2">
@@ -122,13 +122,6 @@
            </item>
            <item row="1" column="1">
             <widget class="QLineEdit" name="le_endTime"/>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label">
-             <property name="text">
-              <string>StartTime</string>
-             </property>
-            </widget>
            </item>
            <item row="1" column="0">
             <widget class="QLabel" name="label_2">
@@ -144,6 +137,13 @@
             <widget class="QLabel" name="label_3">
              <property name="text">
               <string>Crossfade</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>StartTime</string>
              </property>
             </widget>
            </item>
@@ -208,6 +208,26 @@
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
+            <widget class="QPushButton" name="pb_oneShot">
+             <property name="text">
+              <string>one shot</string>
+             </property>
+             <property name="autoDefault">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pb_retrigger">
+             <property name="text">
+              <string>retrigger</string>
+             </property>
+             <property name="autoDefault">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
             <widget class="QLabel" name="label_4">
              <property name="text">
               <string>Crossfade root curves</string>
@@ -216,19 +236,6 @@
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout">
-             <item>
-              <spacer name="verticalSpacer">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>40</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
              <item>
               <widget class="QToolButton" name="tb_loopRx">
                <property name="text">
@@ -311,7 +318,7 @@
        <widget class="QLabel" name="label_CurrentTime">
         <property name="geometry">
          <rect>
-          <x>30</x>
+          <x>50</x>
           <y>200</y>
           <width>62</width>
           <height>16</height>
@@ -324,15 +331,15 @@
          <string/>
         </property>
        </widget>
-       <widget class="QPushButton" name="pb_BakeLoop">
+       <widget class="QPushButton" name="pb_Apply">
         <property name="enabled">
          <bool>true</bool>
         </property>
         <property name="geometry">
          <rect>
-          <x>500</x>
-          <y>330</y>
-          <width>101</width>
+          <x>240</x>
+          <y>370</y>
+          <width>127</width>
           <height>21</height>
          </rect>
         </property>
@@ -344,6 +351,99 @@
         </property>
        </widget>
       </widget>
+      <widget class="QWidget" name="tab_4">
+       <attribute name="title">
+        <string>Agent</string>
+       </attribute>
+       <widget class="QWidget" name="verticalLayoutWidget">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>90</y>
+          <width>160</width>
+          <height>134</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QPushButton" name="pb_AgentRamp">
+           <property name="text">
+            <string>Ramp</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="autoDefault">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pb_AgentLocomotion">
+           <property name="text">
+            <string>Locomotion</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="autoDefault">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pb_AgentStatic">
+           <property name="text">
+            <string>Static</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="autoDefault">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pb_AgentTurning">
+           <property name="text">
+            <string>Turning</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="autoDefault">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QPushButton" name="pb_ApplyAgentCurves">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>260</x>
+          <y>320</y>
+          <width>127</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Apply</string>
+        </property>
+        <property name="autoDefault">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="tab_5">
+       <attribute name="title">
+        <string>Transform</string>
+       </attribute>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -351,8 +451,8 @@
   <widget class="QPushButton" name="pushButtonDone">
    <property name="geometry">
     <rect>
-     <x>510</x>
-     <y>440</y>
+     <x>520</x>
+     <y>480</y>
      <width>114</width>
      <height>32</height>
     </rect>

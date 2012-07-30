@@ -43,6 +43,10 @@ void AnimationPlayer::apply(const Animation &animation, qreal time)
 
         Channel *c=m_body->getAgent()->getOutputChannel(curveName);
         if(c) {
+            //qDebug() << __PRETTY_FUNCTION__ << "Applying "<< curveName;
+//            if(curveName=="tx" || curveName=="tz") {
+//                qDebug() << __PRETTY_FUNCTION__ << "Applying "<< curveName << time << animation.getValue(curveName,time) ;
+//            }
             c->setValue(animation.getValue(curveName,time));
         }
     }

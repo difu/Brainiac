@@ -33,6 +33,7 @@ ActionEditor::ActionEditor(Scene *scene, QWidget *parent) :
     connect(m_actionDisplay,SIGNAL(animationOneFrameForward()),this,SLOT(animationOneFrameForward()));
     connect(m_actionDisplay,SIGNAL(animationRunningToggled()),this,SLOT(animationRunningToggle()));
     connect(ui->lineEditAnimationName,SIGNAL(returnPressed()),this,SLOT(animationNameChanged()));
+    connect(ui->tabWidgetMain,SIGNAL(currentChanged(int)),this,SLOT(uiTabChanged(int)));
     startTimer(1000/m_scene->getSimulation()->getFps());
     m_agent=0;
     m_animationTime=0;
@@ -53,13 +54,19 @@ ActionEditor::ActionEditor(Scene *scene, QWidget *parent) :
     connect(ui->pb_Ramp,SIGNAL(clicked()),this,SLOT(uiLoopAnimModeRamp()));
     connect(ui->pb_Static,SIGNAL(clicked()),this,SLOT(uiLoopAnimModeStatic()));
     connect(ui->pb_Turning,SIGNAL(clicked()),this,SLOT(uiLoopAnimModeTurning()));
-    connect(ui->pb_BakeLoop,SIGNAL(clicked()),this,SLOT(bakeLoop()));
+    connect(ui->pb_Apply,SIGNAL(clicked()),this,SLOT(bakeLoop()));
+
+    // Agent Tab UI
+    connect(ui->pb_ApplyAgentCurves,SIGNAL(clicked()),this,SLOT(bakeAgentCurves()));
 }
 
 void ActionEditor::addCurvesToList(SkeletonNode *node, quint32 level)
 {
     //QHashIterator<QString, AnimationCurve*> i(m_activeAnimation->curves());
     foreach(QString curveName,m_activeAnimation->curveNames()) {
+        if(!curveName.contains(':')) {
+            continue;
+        }
         QString completeName=curveName;
         QString channelName=completeName.split(':').at(0);
         QString channelType=completeName.split(':').at(1);
@@ -80,6 +87,7 @@ void ActionEditor::addCurvesToList(SkeletonNode *node, quint32 level)
             else if(channelType.endsWith('z',Qt::CaseInsensitive))
                 channelItem->setTextColor(BrainiacGlobals::defaultZColor);
         }
+
     }
 
     level++;
@@ -114,6 +122,25 @@ QString ActionEditor::getActiveAnimationName() const {
     } else return QString();
 }
 
+void ActionEditor::refreshCurveList()
+{
+    ui->listCurves->clear();
+    foreach(QString curveName,m_activeAnimation->curveNames()) {
+        if(!curveName.contains(':')) {
+            QListWidgetItem *channelItem=new QListWidgetItem(ui->listCurves);
+            channelItem->setData(Qt::UserRole,QVariant(curveName));
+            channelItem->setText(curveName);
+            if(curveName.compare("rx",Qt::CaseInsensitive)==0||curveName.compare("tx",Qt::CaseInsensitive)==0)
+                channelItem->setTextColor(BrainiacGlobals::defaultXColor);
+            else if(curveName.compare("ry",Qt::CaseInsensitive)==0||curveName.compare("ty",Qt::CaseInsensitive)==0)
+                channelItem->setTextColor(BrainiacGlobals::defaultYColor);
+            else if(curveName.compare("rz",Qt::CaseInsensitive)==0||curveName.compare("tz",Qt::CaseInsensitive)==0)
+                channelItem->setTextColor(BrainiacGlobals::defaultZColor);
+        }
+    }
+    addCurvesToList(m_agentManager->getMasterAgent()->getBody()->getRootSkeletonNode(),0);
+}
+
 void ActionEditor::setActiveAnimation(quint32 animId)
 {
     QMutexLocker locker(&m_animationChangeMutex);
@@ -124,7 +151,7 @@ void ActionEditor::setActiveAnimation(quint32 animId)
     m_activeAnimationId=animId;
     ui->lineEditAnimationName->setText(m_activeAnimation->name());
     //m_activeAnimation=m_agentManager->getAnimations()->value(animId);
-    addCurvesToList(m_agentManager->getMasterAgent()->getBody()->getRootSkeletonNode(),0);
+    refreshCurveList();
     m_loopEditorScene->setAnimation(m_activeAnimation);
     updateLoopUI();
 }
@@ -142,7 +169,7 @@ void ActionEditor::setAgentManager(AgentManager *manager)
     qDebug() << __PRETTY_FUNCTION__ << "Active AgentManager" << manager->getGroup()->getName();
     ui->listAnimation->clear();
     ui->listCurves->clear();
-    ui->tabWidgetMain->setTabEnabled(0,true);
+    ui->tabWidgetMain->setTabEnabled(ACTIONS,true);
         //m_agentManager->loadAnimation("/Users/dirkfuchs/Programming/BrainiacNG/tmpTestData/newBodyFormatAction/Male1_B3_Walk.bvh");
     QHashIterator<quint32,Animation *> i(*m_agentManager->getAnimations()) ;
 
@@ -213,11 +240,19 @@ void ActionEditor::applyAnimation()
 
         if(this->isVisible()) {
             m_agent->getBody()->getAnimationPlayer()->apply(*m_activeAnimation,m_animationTime);
+            m_agent->advance(Agent::NONE);
+            m_agent->advanceCommit();
             m_actionDisplay->setCameraOffset(m_activeAnimation->getRootBoneTranslation(m_animationTime));
             m_actionDisplay->updateGL();
             m_loopEditorScene->updateTime(m_animationTime);
         }
     }
+}
+
+void ActionEditor::bakeAgentCurves()
+{
+    m_activeAnimation->bake();
+    refreshCurveList();
 }
 
 void ActionEditor::bakeLoop()
@@ -285,6 +320,18 @@ void ActionEditor::uiLoopAnimModeTurning()
 {
     m_activeAnimation->setAnimationType(BrainiacGlobals::TURNING);
     updateLoopUI();
+}
+
+void ActionEditor::uiTabChanged(int tabIndex)
+{
+    if(tabIndex==AGENT) {
+        m_activeAnimation->createAgentCurves();
+    } else {
+        if(m_lastTabIndex==AGENT) {
+            m_activeAnimation->resetAgentCurves();
+        }
+    }
+    m_lastTabIndex=tabIndex;
 }
 
 ActionEditor::~ActionEditor()

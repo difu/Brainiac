@@ -68,6 +68,7 @@ public:
      * @return QList<QVector2D>
      */
     QList<QVector2D> keyFrames() const {return m_keyFrames;}
+    QList<QVector2D>& keyFrames()  {return m_keyFrames;}
 
     /**
      * @brief prints out all key frames

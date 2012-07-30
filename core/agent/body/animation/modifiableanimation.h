@@ -30,6 +30,16 @@ public:
     void bake();
 
     /**
+     * @brief creates AgentCurves
+     * the curves will be only permanently added if bake() is called afterwards
+     * if AgentCurves already exist, nothing will be changed and false will be returned
+     * @sa resetAgentCurves() if you want to delete agentcurves that are not baked
+     * @sa bake() if you want to add the AgentCurves permanently
+     * @fn createAgentCurves
+     * @returns bool true, if AgentCurves were created
+     */
+    bool createAgentCurves();
+    /**
      * @brief returns if root rx curve should be cross faded
      *
      * @fn crossFadeRx
@@ -53,7 +63,6 @@ public:
      */
     virtual qreal getValue(const QString &curve, qreal time) const;
 
-    QVector3D getRootSkeletonNodeTranslation(qreal time) const;
     /**
      * @brief returns the root bone translation
      *
@@ -66,12 +75,12 @@ public:
     QVector3D getRootBoneTranslation(qreal time) const;
 
     /**
-     * @brief returns, if this animation has rootcurves, which contain translation/rotation of the whole agent
+     * @brief resets the AgentCurves
      *
-     * @fn hasRootCurves
-     * @return bool true, if this Animation does have root curves
+     * Resets the agent´s root curves and deletes agent curves in case the preview was not accepted
+     * @fn resetAgentCurves
      */
-    bool hasRootCurves() const;
+    void resetAgentCurves();
 
     /**
      * @brief sets the type of the Animation
@@ -134,6 +143,18 @@ public:
 
     static const qreal minDistTime=0.001f; /**< minimum time distance between start and end in ms */
 protected:
+
+    /**
+     * @brief creates an agent curve from a root curve
+     *
+     * Also the root curve gets modified
+     *
+     * @fn createAgentCurve
+     * @param rootCurve pointer to the root curve
+     * @param agentCurve pointer to the agent curve
+     */
+    static void createAgentCurve(AnimationCurve *rootCurve, AnimationCurve *agentCurve);
+
     /**
      * @brief returns a cross faded value
      *
@@ -144,6 +165,7 @@ protected:
      * @bug first and lastframe have the same value, if cf!=0 the first frame should not be the last frame. Workaround in code....
      */
     qreal getCrossfadedValue(const QString &curve, qreal time) const;
+
     qreal m_startTime; /**< start time of Animation in ms */
     qreal m_endTime; /**< end time of Animation in ms */
     qreal m_crossFadeTime; /**< duration of crossfade */

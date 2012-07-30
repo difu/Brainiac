@@ -42,7 +42,7 @@ void ModifiableAnimation::bake()
     m_curves=newCurves;
     qDebug() << __PRETTY_FUNCTION__ ;
     m_origAnimation->copyFromAnimationCurves(m_curves);
-    setAnimationType(BrainiacGlobals::NOTYPE);
+    //setAnimationType(BrainiacGlobals::NOTYPE);
     wLocker.unlock();
     m_startTime=0.0f;
     m_crossFadeTime=0.0f;
@@ -56,6 +56,77 @@ void ModifiableAnimation::bake()
 //        c->addKeyFrame(m_startTime,getValue(i.key(),m_startTime));
 //        c->addKeyFrame(m_endTime,getValue(i.key(),m_endTime));
 //    }
+}
+
+void ModifiableAnimation::createAgentCurve(AnimationCurve *rootCurve, AnimationCurve *agentCurve)
+{
+    if(rootCurve->keyFrames().count()==0) {
+        return;
+    }
+    qreal valBefore=rootCurve->keyFrames().first().y();
+    int i=0;
+    foreach(QVector2D kf,rootCurve->keyFrames()) {
+        agentCurve->addKeyFrame(kf.x(),kf.y()-valBefore);
+        valBefore=kf.y();
+        //rootCurve->keyFrames()[i].setY(0.0f);
+        i++;
+    }
+    // The first kf does is zero. Interpolate its value
+    if(rootCurve->keyFrames().count()==2) {
+        agentCurve->keyFrames()[0].setY(agentCurve->keyFrames().last().y());
+    } else if( rootCurve->keyFrames().count()>2) {
+        agentCurve->keyFrames()[0].setY(0.5f*agentCurve->keyFrames()[1].y()+0.5f*agentCurve->keyFrames().last().y());
+    }
+    rootCurve->keyFrames().clear();
+}
+
+bool ModifiableAnimation::createAgentCurves()
+{
+    if(hasAgentCurves()) {
+        qDebug() << __PRETTY_FUNCTION__ << "AgentCurves already exist! nothing is created";
+        return false;
+    }
+
+    QWriteLocker wLocker(&m_rwLock);
+    Q_UNUSED(wLocker);
+    SkeletonNode *rootBone=m_body->getRootBone();
+    AnimationCurve *rootBoneTxCurve=curves().value(rootBone->getName()%":tx",0);
+    if(!rootBoneTxCurve) {
+        qWarning() << __PRETTY_FUNCTION__ <<"No TX root bone curve!";
+        return false;
+    }
+    AnimationCurve *rootBoneTyCurve=curves().value(rootBone->getName()%":ty",0);
+    if(!rootBoneTyCurve) {
+        qWarning() << __PRETTY_FUNCTION__ <<"No TY root bone curve!";
+        return false;
+    }
+    AnimationCurve *rootBoneTzCurve=curves().value(rootBone->getName()%":tz",0);
+    if(!rootBoneTzCurve) {
+        qWarning() << __PRETTY_FUNCTION__ <<"No TZ root bone curve!";
+        return false;
+    }
+    AnimationCurve *txCurve=new AnimationCurve();
+    AnimationCurve *tyCurve=new AnimationCurve();
+    AnimationCurve *tzCurve=new AnimationCurve();
+    AnimationCurve *rxCurve=new AnimationCurve();
+    AnimationCurve *ryCurve=new AnimationCurve();
+    AnimationCurve *rzCurve=new AnimationCurve();
+    switch(m_animType) {
+    case BrainiacGlobals::LOCOMOTION:
+        qDebug() << __PRETTY_FUNCTION__ << "creating LOCO curves";
+        createAgentCurve(rootBoneTxCurve,txCurve);
+        createAgentCurve(rootBoneTzCurve,tzCurve);
+        break;
+    default:
+        break;
+    }
+    m_curves.insert("tx",txCurve);
+    m_curves.insert("ty",tyCurve);
+    m_curves.insert("tz",tzCurve);
+    m_curves.insert("rx",rxCurve);
+    m_curves.insert("ry",ryCurve);
+    m_curves.insert("rz",rzCurve);
+    return true;
 }
 
 qreal ModifiableAnimation::getValue(const QString &curve, qreal time) const
@@ -121,16 +192,6 @@ QVector3D ModifiableAnimation::getRootBoneTranslation(qreal time) const
     return QVector3D(0,0,0);
 }
 
-QVector3D ModifiableAnimation::getRootSkeletonNodeTranslation(qreal time) const
-{
-    return QVector3D();
-}
-
-bool ModifiableAnimation::hasRootCurves() const
-{
-    return false;
-}
-
 bool ModifiableAnimation::isRootBoneCurve(const QString &curve) const
 {
     SkeletonNode *rootBone=m_body->getRootBone();
@@ -141,6 +202,12 @@ bool ModifiableAnimation::isRootBoneCurve(const QString &curve) const
         return false;
     }
 
+}
+
+void ModifiableAnimation::resetAgentCurves()
+{
+    deleteCurves();
+    copyFromAnimation(m_origAnimation);
 }
 
 void ModifiableAnimation::setAnimationType(BrainiacGlobals::AnimationType type)

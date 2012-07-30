@@ -42,6 +42,8 @@ public:
      */
     void calculateLength();
 
+    void copyFromAnimation(Animation *animation);
+
     void copyFromAnimationCurves(QHash<QString, AnimationCurve*> curves);
 
     /**
@@ -105,6 +107,14 @@ public:
      */
     void addKeyFrame(QString &curveName, qreal time, qreal value);
 
+    /**
+     * @brief returns, if this Animation has AgentCurves
+     *
+     *
+     * @fn hasAgentCurves
+     * @return bool true, if this Animation has AgentCurves, false, if not
+     */
+    bool hasAgentCurves() const;
     /**
      * @brief the name of this Animation
      *
