@@ -7,6 +7,7 @@
 class Agent;
 class AgentManager;
 class Animation;
+class BrainiacSlider;
 class LoopEditorScene;
 class ModifiableAnimation;
 class SkeletonNode;
@@ -61,6 +62,7 @@ protected:
     QDoubleValidator *m_doubleValidator;
     qreal m_animationTime;
     bool m_animationRunning;
+    BrainiacSlider *m_sliderTransformYRot;
     /**
      * @brief index of tabs
      *
@@ -82,6 +84,7 @@ protected slots:
     void bakeAgentCurves();
 
     // Action Tab Stuff
+    void uiTranslationYRotChanged(qreal value);
 private:
     Ui::ActionEditor *ui;
 };

@@ -136,6 +136,13 @@ public:
      */
     virtual void setName(QString name) {Animation::setName(name);m_origAnimation->setName(name);}
 
+    /**
+     * @brief
+     * @bug Y Rotation currently only works fine when y angle>0 && <180. Even at the borders some minor erros occur, works best at 90°. Obviously bug/error/... in matrix decompositions
+     * @param yAxisRot
+     */
+    void setTansformRotation(qreal yAxisRot);
+
     qreal getCrossFade() const {return m_crossFadeTime;}
     qreal getStartTime() const {return m_startTime;}
     qreal getEndTime() const {return m_endTime;}

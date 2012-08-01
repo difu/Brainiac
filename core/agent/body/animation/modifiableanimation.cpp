@@ -4,6 +4,8 @@
 #include "core/agent/body/body.h"
 #include "core/agent/body/skeletonnode.h"
 #include "core/agent/body/animation/animationcurve.h"
+#include "cml/cml.h"
+#include "cml/mathlib/matrix_rotation.h"
 
 ModifiableAnimation::ModifiableAnimation( Animation *animation, Body *body) : Animation(animation)
 {
@@ -255,6 +257,191 @@ void ModifiableAnimation::setStartTime(qreal startTime)
 void ModifiableAnimation::setEndTime(qreal endTime)
 {
     m_endTime=qBound(m_startTime+minDistTime,endTime,getLength(true));
+}
+
+void ModifiableAnimation::setTansformRotation(qreal yAxisRot)
+{
+    yAxisRot=-yAxisRot;
+    QWriteLocker wLocker(&m_rwLock);
+    Q_UNUSED(wLocker);
+    bool isPositiveYAngle=false;
+    if(yAxisRot>0.0f) {
+        isPositiveYAngle=true;
+    }
+    SkeletonNode *rootBone=m_body->getRootBone();
+
+    AnimationCurve *rootBoneTxCurve=curves().value(rootBone->getName()%":tx",0);
+    if(!rootBoneTxCurve) {
+        qWarning() << __PRETTY_FUNCTION__ <<"No TX root bone curve!";
+        return;
+    }
+    AnimationCurve *origRootBoneTxCurve=m_origAnimation->curves().value(rootBone->getName()%":tx",0);
+    if(!origRootBoneTxCurve) {
+        qWarning() << __PRETTY_FUNCTION__ <<"No original TX root bone curve!";
+        return;
+    }
+
+
+    AnimationCurve *rootBoneTyCurve=curves().value(rootBone->getName()%":ty",0);
+    if(!rootBoneTyCurve) {
+        qWarning() << __PRETTY_FUNCTION__ <<"No TY root bone curve!";
+        return;
+    }
+    AnimationCurve *origRootBoneTyCurve=m_origAnimation->curves().value(rootBone->getName()%":ty",0);
+    if(!origRootBoneTyCurve) {
+        qWarning() << __PRETTY_FUNCTION__ <<"No original TY root bone curve!";
+        return;
+    }
+
+    AnimationCurve *rootBoneTzCurve=curves().value(rootBone->getName()%":tz",0);
+    if(!rootBoneTzCurve) {
+        qWarning() << __PRETTY_FUNCTION__ <<"No TZ root bone curve!";
+        return;
+    }
+    AnimationCurve *origRootBoneTzCurve=m_origAnimation->curves().value(rootBone->getName()%":tz",0);
+    if(!origRootBoneTzCurve) {
+        qWarning() << __PRETTY_FUNCTION__ <<"No original TZ root bone curve!";
+        return;
+    }
+
+
+    AnimationCurve *rootBoneRxCurve=curves().value(rootBone->getName()%":rx",0);
+    if(!rootBoneRxCurve) {
+        qWarning() << __PRETTY_FUNCTION__ <<"No RX root bone curve!";
+        return;
+    }
+    AnimationCurve *origRootBoneRxCurve=m_origAnimation->curves().value(rootBone->getName()%":rx",0);
+    if(!origRootBoneRxCurve) {
+        qWarning() << __PRETTY_FUNCTION__ <<"No original RX root bone curve!";
+        return;
+    }
+
+    AnimationCurve *rootBoneRyCurve=curves().value(rootBone->getName()%":ry",0);
+    if(!rootBoneRyCurve) {
+        qWarning() << __PRETTY_FUNCTION__ <<"No RY root bone curve!";
+        return;
+    }
+    AnimationCurve *origRootBoneRyCurve=m_origAnimation->curves().value(rootBone->getName()%":ry",0);
+    if(!origRootBoneRyCurve) {
+        qWarning() << __PRETTY_FUNCTION__ <<"No original RY root bone curve!";
+        return;
+    }
+
+    AnimationCurve *rootBoneRzCurve=curves().value(rootBone->getName()%":rz",0);
+    if(!rootBoneRzCurve) {
+        qWarning() << __PRETTY_FUNCTION__ <<"No RZ root bone curve!";
+        return;
+    }
+    AnimationCurve *origRootBoneRzCurve=m_origAnimation->curves().value(rootBone->getName()%":rz",0);
+    if(!origRootBoneRzCurve) {
+        qWarning() << __PRETTY_FUNCTION__ <<"No original RZ root bone curve!";
+        return;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Translation Curves
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    QQuaternion rotQuatY=QQuaternion::fromAxisAndAngle(0.0f,1.0f,0.0f,yAxisRot+180.0f);
+    rotQuatY.normalize();
+    QVector3D origin;
+    origin.setX(origRootBoneTxCurve->getValue(0.0f));
+    origin.setY(origRootBoneTyCurve->getValue(0.0f));
+    origin.setZ(origRootBoneTzCurve->getValue(0.0f));
+
+    for(int i=1;i<rootBoneTzCurve->keyFrames().count();i++) {
+        QVector3D originalPoint(origRootBoneTxCurve->getValue(rootBoneTxCurve->keyFrames().at(i).x()),
+                                origRootBoneTyCurve->getValue(rootBoneTyCurve->keyFrames().at(i).x()),
+                                origRootBoneTzCurve->getValue(rootBoneTzCurve->keyFrames().at(i).x()));
+        QVector3D point=origin-originalPoint;
+        QVector3D rotated=rotQuatY.rotatedVector(point);
+        rootBoneTxCurve->keyFrames()[i].setY((rotated.x()+origin.x()));
+        //rootBoneTyCurve->keyFrames()[i].setY((rotated.y()+origin.y()));
+        rootBoneTzCurve->keyFrames()[i].setY((rotated.z()+origin.z()));
+        //qDebug() << __PRETTY_FUNCTION__ << yAxisRot << rotated+origin << originalPoint;
+    }
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Rotation Curves
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//    if(isPositiveYAngle) {
+//        yAxisRot-=360.0f;
+//    }
+    QList<BrainiacGlobals::RotTrans> rotList;
+    foreach(BrainiacGlobals::RotTrans rot,rootBone->getRotationTranslationOrder()) {
+        switch( rot ) {
+        case BrainiacGlobals::RX:
+        case BrainiacGlobals::RY:
+        case BrainiacGlobals::RZ:
+            rotList.append(rot);
+        break;
+        default:
+            continue;
+        }
+    }
+
+    QVector3D lastOrigVec;
+    QVector3D lastCMLVec;
+    for(int i=0;i<rootBoneRyCurve->keyFrames().count();i++) {
+//        QMatrix4x4 rotMatrix;
+//        rotMatrix.setToIdentity();
+
+        cml::matrix33d_r cmlRotMatrix;
+        cmlRotMatrix.identity();
+
+        QVector3D originalRot  (origRootBoneRxCurve->getValue(rootBoneRxCurve->keyFrames().at(i).x()),
+                                origRootBoneRyCurve->getValue(rootBoneRyCurve->keyFrames().at(i).x()),
+                                origRootBoneRzCurve->getValue(rootBoneRzCurve->keyFrames().at(i).x()));
+
+        foreach(BrainiacGlobals::RotTrans rot,rotList) {
+            switch( rot ) {
+            case BrainiacGlobals::RX:
+                qDebug() << __PRETTY_FUNCTION__ << "rx";
+                //rotMatrix.rotate(originalRot.x(),1.0f,0.0f,0.0f);
+                //matrix_rotate_about_world_x(cmlRotMatrix,BrainiacGlobals::grad2rad(originalRot.x()));
+                break;
+            case BrainiacGlobals::RY:
+                qDebug() << __PRETTY_FUNCTION__ << "ry";
+                //rotMatrix.rotate(originalRot.y(),0.0f,1.0f,0.0f);
+                //matrix_rotate_about_world_y(cmlRotMatrix,BrainiacGlobals::grad2rad(originalRot.y()));
+                break;
+            case BrainiacGlobals::RZ:
+                qDebug() << __PRETTY_FUNCTION__ << "rz";
+                //rotMatrix.rotate(originalRot.z(),0.0f,0.0f,1.0f);
+                //matrix_rotate_about_world_z(cmlRotMatrix,BrainiacGlobals::grad2rad(originalRot.z()));
+                break;
+            default:
+                continue;
+            }
+        }
+        qDebug() << __PRETTY_FUNCTION__ << "KF: "<< i << " Original Rotation Vector: " << originalRot << yAxisRot;
+
+        float xRot,yRot,zRot;
+
+        cml::matrix_rotation_euler(cmlRotMatrix,
+                                   BrainiacGlobals::grad2rad(originalRot.x()),
+                                   BrainiacGlobals::grad2rad(originalRot.y()),
+                                   BrainiacGlobals::grad2rad(originalRot.z()),
+                                   cml::euler_order_xyz);
+
+        cml::matrix_rotate_about_world_y(cmlRotMatrix,BrainiacGlobals::grad2rad(yAxisRot));
+
+        cml::matrix_to_euler(cmlRotMatrix,xRot,yRot,zRot,cml::euler_order_xyz);
+        qDebug() << __PRETTY_FUNCTION__ << "KF: "<< i << " Rotation CML:                       " << BrainiacGlobals::rad2grad(xRot) << BrainiacGlobals::rad2grad(yRot) << BrainiacGlobals::rad2grad(zRot);
+
+        rootBoneRxCurve->keyFrames()[i].setY(BrainiacGlobals::rad2grad(xRot));
+        rootBoneRyCurve->keyFrames()[i].setY(BrainiacGlobals::rad2grad(yRot));
+        rootBoneRzCurve->keyFrames()[i].setY(BrainiacGlobals::rad2grad(zRot));
+
+//        qDebug() << "DIFFS:" << originalRot-lastOrigVec << QVector3D(BrainiacGlobals::rad2grad(xRot-lastCMLVec.x()),BrainiacGlobals::rad2grad(yRot-lastCMLVec.y()),BrainiacGlobals::rad2grad(zRot-lastCMLVec.z()));
+//        lastOrigVec=originalRot;
+//        lastCMLVec=QVector3D(xRot,yRot,zRot);
+    }
+
+//    SkeletonNode *rootSkeletonNode=m_body->getRootSkeletonNode();
+//    rootSkeletonNode->setRestRotation(QVector3D(0.0f,rot,0.0f));
 }
 
 ModifiableAnimation::~ModifiableAnimation(){

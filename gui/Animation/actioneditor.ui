@@ -45,7 +45,7 @@
     <item row="1" column="0">
      <widget class="QTabWidget" name="tabWidgetMain">
       <property name="currentIndex">
-       <number>4</number>
+       <number>5</number>
       </property>
       <widget class="QWidget" name="tabD">
        <attribute name="title">
@@ -443,6 +443,19 @@
        <attribute name="title">
         <string>Transform</string>
        </attribute>
+       <widget class="QGroupBox" name="gb_Rotation">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>60</y>
+          <width>581</width>
+          <height>171</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Rotation</string>
+        </property>
+       </widget>
       </widget>
      </widget>
     </item>

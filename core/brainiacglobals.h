@@ -31,6 +31,10 @@ public:
         qreal deNorm=min+val*dist;
         return deNorm;
     }
+
+    static qreal grad2rad(qreal grad) { return grad*PI/180.0f; }
+    static qreal rad2grad(qreal rad) { return rad*180.0f/PI; }
+
     static qreal sinGrad( qreal grad) { return sin(grad*PI/180.0f); }
     static qreal cosGrad( qreal grad) { return cos(grad*PI/180.0f); }
 

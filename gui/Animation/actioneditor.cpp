@@ -12,6 +12,7 @@
 #include "core/agent/body/animation/animationplayer.h"
 #include "core/agent/body/animation/modifiableanimation.h"
 #include "gui/actiondisplay.h"
+#include "gui/brainiacslider.h"
 #include "gui/Animation/loopeditorscene.h"
 #include <QListWidgetItem>
 #include <QHashIterator>
@@ -58,6 +59,14 @@ ActionEditor::ActionEditor(Scene *scene, QWidget *parent) :
 
     // Agent Tab UI
     connect(ui->pb_ApplyAgentCurves,SIGNAL(clicked()),this,SLOT(bakeAgentCurves()));
+
+    // Transform Tab UI
+    m_sliderTransformYRot=new BrainiacSlider(ui->gb_Rotation);
+    m_sliderTransformYRot->setSliderColor(BrainiacGlobals::defaultYColor);
+    m_sliderTransformYRot->setGeometry(10,70,930,40);
+    m_sliderTransformYRot->setRange(-180.0f,180.0f);
+    m_sliderTransformYRot->setText("Y");
+    connect(m_sliderTransformYRot,SIGNAL(valueChanged(qreal)),this,SLOT(uiTranslationYRotChanged(qreal)));
 }
 
 void ActionEditor::addCurvesToList(SkeletonNode *node, quint32 level)
@@ -154,6 +163,7 @@ void ActionEditor::setActiveAnimation(quint32 animId)
     refreshCurveList();
     m_loopEditorScene->setAnimation(m_activeAnimation);
     updateLoopUI();
+    m_sliderTransformYRot->setValue(0.0f);
 }
 
 void ActionEditor::setAgentManager(AgentManager *manager)
@@ -320,6 +330,11 @@ void ActionEditor::uiLoopAnimModeTurning()
 {
     m_activeAnimation->setAnimationType(BrainiacGlobals::TURNING);
     updateLoopUI();
+}
+
+void ActionEditor::uiTranslationYRotChanged(qreal value)
+{
+    m_activeAnimation->setTansformRotation(value);
 }
 
 void ActionEditor::uiTabChanged(int tabIndex)
