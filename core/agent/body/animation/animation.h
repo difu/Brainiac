@@ -3,6 +3,7 @@
 
 #include<QHash>
 #include<QReadWriteLock>
+#include "core/brainiacglobals.h"
 
 class AnimationCurve;
 
@@ -33,6 +34,8 @@ public:
  * @param name the name of this Animation
  */
     Animation(QHash<QString, AnimationCurve*> curves, QString name);
+
+    BrainiacGlobals::AnimationType animationType() const { return m_animType; }
 
     /**
      * @brief calculate the length of this Animation
@@ -80,6 +83,13 @@ public:
      */
     bool isLoopedAnimation() const { return m_isLoopedAnimation; }
 
+    /**
+     * @brief returns if this Animation is retriggerable from the brain
+     *
+     * @fn isRetriggerable
+     * @return bool true, if this Animation is retriggerable
+     */
+    bool isRetriggerable() const { return m_isRetriggerable; }
 
     /**
      * @brief loads a brainiac animation file
@@ -153,6 +163,8 @@ public:
      */
     bool saveAnimation(QString &fileName);
 
+    void setAnimationType( BrainiacGlobals::AnimationType type) { m_animType=type; }
+
     /**
      * @brief sets the filename of this Animation
      *
@@ -160,6 +172,16 @@ public:
      * @param fileName
      */
     void setFileName(QString relativeFileName) {m_fileName=relativeFileName;}
+
+    /**
+     * @brief set if this Animation is to be looped
+     *
+     * @fn setIsLoopedAnimation
+     * @param isLooped true, if this Animation should be looped
+     */
+    void setIsLoopedAnimation( bool isLooped ) { m_isLoopedAnimation=isLooped; }
+
+    void setIsRetriggerable( bool isRetriggerable ) { m_isRetriggerable=isRetriggerable; }
 
     /**
      * @brief sets the name of this Animation
@@ -175,7 +197,9 @@ protected:
     QString m_name; /**< name of this Animation */
     QString m_fileName; /**< filename relative to scenefile */
     bool m_isLoopedAnimation;
+    bool m_isRetriggerable;
     mutable QReadWriteLock m_rwLock; /**< Lock to prevent reading from curves when the curves are changed */
+    BrainiacGlobals::AnimationType m_animType; /**< the type of this animation */
 };
 
 #endif // ANIMATION_H

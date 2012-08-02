@@ -45,7 +45,7 @@
     <item row="1" column="0">
      <widget class="QTabWidget" name="tabWidgetMain">
       <property name="currentIndex">
-       <number>5</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="tabD">
        <attribute name="title">
@@ -212,6 +212,9 @@
              <property name="text">
               <string>one shot</string>
              </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
              <property name="autoDefault">
               <bool>false</bool>
              </property>
@@ -221,6 +224,9 @@
             <widget class="QPushButton" name="pb_retrigger">
              <property name="text">
               <string>retrigger</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
              </property>
              <property name="autoDefault">
               <bool>false</bool>

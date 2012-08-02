@@ -27,6 +27,10 @@ void ActionDisplay::keyPressEvent(QKeyEvent *e)
         emit animationOneFrameBackward();
     } else if(e->key()==Qt::Key_Right) {
         emit animationOneFrameForward();
+    } else if(e->key()==Qt::Key_R) {
+        if(m_agent) {
+            m_agent->setTranslation(0.0f,0.0f,0.0f);
+        }
     }
     if(m_agent) {
         m_agent->getBody()->showBoneCoordCrosses(m_showAgentBoneCoordCrosses);

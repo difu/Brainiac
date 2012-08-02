@@ -5,6 +5,7 @@
 #include "core/group/group.h"
 #include "core/agent/agentmanager.h"
 #include "core/agent/agent.h"
+#include "core/agent/channel.h"
 #include "core/agent/body/body.h"
 #include "core/agent/body/skeletonnode.h"
 #include "core/agent/body/animation/animation.h"
@@ -156,6 +157,14 @@ void ActionEditor::setActiveAnimation(quint32 animId)
     Q_UNUSED(locker);
     if(m_activeAnimation)
         delete m_activeAnimation;
+    // unset agent transformation as they might be set by previous Animations and their curves which this animation does maybe not have
+    m_agent->getOutputChannel("rx")->setValue(0);
+    m_agent->getOutputChannel("ry")->setValue(0);
+    m_agent->getOutputChannel("rz")->setValue(0);
+    m_agent->getOutputChannel("tx")->setValue(0);
+    m_agent->getOutputChannel("ty")->setValue(0);
+    m_agent->getOutputChannel("tz")->setValue(0);
+
     m_activeAnimation=new ModifiableAnimation(m_agentManager->getAnimations()->value(animId),m_agent->getBody());
     m_activeAnimationId=animId;
     ui->lineEditAnimationName->setText(m_activeAnimation->name());
@@ -250,6 +259,16 @@ void ActionEditor::applyAnimation()
 
         if(this->isVisible()) {
             m_agent->getBody()->getAnimationPlayer()->apply(*m_activeAnimation,m_animationTime);
+            if(!m_animationRunning) {
+
+                    m_agent->getOutputChannel("rx")->setValue(0);
+                    m_agent->getOutputChannel("ry")->setValue(0);
+                    m_agent->getOutputChannel("rz")->setValue(0);
+                    m_agent->getOutputChannel("tx")->setValue(0);
+                    m_agent->getOutputChannel("ty")->setValue(0);
+                    m_agent->getOutputChannel("tz")->setValue(0);
+
+            }
             m_agent->advance(Agent::NONE);
             m_agent->advanceCommit();
             m_actionDisplay->setCameraOffset(m_activeAnimation->getRootBoneTranslation(m_animationTime));
@@ -298,6 +317,8 @@ void ActionEditor::updateLoopUI()
     ui->tb_loopTx->setChecked(m_activeAnimation->crossFadeTx());
     ui->tb_loopTy->setChecked(m_activeAnimation->crossFadeTy());
     ui->tb_loopTz->setChecked(m_activeAnimation->crossFadeTz());
+    ui->pb_oneShot->setChecked(!m_activeAnimation->isLoopedAnimation());
+    ui->pb_retrigger->setChecked(m_activeAnimation->isRetriggerable());
 }
 
 void ActionEditor::uiLoopTimesChanged()

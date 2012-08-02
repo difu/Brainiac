@@ -8,6 +8,8 @@ class Body;
 /**
  * @brief ModifiableAnimation provides functionality to manipulate and optimize an Animation
  *
+ * @todo x,z rotation for agent transformation, rotation order
+ * @todo xyz translation for agent transformation
  * @class ModifiableAnimation modifiableanimation.h "core/agent/body/animation/modifiableanimation.h"
  */
 class ModifiableAnimation : public Animation
@@ -21,7 +23,6 @@ public:
  */
     ModifiableAnimation(Animation *animation, Body *body);
     virtual ~ModifiableAnimation();
-    BrainiacGlobals::AnimationType animationType() const { return m_animType; }
 
     /**
      * @brief Bakes the applied changes to the curve
@@ -184,7 +185,6 @@ protected:
     bool m_crossFadeTz;
     Body *m_body;
     Animation *m_origAnimation;
-    BrainiacGlobals::AnimationType m_animType;
 };
 
 #endif // MODIFIABLEANIMATION_H

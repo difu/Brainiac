@@ -21,6 +21,8 @@ Animation::Animation(QHash<QString, AnimationCurve *> curves, QString name="")
     m_name=name;
     m_curves=curves;
     m_isLoopedAnimation=true;
+    m_isRetriggerable=false;
+    m_animType=BrainiacGlobals::STATIC;
     calculateLength();
 }
 
@@ -39,6 +41,8 @@ void Animation::copyFromAnimation(Animation *animation)
     m_name=animation->name();
     m_fileName=animation->fileName();
     m_isLoopedAnimation=animation->isLoopedAnimation();
+    m_isRetriggerable=animation->isRetriggerable();
+    m_animType=animation->animationType();
 }
 
 void Animation::copyFromAnimationCurves(QHash<QString, AnimationCurve *> curves)
@@ -181,6 +185,19 @@ Animation* Animation::loadAnimation(QString fileName)
         anim=new Animation();
         anim->name()=name;
     }
+    BrainiacGlobals::AnimationType animType;
+    in >> (quint32&) animType;
+    bool isLoopedAnimation;
+    in >> isLoopedAnimation;
+    bool isRetriggerable;
+    in >> isRetriggerable;
+    anim->setAnimationType(animType);
+    anim->setIsLoopedAnimation(isLoopedAnimation);
+    anim->setIsRetriggerable(isRetriggerable);
+//    out << m_animType;
+//    out << m_isLoopedAnimation;
+//    out << m_isRetriggerable;
+
     anim->setFileName(fileName);
     qDebug( )  << "Magic number <<" << magicNumber << version << name <<  numOfCurves;
     return anim;
@@ -222,6 +239,9 @@ bool Animation::saveAnimation(QString &fileName)
         }
     }
     m_fileName=fileName;
+    out << (quint32)m_animType;
+    out << m_isLoopedAnimation;
+    out << m_isRetriggerable;
     return true;
 }
 
