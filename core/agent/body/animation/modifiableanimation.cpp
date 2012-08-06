@@ -102,27 +102,21 @@ bool ModifiableAnimation::createAgentCurves()
         qWarning() << __PRETTY_FUNCTION__ <<"No TZ root bone curve!";
         return false;
     }
-    AnimationCurve *txCurve=new AnimationCurve();
-    AnimationCurve *tyCurve=new AnimationCurve();
-    AnimationCurve *tzCurve=new AnimationCurve();
-    AnimationCurve *rxCurve=new AnimationCurve();
-    AnimationCurve *ryCurve=new AnimationCurve();
-    AnimationCurve *rzCurve=new AnimationCurve();
+
     switch(m_animType) {
     case BrainiacGlobals::LOCOMOTION:
         qDebug() << __PRETTY_FUNCTION__ << "creating LOCO curves";
+        AnimationCurve *txCurve=new AnimationCurve();
+        AnimationCurve *tzCurve=new AnimationCurve();
         createAgentCurve(rootBoneTxCurve,txCurve);
         createAgentCurve(rootBoneTzCurve,tzCurve);
+        m_curves.insert("tx",txCurve);
+        m_curves.insert("tz",tzCurve);
         break;
     default:
         break;
     }
-    m_curves.insert("tx",txCurve);
-    m_curves.insert("ty",tyCurve);
-    m_curves.insert("tz",tzCurve);
-    m_curves.insert("rx",rxCurve);
-    m_curves.insert("ry",ryCurve);
-    m_curves.insert("rz",rzCurve);
+
     return true;
 }
 

@@ -45,21 +45,7 @@ void Animation::copyFromAnimation(Animation *animation)
     m_animType=animation->animationType();
 }
 
-void Animation::copyFromAnimationCurves(QHash<QString, AnimationCurve *> curves)
-{
-    deleteCurves();
-    QHashIterator<QString, AnimationCurve *> i(curves) ;
-
-    while(i.hasNext()) {
-        i.next();
-        AnimationCurve *c=i.value();
-        AnimationCurve *newCurve= new AnimationCurve(c);
-        m_curves.insert(i.key(),newCurve);
-    }
-    calculateLength();
-}
-
-void Animation::calculateLength()
+void Animation::calculateLength() const
 {
     QReadLocker rLocker(&m_rwLock);
     Q_UNUSED(rLocker);
@@ -103,7 +89,7 @@ void Animation::deleteCurves()
     m_curves.clear();
 }
 
-qreal Animation::getLength(bool calculateNew)
+qreal Animation::getLength(bool calculateNew) const
 {
     if(calculateNew) {
         calculateLength();

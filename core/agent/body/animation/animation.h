@@ -43,11 +43,9 @@ public:
      * The length is calculated as the max keyframe time of the longest AnimationCurve
      * @fn calculateLength
      */
-    void calculateLength();
+    void calculateLength() const;
 
     void copyFromAnimation(Animation *animation);
-
-    void copyFromAnimationCurves(QHash<QString, AnimationCurve*> curves);
 
     /**
      * @brief deletes the curve with name curve
@@ -70,7 +68,7 @@ public:
      * @param calculateNew true if the length should re calculated, false if a cached length should be returned
      * @return qreal the length of this Animation
      */
-    qreal getLength(bool calculateNew=false);
+    qreal getLength(bool calculateNew=false) const;
 
 
     virtual qreal getValue(const QString &curve, qreal time) const;
@@ -192,7 +190,7 @@ public:
     virtual void setName(QString name) { m_name=name; }
     virtual ~Animation();
 protected:
-    qreal m_length;
+    mutable qreal m_length;
     QHash<QString, AnimationCurve*> m_curves; /**< all AnimationCurves, QString is the curve name, that correspondents to the agent´s SkeletonNode channel @sa SkeletonNode @sa Channel */
     QString m_name; /**< name of this Animation */
     QString m_fileName; /**< filename relative to scenefile */
