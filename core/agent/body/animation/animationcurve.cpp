@@ -67,6 +67,34 @@ void AnimationCurve::deleteBeforeTime(qreal time)
     }
 }
 
+qreal AnimationCurve::getMaxValue() const
+{
+    qreal maxValue=0.0f;
+    if(!m_keyFrames.isEmpty()) {
+        maxValue=m_keyFrames.first().y();
+        foreach(QVector2D kf, m_keyFrames) {
+            if(kf.y()>maxValue) {
+                maxValue=kf.y();
+            }
+        }
+    }
+    return maxValue;
+}
+
+qreal AnimationCurve::getMinValue() const
+{
+    qreal minValue=0.0f;
+    if(!m_keyFrames.isEmpty()) {
+        minValue=m_keyFrames.first().y();
+        foreach(QVector2D kf, m_keyFrames) {
+            if(kf.y()<minValue) {
+                minValue=kf.y();
+            }
+        }
+    }
+    return minValue;
+}
+
 qreal AnimationCurve::getValue(qreal time) const
 {
     qreal retVal=0;

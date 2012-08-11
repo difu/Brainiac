@@ -53,6 +53,24 @@ public:
     void deleteAfterTime(qreal time);
 
     /**
+     * @brief get the maximal value of all keyframes
+     *
+     * if this curve does not have any keyframes 0 is returned
+     * @fn getMaxValue
+     * @return qreal the max value of all keyframes
+     */
+    qreal getMaxValue() const;
+
+    /**
+     * @brief get the min value of all keyframes
+     *
+     * if this curve does not have any keyframes 0 is returned
+     * @fn getMinValue
+     * @return qreal the min value of all keyframes
+     */
+    qreal getMinValue() const;
+
+    /**
      * @brief returns the interpolated value for given time
      *
      * @fn getValue

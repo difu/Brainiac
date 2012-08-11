@@ -2,6 +2,7 @@
 #include <QGraphicsView>
 #include <QColor>
 #include "core/agent/body/animation/modifiableanimation.h"
+#include "core/agent/body/animation/animationcurve.h"
 #include "gui/Animation/editorlineitem.h"
 
 LoopEditorScene::LoopEditorScene() : QGraphicsScene(0),m_animation(0)
@@ -25,6 +26,16 @@ LoopEditorScene::LoopEditorScene() : QGraphicsScene(0),m_animation(0)
 
     m_crossFadeStartItem=new EditorLineItem(this);
     m_crossFadeStartItem->setPen(pen);
+}
+
+qreal LoopEditorScene::mapCurveRangeToHeight(qreal max, qreal min, qreal value) const
+{
+    Q_ASSERT(max>=min);
+    qreal height=this->height();
+    if(qFuzzyCompare(max+1.0f,min+1.0f)) {
+        return height/2.0f;
+    }
+    return height*BrainiacGlobals::norm(min,max,value);
 }
 
 qreal LoopEditorScene::mapTimeToWidth(qreal time) const
@@ -54,6 +65,12 @@ void LoopEditorScene::setAnimation(ModifiableAnimation *animation)
     update();
 }
 
+void LoopEditorScene::setAnimationCurveNames(QList<QString> curveNames)
+{
+    m_curveItemNames=curveNames;
+    this->updateCurves();
+}
+
 void LoopEditorScene::setTimeCursor(qreal time)
 {
 //    QMutexLocker locker(&m_animChangeMutex);
@@ -81,6 +98,38 @@ void LoopEditorScene::update()
         m_crossFadeStartItem->hide();
     }
 
+}
+
+void LoopEditorScene::updateCurves()
+{
+    foreach(QList< QGraphicsItem *> gItems,m_curveItems)
+    {
+        foreach(QGraphicsItem *item,gItems) {
+            this->removeItem(item);
+            delete(item);
+        }
+    }
+    m_curveItems.clear();
+    int numberOfCurves=m_curveItemNames.count()+1; // +1 to avoid black color
+    int curveNo=1; // +1 to avoid black color
+    foreach(QString cn,m_curveItemNames) {
+        AnimationCurve *curve=m_animation->curves().value(cn,0);
+        if(curve) {
+            qreal minValue=curve->getMinValue();
+            qreal maxValue=curve->getMaxValue();
+            QList< QGraphicsItem *> gItems;
+            QBrush brush(BrainiacGlobals::getColorFromBrainiacColorValue((qreal)curveNo/(qreal)(numberOfCurves)));
+            foreach(QVector2D kf,curve->keyFrames()) {
+                QGraphicsRectItem *item=new QGraphicsRectItem(-1,-1,1,1);
+                item->setPos(mapTimeToWidth(kf.x()),mapCurveRangeToHeight(maxValue,minValue,kf.y()));
+                item->setBrush(brush);
+                this->addItem(item);
+                gItems.append(item);
+            }
+            curveNo++;
+            m_curveItems.insert(cn,gItems);
+        }
+    }
 }
 
 void LoopEditorScene::updateTime(qreal time)

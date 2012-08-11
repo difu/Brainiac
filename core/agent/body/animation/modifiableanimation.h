@@ -32,6 +32,8 @@ public:
 
     /**
      * @brief creates AgentCurves
+     * per default a latch curve is created with a latch at 1/2 second before the end of this Animation
+     *
      * the curves will be only permanently added if bake() is called afterwards
      * if AgentCurves already exist, nothing will be changed and false will be returned
      * @sa resetAgentCurves() if you want to delete agentcurves that are not baked

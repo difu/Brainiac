@@ -2,6 +2,7 @@
 #define ANIMATIONPLAYER_H
 #include <QObject>
 #include <QHash>
+#include <QStateMachine>
 
 
 class Animation;
@@ -36,9 +37,20 @@ public:
 protected:
     quint32 m_currentAnimationId;
     quint32 m_nextAnimationId;
+    quint32 m_time;
     Simulation *m_simulation;
     Body *m_body;
+    QStateMachine m_stateMachine;
+    QState m_animDefault;
+    QState m_animCanTrans;
+    QState m_animInTransition;
     QHash<quint32,Animation *> *m_animations; /**< Pointer to Animation array */
+
+signals:
+    void animCanTransit();
+    void animCannotTransit();
+    void animIsInTransition();
+    void aninHasTransitioned();
 };
 
 #endif // ANIMATIONPLAYER_H

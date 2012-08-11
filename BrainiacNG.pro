@@ -74,7 +74,8 @@ SOURCES += main.cpp\
     gui/actiondisplay.cpp \
     core/agent/body/animation/modifiableanimation.cpp \
     gui/Animation/loopeditorscene.cpp \
-    gui/Animation/editorlineitem.cpp
+    gui/Animation/editorlineitem.cpp \
+    core/agent/body/animation/latchcurve.cpp
 
 HEADERS  += gui/mainwindow.h \
     core/scene.h \
@@ -141,7 +142,8 @@ HEADERS  += gui/mainwindow.h \
     core/agent/body/animation/loopeditorscene.h \
     gui/Animation/loopeditorscene.h \
     gui/Animation/editorlineitem.h \
-    cml/cml.h
+    cml/cml.h \
+    core/agent/body/animation/latchcurve.h
 
 FORMS    += gui/mainwindow.ui \
     gui/sceneeditor/groupeditor.ui \

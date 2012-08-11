@@ -37,6 +37,7 @@ void ModifiableAnimation::bake()
         }
         qDebug() << __PRETTY_FUNCTION__ << curveName <<" oldKF" << origCuve->keyFrames().count() << "NewKF" << newCurve->keyFrames().count();
         newCurves.insert(curveName,newCurve);
+        delete origCuve;
     }
     QWriteLocker wLocker(&m_rwLock);
     Q_UNUSED(wLocker);
@@ -79,44 +80,53 @@ void ModifiableAnimation::createAgentCurve(AnimationCurve *rootCurve, AnimationC
 
 bool ModifiableAnimation::createAgentCurves()
 {
-    if(hasAgentCurves()) {
-        qDebug() << __PRETTY_FUNCTION__ << "AgentCurves already exist! nothing is created";
-        return false;
-    }
+    if(!hasAgentCurves()) {
+        qDebug() << __PRETTY_FUNCTION__ << "AgentRootCurves already exist! nothing is created";
+    } else {
+        AnimationCurve *txCurve;
+        AnimationCurve *tzCurve;
 
-    QWriteLocker wLocker(&m_rwLock);
-    Q_UNUSED(wLocker);
-    SkeletonNode *rootBone=m_body->getRootBone();
-    AnimationCurve *rootBoneTxCurve=curves().value(rootBone->getName()%":tx",0);
-    if(!rootBoneTxCurve) {
-        qWarning() << __PRETTY_FUNCTION__ <<"No TX root bone curve!";
-        return false;
-    }
-    AnimationCurve *rootBoneTyCurve=curves().value(rootBone->getName()%":ty",0);
-    if(!rootBoneTyCurve) {
-        qWarning() << __PRETTY_FUNCTION__ <<"No TY root bone curve!";
-        return false;
-    }
-    AnimationCurve *rootBoneTzCurve=curves().value(rootBone->getName()%":tz",0);
-    if(!rootBoneTzCurve) {
-        qWarning() << __PRETTY_FUNCTION__ <<"No TZ root bone curve!";
-        return false;
-    }
+        QWriteLocker wLocker(&m_rwLock);
+        Q_UNUSED(wLocker);
+        SkeletonNode *rootBone=m_body->getRootBone();
+        AnimationCurve *rootBoneTxCurve=curves().value(rootBone->getName()%":tx",0);
+        if(!rootBoneTxCurve) {
+            qWarning() << __PRETTY_FUNCTION__ <<"No TX root bone curve!";
+            return false;
+        }
+        AnimationCurve *rootBoneTyCurve=curves().value(rootBone->getName()%":ty",0);
+        if(!rootBoneTyCurve) {
+            qWarning() << __PRETTY_FUNCTION__ <<"No TY root bone curve!";
+            return false;
+        }
+        AnimationCurve *rootBoneTzCurve=curves().value(rootBone->getName()%":tz",0);
+        if(!rootBoneTzCurve) {
+            qWarning() << __PRETTY_FUNCTION__ <<"No TZ root bone curve!";
+            return false;
+        }
 
-    switch(m_animType) {
-    case BrainiacGlobals::LOCOMOTION:
-        qDebug() << __PRETTY_FUNCTION__ << "creating LOCO curves";
-        AnimationCurve *txCurve=new AnimationCurve();
-        AnimationCurve *tzCurve=new AnimationCurve();
-        createAgentCurve(rootBoneTxCurve,txCurve);
-        createAgentCurve(rootBoneTzCurve,tzCurve);
-        m_curves.insert("tx",txCurve);
-        m_curves.insert("tz",tzCurve);
-        break;
-    default:
-        break;
+        switch(m_animType) {
+        case BrainiacGlobals::LOCOMOTION:
+            qDebug() << __PRETTY_FUNCTION__ << "creating LOCO curves";
+            txCurve=new AnimationCurve();
+            tzCurve=new AnimationCurve();
+            createAgentCurve(rootBoneTxCurve,txCurve);
+            createAgentCurve(rootBoneTzCurve,tzCurve);
+            m_curves.insert("tx",txCurve);
+            m_curves.insert("tz",tzCurve);
+            break;
+        default:
+            break;
+        }
     }
+    if(!m_transitionCurve) {
+        m_transitionCurve=new AnimationCurve();
+    }
+    if(m_latchCurves.isEmpty()) {
 
+    } else {
+        qDebug() << __PRETTY_FUNCTION__ << "Latches already exist! nothing is created";
+    }
     return true;
 }
 

@@ -1,5 +1,6 @@
 #include "animation.h"
 #include "core/agent/body/animation/animationcurve.h"
+#include "core/agent/body/animation/latchcurve.h"
 #include "core/brainiacglobals.h"
 
 #include <QFile>
@@ -9,6 +10,7 @@
 Animation::Animation()
 {
    calculateLength();
+   m_transitionCurve=0;
 }
 
 Animation::Animation( Animation *animation)
@@ -23,6 +25,7 @@ Animation::Animation(QHash<QString, AnimationCurve *> curves, QString name="")
     m_isLoopedAnimation=true;
     m_isRetriggerable=false;
     m_animType=BrainiacGlobals::STATIC;
+    m_transitionCurve=0;
     calculateLength();
 }
 
@@ -37,12 +40,23 @@ void Animation::copyFromAnimation(Animation *animation)
         AnimationCurve *newCurve= new AnimationCurve(c);
         m_curves.insert(i.key(),newCurve);
     }
+    QHashIterator<QString, LatchCurve *> j(animation->latches());
+    while(j.hasNext()) {
+        j.next();
+        LatchCurve *l=j.value();
+        LatchCurve *newLatchCurve=new LatchCurve(*l);
+        m_latchCurves.insert(j.key(),newLatchCurve);
+    }
     calculateLength();
     m_name=animation->name();
     m_fileName=animation->fileName();
     m_isLoopedAnimation=animation->isLoopedAnimation();
     m_isRetriggerable=animation->isRetriggerable();
     m_animType=animation->animationType();
+    AnimationCurve *transCurve=animation->getTransitionCurve();
+    if(transCurve) {
+        m_transitionCurve=new AnimationCurve(transCurve);
+    }
 }
 
 void Animation::calculateLength() const
@@ -87,6 +101,16 @@ void Animation::deleteCurves()
         delete curve;
     }
     m_curves.clear();
+    m_transitionCurve=0;
+    foreach(LatchCurve *latch,m_latchCurves) {
+        delete latch;
+    }
+    m_latchCurves.clear();
+}
+
+AnimationCurve* Animation::getTransitionCurve() const
+{
+    return m_transitionCurve;
 }
 
 qreal Animation::getLength(bool calculateNew) const

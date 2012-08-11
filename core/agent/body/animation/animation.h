@@ -5,7 +5,9 @@
 #include<QReadWriteLock>
 #include "core/brainiacglobals.h"
 
+
 class AnimationCurve;
+class LatchCurve;
 
 /**
  * @brief Describes an Animation and provides access
@@ -57,6 +59,7 @@ public:
     /**
      * @brief deletes all curves
      *
+     * all segment curves, latch curves and the transition curve will be deleted
      */
     void deleteCurves();
 
@@ -115,6 +118,8 @@ public:
      */
     void addKeyFrame(QString &curveName, qreal time, qreal value);
 
+    AnimationCurve* getTransitionCurve() const;
+
     /**
      * @brief returns, if this Animation has AgentCurves
      *
@@ -139,7 +144,7 @@ public:
      */
     QHash<QString, AnimationCurve*>& curves() {return m_curves;}
     QHash<QString, AnimationCurve*> curves() const {return m_curves;}
-
+    QHash<QString, LatchCurve*> latches() const {return m_latchCurves;}
     /**
      * @brief returns a list of all AnimationCurve names
      *
@@ -198,6 +203,8 @@ protected:
     bool m_isRetriggerable;
     mutable QReadWriteLock m_rwLock; /**< Lock to prevent reading from curves when the curves are changed */
     BrainiacGlobals::AnimationType m_animType; /**< the type of this animation */
+    QHash<QString, LatchCurve*> m_latchCurves; /**< all latchCurves, QString is the curve name */
+    AnimationCurve *m_transitionCurve; /**< the transition curve */
 };
 
 #endif // ANIMATION_H

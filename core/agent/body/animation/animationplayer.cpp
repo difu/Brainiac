@@ -13,6 +13,16 @@ AnimationPlayer::AnimationPlayer(Body *body)
 {
     m_body=body;
     m_simulation=body->getAgent()->getScene()->getSimulation();
+    m_animDefault.addTransition(this,SIGNAL(animCanTransit()),&m_animCanTrans);
+    m_animCanTrans.addTransition(this,SIGNAL(animIsInTransition()),&m_animInTransition);
+    m_animCanTrans.addTransition(this,SIGNAL(animCannotTransit()),&m_animDefault);
+    m_animInTransition.addTransition(this,SIGNAL(aninHasTransitioned()),&m_animDefault);
+    m_stateMachine.addState(&m_animDefault);
+    m_stateMachine.addState(&m_animCanTrans);
+    m_stateMachine.addState(&m_animInTransition);
+    m_stateMachine.setInitialState(&m_animDefault);
+    m_stateMachine.start();
+    m_time=0;
 }
 
 void AnimationPlayer::apply2(const Animation &animation, qreal val)

@@ -80,6 +80,8 @@ protected slots:
     void uiLoopAnimModeStatic();
     void uiLoopAnimModeTurning();
     void uiLoopAnimModeRamp();
+    void uiLoopOneShot();
+    void uiLoopRetrigger();
     void bakeLoop();
     void bakeAgentCurves();
 

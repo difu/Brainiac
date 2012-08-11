@@ -41,6 +41,9 @@ ActionEditor::ActionEditor(Scene *scene, QWidget *parent) :
     m_animationTime=0;
     m_animationRunning=true;
 
+    // Curves Tab
+    ui->listCurves->setSelectionMode(QAbstractItemView::MultiSelection);
+
     // Loop Tab UI
     m_loopEditorScene=new LoopEditorScene();
     ui->loopGraphicsView->setScene(m_loopEditorScene);
@@ -57,6 +60,8 @@ ActionEditor::ActionEditor(Scene *scene, QWidget *parent) :
     connect(ui->pb_Static,SIGNAL(clicked()),this,SLOT(uiLoopAnimModeStatic()));
     connect(ui->pb_Turning,SIGNAL(clicked()),this,SLOT(uiLoopAnimModeTurning()));
     connect(ui->pb_Apply,SIGNAL(clicked()),this,SLOT(bakeLoop()));
+    connect(ui->pb_oneShot,SIGNAL(clicked()),this,SLOT(uiLoopOneShot()));
+    connect(ui->pb_retrigger,SIGNAL(clicked()),this,SLOT(uiLoopRetrigger()));
 
     // Agent Tab UI
     connect(ui->pb_ApplyAgentCurves,SIGNAL(clicked()),this,SLOT(bakeAgentCurves()));
@@ -327,29 +332,46 @@ void ActionEditor::uiLoopTimesChanged()
     m_activeAnimation->setEndTime(ui->le_endTime->text().toDouble());
     m_activeAnimation->setCrossFade(ui->le_crossFadeTime->text().toDouble());
     updateLoopUI();
+    m_loopEditorScene->updateCurves();
 }
 
 void ActionEditor::uiLoopAnimModeStatic()
 {
     m_activeAnimation->setAnimationType(BrainiacGlobals::STATIC);
     updateLoopUI();
+    m_loopEditorScene->updateCurves();
 }
 
 void ActionEditor::uiLoopAnimModeRamp()
 {
     m_activeAnimation->setAnimationType(BrainiacGlobals::RAMP);
     updateLoopUI();
+    m_loopEditorScene->updateCurves();
 }
 
 void ActionEditor::uiLoopAnimModeLocomotion()
 {
     m_activeAnimation->setAnimationType(BrainiacGlobals::LOCOMOTION);
     updateLoopUI();
+     m_loopEditorScene->updateCurves();
 }
 
 void ActionEditor::uiLoopAnimModeTurning()
 {
     m_activeAnimation->setAnimationType(BrainiacGlobals::TURNING);
+    updateLoopUI();
+    m_loopEditorScene->updateCurves();
+}
+
+void ActionEditor::uiLoopRetrigger()
+{
+    m_activeAnimation->setIsRetriggerable(ui->pb_retrigger->isChecked());
+    updateLoopUI();
+}
+
+void ActionEditor::uiLoopOneShot()
+{
+    m_activeAnimation->setIsLoopedAnimation(!ui->pb_oneShot->isChecked());
     updateLoopUI();
 }
 
@@ -366,6 +388,16 @@ void ActionEditor::uiTabChanged(int tabIndex)
         if(m_lastTabIndex==AGENT) {
             m_activeAnimation->resetAgentCurves();
         }
+    }
+    if(tabIndex==LOOP || tabIndex==EDIT) {
+        QList<QString> selectedCurveNames;
+        foreach(QListWidgetItem *item,ui->listCurves->selectedItems()){
+            QString curveName=item->data(Qt::UserRole).toString();
+            qDebug() << __PRETTY_FUNCTION__ << curveName;
+            selectedCurveNames.append(curveName);
+        }
+        m_loopEditorScene->setAnimationCurveNames(selectedCurveNames);
+
     }
     m_lastTabIndex=tabIndex;
 }

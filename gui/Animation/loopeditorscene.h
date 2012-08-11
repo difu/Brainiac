@@ -3,9 +3,12 @@
 
 #include <QGraphicsScene>
 #include <QMutex>
+#include <QHash>
+#include <QList>
 
 class EditorLineItem;
 class ModifiableAnimation;
+class AnimationCurves;
 
 
 /**
@@ -31,6 +34,15 @@ public:
      * @param animation the animation
      */
     void setAnimation(ModifiableAnimation *animation);
+
+    /**
+     * @brief sets the curves to display
+     *
+     * @fn setAnimationCurveNames
+     * @param curveNames the name of the curves to display
+     */
+    void setAnimationCurveNames(QList <QString> curveNames);
+
     /**
      * @brief sets the time cursor to a given time
      *
@@ -47,6 +59,12 @@ public:
      */
     void update();
 
+    /**
+     * @brief updates the curves
+     *
+     * @fn updateCurves
+     */
+    void updateCurves();
 public slots:
     /**
      * @brief
@@ -57,6 +75,17 @@ public slots:
     void updateTime(qreal time);
 
 protected:
+    /**
+     * @brief maps the range of a curve to the height of the editor
+     *
+     * @fn mapCurveRangeToHeight
+     * @param max
+     * @param min
+     * @param value
+     * @return qreal
+     */
+    qreal mapCurveRangeToHeight(qreal max, qreal min, qreal value) const;
+
     /**
      * @brief maps the widgets width to a time value
      *
@@ -73,6 +102,8 @@ protected:
      * @return qreal the width (x position
      */
     qreal mapTimeToWidth(qreal time) const;
+    QHash<QString, QList<QGraphicsItem *> > m_curveItems;
+    QList<QString> m_curveItemNames;
     ModifiableAnimation *m_animation; /**< the Animation in this editor */
     QMutex m_animChangeMutex; /**< TODO */
     EditorLineItem *m_timeCurserItem; /**< TODO */
