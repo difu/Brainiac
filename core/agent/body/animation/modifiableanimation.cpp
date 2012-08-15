@@ -116,6 +116,7 @@ bool ModifiableAnimation::createAgentCurves()
             m_curves.insert("tz",tzCurve);
             break;
         default:
+            qWarning() << __PRETTY_FUNCTION__ << "Animation type " << m_animType <<" not implemented!"; ;
             break;
         }
     }
