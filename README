@@ -3,3 +3,9 @@ What is Brainiac?
 Brainiac is a free and open source tool for generating crowds.
 A crowd consists of many agents who respond individually to each other and make decisions about their future behavior.
 Brainiac is completely based on open source technology.
+
+Some of the icons used are from
+http://openiconlibrary.sourceforge.net/
+They were renamed to match the brainiac naming convention. Here is a list of the icons used:
+people-xbill.png http://www.wpclipart.com/ Public Domain
+system-users-3.png http://tango.freedesktop.org/Tango_Icon_Library Public Domain
