@@ -537,27 +537,29 @@ void MainWindow::setEditMode(EditMode em)
 
     int index=m_editModeComboBox->findData(QVariant(em));
     m_editModeComboBox->setCurrentIndex(index);
+
     switch( em ) {
     case MainWindow::SCENE:
         m_editorView->setScene(m_sceneEditor);
         break;
     case MainWindow::BODY:
         m_bodyDisplay->setAgentManager(m_activeAgentManager);
-        if(m_bodyEditors.contains(m_activeAgentManager))
+        if(m_bodyEditors.contains(m_activeAgentManager)) {
             m_editorView->setScene(m_bodyEditors.value(m_activeAgentManager));
+        }
         else {
             m_editorView->setScene(0);
         }
         break;
     case MainWindow::BRAIN:
-        if(m_brainEditors.contains(m_activeAgentManager))
+        if(m_brainEditors.contains(m_activeAgentManager)) {
             m_editorView->setScene(m_brainEditors.value(m_activeAgentManager));
+        }
         else {
             m_editorView->setScene(0);
         }
         break;
     }
-    m_editorView->centerOn(m_editorView->scene()->width()/2,m_editorView->scene()->height()/2);
 }
 
 void MainWindow::showActionEditor()

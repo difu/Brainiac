@@ -21,24 +21,75 @@
 
 #include <QGraphicsView>
 
+class EditorBase;
+
+/**
+ * @brief The view of all editors in of the MainWindow´s central widget
+ *
+ * @class EditorGraphicsView editorgraphicsview.h "gui/editorgraphicsview.h"
+ */
 class EditorGraphicsView : public QGraphicsView
 {
+    Q_OBJECT
 public:
+/**
+ * @brief
+ *
+ * @fn EditorGraphicsView
+ */
     EditorGraphicsView();
+    /**
+     * @brief sets the scene for this EditorGraphicsView
+     *  the views matrix and position of the scrollbars are also set
+     *
+     * @fn setScene
+     * @bug mouse wheel scrolling and translation of scene is not stored properly
+     * @param scene the EditorBase scene to be set
+     */
+    void setScene(EditorBase *scene);
 
 protected:
+    /**
+     * @brief
+     *
+     * @fn keyPressEvent
+     * @param keyEvent
+     */
     void keyPressEvent (QKeyEvent *keyEvent);
+    /**
+     * @brief
+     *
+     * @fn keyReleaseEvent
+     * @param keyEvent
+     */
     void keyReleaseEvent(QKeyEvent *keyEvent);
+    /**
+     * @brief
+     *
+     * @fn mousePressEvent
+     * @param mouseEvent
+     */
     void mousePressEvent(QMouseEvent *mouseEvent);
+    /**
+     * @brief
+     *
+     * @fn mouseMoveEvent
+     * @param mouseEvent
+     */
     void mouseMoveEvent(QMouseEvent *mouseEvent);
+    /**
+     * @brief
+     *
+     * @fn mouseReleaseEvent
+     * @param mouseEvent
+     */
     void mouseReleaseEvent(QMouseEvent *mouseEvent);
-    bool m_rightButtonPressed;
-    bool m_middleButtonPressed;
-    int m_mousePosX;
-    int m_mousePosY;
-    int m_sceneCenterX;
-    int m_sceneCenterY;
-    QTransform *m_transformation;
+    bool m_rightButtonPressed; /**< true, if right mouse button is pressed */
+    bool m_middleButtonPressed; /**< true, if middle mouse button is pressed */
+    QPoint m_oldMousePos; /**< the old mouse position */
+
+protected slots:
+    void sliderMoved(int value);
 };
 
 #endif // EDITORGRAPHICSVIEW_H

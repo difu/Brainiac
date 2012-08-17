@@ -37,10 +37,37 @@ class EditorBase : public QGraphicsScene
 public:
     EditorBase(Scene *scene);
 
+    /**
+     * @brief sets the view matrix (scale) and the translation (the h/v sliders) of this scene when displayed in the EditorGraphicsView
+     *
+     * @fn setViewMatrixAndViewTranslation
+     * @sa EditorGraphicsView
+     * @param m the matrix containing the scale
+     * @param x the value of the horizontal slider
+     * @param y the value of the vertical slider
+     */
+    void setViewMatrixAndViewTranslation(QMatrix m, int x, int y ) { m_viewMatrix=m; m_viewXtrans=x;m_viewYtrans=y;m_viewHasNeverBeenSet=false;}
+    int getViewXtrans() const {return m_viewXtrans; }
+    int getViewYtrans() const {return m_viewYtrans; }
+    QMatrix getViewMatrix() const { return m_viewMatrix; }
+
+    /**
+     * @brief returns if the scale matrix etc have never been set before
+     * calling setViewMatrixAndViewTranslation() will return this function always true
+     * @sa setViewMatrixAndViewTranslation
+     *
+     * @fn viewHasNeverBeenSet
+     * @return bool
+     */
+    bool viewHasNeverBeenSet() const { return m_viewHasNeverBeenSet;}
 protected:
     Scene *m_scene;
     virtual void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
     virtual void dragMoveEvent(QGraphicsSceneDragDropEvent *event);
+    QMatrix m_viewMatrix;
+    int m_viewXtrans;
+    int m_viewYtrans;
+    bool m_viewHasNeverBeenSet;
 signals:
     void itemClicked(ItemEditorWidgetsBase::editMessage msg);
 };

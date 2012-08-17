@@ -17,13 +17,22 @@
 
 
 #include "editorgraphicsview.h"
+#include "editorbase.h"
+#include <QMouseEvent>
+#include <QDebug>
+
+#include <QScrollBar>
 
 EditorGraphicsView::EditorGraphicsView():QGraphicsView()
 {
     setDragMode(QGraphicsView::RubberBandDrag);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    m_rightButtonPressed=m_middleButtonPressed=false;
     //setDragMode(QGraphicsView::ScrollHandDrag);
+//    connect(this->horizontalScrollBar(),SIGNAL(valueChanged(int)),this,SLOT(sliderMoved(int)));
+//    connect(this->verticalScrollBar(),SIGNAL(valueChanged(int)),this,SLOT(sliderMoved(int)));
+
 }
 
 void EditorGraphicsView::keyPressEvent(QKeyEvent *keyEvent)
@@ -38,15 +47,79 @@ void EditorGraphicsView::keyReleaseEvent(QKeyEvent *keyEvent)
 
 void EditorGraphicsView::mouseMoveEvent(QMouseEvent *mouseEvent)
 {
-    QGraphicsView::mouseMoveEvent(mouseEvent);
+    if(m_rightButtonPressed) {
+        if(m_oldMousePos.x()>mouseEvent->pos().x()) {
+            this->scale(0.9f,0.9f);
+        } else {
+            this->scale(1.1f,1.1f);
+            QMatrix m=this->matrix();
+            if(m.m11()>1.0f || m.m22() >1.0f) {
+                m.reset();
+                setMatrix(m);
+            }
+        }
+
+    } else if(m_middleButtonPressed) {
+
+        int oldXSBVal=this->horizontalScrollBar()->value();
+        int oldYSBVal=this->verticalScrollBar()->value();
+        this->horizontalScrollBar()->setValue(oldXSBVal-(mouseEvent->pos()-m_oldMousePos).x());
+        this->verticalScrollBar()->setValue(oldYSBVal-(mouseEvent->pos()-m_oldMousePos).y());
+    } else {
+        QGraphicsView::mouseMoveEvent(mouseEvent);
+    }
+    m_oldMousePos=mouseEvent->pos();
 }
 
 void EditorGraphicsView::mousePressEvent(QMouseEvent *mouseEvent)
 {
     QGraphicsView::mousePressEvent(mouseEvent);
+    if(mouseEvent->button()==Qt::RightButton) {
+        m_rightButtonPressed=true;
+    } else if(mouseEvent->button()==Qt::MiddleButton) {
+        m_middleButtonPressed=true;
+    }
+    m_oldMousePos=mouseEvent->pos();
+
 }
 
 void EditorGraphicsView::mouseReleaseEvent(QMouseEvent *mouseEvent)
 {
     QGraphicsView::mouseReleaseEvent(mouseEvent);
+    if(mouseEvent->button()==Qt::RightButton) {
+        m_rightButtonPressed=false;
+    } else if(mouseEvent->button()==Qt::MiddleButton) {
+        m_middleButtonPressed=false;
+    }
+    EditorBase *editor=dynamic_cast<EditorBase *> (this->scene());
+    if(editor) {
+        editor->setViewMatrixAndViewTranslation(this->matrix(),this->horizontalScrollBar()->value(),this->verticalScrollBar()->value());
+    }
+//    qDebug() << __PRETTY_FUNCTION__ << this->matrix() << this->horizontalScrollBar()->value() << this->verticalScrollBar()->value();
+
+}
+
+void EditorGraphicsView::setScene(EditorBase *scene)
+{
+    if(scene) {
+        if(scene->viewHasNeverBeenSet()) {
+            setMatrix(QMatrix());
+            centerOn(scene->width()/2,scene->height()/2);
+        } else {
+            setMatrix(scene->getViewMatrix());
+            this->horizontalScrollBar()->setValue(scene->getViewXtrans());
+            this->verticalScrollBar()->setValue(scene->getViewYtrans());
+//            qDebug() << __PRETTY_FUNCTION__ << this->matrix() << this->horizontalScrollBar()->value() << this->verticalScrollBar()->value();
+        }
+    }
+    QGraphicsView::setScene((QGraphicsScene*) scene);
+}
+
+void EditorGraphicsView::sliderMoved(int value)
+{
+    EditorBase *editor=dynamic_cast<EditorBase *> (this->scene());
+    if(editor) {
+        editor->setViewMatrixAndViewTranslation(this->matrix(),this->horizontalScrollBar()->value(),this->verticalScrollBar()->value());
+//        qDebug() << __PRETTY_FUNCTION__ << this->matrix() << this->horizontalScrollBar()->value() << this->verticalScrollBar()->value();
+    }
 }
