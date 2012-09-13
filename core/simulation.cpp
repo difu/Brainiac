@@ -45,29 +45,40 @@ Simulation::Simulation(Scene *scene) :
     m_running=false;
     m_fps=24;
     startTimer(1000/m_fps);
+    connect(&m_futureWatcherAdvance,SIGNAL(finished()),this,SLOT(advanceDone()));
+    connect(&m_futureWatcherAdvanceCommit,SIGNAL(finished()),this,SLOT(advanceCommitDone()));
+    m_agents=m_scene->getAgents();
 }
 
 
-/** \brief go one step further in simulation
-
-**/
 void Simulation::advance()
 {
-    if(m_simMutex.tryLock()) {
-        QTime t;
-        t.start();
-        QList<Agent *> agents=m_scene->getAgents();
-        QtConcurrent::blockingMap(agents,&::advanceAgent);
-        QtConcurrent::blockingMap(agents,&::advanceAgentCommit);
+    if(m_simMutex.tryLock() ) {
+        m_t.start();
+        // Kepp the List up2date
+        m_agents=m_scene->getAgents();
+        m_futureWatcherAdvance.setFuture(QtConcurrent::map(m_agents,&::advanceAgent));
         m_frameCalculationTime=t.elapsed();
-        m_currentFrame++;
-        m_simMutex.unlock();
-        emit frameDone();
     } else {
-        m_late=false;
+        m_late=true;
         qDebug() << __PRETTY_FUNCTION__ << "sim is late";
+
     }
 }
+
+void Simulation::advanceDone()
+{
+    m_futureWatcherAdvanceCommit.setFuture(QtConcurrent::map(m_agents,&::advanceAgentCommit));
+}
+
+void Simulation::advanceCommitDone()
+{
+    m_currentFrame++;
+    emit frameDone();
+    m_simMutex.unlock();
+    m_frameCalculationTime=m_t.elapsed();
+}
+
 
 quint32 Simulation::getCurrentFrame() const
 {
@@ -114,6 +125,8 @@ void Simulation::stopSimulation()
 void Simulation::timerEvent(QTimerEvent *)
 {
     if(m_running) {
+        qDebug() << __PRETTY_FUNCTION__ << "Running";
         this->advance();
     }
 }
+

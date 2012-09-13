@@ -140,7 +140,6 @@ HEADERS  += gui/mainwindow.h \
     gui/Animation/actioneditor.h \
     gui/actiondisplay.h \
     core/agent/body/animation/modifiableanimation.h \
-    core/agent/body/animation/loopeditorscene.h \
     gui/Animation/loopeditorscene.h \
     gui/Animation/editorlineitem.h \
     cml/cml.h \
