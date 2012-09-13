@@ -21,8 +21,10 @@
 
 #include <QObject>
 #include <QMutex>
+#include <QFutureWatcher>
 
 class Scene;
+class Agent;
 
 
 /** \brief  The Simulation manager of the scene
@@ -75,8 +77,39 @@ protected:
     quint32 m_currentFrame;  //!< current frame of the simualtion;
     bool m_late; //!< shows, if sim step is calculated in realtime
     QMutex m_simMutex; //!< prevent new simulation step when current has not finished yet
+    QFutureWatcher<void> m_futureWatcherAdvance; /**< the future watcher of the async advance calculation */
+    QFutureWatcher<void> m_futureWatcherAdvanceCommit; /**< th future watcher of the async advance commit calculation */
+
+    /** \brief go one step further in simulation
+
+    **/
     void advance();
     void timerEvent(QTimerEvent *);
+    QTime m_t;  /**< Time to calculate the frame calculation time */
+
+    /** \brief QtConcurrent needs this list of all scene agents, can´t use Scene::getAgents()
+    * this has to be kept up2date everytime advance() is called!
+    **/
+    QList<Agent *> m_agents;
+protected slots:
+    /**
+     * @brief called when the asynchronous calculation of agent advancing is done
+     * It further starts the asynchronous calculation of agent advance commit step.
+     * The mutex that holds the lock to prevent multiple calculations is NOT released here!
+     * @sa Agent::advanceCommit()
+     * @sa advanceCommitDone()
+     */
+    void advanceDone();
+
+
+    /**
+     * @brief called when the asynchronous calculation of agent advance commit is done
+     * This function releases the lock to prevent multiple calculations
+     * Also the signal frameDone() is emited
+     * @sa frameDone()
+     */
+    void advanceCommitDone();
+
 
 signals:
     void frameDone(); //!< emitted when a frame has been done

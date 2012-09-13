@@ -33,6 +33,12 @@ Brainiac uses \textit{fuzzy logic} to model a brain of an agent.
 \subsection{Fuzzy Nodes}
 \subsubsection{AND}
 \includegraphics{../gui/pics/editor_logo_and.png}
+The AND node is the implementation of fuzzy AND logic. There are two modes that can be used to calculate the output value:
+\begin{itemize}
+\item PROD use the product of all inputs to determine the output value
+\item MIN us the minimum input value to determine the output value
+\end{itemize}
+It is also possible to calculate fuzzy NAND. Use inverted input connections. Their values will be subtracted from 1 before being calculated. This represents the fuzzy NAND rule.
 \subsubsection{OR}
 \includegraphics{../gui/pics/editor_logo_or.png}
 The OR node is the implementation of fuzzy OR logic. There are two modes that can be used to calculate the output value:
@@ -40,7 +46,7 @@ The OR node is the implementation of fuzzy OR logic. There are two modes that ca
 \item SUM use the sum of all inputs to determine the output value
 \item MAX us the maximum input value to determine the output value
 \end{itemize}
-It is also possible to calculate fuzzy NOR. Use inverted input connections. Their values will be subtracted from 1 before being calculated. This represents the fuzzy NOR.
+It is also possible to calculate fuzzy NOR. Use inverted input connections. Their values will be subtracted from 1 before being calculated. This represents the fuzzy NOR rule.
 \subsubsection{FUZZ}
 \includegraphics{../gui/pics/editor_logo_fuzz.png}
 \subsubsection{DEFUZZ}
