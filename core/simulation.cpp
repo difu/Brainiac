@@ -58,7 +58,6 @@ void Simulation::advance()
         // Kepp the List up2date
         m_agents=m_scene->getAgents();
         m_futureWatcherAdvance.setFuture(QtConcurrent::map(m_agents,&::advanceAgent));
-        m_frameCalculationTime=t.elapsed();
     } else {
         m_late=true;
         qDebug() << __PRETTY_FUNCTION__ << "sim is late";
@@ -125,7 +124,6 @@ void Simulation::stopSimulation()
 void Simulation::timerEvent(QTimerEvent *)
 {
     if(m_running) {
-        qDebug() << __PRETTY_FUNCTION__ << "Running";
         this->advance();
     }
 }

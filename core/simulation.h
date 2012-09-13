@@ -22,6 +22,7 @@
 #include <QObject>
 #include <QMutex>
 #include <QFutureWatcher>
+#include <QTime>
 
 class Scene;
 class Agent;

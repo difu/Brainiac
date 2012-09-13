@@ -9,6 +9,16 @@ AndEditor::AndEditor(Scene *scene, QWidget *parent) :
     ui->setupUi(this);
 }
 
+void AndEditor::manualNameChange()
+{
+
+}
+
+void AndEditor::manualResultChange(qreal value)
+{
+
+}
+
 AndEditor::~AndEditor()
 {
     delete ui;
