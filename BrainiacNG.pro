@@ -75,7 +75,8 @@ SOURCES += main.cpp\
     core/agent/body/animation/modifiableanimation.cpp \
     gui/Animation/loopeditorscene.cpp \
     gui/Animation/editorlineitem.cpp \
-    core/agent/body/animation/latchcurve.cpp
+    core/agent/body/animation/latchcurve.cpp \
+    gui/braineditor/andeditor.cpp
 
 HEADERS  += gui/mainwindow.h \
     core/scene.h \
@@ -143,7 +144,8 @@ HEADERS  += gui/mainwindow.h \
     gui/Animation/loopeditorscene.h \
     gui/Animation/editorlineitem.h \
     cml/cml.h \
-    core/agent/body/animation/latchcurve.h
+    core/agent/body/animation/latchcurve.h \
+    gui/braineditor/andeditor.h
 
 FORMS    += gui/mainwindow.ui \
     gui/sceneeditor/groupeditor.ui \
@@ -154,7 +156,8 @@ FORMS    += gui/mainwindow.ui \
     gui/braineditor/noiseeditor.ui \
     gui/placeeditor.ui \
     gui/bodyeditor/segmenteditor.ui \
-    gui/Animation/actioneditor.ui
+    gui/Animation/actioneditor.ui \
+    gui/braineditor/andeditor.ui
 
 LIBS += -framework \
     glut
