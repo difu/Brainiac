@@ -29,6 +29,7 @@ class Group;
 class QXmlStreamReader;
 class Scene;
 class Animation;
+class BodyManager;
 
 class AgentManager
 {
@@ -147,6 +148,15 @@ public:
     Group* getGroup() { return m_group; }
     Agent* getMasterAgent() {return m_masterAgent; }
     QString & getName() {return m_name;}
+
+    /**
+     * @brief returns a modifiable reference to the segment id generator
+     *
+     * @sa BodyManager
+     * @fn getSegmentIdGenerator
+     * @return IdGenerator
+     */
+    IdGenerator& getSegmentIdGenerator() { return m_segmentIdGenerator; }
     /**
      * @brief check, if a filame is set
      *
@@ -339,6 +349,7 @@ public:
 
 protected:
     Agent *m_masterAgent;
+    BodyManager *m_bodyManager;
     QString m_name;
     QString m_fileName;
     quint32 m_id;
@@ -349,6 +360,7 @@ protected:
     QHash<quint32, QPoint> m_editorSkeletonNodeLocations;
     IdGenerator m_brainIdGenerator;
     IdGenerator m_animationIdGenerator;
+    IdGenerator m_segmentIdGenerator;
     QHash<quint32,Animation *> m_animations;
 
     // Brain stuff

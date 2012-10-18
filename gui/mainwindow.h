@@ -25,6 +25,7 @@
 #include "core/brainiacglobals.h"
 #include "gui/itemeditorwidgetsbase.h"
 
+
 namespace Ui {
     class MainWindow;
 }
@@ -45,6 +46,7 @@ class SceneDisplay;
 class BodyDisplay;
 class SegmentEditor;
 class ActionEditor;
+class BodyDisplay_;
 
 class AgentManager;
 class BrainEditor;
@@ -151,6 +153,8 @@ protected:
     SceneDisplay *m_sceneDisplay; //!< Window that shows the rendered gl scene
     BodyDisplay *m_bodyDisplay; //!< Window that shows the body of selected agent
     ActionEditor *m_actionEditor;  /**< Window of ActionEditor */
+
+    BodyDisplay_ *m_bodyDisplayOSG;
 
 public slots:
     void statusBarMessageChange( const QString & message );

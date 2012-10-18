@@ -34,6 +34,7 @@
 #include "gui/scenedisplay.h"
 #include "gui/bodydisplay.h"
 #include "gui/Animation/actioneditor.h"
+#include "gui/bodyeditor/bodydisplay_.h"
 #include "editorlabel.h"
 #include "core/agent/agentmanager.h"
 #include "core/agent/agent.h"
@@ -90,6 +91,8 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
 
     m_bodyDisplay=new BodyDisplay(this->m_scene);
 
+    m_bodyDisplayOSG=new BodyDisplay_();
+
     m_sceneDisplay=new SceneDisplay(this->m_scene,m_scene->getCameras().first());
     connect(m_outputEditor,SIGNAL(updateGLContent()),m_sceneDisplay,SLOT(update()));
     connect(m_segmentEditor,SIGNAL(updateGLContent()),m_bodyDisplay,SLOT(update()));
@@ -129,8 +132,13 @@ void MainWindow::addAgentManager(AgentManager *agentManager)
 
 void MainWindow::closeEvent(QCloseEvent *ev)
 {
-    Q_UNUSED(ev);
+    if(m_bodyDisplayOSG) {
+        m_bodyDisplayOSG->hide();
+        m_bodyDisplayOSG->deleteLater();
+        m_bodyDisplayOSG=0;
+    }
     writeSettings();
+    ev->accept();
 }
 
 void MainWindow::createActions()

@@ -27,6 +27,7 @@ class BrainiacGlobals
 public:
     static const qreal PI=3.14159265;
     enum ItemType {AND, OR, FUZZ, DEFUZZ, OUTPUT, INPUT, NOISE, TIMER, SPHERE, CUBE, TUBE, GROUP, AGENT};
+    enum SegmentType {SPHERESEGMENT=BrainiacGlobals::SPHERE, BOXSEGMENT=BrainiacGlobals::CUBE, TUBESEGMENT=BrainiacGlobals::TUBE, NOPRIMITIVE};
     enum RotTrans {RX, RY, RZ, TX, TY, TZ };
     enum AnimationType{ STATIC, LOCOMOTION, RAMP, TURNING, NOTYPE };
     static QColor getColorFromBrainiacColorValue(qreal colVal);

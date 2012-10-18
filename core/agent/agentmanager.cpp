@@ -36,6 +36,7 @@
 #include "core/group/group.h"
 #include "core/agent/body/animation/animationcurve.h"
 #include "core/agent/body/animation/animation.h"
+#include "core/agent/body/bodymanager.h"
 #include <QFile>
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
@@ -48,6 +49,7 @@ AgentManager::AgentManager(Scene *scene, Group *group)
     m_scene=scene;
     m_group=group;
     m_id=0;
+    m_bodyManager=new BodyManager(this);
     m_masterAgent=new Agent(m_scene,0); // Id 0 is ok, its just a master agent
     m_masterAgent->getBody()->setAnimations(&m_animations);
 }
@@ -123,11 +125,12 @@ void AgentManager::addSkeletonNodeFromConfig(QXmlStreamReader *reader, quint32 i
             QXmlStreamAttributes attribs = reader->attributes();
             reader->skipCurrentElement();
             newNode=new SkeletonNodeSphere(id,name,m_masterAgent->getBody());
+            m_bodyManager->setNewSegmentType(BrainiacGlobals::SPHERESEGMENT);
         } else if(reader->name()==BrainiacGlobals::XmlBoxTag) {
             QXmlStreamAttributes attribs = reader->attributes();
             reader->skipCurrentElement();
             newNode=new SkeletonNodeBox(id,name,m_masterAgent->getBody());
-
+            m_bodyManager->setNewSegmentType(BrainiacGlobals::BOXSEGMENT);
         }
     }
     newNode->setScale(scale);
@@ -138,6 +141,21 @@ void AgentManager::addSkeletonNodeFromConfig(QXmlStreamReader *reader, quint32 i
     newNode->setRotTransOrder(rotTransOrder);
     newNode->setTranslation(translation);
     newNode->setRotation(rotation);
+
+    m_bodyManager->setNewSegmentId( id);
+    m_bodyManager->setNewSegmentName(name);
+    m_bodyManager->setNewSegmentParentId(parent);
+    m_bodyManager->setNewSegmentRestRotation(restRotation);
+    m_bodyManager->setNewSegmentRestTranslation(restTranslation);
+    m_bodyManager->setNewSegmentRotation(rotation);
+    m_bodyManager->setNewSegmentTranslation(translation);
+    m_bodyManager->setNewSegmentRotationTranslationOrder(rotTransOrder);
+    m_bodyManager->setNewSegmentScale(scale);
+    m_bodyManager->setNewSegmentColor(color);
+    m_bodyManager->setNewSegmentColorInherited(colorInherited);
+    m_bodyManager->createNewSegment();
+
+
     m_masterAgent->getBody()->addSkeletonNode(newNode,parent);
     setBodyEditorTranslation(id,editorX,editorY);
     qDebug() << __PRETTY_FUNCTION__ << "" << translation << rotation << name << scale << color << editorX << editorY;

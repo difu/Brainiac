@@ -76,7 +76,10 @@ SOURCES += main.cpp\
     gui/Animation/loopeditorscene.cpp \
     gui/Animation/editorlineitem.cpp \
     core/agent/body/animation/latchcurve.cpp \
-    gui/braineditor/andeditor.cpp
+    gui/braineditor/andeditor.cpp \
+    gui/bodyeditor/bodydisplay_.cpp \
+    core/agent/body/bodymanager.cpp \
+    core/agent/body/segment.cpp
 
 HEADERS  += gui/mainwindow.h \
     core/scene.h \
@@ -144,7 +147,11 @@ HEADERS  += gui/mainwindow.h \
     gui/Animation/editorlineitem.h \
     cml/cml.h \
     core/agent/body/animation/latchcurve.h \
-    gui/braineditor/andeditor.h
+    gui/braineditor/andeditor.h \
+    gui/osgmultithreadedqtwidget.h \
+    gui/bodyeditor/bodydisplay_.h \
+    core/agent/body/bodymanager.h \
+    core/agent/body/segment.h
 
 FORMS    += gui/mainwindow.ui \
     gui/sceneeditor/groupeditor.ui \
@@ -158,11 +165,17 @@ FORMS    += gui/mainwindow.ui \
     gui/Animation/actioneditor.ui \
     gui/braineditor/andeditor.ui
 
-LIBS += -framework \
-    glut
-
 RESOURCES += \
     brainiac.qrc
+
+macx: LIBS += -L/usr/local/lib/ -losg -losgQt -losgViewer -losgGA -losgDB -lOpenThreads -losgFX
+macx: LIBS += -framework glut
+macx: INCLUDEPATH += /usr/local/include
+macx: DEPENDPATH += /usr/local/include
+
+
+QMAKE_CFLAGS_X86_64 += -mmacosx-version-min=10.7
+QMAKE_CXXFLAGS_X86_64 = $$QMAKE_CFLAGS_X86_64
 
 LASTCOMMIT= $$system(git log | head -1 | awk \'{print $2;}\')
 message( Last Commit ($$LASTCOMMIT). )
