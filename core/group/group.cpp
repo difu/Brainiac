@@ -33,9 +33,21 @@ Group::Group(Scene *scene)
     m_scene->addGroup(this);
 }
 
-void Group::addAgent(Agent *agent)
+//void Group::addAgent(Agent *agent)
+//{
+//    m_agents.append(agent);
+//}
+
+Agent* Group::createAndAddNewAgent(quint32 id)
 {
+    Agent *agent=m_agentManager->createNewAgentInstance(id);
     m_agents.append(agent);
+    return agent;
+}
+
+Agent* Group::createAndAddNewAgent()
+{
+    return this->createAndAddNewAgent(this->getNextAgentId());
 }
 
 quint32 Group::getNextAgentId() {

@@ -51,7 +51,7 @@ bool BodyManager::createNewSegment()
         m_agentManager->getSegmentIdGenerator().registerId(m_newSegment.getId());
     }
 
-    Segment *newSegment=new Segment(m_newSegment);
+    SegmentShape *newSegment=new SegmentShape(m_newSegment);
     m_segments.insert(newSegment->getId(),newSegment);
     resetNewSegmentProperties();
     return true;

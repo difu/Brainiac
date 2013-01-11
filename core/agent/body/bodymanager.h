@@ -20,6 +20,7 @@
 
 #include "core/brainiacglobals.h"
 #include "core/agent/body/segment.h"
+#include "core/agent/body/segmentshape.h"
 #include <QVector3D>
 #include <QString>
 
@@ -153,7 +154,7 @@ public:
 protected:
     AgentManager *m_agentManager; /**< TODO */
     Segment m_newSegment; /**< TODO */
-    QHash<quint32, Segment *> m_segments; /**< TODO */
+    QHash<quint32, SegmentShape *> m_segments; /**< TODO */
 
 };
 

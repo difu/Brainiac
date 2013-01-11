@@ -52,6 +52,9 @@ AgentManager::AgentManager(Scene *scene, Group *group)
     m_bodyManager=new BodyManager(this);
     m_masterAgent=new Agent(m_scene,0); // Id 0 is ok, its just a master agent
     m_masterAgent->getBody()->setAnimations(&m_animations);
+    m_agents.append(m_masterAgent);
+    m_spBodyAgent=cloneAgent(0);
+    m_agents.append(m_spBodyAgent);
 }
 
 void AgentManager::addSkeletonNodeFromConfig(QXmlStreamReader *reader, quint32 id, QString name, quint32 parent, quint32 editorX, quint32 editorY)
@@ -181,8 +184,8 @@ void AgentManager::addAndFuzz(quint32 id, QString name, QString mode, quint32 ed
     } else {
         andMode=FuzzyAnd::PRODUCT;
     }
-    m_masterAgent->addAndFuzz(id,name,andMode);
-    foreach(Agent* agent,m_group->getAgents()) {
+    //m_masterAgent->addAndFuzz(id,name,andMode);
+    foreach(Agent* agent,m_agents) {
         agent->addAndFuzz(id,name,andMode);
     }
     m_brainIdGenerator.registerId(id);
@@ -229,8 +232,8 @@ void AgentManager::addFuzzFuzz(quint32 id, QString name, QString mode, QString i
         interMode=FuzzyFuzz::QUAD;
     }
 
-    m_masterAgent->addFuzzFuzz(id,name,fuzzMode,interMode,p1,p2,p3,p4);
-    foreach(Agent* agent,m_group->getAgents()) {
+    //m_masterAgent->addFuzzFuzz(id,name,fuzzMode,interMode,p1,p2,p3,p4);
+    foreach(Agent* agent,m_agents) {
         agent->addFuzzFuzz(id,name,fuzzMode,interMode,p1,p2,p3,p4);
     }
     m_brainIdGenerator.registerId(id);
@@ -253,8 +256,8 @@ quint32 AgentManager::addDefuzz(QString name, qreal defuzzValue, bool isElse, qu
 
 void AgentManager::addDefuzz(quint32 id, QString name, qreal defuzzValue, bool isElse, quint32 editorX, quint32 editorY)
 {
-    m_masterAgent->addDefuzz(id,name,defuzzValue,isElse);
-    foreach(Agent* agent,m_group->getAgents()) {
+    //m_masterAgent->addDefuzz(id,name,defuzzValue,isElse);
+    foreach(Agent* agent,m_agents) {
         agent->addDefuzz(id,name,defuzzValue,isElse);
     }
     m_brainIdGenerator.registerId(id);
@@ -281,8 +284,8 @@ void AgentManager::addOrFuzz(quint32 id, QString name, QString mode, quint32 edi
     } else {
         orMode=FuzzyOr::SUM;
     }
-    m_masterAgent->addOrFuzz(id,name,orMode);
-    foreach(Agent* agent,m_group->getAgents()) {
+    //m_masterAgent->addOrFuzz(id,name,orMode);
+    foreach(Agent* agent,m_agents) {
         agent->addOrFuzz(id,name,orMode);
     }
     m_brainIdGenerator.registerId(id);
@@ -305,9 +308,9 @@ quint32 AgentManager::addOutputFuzz(QString name, QString channel, qreal min, qr
 
 void AgentManager::addOutputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY)
 {
-    m_masterAgent->addOutputFuzz(id, name, channel, min, max);
+    //m_masterAgent->addOutputFuzz(id, name, channel, min, max);
     //Output *out=(Output*)m_masterAgent->getBrain()->getFuzzy(id);
-    foreach(Agent* agent,m_group->getAgents()) {
+    foreach(Agent* agent,m_agents) {
         agent->addOutputFuzz(id, name, channel, min, max);
         //Output *out=(Output*)agent->getBrain()->getFuzzy(id);
     }
@@ -331,8 +334,8 @@ quint32 AgentManager::addInputFuzz(QString name, QString channel, qreal min, qre
 
 void AgentManager::addInputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY)
 {
-    m_masterAgent->addInputFuzz(id, name, channel, min, max);
-    foreach(Agent* agent,m_group->getAgents()) {
+    //m_masterAgent->addInputFuzz(id, name, channel, min, max);
+    foreach(Agent* agent,m_agents) {
         agent->addInputFuzz(id, name, channel, min, max);
     }
     setFuzzyChannelName(id,channel); //!< @bug @todo Channel name must be set here to determine if an input is a sound input node...
@@ -382,8 +385,8 @@ quint32 AgentManager::addTimerFuzz(QString name, qreal rate, QString mode, quint
 void AgentManager::addTimerFuzz(quint32 id, QString name, qreal rate, QString mode, quint32 editorX, quint32 editorY)
 {
     if(QString::compare(BrainiacGlobals::FuzzTimerModeIfStopped,mode,Qt::CaseInsensitive)==0) {
-        m_masterAgent->addTimerFuzz(id,name,rate,Timer::IFSTOPPED);
-        foreach(Agent* agent,m_group->getAgents()) {
+        //m_masterAgent->addTimerFuzz(id,name,rate,Timer::IFSTOPPED);
+        foreach(Agent* agent,m_agents) {
             agent->addTimerFuzz(id,name,rate,Timer::IFSTOPPED);
         }
     }
@@ -393,8 +396,8 @@ void AgentManager::addTimerFuzz(quint32 id, QString name, qreal rate, QString mo
 
 void AgentManager::addConnector(quint32 childId, quint32 parentId, bool inverted)
 {
-    m_masterAgent->addConnection(childId, parentId, inverted);//!< @todo check, if connection already exists
-    foreach(Agent* agent,m_group->getAgents()) {
+    //m_masterAgent->addConnection(childId, parentId, inverted);//!< @todo check, if connection already exists
+    foreach(Agent* agent,m_agents) {
         agent->addConnection(childId, parentId, inverted);
     }
     updateSoundConfigs();
@@ -406,10 +409,17 @@ Agent* AgentManager::cloneAgent(quint32 id)
     return agent;
 }
 
+Agent* AgentManager::createNewAgentInstance(quint32 id)
+{
+    Agent *agent=new Agent(m_masterAgent,id);
+    m_agents.append(agent);
+    return agent;
+}
+
 void AgentManager::deleteConnector(quint32 childId, quint32 parentId)
 {
-    m_masterAgent->deleteConnection(parentId,childId);
-    foreach(Agent* agent,m_group->getAgents()) {
+    //m_masterAgent->deleteConnection(parentId,childId);
+    foreach(Agent* agent,m_agents) {
         agent->deleteConnection(parentId,childId);
     }
     updateSoundConfigs();
@@ -417,8 +427,8 @@ void AgentManager::deleteConnector(quint32 childId, quint32 parentId)
 
 void AgentManager::deleteFuzz(quint32 fuzzId)
 {
-    m_masterAgent->deleteFuzz(fuzzId);
-    foreach(Agent* agent,m_group->getAgents()) {
+    //m_masterAgent->deleteFuzz(fuzzId);
+    foreach(Agent* agent,m_agents) {
         agent->deleteFuzz(fuzzId);
     }
     updateSoundConfigs();
@@ -1007,8 +1017,7 @@ void AgentManager::setSegmentDimensions(quint32 id, qreal x, qreal y, qreal z)
     SkeletonNode *n=m_masterAgent->getBody()->getSkeletonNodeById(id);
     SkeletonNodeBox *node=dynamic_cast<SkeletonNodeBox *>(n);
     if(node) {
-        node->setScale(QVector3D(x,y,z));
-        foreach(Agent *agent, m_group->getAgents()) {
+        foreach(Agent *agent, m_agents) {
             agent->getBody()->getSkeletonNodeById(id)->setScale(QVector3D(x,y,z));
         }
     } else {
@@ -1032,24 +1041,24 @@ void AgentManager::setSegmentRotationTranslationOrder(quint32 id, QList<Brainiac
     if(!list.contains(BrainiacGlobals::TZ))
         list.append(BrainiacGlobals::TZ);
 
-    m_masterAgent->getBody()->getSkeletonNodeById(id)->setRotTransOrder(list);
-    foreach(Agent *agent, m_group->getAgents()) {
+//    m_masterAgent->getBody()->getSkeletonNodeById(id)->setRotTransOrder(list);
+    foreach(Agent *agent, m_agents) {
         agent->getBody()->getSkeletonNodeById(id)->setRotTransOrder(list);
     }
 }
 
 void AgentManager::setSegmentRestRotation(quint32 id, qreal x, qreal y, qreal z)
 {
-    m_masterAgent->getBody()->getSkeletonNodeById(id)->setRestRotation(QVector3D(x,y,z));
-    foreach(Agent *agent, m_group->getAgents()) {
+    //m_masterAgent->getBody()->getSkeletonNodeById(id)->setRestRotation(QVector3D(x,y,z));
+    foreach(Agent *agent, m_agents) {
         agent->getBody()->getSkeletonNodeById(id)->setRestRotation(QVector3D(x,y,z));
     }
 }
 
 void AgentManager::setSegmentRestTranslation(quint32 id, qreal x, qreal y, qreal z)
 {
-    m_masterAgent->getBody()->getSkeletonNodeById(id)->setRestTranslation(QVector3D(x,y,z));
-    foreach(Agent *agent, m_group->getAgents()) {
+    //m_masterAgent->getBody()->getSkeletonNodeById(id)->setRestTranslation(QVector3D(x,y,z));
+    foreach(Agent *agent, m_agents) {
         agent->getBody()->getSkeletonNodeById(id)->setRestTranslation(QVector3D(x,y,z));
     }
         qDebug()<< __PRETTY_FUNCTION__;
@@ -1057,16 +1066,16 @@ void AgentManager::setSegmentRestTranslation(quint32 id, qreal x, qreal y, qreal
 
 void AgentManager::setSegmentRotation(quint32 id, qreal x, qreal y, qreal z)
 {
-    m_masterAgent->getBody()->getSkeletonNodeById(id)->setRotation(QVector3D(x,y,z));
-    foreach(Agent *agent, m_group->getAgents()) {
+    //m_masterAgent->getBody()->getSkeletonNodeById(id)->setRotation(QVector3D(x,y,z));
+    foreach(Agent *agent, m_agents) {
         agent->getBody()->getSkeletonNodeById(id)->setRotation(QVector3D(x,y,z));
     }
 }
 
 void AgentManager::setSegmentTranslation(quint32 id, qreal x, qreal y, qreal z)
 {
-    m_masterAgent->getBody()->getSkeletonNodeById(id)->setTranslation(QVector3D(x,y,z));
-    foreach(Agent *agent, m_group->getAgents()) {
+    //m_masterAgent->getBody()->getSkeletonNodeById(id)->setTranslation(QVector3D(x,y,z));
+    foreach(Agent *agent, m_agents) {
         agent->getBody()->getSkeletonNodeById(id)->setTranslation(QVector3D(x,y,z));
     }
 }
@@ -1074,9 +1083,9 @@ void AgentManager::setSegmentTranslation(quint32 id, qreal x, qreal y, qreal z)
 void AgentManager::setFuzzyAndIsSoundRule(quint32 id, bool isSoundRule)
 {
     if(m_masterAgent->getBrain()->getFuzzy(id)->getType()==FuzzyBase::AND) {
-        FuzzyAnd *fuzzy=(FuzzyAnd *)m_masterAgent->getBrain()->getFuzzy(id);
-        fuzzy->setIsSoundRule(isSoundRule);
-        foreach(Agent *agent, m_group->getAgents()) {
+//        FuzzyAnd *fuzzy=(FuzzyAnd *)m_masterAgent->getBrain()->getFuzzy(id);
+//        fuzzy->setIsSoundRule(isSoundRule);
+        foreach(Agent *agent, m_agents) {
             FuzzyAnd *agentFuzz=(FuzzyAnd *) agent->getBrain()->getFuzzy(id);
             Q_ASSERT(agentFuzz->getType()==FuzzyBase::AND);
             agentFuzz->setIsSoundRule(isSoundRule);
@@ -1087,9 +1096,9 @@ void AgentManager::setFuzzyAndIsSoundRule(quint32 id, bool isSoundRule)
 void AgentManager::setFuzzyFuzzMode(quint32 id, FuzzyFuzz::Mode mode)
 {
     if(m_masterAgent->getBrain()->getFuzzy(id)->getType()==FuzzyBase::FUZZ) {
-        FuzzyFuzz *fuzzy=(FuzzyFuzz *)m_masterAgent->getBrain()->getFuzzy(id);
-        fuzzy->setMode(mode);
-        foreach(Agent *agent, m_group->getAgents()) {
+//        FuzzyFuzz *fuzzy=(FuzzyFuzz *)m_masterAgent->getBrain()->getFuzzy(id);
+//        fuzzy->setMode(mode);
+        foreach(Agent *agent, m_agents) {
             FuzzyFuzz *agentFuzz=(FuzzyFuzz *) agent->getBrain()->getFuzzy(id);
             Q_ASSERT(agentFuzz->getType()==FuzzyBase::FUZZ);
             agentFuzz->setMode(mode);
@@ -1100,12 +1109,12 @@ void AgentManager::setFuzzyFuzzMode(quint32 id, FuzzyFuzz::Mode mode)
 void AgentManager::setFuzzyFuzzMembershipPoints(quint32 id, qreal p1, qreal p2, qreal p3, qreal p4)
 {
     if(m_masterAgent->getBrain()->getFuzzy(id)->getType()==FuzzyBase::FUZZ) {
-        FuzzyFuzz *fuzzy=(FuzzyFuzz *)m_masterAgent->getBrain()->getFuzzy(id);
-        fuzzy->setP1(p1);
-        fuzzy->setP2(p2);
-        fuzzy->setP3(p3);
-        fuzzy->setP4(p4);
-        foreach(Agent *agent, m_group->getAgents()) {
+//        FuzzyFuzz *fuzzy=(FuzzyFuzz *)m_masterAgent->getBrain()->getFuzzy(id);
+//        fuzzy->setP1(p1);
+//        fuzzy->setP2(p2);
+//        fuzzy->setP3(p3);
+//        fuzzy->setP4(p4);
+        foreach(Agent *agent, m_agents) {
             FuzzyFuzz *agentFuzz=(FuzzyFuzz *) agent->getBrain()->getFuzzy(id);
             Q_ASSERT(agentFuzz->getType()==FuzzyBase::FUZZ);
             agentFuzz->setP1(p1);
@@ -1119,9 +1128,9 @@ void AgentManager::setFuzzyFuzzMembershipPoints(quint32 id, qreal p1, qreal p2, 
 void AgentManager::setFuzzyFuzzInterpolationMode(quint32 id, FuzzyFuzz::InterpolationMode mode)
 {
     if(m_masterAgent->getBrain()->getFuzzy(id)->getType()==FuzzyBase::FUZZ) {
-        FuzzyFuzz *fuzzy=(FuzzyFuzz *)m_masterAgent->getBrain()->getFuzzy(id);
-        fuzzy->setInterpolationMode(mode);
-        foreach(Agent *agent, m_group->getAgents()) {
+//        FuzzyFuzz *fuzzy=(FuzzyFuzz *)m_masterAgent->getBrain()->getFuzzy(id);
+//        fuzzy->setInterpolationMode(mode);
+        foreach(Agent *agent, m_agents) {
             FuzzyFuzz *agentFuzz=(FuzzyFuzz *) agent->getBrain()->getFuzzy(id);
             Q_ASSERT(agentFuzz->getType()==FuzzyBase::FUZZ);
             agentFuzz->setInterpolationMode(mode);
@@ -1134,23 +1143,23 @@ void AgentManager::setFuzzyChannelName(quint32 id, QString name)
     FuzzyBase *fuzz=m_masterAgent->getBrain()->getFuzzy(id);
 
     switch(fuzz->getType()) {
-    Input *inp;
-    Output *out;
+//    Input *inp;
+//    Output *out;
 
     case(FuzzyBase::INPUT):
-        inp=(Input *) fuzz;
-        inp->setChannelName(name);
+//        inp=(Input *) fuzz;
+//        inp->setChannelName(name);
 
-        foreach(Agent *agent, m_group->getAgents()) {
+        foreach(Agent *agent, m_agents) {
             Input *agentInput=(Input *) agent->getBrain()->getFuzzy(id);
             Q_ASSERT(agentInput->getType()==FuzzyBase::INPUT);
             agentInput->setChannelName(name);
         }
         break;
     case(FuzzyBase::OUTPUT):
-        out=(Output *)fuzz;
-        out->setChannelName(name);
-        foreach(Agent *agent, m_group->getAgents()) {
+//        out=(Output *)fuzz;
+//        out->setChannelName(name);
+        foreach(Agent *agent, m_agents) {
             Output *agentOut=(Output *) agent->getBrain()->getFuzzy(id);
             Q_ASSERT(agentOut->getType()==FuzzyBase::OUTPUT);
             agentOut->setChannelName(name);
@@ -1163,9 +1172,9 @@ void AgentManager::setFuzzyChannelName(quint32 id, QString name)
 
 void AgentManager::setFuzzyMinMax(quint32 id, qreal min, qreal max)
 {
-    m_masterAgent->getBrain()->getFuzzy(id)->setMin(min);
-    m_masterAgent->getBrain()->getFuzzy(id)->setMax(max);
-    foreach(Agent *agent, m_group->getAgents()) {
+//    m_masterAgent->getBrain()->getFuzzy(id)->setMin(min);
+//    m_masterAgent->getBrain()->getFuzzy(id)->setMax(max);
+    foreach(Agent *agent, m_agents) {
         agent->getBrain()->getFuzzy(id)->setMin(min);
         agent->getBrain()->getFuzzy(id)->setMax(max);
     }
@@ -1173,16 +1182,16 @@ void AgentManager::setFuzzyMinMax(quint32 id, qreal min, qreal max)
 
 void AgentManager::setFuzzyName(quint32 id, QString name)
 {
-    m_masterAgent->getBrain()->getFuzzy(id)->setName(name);
-    foreach(Agent *agent, m_group->getAgents()) {
+//    m_masterAgent->getBrain()->getFuzzy(id)->setName(name);
+    foreach(Agent *agent, m_agents) {
         agent->getBrain()->getFuzzy(id)->setName(name);
     }
 }
 
 void AgentManager::setFuzzyResult(quint32 id, qreal result)
 {
-    m_masterAgent->getBrain()->getFuzzy(id)->setResult(result);
-    foreach(Agent *agent, m_group->getAgents()) {
+//    m_masterAgent->getBrain()->getFuzzy(id)->setResult(result);
+    foreach(Agent *agent, m_agents) {
         agent->getBrain()->getFuzzy(id)->setResult(result);
     }
 }
@@ -1191,9 +1200,9 @@ void AgentManager::setFuzzyResult(quint32 id, qreal result)
 void AgentManager::setDefuzzValue(quint32 id, qreal value)
 {
     if(m_masterAgent->getBrain()->getFuzzy(id)->getType()==FuzzyBase::DEFUZZ) {
-        FuzzyDefuzz *masterDefuzz=(FuzzyDefuzz *)m_masterAgent->getBrain()->getFuzzy(id);
-        masterDefuzz->setDefuzzValAbs(value);
-        foreach(Agent *agent, m_group->getAgents()) {
+//        FuzzyDefuzz *masterDefuzz=(FuzzyDefuzz *)m_masterAgent->getBrain()->getFuzzy(id);
+//        masterDefuzz->setDefuzzValAbs(value);
+        foreach(Agent *agent, m_agents) {
             FuzzyDefuzz *agentDefuzz=(FuzzyDefuzz *)agent->getBrain()->getFuzzy(id);
             Q_ASSERT(agentDefuzz->getType()==FuzzyBase::DEFUZZ);
             agentDefuzz->setDefuzzValAbs(value);
@@ -1204,9 +1213,9 @@ void AgentManager::setDefuzzValue(quint32 id, qreal value)
 void AgentManager::setDefuzzIsElse(quint32 id, bool isElse)
 {
     if(m_masterAgent->getBrain()->getFuzzy(id)->getType()==FuzzyBase::DEFUZZ) {
-        FuzzyDefuzz *masterDefuzz=(FuzzyDefuzz *)m_masterAgent->getBrain()->getFuzzy(id);
-        masterDefuzz->setElse(isElse);
-        foreach(Agent *agent, m_group->getAgents()) {
+//        FuzzyDefuzz *masterDefuzz=(FuzzyDefuzz *)m_masterAgent->getBrain()->getFuzzy(id);
+//        masterDefuzz->setElse(isElse);
+        foreach(Agent *agent, m_agents) {
             FuzzyDefuzz *agentDefuzz=(FuzzyDefuzz *)agent->getBrain()->getFuzzy(id);
             Q_ASSERT(agentDefuzz->getType()==FuzzyBase::DEFUZZ);
             agentDefuzz->setElse(isElse);
@@ -1218,9 +1227,9 @@ void AgentManager::setDefuzzIsElse(quint32 id, bool isElse)
 void AgentManager::setOutputDefuzzMode(quint32 id, Output::DefuzzMode mode)
 {
     if(m_masterAgent->getBrain()->getFuzzy(id)->getType()==FuzzyBase::OUTPUT) {
-        Output *masterOut=(Output *)m_masterAgent->getBrain()->getFuzzy(id);
-        masterOut->setDefuzzMode(mode);
-        foreach(Agent *agent, m_group->getAgents()) {
+//        Output *masterOut=(Output *)m_masterAgent->getBrain()->getFuzzy(id);
+//        masterOut->setDefuzzMode(mode);
+        foreach(Agent *agent, m_agents) {
             Output *agentOut=(Output *) agent->getBrain()->getFuzzy(id);
             Q_ASSERT(agentOut->getType()==FuzzyBase::OUTPUT);
             agentOut->setDefuzzMode(mode);
@@ -1233,9 +1242,9 @@ void AgentManager::setOutputDefuzzMode(quint32 id, Output::DefuzzMode mode)
 void AgentManager::setNoiseRate(quint32 id, qreal rate)
 {
     if(m_masterAgent->getBrain()->getFuzzy(id)->getType()==FuzzyBase::NOISE) {
-        Noise *masterNoise=(Noise *)m_masterAgent->getBrain()->getFuzzy(id);
-        masterNoise->setRate(rate);
-        foreach(Agent *agent, m_group->getAgents()) {
+//        Noise *masterNoise=(Noise *)m_masterAgent->getBrain()->getFuzzy(id);
+//        masterNoise->setRate(rate);
+        foreach(Agent *agent, m_agents) {
             Noise *agentNoise=(Noise *) agent->getBrain()->getFuzzy(id);
             Q_ASSERT(agentNoise->getType()==FuzzyBase::NOISE);
             agentNoise->setRate(rate);

@@ -28,18 +28,48 @@ class Agent;
 class AgentManager;
 class Scene;
 
+/**
+ * @brief Manages a group
+ *
+ * A Group is a collection of Agents of the same kind. Internally they are managed by the AgentManager
+ *
+ * @sa AgentManager
+ * @class Group group.h "core/group/group.h"
+ */
 class Group
 {
 public:
     Group(Scene *scene);
+
     /**
-     * @brief adds an agent to this group
+     * @brief Creates a new Agent instance with given Id
      *
-     * @todo remove this funtion. It is dangerous to add an agent via pointer as you cannot be sure it is the same type of this group!
-     * @param agent
+     * @param id the id of the new Agent
+     * @return Agent* a pointer to the newly generated Agent
      */
-    void addAgent(Agent *agent);
+    Agent* createAndAddNewAgent(quint32 id);
+
+    /**
+     * @brief Creates a new agent instance
+     *
+     * @return Agent* a pointer to the newly generated Agent
+     */
+    Agent* createAndAddNewAgent();
+
+    /**
+     * @brief returns a list of all agents of this Group
+     *
+     * @fn getAgents
+     * @return QList<Agent *>
+     */
     QList <Agent *> getAgents() {return m_agents;}
+
+    /**
+     * @brief returns the id of this group
+     *
+     * @fn getId
+     * @return quint32
+     */
     quint32 getId() { return m_id; }
     qint32 getEditorTranslationX() { return m_editX; }
     qint32 getEditorTranslationY() { return m_editY; }
@@ -63,7 +93,7 @@ protected:
             m_editY; /**< y position of group item in SceneEditor */
     AgentManager *m_agentManager;
     Scene *m_scene;
-    QList <Agent *> m_agents;
+    QList <Agent *> m_agents; /**< all agents of this group */
 };
 
 #endif // GROUP_H

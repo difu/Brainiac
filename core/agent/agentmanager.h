@@ -124,11 +124,23 @@ public:
     /** \brief clones an agent
 
                     this function clones an agent from this manager´s master agent
+                    @warning It is up to the user to manage and destroy this agent instance
 
             \param  id the id of the new agent
             \return pointer to new agent instance
     **/
-    Agent *cloneAgent(quint32 id);
+    Agent* cloneAgent(quint32 id);
+
+    /**
+     * @brief creates a new managed instance of the agent
+     *
+     *      A new instance of an agent is created and is under control of this AgentManager.
+     *      The pointer of the newly created Agent is returned
+     * @fn createNewAgentInstance
+     * @param id the id of the new agent
+     * @return Agent pointer to the new agent instance
+     */
+    Agent* createNewAgentInstance(quint32 id);
     void deleteConnector(quint32 childId, quint32 parentId);
 
     /** \brief deletes a fuzz from all agent´s brains belonging to this group
@@ -146,7 +158,27 @@ public:
     QHash<quint32, QPoint> getEditorSkeletonNodeLocations();
     QHash<quint32, QPoint> getEditorFuzzyLocations();
     Group* getGroup() { return m_group; }
+
+    /**
+     * @brief returns a pointer to the master gent
+     *
+     * The master agent is a special purpose agent. All new instances are created from this agent
+     *
+     * @fn getMasterAgent
+     * @return Agent
+     */
     Agent* getMasterAgent() {return m_masterAgent; }
+
+    /**
+     * @brief returns a pointer to the body agent
+     *
+     * The body agent ios a special purpose agent. It is used by the ActionEditor.
+     *
+     * @sa getMasterAgent()
+     * @fn getBodyAgent
+     * @return Agent
+     */
+    Agent* getBodyAgent() {return m_spBodyAgent;}
     QString & getName() {return m_name;}
 
     /**
@@ -348,7 +380,8 @@ public:
     void updateSoundConfigs();
 
 protected:
-    Agent *m_masterAgent;
+    Agent *m_masterAgent; /**< special purpose agent. The reference all other instances are created from */
+    Agent *m_spBodyAgent; /**< special purpose agent. This agent will be used within the ActionEditor */
     BodyManager *m_bodyManager;
     QString m_name;
     QString m_fileName;
@@ -362,6 +395,7 @@ protected:
     IdGenerator m_animationIdGenerator;
     IdGenerator m_segmentIdGenerator;
     QHash<quint32,Animation *> m_animations;
+    QList<Agent *> m_agents; /**< contains all agents, including special purpose agents like @sa m_masterAgent */
 
     // Brain stuff
     void addAndFuzz(quint32 id, QString name, QString mode, quint32 editorX, quint32 editorY);

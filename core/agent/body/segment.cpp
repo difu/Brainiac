@@ -16,6 +16,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "segment.h"
+#include <osg/ShapeDrawable>
+
 
 Segment::Segment()
 {
@@ -38,7 +40,7 @@ Segment::Segment(const Segment &other):QObject()
     m_segmentId=other.getId();
     m_segmentParentId=other.getParentId();
     m_segmentType=other.getType();
-    m_segmentName=other.getName();
+    QObject::setObjectName(other.getName());
     m_segmentColorInherited=other.getColorInherited();
     m_segmentRotTransOrder=other.getRotationTranslationOrder();
 }
@@ -49,4 +51,9 @@ void Segment::setRotationTranslationOrder(QList<BrainiacGlobals::RotTrans> list)
     m_segmentRotTransOrder=list;
     Q_ASSERT(m_segmentRotTransOrder.count()==6);
     emit updated();
+}
+
+Segment::~Segment()
+{
+
 }

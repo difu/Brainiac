@@ -79,7 +79,8 @@ SOURCES += main.cpp\
     gui/braineditor/andeditor.cpp \
     gui/bodyeditor/bodydisplay_.cpp \
     core/agent/body/bodymanager.cpp \
-    core/agent/body/segment.cpp
+    core/agent/body/segment.cpp \
+    core/agent/body/segmentshape.cpp
 
 HEADERS  += gui/mainwindow.h \
     core/scene.h \
@@ -151,7 +152,8 @@ HEADERS  += gui/mainwindow.h \
     gui/osgmultithreadedqtwidget.h \
     gui/bodyeditor/bodydisplay_.h \
     core/agent/body/bodymanager.h \
-    core/agent/body/segment.h
+    core/agent/body/segment.h \
+    core/agent/body/segmentshape.h
 
 FORMS    += gui/mainwindow.ui \
     gui/sceneeditor/groupeditor.ui \

@@ -205,6 +205,8 @@ void ActionEditor::setAgentManager(AgentManager *manager)
         delete m_agent;
     }
     m_activeAnimationId=0;
+//    m_agent=m_agentManager->getBodyAgent();
+    Agent *bodyAgent=m_agentManager->getBodyAgent(); /**< @todo Use this agent, when AgentManager is fixed */
     m_agent=m_agentManager->cloneAgent(0);
     m_agent->setObjectName("ActionEditorAgent");
     m_actionDisplay->setAgent(m_agent);

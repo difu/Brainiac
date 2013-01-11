@@ -46,6 +46,13 @@ public:
     Segment( const Segment& other );
 
     /**
+     * @brief Destructor
+     *
+     * @fn ~Segment
+     */
+    virtual ~Segment();
+
+    /**
      * @brief returns the id of this segment
      *
      * @fn getId
@@ -132,7 +139,7 @@ public:
      * @fn getName
      * @return QString
      */
-    QString getName() const { return m_segmentName; }
+    QString getName() const { return this->objectName(); }
 
     /**
      * @brief
@@ -199,7 +206,7 @@ public:
      * @param parent
      */
     void setParentId(quint32 parent) {m_segmentParentId=parent;
-                                      emit updated();}
+                                      emitUpdatedSignals();}
     /**
      * @brief
      *
@@ -207,7 +214,7 @@ public:
      * @param translation
      */
     void setTranslation(const QVector3D &translation) {m_segmentTranslation=translation;
-                                                emit updated();}
+                                                emitUpdatedSignals();}
     /**
      * @brief
      *
@@ -215,7 +222,7 @@ public:
      * @param restTranslation
      */
     void setRestTranslation(const QVector3D &restTranslation) {m_segmentRestTranslation=restTranslation;
-                                                        emit updated();}
+                                                        emitUpdatedSignals();}
     /**
      * @brief
      *
@@ -223,7 +230,7 @@ public:
      * @param rotation
      */
     void setRotation(const QVector3D &rotation) {m_segmentRotation=rotation;
-                                          emit updated();}
+                                          emitUpdatedSignals();}
     /**
      * @brief
      *
@@ -231,7 +238,7 @@ public:
      * @param restRotation
      */
     void setRestRotation(const QVector3D &restRotation) {m_segmentRestRotation=restRotation;
-                                                  emit updated();}
+                                                  emitUpdatedSignals();}
     /**
      * @brief
      *
@@ -246,7 +253,7 @@ public:
      * @param scale
      */
     void setScale(const QVector3D &scale) {m_segmentScale=scale;
-                                    emit updated();}
+                                    emitUpdatedSignals();}
     /**
      * @brief
      *
@@ -261,7 +268,7 @@ public:
      * @param name
      */
 
-    void setName(const QString &name) {m_segmentName=name;}
+    void setName(const QString &name) {setObjectName(name);}
     /**
      * @brief
      *
@@ -269,7 +276,7 @@ public:
      * @param inherited
      */
     void setColorInherited(bool inherited) {m_segmentColorInherited=inherited;
-                                           emit updated();}
+                                           emitUpdatedSignals();}
     /**
      * @brief
      *
@@ -277,9 +284,10 @@ public:
      * @param color
      */
     void setColor(qreal color) {m_segmentColor=color;
-                               emit updated();}
+                               emitUpdatedSignals();}
 
 protected:
+    void emitUpdatedSignals() {emit updated(); emit updated(m_segmentId) ;}
     QVector3D m_segmentRotation; /**< TODO */
     QVector3D m_segmentTranslation; /**< TODO */
     QVector3D m_segmentRestRotation; /**< TODO */
@@ -288,7 +296,6 @@ protected:
     quint32 m_segmentId; /**< the id of this segment */
     quint32 m_segmentParentId; /**< TODO */
     BrainiacGlobals::SegmentType m_segmentType; /**< TODO */
-    QString m_segmentName; /**< TODO */
     bool m_segmentColorInherited; /**< TODO */
     qreal m_segmentColor; /**< TODO */
     QList<BrainiacGlobals::RotTrans> m_segmentRotTransOrder; /**< TODO */
@@ -300,6 +307,7 @@ signals:
      * @fn updated
      */
     void updated();
+    void updated(quint32 id);
 };
 
 #endif // SEGMENT_H
