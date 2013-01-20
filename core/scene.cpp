@@ -203,6 +203,7 @@ bool Scene::saveConfig(const QString & fileName)
 
         m_streamWriter.writeEndDocument();
         file.close();
+        m_fileName=fileName;
         return true;
     }
 

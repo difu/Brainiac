@@ -134,6 +134,7 @@ public:
 
     /**
      * @brief creates a new segment
+     *
      * Before the new segment will be created, it will be checked if
      *   - if this is a root node and there is already another root node nothing is added and false will be returned.
      *   - if no id has been set, a unique id is created and registered
@@ -152,6 +153,8 @@ public:
      */
     ~BodyManager();
 protected:
+
+    void addSegmentToAgents(quint32 id);
     AgentManager *m_agentManager; /**< TODO */
     Segment m_newSegment; /**< TODO */
     QHash<quint32, SegmentShape *> m_segments; /**< TODO */

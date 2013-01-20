@@ -23,11 +23,13 @@
 #include <QTextStream>
 #include "core/scene.h"
 
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    const QString gitVersion(__LASTCOMMIT__);
     std::cout << "Brainiac V0.01" << std::endl << std::flush;
-
+    std::cout << "Build from Git commit " << gitVersion.toStdString() << std::endl << std::flush;
     // Apply stylesheet
     QFile file(":/gui/brainiacStyleSheet.style");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))

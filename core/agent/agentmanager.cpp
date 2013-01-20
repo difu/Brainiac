@@ -752,7 +752,9 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
 bool AgentManager::saveConfig()
 {
     QFile file(m_fileName);
-    file.open(QIODevice::WriteOnly);
+    if(!file.open(QIODevice::WriteOnly) ) {
+        return false;
+    }
     QXmlStreamWriter stream(&file);
     stream.setAutoFormatting(true);
     stream.writeStartDocument();
@@ -986,7 +988,7 @@ bool AgentManager::saveConfig()
     stream.writeEndElement(); // Agentconfig
 
     stream.writeEndDocument();
-    return false;
+    return true;
 }
 
 void AgentManager::setEditorTranslation(qint32 x, qint32 y)

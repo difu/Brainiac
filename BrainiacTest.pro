@@ -1,17 +1,23 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2011-04-25T12:41:25
+# Project created by QtCreator 2013-01-12T15:08:34
 #
 #-------------------------------------------------
 
+QT       += testlib
 QT       += core gui opengl qt warn_on qt3d
 CONFIG += qt3d
-TARGET = BrainiacNG
+TARGET = tst_brainiacscenetest
+CONFIG   += console
+CONFIG   -= app_bundle
+
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        gui/mainwindow.cpp \
+SOURCES += tst_brainiacscenetest.cpp
+DEFINES += SRCDIR=\\\"$$PWD/\\\"
+
+SOURCES += gui/mainwindow.cpp \
     core/scene.cpp \
     core/agent/brain/fuzzybase.cpp \
     core/generator/generator.cpp \
@@ -182,5 +188,4 @@ QMAKE_CXXFLAGS_X86_64 = $$QMAKE_CFLAGS_X86_64
 LASTCOMMIT= $$system(git log | head -1 | awk \'{print $2;}\')
 DEFINES += "__LASTCOMMIT__=\'\"($$LASTCOMMIT)\"\'"
 message( Last Commit ($$LASTCOMMIT). )
-
 

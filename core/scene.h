@@ -74,6 +74,16 @@ public:
     bool saveConfig(const QString & fileName);
     bool saveConfig();
 
+    /**
+     * @brief sets the file name of the scene
+     *
+     * Invoking this function does not save the scene!
+     *
+     * @fn setFileName
+     * @param fileName
+     */
+    void setFileName(const QString &fileName) { m_fileName=fileName; }
+
 protected:
     void createAgents();
     void createAgents(Generator *gen);

@@ -143,6 +143,16 @@ public:
     Agent* createNewAgentInstance(quint32 id);
     void deleteConnector(quint32 childId, quint32 parentId);
 
+    /**
+     * @brief returns a list of all agents managed by this AgentManager
+     *
+     * This list includes also the special purpose agents like master agent and
+     * body agent
+     * @fn getAllManagedAgents
+     * @return QList<Agents *>
+     */
+    QList<Agents *> getAllManagedAgents() {return m_agents;}
+
     /** \brief deletes a fuzz from all agent´s brains belonging to this group
 
                     all connecttions from/to this fuzz´ brain are also deleted

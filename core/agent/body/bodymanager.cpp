@@ -25,6 +25,13 @@ BodyManager::BodyManager(AgentManager *manager)
     resetNewSegmentProperties();
 }
 
+void BodyManager::addSegmentToAgents(quint32 id)
+{
+    foreach(Agent *agent,m_agentManager->getAllManagedAgents() ) {
+
+    }
+}
+
 bool BodyManager::createNewSegment()
 {
     // first check, if everything is valid
