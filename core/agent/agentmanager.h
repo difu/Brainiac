@@ -151,7 +151,7 @@ public:
      * @fn getAllManagedAgents
      * @return QList<Agents *>
      */
-    QList<Agents *> getAllManagedAgents() {return m_agents;}
+    QList<Agent *> getAllManagedAgents() {return m_agents;}
 
     /** \brief deletes a fuzz from all agent´s brains belonging to this group
 

@@ -24,16 +24,32 @@
 #include <osg/Geode>
 #include <osg/Transform>
 
+/**
+ * @brief This class describes as segment and also holds the geometry that is shared between all agents of an AgentManager
+ *
+ * @class SegmentShape segmentshape.h "core/agent/body/segmentshape.h"
+ */
 class SegmentShape : public Segment
 {
 public:
+/**
+ * @brief Copy Constructor
+ *
+ * @fn SegmentShape
+ * @param other
+ */
     SegmentShape(const Segment &other);
+    /**
+     * @brief Destructor
+     *
+     * @fn ~SegmentShape
+     */
     virtual ~SegmentShape();
 
 protected:
-    osg::Geode *m_geode;
-    osg::ShapeDrawable *m_shapeDrawable;
-    osg::Transform *m_transformNode;
+    osg::ref_ptr<osg::Geode> m_geode; /**< the geometry node that holds the ShapeDrawable */
+    osg::ref_ptr<osg::ShapeDrawable> m_shapeDrawable; /**< the node that holds the geometyr */
+    osg::ref_ptr<osg::Transform> m_transformNode; /**< the transformation node of the segment. This is the node that is shared between all agent instances @sa AgentManager */
 };
 
 #endif // SEGMENTSHAPE_H

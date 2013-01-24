@@ -154,9 +154,15 @@ public:
     ~BodyManager();
 protected:
 
+    /**
+     * @brief Adds a SegmentShape to all Agents of this AgentManager
+     *
+     * @fn addSegmentToAgents
+     * @param id
+     */
     void addSegmentToAgents(quint32 id);
-    AgentManager *m_agentManager; /**< TODO */
-    Segment m_newSegment; /**< TODO */
+    AgentManager *m_agentManager; /**< The AgentManager this BodyManagers belongs to */
+    Segment m_newSegment; /**< Temporary Segment */
     QHash<quint32, SegmentShape *> m_segments; /**< TODO */
 
 };

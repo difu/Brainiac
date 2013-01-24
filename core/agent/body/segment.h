@@ -294,7 +294,7 @@ protected:
     QVector3D m_segmentRestTranslation; /**< TODO */
     QVector3D m_segmentScale; /**< TODO */
     quint32 m_segmentId; /**< the id of this segment */
-    quint32 m_segmentParentId; /**< TODO */
+    quint32 m_segmentParentId; /**< The Id of the parent Segment */
     BrainiacGlobals::SegmentType m_segmentType; /**< TODO */
     bool m_segmentColorInherited; /**< TODO */
     qreal m_segmentColor; /**< TODO */
