@@ -16,6 +16,11 @@ public:
 
 private Q_SLOTS:
     void initTestCase();
+    /**
+     * @brief Tests, if scene creation is valid
+     *
+     * creates a scene (Scene1), adds two groups.
+     */
     void createScene1();
     void saveScene1Agents();
     void saveScene1();

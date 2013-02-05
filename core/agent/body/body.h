@@ -22,16 +22,21 @@
 #include <QList>
 #include <QHash>
 
+#include <osg/PositionAttitudeTransform>
+
 class Agent;
 class AnimationPlayer;
 class SkeletonNode;
 class Animation;
 class QGLPainter;
+class BodySegment;
 
 class Body
 {
 public:
     Body(Agent *agent, Body *body=0);
+
+    void addBodySegment( osg::ref_ptr<BodySegment> bodySegment, quint32 parentId);
     void addSkeletonNode( SkeletonNode *node, quint32 parentId );
     void copyBody(Body *body);
     /**
@@ -79,6 +84,9 @@ public:
      * @return SkeletonNode
      */
     SkeletonNode *getRootBone();
+
+    osg::ref_ptr<osg::PositionAttitudeTransform> getRootSegment() { return m_rootSegment; }
+
     SkeletonNode *getSkeletonNodeById(quint32 id);
     SkeletonNode *getSkeletonNodeByName(const QString &name);
     Agent* getAgent();
@@ -102,6 +110,10 @@ protected:
 
     SkeletonNode *m_rootSkeletonNode;
     AnimationPlayer *m_animationPlayer;
+
+    QHash<quint32, BodySegment* > m_bodySegments;
+
+    osg::ref_ptr<osg::PositionAttitudeTransform> m_rootSegment;
 };
 
 #endif // BODY_H

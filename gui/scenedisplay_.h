@@ -15,17 +15,23 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef BODYDISPLAY__H
-#define BODYDISPLAY__H
+
+#ifndef SCENEDISPLAY__H
+#define SCENEDISPLAY__H
 
 #include "gui/osgmultithreadedqtwidget.h"
 
 class Scene;
-
-class BodyDisplay_ : public OsgMultithreadedViewerWidget
+/**
+ * @brief The SceneDisplay class
+ */
+class SceneDisplay_ : public OsgMultithreadedViewerWidget
 {
 public:
-    BodyDisplay_();
+    SceneDisplay_(Scene *scene);
+
+protected:
+    Scene *m_scene;
 };
 
-#endif // BODYDISPLAY__H
+#endif // SCENEDISPLAY__H

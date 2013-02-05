@@ -39,6 +39,17 @@ public:
  * @param other
  */
     SegmentShape(const Segment &other);
+
+    /**
+     * @brief returns the GL segment
+     *
+     * A smart pointer of the transformation node that contains the rotation, translation, scale followd by a geode that contains the geometry is returned.
+     * The transformation node is to be added to the rest transformation node of the skeleton of the agent.
+     *
+     * @fn getGLSegment
+     * @return osg::ref_ptr<osg::Transform> smart pointer of the transformation node of the Segment that is added to the skeleton
+     */
+    osg::ref_ptr<osg::Transform> getGLSegment() { return m_transformNode; }
     /**
      * @brief Destructor
      *

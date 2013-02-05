@@ -26,6 +26,7 @@
 #include "core/agent/body/skeletonnodebox.h"
 #include "core/agent/body/skeletongeometrynode.h"
 #include "core/agent/channel.h"
+#include "core/agent/body/bodysegment.h"
 
 #include <QtOpenGL>
 #include "qglpainter.h"
@@ -41,6 +42,7 @@ Body::Body(Agent *agent,Body *body)
     m_agent=agent;
     m_rootSkeletonNode=new SkeletonNode(SkeletonNode::NOPRIMITIVE,0,QString("root"),this);
     m_animationPlayer=new AnimationPlayer(this);
+    m_rootSegment=new osg::PositionAttitudeTransform;
     // if we have a body, clone it
     if(body) {
         copyBody(body);
@@ -94,6 +96,24 @@ void Body::copySkeletonNode(SkeletonNode *n)
             if(childNode)
                 copySkeletonNode(childNode);
         }
+    }
+}
+
+void Body::addBodySegment(osg::ref_ptr<BodySegment> bodySegment, quint32 parentId)
+{
+    //BodySegment *bs=bodySegment.get();
+    m_bodySegments.insert(bodySegment.get()->getId(),bodySegment.get());
+    if(parentId==0) {
+        osg::PositionAttitudeTransform *trans=m_rootSegment.get();
+        trans->addChild(bodySegment);
+        m_rootSegment.get()->addChild(bodySegment.get());
+        return;
+    }
+    BodySegment *bs=m_bodySegments.value(parentId,0);
+    if(bs) {
+        bs->addChild(bodySegment);
+    } else {
+        qCritical() << __PRETTY_FUNCTION__ << "Unknown parentId " << parentId;
     }
 }
 
