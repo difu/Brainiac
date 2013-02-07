@@ -56,7 +56,7 @@ void BodyManager::applyBodyOnAgent(Agent *agent)
     Segment *rootSeg=0;
 
     foreach(Segment *seg,m_segments) {
-        if(seg->isRootElement()) {
+        if(seg->isRootSegment()) {
             rootSeg=seg;
             break;
         }
@@ -75,9 +75,9 @@ bool BodyManager::createNewSegment()
     // first check, if everything is valid
 
     // If this should be a root node, check if we have already a root node
-    if(m_newSegment.isRootElement()) {
+    if(m_newSegment.isRootSegment()) {
         foreach(Segment *seg, m_segments) {
-            if(seg->isRootElement()) {
+            if(seg->isRootSegment()) {
                 qDebug() << __PRETTY_FUNCTION__ << "Error: Trying to add a second root segment";
                 resetNewSegmentProperties();
                 return false;

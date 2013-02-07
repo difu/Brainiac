@@ -185,10 +185,10 @@ public:
      * @brief returns, if this is a root segment
      *
      * A segment is a root segment, if its parent id == 0
-     * @fn isRootElement
+     * @fn isRootSegment
      * @return bool true, if this segment is a root segment
      */
-    bool isRootElement() const {
+    bool isRootSegment() const {
         return m_segmentParentId==0;
     }
 
