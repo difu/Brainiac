@@ -25,6 +25,7 @@
 #include <QString>
 
 class AgentManager;
+class Agent;
 
 /**
  * @brief
@@ -41,6 +42,13 @@ public:
  * @param manager
  */
     BodyManager(AgentManager *manager);
+
+    /**
+     * @brief applyBodyOnAgent
+     * Apply the managed body to agent
+     * @param agent the Agent this body should be applied
+     */
+    void applyBodyOnAgent(Agent *agent);
     /**
      * @brief
      *
@@ -161,6 +169,16 @@ protected:
      * @param id
      */
     void addSegmentToAgents(quint32 id);
+
+    /**
+     * @brief addSegmentsToAgent
+     * Adds all segments to an Agent
+     * @param agent the Agent
+     * @param startSegmentId the id of the segment to start the recursion
+     */
+    void addSegmentsToAgent(Agent *agent, quint32 startSegmentId);
+
+    QList<quint32> getSegmentChildrenIds(quint32 id) const;
     AgentManager *m_agentManager; /**< The AgentManager this BodyManagers belongs to */
     Segment m_newSegment; /**< Temporary Segment */
     QHash<quint32, SegmentShape *> m_segments; /**< TODO */

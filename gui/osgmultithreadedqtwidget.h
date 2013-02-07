@@ -61,7 +61,7 @@ public:
     {
         m_camera=camera;
         m_rootNode=new osg::Group;
-        m_rootNode->setName("rootGroupNode");
+        m_rootNode->setName("Viewer rootGroupNode");
         if(!m_camera)
             m_camera=createCamera( 50, 50, 640, 480 );
         m_viewer.setCamera( m_camera );
