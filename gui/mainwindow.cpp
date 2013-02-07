@@ -35,7 +35,6 @@
 #include "gui/bodydisplay.h"
 #include "gui/Animation/actioneditor.h"
 #include "gui/bodyeditor/bodydisplay_.h"
-#include "gui/scenedisplay_.h"
 #include "editorlabel.h"
 #include "core/agent/agentmanager.h"
 #include "core/agent/agent.h"
@@ -54,7 +53,7 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    osg::setNotifyLevel( osg::FATAL );
+
     m_editMode=MainWindow::BODY;
     m_scene=scene;
 
@@ -93,7 +92,6 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
     m_bodyDisplay=new BodyDisplay(this->m_scene);
 
     m_bodyDisplayOSG=new BodyDisplay_();
-    m_sceneDisplayOSG=new SceneDisplay_(this->m_scene);
 
     m_sceneDisplay=new SceneDisplay(this->m_scene,m_scene->getCameras().first());
     connect(m_outputEditor,SIGNAL(updateGLContent()),m_sceneDisplay,SLOT(update()));
@@ -138,11 +136,6 @@ void MainWindow::closeEvent(QCloseEvent *ev)
         m_bodyDisplayOSG->hide();
         m_bodyDisplayOSG->deleteLater();
         m_bodyDisplayOSG=0;
-    }
-    if(m_sceneDisplayOSG) {
-        m_sceneDisplayOSG->hide();
-        m_sceneDisplayOSG->deleteLater();
-        m_sceneDisplayOSG=0;
     }
     writeSettings();
     ev->accept();

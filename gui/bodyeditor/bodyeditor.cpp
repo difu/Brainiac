@@ -33,8 +33,8 @@ BodyEditor::BodyEditor(Scene *scene, AgentManager *agentManager) : EditorBase(sc
 {
     m_agentManager=agentManager;
     foreach(SkeletonNode *n, agentManager->getMasterAgent()->getBody()->getAllSkeletonNodes() ) {
-//        qDebug() << __PRETTY_FUNCTION__ << "added node "<< n->objectName();
-//        qDebug() << __PRETTY_FUNCTION__ << agentManager->getEditorSkeletonNodeLocations().value(n->getId()).x();
+        qDebug() << __PRETTY_FUNCTION__ << "added node "<< n->objectName();
+        qDebug() << __PRETTY_FUNCTION__ << agentManager->getEditorSkeletonNodeLocations().value(n->getId()).x();
         if(dynamic_cast<SkeletonNodeBox*>(n)) {
             BodyEditorItem *item=new BodyEditorItem(BrainiacGlobals::CUBE,m_agentManager,n->getId());
             item->setPos(agentManager->getEditorSkeletonNodeLocations().value(n->getId()).x(),agentManager->getEditorSkeletonNodeLocations().value(n->getId()).y());

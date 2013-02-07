@@ -57,7 +57,7 @@ EditorLabel::EditorLabel(BrainiacGlobals::ItemType labelType) :
         setPixmap(QPixmap(":/gui/pics/editor_logo_group.png"));
         break;
     default:
-        qWarning() << __PRETTY_FUNCTION__ << "Wrong label parameter or label not yet implemented!";
+        qDebug() << __PRETTY_FUNCTION__ << "Wrong label parameter or label not yet implemented!";
     }
     setMouseTracking(true);
 }
