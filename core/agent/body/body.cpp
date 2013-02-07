@@ -43,8 +43,6 @@ Body::Body(Agent *agent,Body *body)
     m_rootSkeletonNode=new SkeletonNode(SkeletonNode::NOPRIMITIVE,0,QString("root"),this);
     m_animationPlayer=new AnimationPlayer(this);
     m_rootSegment=new osg::PositionAttitudeTransform;
-    m_rootSegment.get()->setName("AgentBody Root Segment");
-    //m_agent->getScene()->getRootSceneNode()->addChild(m_rootSegment);
     // if we have a body, clone it
     if(body) {
         copyBody(body);
@@ -103,7 +101,6 @@ void Body::copySkeletonNode(SkeletonNode *n)
 
 void Body::addBodySegment(osg::ref_ptr<BodySegment> bodySegment, quint32 parentId)
 {
-    qDebug( ) << __PRETTY_FUNCTION__ << "Added BodySegment with parentId" << parentId;
     //BodySegment *bs=bodySegment.get();
     m_bodySegments.insert(bodySegment.get()->getId(),bodySegment.get());
     if(parentId==0) {
@@ -270,5 +267,4 @@ Body::~Body()
 //        delete n;
 //    }
     delete m_rootSkeletonNode;
-    m_agent->getScene()->getRootSceneNode()->removeChild(m_rootSegment);
 }

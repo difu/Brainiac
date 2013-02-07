@@ -406,14 +406,12 @@ void AgentManager::addConnector(quint32 childId, quint32 parentId, bool inverted
 Agent* AgentManager::cloneAgent(quint32 id)
 {
     Agent *agent=new Agent(m_masterAgent,id);
-    m_bodyManager->applyBodyOnAgent(agent);
     return agent;
 }
 
 Agent* AgentManager::createNewAgentInstance(quint32 id)
 {
     Agent *agent=new Agent(m_masterAgent,id);
-    m_bodyManager->applyBodyOnAgent(agent);
     m_agents.append(agent);
     return agent;
 }

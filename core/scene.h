@@ -25,7 +25,6 @@
 #include <QXmlStreamWriter>
 #include <QXmlStreamReader>
 
-#include <osg/Group>
 #include "core/idgenerator.h"
 
 class Agent;
@@ -70,12 +69,6 @@ public:
      * @return QString
      */
     QString getRelativeFileDir(QString file) const;
-
-    /**
-     * @brief getRootSceneNode
-     * @return
-     */
-    osg::Group* getRootSceneNode() { return m_rootNode.get(); }
     Simulation *getSimulation() { return m_simulation; }
     bool openConfig(const QString & fileName);
     bool saveConfig(const QString & fileName);
@@ -102,8 +95,7 @@ protected:
     QList<Generator *> m_generators; //!< all agent generators of this scene
     QList<Group *> m_groups; //!< all groups of this scene
     Simulation *m_simulation; //!< simulation
-    IdGenerator m_groupIdGenerator; //!< Group Id generator
-    osg::ref_ptr<osg::Group> m_rootNode;
+    IdGenerator m_groupIdGenerator;
 
 signals:
     void groupAdded(Group *group); //!< emitted when a group is added
