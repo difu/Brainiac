@@ -21,6 +21,7 @@
 #include <QObject>
 #include <QVector3D>
 #include "core/brainiacglobals.h"
+#include <osg/MatrixTransform>
 
 /**
  * @brief Describes a segment of the Agent ´s Body
@@ -206,7 +207,7 @@ public:
      * @param parent
      */
     void setParentId(quint32 parent) {m_segmentParentId=parent;
-                                      emitUpdatedSignals();}
+                                      updateAndNotify();}
     /**
      * @brief
      *
@@ -214,7 +215,7 @@ public:
      * @param translation
      */
     void setTranslation(const QVector3D &translation) {m_segmentTranslation=translation;
-                                                emitUpdatedSignals();}
+                                                updateAndNotify();}
     /**
      * @brief
      *
@@ -222,7 +223,7 @@ public:
      * @param restTranslation
      */
     void setRestTranslation(const QVector3D &restTranslation) {m_segmentRestTranslation=restTranslation;
-                                                        emitUpdatedSignals();}
+                                                        updateAndNotify();}
     /**
      * @brief
      *
@@ -230,7 +231,7 @@ public:
      * @param rotation
      */
     void setRotation(const QVector3D &rotation) {m_segmentRotation=rotation;
-                                          emitUpdatedSignals();}
+                                          updateAndNotify();}
     /**
      * @brief
      *
@@ -238,7 +239,7 @@ public:
      * @param restRotation
      */
     void setRestRotation(const QVector3D &restRotation) {m_segmentRestRotation=restRotation;
-                                                  emitUpdatedSignals();}
+                                                  updateAndNotify();}
     /**
      * @brief
      *
@@ -253,7 +254,7 @@ public:
      * @param scale
      */
     void setScale(const QVector3D &scale) {m_segmentScale=scale;
-                                    emitUpdatedSignals();}
+                                    updateAndNotify();}
     /**
      * @brief
      *
@@ -276,7 +277,7 @@ public:
      * @param inherited
      */
     void setColorInherited(bool inherited) {m_segmentColorInherited=inherited;
-                                           emitUpdatedSignals();}
+                                           updateAndNotify();}
     /**
      * @brief
      *
@@ -284,10 +285,15 @@ public:
      * @param color
      */
     void setColor(qreal color) {m_segmentColor=color;
-                               emitUpdatedSignals();}
+                               updateAndNotify();}
 
 protected:
-    void emitUpdatedSignals() {emit updated(); emit updated(m_segmentId) ;}
+    /**
+     * @brief updateAndNotify Updates internal data and emit signals
+     *
+     * Whenever this is called, the transformation matrix is re-calculated
+     */
+    void updateAndNotify();
     QVector3D m_segmentRotation; /**< TODO */
     QVector3D m_segmentTranslation; /**< TODO */
     QVector3D m_segmentRestRotation; /**< TODO */
@@ -299,6 +305,8 @@ protected:
     bool m_segmentColorInherited; /**< TODO */
     qreal m_segmentColor; /**< TODO */
     QList<BrainiacGlobals::RotTrans> m_segmentRotTransOrder; /**< TODO */
+    osg::ref_ptr<osg::MatrixTransform> m_transformNode; /**< the transformation node of the segment. This is the node that is shared between all agent instances @sa AgentManager */
+
 
 signals:
     /**

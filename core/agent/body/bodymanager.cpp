@@ -16,8 +16,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "bodymanager.h"
+#include "core/group/group.h"
 #include "core/agent/agentmanager.h"
-
+#include "core/agent/agent.h"
+#include "core/agent/body/body.h"
+#include "core/agent/body/bodysegment.h"
 
 BodyManager::BodyManager(AgentManager *manager)
 {
@@ -28,8 +31,43 @@ BodyManager::BodyManager(AgentManager *manager)
 void BodyManager::addSegmentToAgents(quint32 id)
 {
     foreach(Agent *agent,m_agentManager->getAllManagedAgents() ) {
-
+        osg::ref_ptr<BodySegment> bs=new BodySegment(agent->getBody(), m_segments.value(id));
+        agent->getBody()->addBodySegment(bs.get(),bs.get()->getParentId());
     }
+}
+
+void BodyManager::addSegmentsToAgent(Agent *agent, quint32 startSegmentId)
+{
+    qDebug()<< __PRETTY_FUNCTION__ << "Adding segment id" << startSegmentId;
+    osg::ref_ptr<BodySegment> bs=new BodySegment(agent->getBody(), m_segments.value(startSegmentId));
+    agent->getBody()->addBodySegment(bs.get(),bs.get()->getParentId());
+    foreach(quint32 childId,getSegmentChildrenIds(startSegmentId)) {
+        qDebug() << __PRETTY_FUNCTION__ << "Add child " << childId;
+        this->addSegmentsToAgent(agent,childId);
+    }
+}
+
+void BodyManager::applyBodyOnAgent(Agent *agent)
+{
+    if(m_segments.count()==0) {
+        qDebug() << __PRETTY_FUNCTION__ << "No segments found!";
+        return;
+    }
+    Segment *rootSeg=0;
+
+    foreach(Segment *seg,m_segments) {
+        if(seg->isRootElement()) {
+            rootSeg=seg;
+            break;
+        }
+    }
+
+    if(rootSeg) {
+        this->addSegmentsToAgent(agent,rootSeg->getId());
+    } else {
+        qDebug() << __PRETTY_FUNCTION__ << "No root segment found for agent " << agent->getId() << m_agentManager->getGroup()->getName();
+    }
+
 }
 
 bool BodyManager::createNewSegment()
@@ -60,8 +98,22 @@ bool BodyManager::createNewSegment()
 
     SegmentShape *newSegment=new SegmentShape(m_newSegment);
     m_segments.insert(newSegment->getId(),newSegment);
+    addSegmentToAgents(newSegment->getId());
     resetNewSegmentProperties();
     return true;
+}
+
+QList<quint32> BodyManager::getSegmentChildrenIds(quint32 id) const
+{
+    SegmentShape *s=m_segments.value(id);
+    QList<quint32> childIds;
+    foreach(SegmentShape* segShape,m_segments) {
+        if(segShape->getParentId()==s->getId()) {
+            childIds.append(segShape->getId());
+            qDebug() << __PRETTY_FUNCTION__ << "Child found: "<< segShape->getId() << "#" << childIds.count();
+        }
+    }
+    return childIds;
 }
 
 void BodyManager::resetNewSegmentProperties()

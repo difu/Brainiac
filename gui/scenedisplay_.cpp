@@ -18,7 +18,12 @@
 #include "scenedisplay_.h"
 #include "core/scene.h"
 
-SceneDisplay_::SceneDisplay_(Scene *scene): m_scene(scene)
+SceneDisplay_::SceneDisplay_(Scene *scene): OsgMultithreadedViewerWidget(0,scene->getRootSceneNode())
 {
 
+}
+
+SceneDisplay_::~SceneDisplay_()
+{
+    osgDB::writeNodeFile(*m_rootNode,"/tmp/scene.osgt");
 }

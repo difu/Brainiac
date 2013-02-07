@@ -21,17 +21,20 @@
 
 Segment::Segment()
 {
-        m_segmentRotTransOrder.append(BrainiacGlobals::RX);
-        m_segmentRotTransOrder.append(BrainiacGlobals::RY);
-        m_segmentRotTransOrder.append(BrainiacGlobals::RZ);
+    m_transformNode=new osg::MatrixTransform;
+    m_segmentRotTransOrder.append(BrainiacGlobals::RX);
+    m_segmentRotTransOrder.append(BrainiacGlobals::RY);
+    m_segmentRotTransOrder.append(BrainiacGlobals::RZ);
 
-        m_segmentRotTransOrder.append(BrainiacGlobals::TX);
-        m_segmentRotTransOrder.append(BrainiacGlobals::TY);
-        m_segmentRotTransOrder.append(BrainiacGlobals::TZ);
+    m_segmentRotTransOrder.append(BrainiacGlobals::TX);
+    m_segmentRotTransOrder.append(BrainiacGlobals::TY);
+    m_segmentRotTransOrder.append(BrainiacGlobals::TZ);
+    updateAndNotify();
 }
 
 Segment::Segment(const Segment &other):QObject()
 {
+    m_transformNode=new osg::MatrixTransform;
     m_segmentRotation=other.getRotation();
     m_segmentTranslation=other.getTranslation();
     m_segmentRestRotation=other.getRestRotation();
@@ -43,6 +46,7 @@ Segment::Segment(const Segment &other):QObject()
     QObject::setObjectName(other.getName());
     m_segmentColorInherited=other.getColorInherited();
     m_segmentRotTransOrder=other.getRotationTranslationOrder();
+    updateAndNotify();
 }
 
 void Segment::setRotationTranslationOrder(QList<BrainiacGlobals::RotTrans> list)
@@ -53,6 +57,29 @@ void Segment::setRotationTranslationOrder(QList<BrainiacGlobals::RotTrans> list)
     emit updated();
 }
 
+void Segment::updateAndNotify()
+{
+    osg::Matrix m;
+
+    m*=osg::Matrix::scale(m_segmentScale.x(),
+                          m_segmentScale.y(),
+                          m_segmentScale.z());
+
+    m*=osg::Matrix::rotate(m_segmentRotation.z(),osg::Vec3f(0.0f,0.0f,1.0f));
+    m*=osg::Matrix::rotate(m_segmentRotation.y(),osg::Vec3f(0.0f,1.0f,0.0f));
+    m*=osg::Matrix::rotate(m_segmentRotation.x(),osg::Vec3f(1.0f,0.0f,0.0f));
+
+
+    m*=osg::Matrix::translate(m_segmentTranslation.x(),
+                              m_segmentTranslation.y(),
+                              m_segmentTranslation.z());
+
+
+    m_transformNode.get()->setMatrix(m);
+
+    emit updated();
+    emit updated(m_segmentId);
+}
 Segment::~Segment()
 {
 

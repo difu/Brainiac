@@ -20,6 +20,7 @@
 #define SCENEDISPLAY__H
 
 #include "gui/osgmultithreadedqtwidget.h"
+#include <osgDB/WriteFile>
 
 class Scene;
 /**
@@ -29,7 +30,7 @@ class SceneDisplay_ : public OsgMultithreadedViewerWidget
 {
 public:
     SceneDisplay_(Scene *scene);
-
+    virtual ~SceneDisplay_();
 protected:
     Scene *m_scene;
 };
