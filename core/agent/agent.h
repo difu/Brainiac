@@ -246,6 +246,13 @@ public:
     void renderGL();
     void renderSoundEmission(bool render);
     void reset();
+
+    /**
+     * @brief setObjectName sets the name of the agent
+     *
+     * @param name the name of the agent
+     */
+    void setObjectName(const QString &name);
     void setRotation(qreal x, qreal y, qreal z);
     void setTranslation(qreal x, qreal y, qreal z);
     void setRestRotation(qreal x, qreal y, qreal z);

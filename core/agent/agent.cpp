@@ -527,6 +527,12 @@ void Agent::reset()
     m_body->updatePosition();
 }
 
+void Agent::setObjectName(const QString &name)
+{
+    QObject::setObjectName(name);
+    m_body->getRootSegment().get()->setName(name.toStdString());
+}
+
 void Agent::setRotation(qreal x, qreal y, qreal z)
 {
     BrainiacGlobals::normalizeAngle(&x);

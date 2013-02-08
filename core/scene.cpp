@@ -84,6 +84,9 @@ void Scene::createAgents(Generator *gen)
                 //grp->addAgent(agent);
                 m_rootNode.get()->addChild(agent->getBody()->getRootSegment());
                 agent->reset();
+                QString name;
+                name=grp->getName()+QString::number(agent->getId());
+                agent->setObjectName(name);
 //                QString fileName=QString("/tmp/Agent")+QString(QString::number(agent->getId()))+".osgt";
 //                osgDB::writeNodeFile(*agent->getBody()->getRootSegment(),fileName.toStdString());
             }
