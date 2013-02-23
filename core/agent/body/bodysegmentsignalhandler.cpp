@@ -1,6 +1,6 @@
 // Brainiac is a free and open source tool for the creation of crowd simulation
 
-// Copyright (C) 2012  Dirk Fuchs dirkfux@googlemail.com
+// Copyright (C) 2013  Dirk Fuchs dirkfux@googlemail.com
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,27 +15,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef BODYDISPLAY__H
-#define BODYDISPLAY__H
+#include "bodysegmentsignalhandler.h"
+#include "core/agent/body/bodysegment.h"
 
-#include "gui/osgmultithreadedqtwidget.h"
-
-class Scene;
-class AgentManager;
-
-class BodyDisplay_ : public OsgMultithreadedViewerWidget
+BodySegmentSignalHandler::BodySegmentSignalHandler(BodySegment *bodySegment, QObject *parent) :
+    QObject(parent)
 {
-public:
-    BodyDisplay_();
-    /**
-     * @brief setAgentManager
-     * sets the current agent manager
-     * @param agentManager the AgentManager
-     */
-    void setAgentManager( AgentManager *agentManager );
-
-protected:
-    AgentManager *m_agentManager;
-};
-
-#endif // BODYDISPLAY__H
+    m_bodySegment=bodySegment;
+}

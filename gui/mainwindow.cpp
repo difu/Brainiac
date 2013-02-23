@@ -371,6 +371,7 @@ void MainWindow::editorNodeClick(ItemEditorWidgetsBase::editMessage msg)
         m_groupEditor->setGroup(grp);
         m_activeAgentManager=grp->getAgentManager();
         m_bodyDisplay->setAgentManager(m_activeAgentManager);
+        m_bodyDisplayOSG->setAgentManager(m_activeAgentManager);
         break;
     case BrainiacGlobals::OUTPUT:
         mgr=(AgentManager *)msg.object;

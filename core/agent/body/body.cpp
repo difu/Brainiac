@@ -259,8 +259,11 @@ void Body::showSilhouettes(bool show)
 }
 
 void Body::updatePosition() {
-    if(m_agent)
+    if(m_agent) {
         m_rootSkeletonNode->setPosition(*m_agent->getPosition());
+        osg::PositionAttitudeTransform *posTrans=m_rootSegment.get();
+        posTrans->setPosition(osg::Vec3d(m_agent->getPosition()->x(),m_agent->getPosition()->y(),m_agent->getPosition()->z()));
+    }
 
 }
 

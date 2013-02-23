@@ -82,7 +82,7 @@ SOURCES += main.cpp\
     core/agent/body/segment.cpp \
     core/agent/body/segmentshape.cpp \
     core/agent/body/bodysegment.cpp \
-    core/agent/body/bodysegmentchannelhandler.cpp \
+    core/agent/body/bodysegmentsignalhandler.cpp \
     gui/scenedisplay_.cpp
 
 HEADERS  += gui/mainwindow.h \
@@ -158,7 +158,7 @@ HEADERS  += gui/mainwindow.h \
     core/agent/body/segment.h \
     core/agent/body/segmentshape.h \
     core/agent/body/bodysegment.h \
-    core/agent/body/bodysegmentchannelhandler.h \
+    core/agent/body/bodysegmentsignalhandler.h \
     gui/scenedisplay_.h
 
 FORMS    += gui/mainwindow.ui \

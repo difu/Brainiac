@@ -26,6 +26,7 @@
 
 int main(int argc, char *argv[])
 {
+    setenv("OSG_GL_EXTENSION_DISABLE","GL_EXT_timer_query GL_ARB_timer_query",0); //!< @bug see http://forum.openscenegraph.org/viewtopic.php?t=11086
     QApplication a(argc, argv);
     const QString gitVersion(__LASTCOMMIT__);
     std::cout << "Brainiac V0.01" << std::endl << std::flush;

@@ -65,10 +65,11 @@ void Segment::updateAndNotify()
                           m_segmentScale.y(),
                           m_segmentScale.z());
 
-    m*=osg::Matrix::rotate(m_segmentRotation.z(),osg::Vec3f(0.0f,0.0f,1.0f));
-    m*=osg::Matrix::rotate(m_segmentRotation.y(),osg::Vec3f(0.0f,1.0f,0.0f));
     m*=osg::Matrix::rotate(m_segmentRotation.x(),osg::Vec3f(1.0f,0.0f,0.0f));
+    m*=osg::Matrix::rotate(m_segmentRotation.y(),osg::Vec3f(0.0f,1.0f,0.0f));
+    m*=osg::Matrix::rotate(m_segmentRotation.z(),osg::Vec3f(0.0f,0.0f,1.0f));
 
+    qDebug() << __PRETTY_FUNCTION__ << m_segmentRotation;
 
     m*=osg::Matrix::translate(m_segmentTranslation.x(),
                               m_segmentTranslation.y(),
