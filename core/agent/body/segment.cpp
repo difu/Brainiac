@@ -44,6 +44,7 @@ Segment::Segment(const Segment &other):QObject()
     m_segmentParentId=other.getParentId();
     m_segmentType=other.getType();
     QObject::setObjectName(other.getName());
+    m_segmentColor=other.getColor();
     m_segmentColorInherited=other.getColorInherited();
     m_segmentRotTransOrder=other.getRotationTranslationOrder();
     updateAndNotify();
@@ -65,9 +66,9 @@ void Segment::updateAndNotify()
                           m_segmentScale.y(),
                           m_segmentScale.z());
 
-    m*=osg::Matrix::rotate(m_segmentRotation.x(),osg::Vec3f(1.0f,0.0f,0.0f));
-    m*=osg::Matrix::rotate(m_segmentRotation.y(),osg::Vec3f(0.0f,1.0f,0.0f));
-    m*=osg::Matrix::rotate(m_segmentRotation.z(),osg::Vec3f(0.0f,0.0f,1.0f));
+    m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_segmentRotation.x()),osg::Vec3f(1.0f,0.0f,0.0f));
+    m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_segmentRotation.y()),osg::Vec3f(0.0f,1.0f,0.0f));
+    m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_segmentRotation.z()),osg::Vec3f(0.0f,0.0f,1.0f));
 
     qDebug() << __PRETTY_FUNCTION__ << m_segmentRotation;
 

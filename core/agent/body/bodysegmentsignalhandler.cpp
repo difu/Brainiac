@@ -22,4 +22,12 @@ BodySegmentSignalHandler::BodySegmentSignalHandler(BodySegment *bodySegment, QOb
     QObject(parent)
 {
     m_bodySegment=bodySegment;
+    connect(m_bodySegment->getSegmentShape(),SIGNAL(updated()),this,SLOT(matricesChanged()));
+}
+
+void BodySegmentSignalHandler::matricesChanged()
+{
+//    qDebug() << __PRETTY_FUNCTION__ <<"Matrices changed";
+    m_bodySegment->computeRestMatrix(true);
+    m_bodySegment->computeMatrix();
 }

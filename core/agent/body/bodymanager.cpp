@@ -135,7 +135,105 @@ void BodyManager::setNewSegmentRotationTranslationOrder(QList<BrainiacGlobals::R
     m_newSegment.setRotationTranslationOrder(order);
 }
 
- BodyManager::~BodyManager()
+void BodyManager::setSegmentRestRotation(quint32 id, qreal x, qreal y, qreal z)
+{
+    if(m_segments.contains(id))
+        m_segments.value(id)->setRestRotation(QVector3D(x,y,z));
+    else
+        qCritical() << __PRETTY_FUNCTION__ << "No segment with id "<< id;
+}
+
+void BodyManager::setSegmentRotation(quint32 id, qreal x, qreal y, qreal z)
+{
+    if(m_segments.contains(id))
+        m_segments.value(id)->setRotation(QVector3D(x,y,z));
+    else
+        qCritical() << __PRETTY_FUNCTION__ << "No segment with id "<< id;
+}
+
+void BodyManager::setSegmentRestTranslation(quint32 id, qreal x, qreal y, qreal z)
+{
+    if(m_segments.contains(id))
+        m_segments.value(id)->setRestTranslation(QVector3D(x,y,z));
+    else
+        qCritical() << __PRETTY_FUNCTION__ << "No segment with id "<< id;
+}
+
+void BodyManager::setSegmentScale(quint32 id, qreal x, qreal y, qreal z)
+{
+    if(m_segments.contains(id))
+        m_segments.value(id)->setScale(QVector3D(x,y,z));
+    else
+        qCritical() << __PRETTY_FUNCTION__ << "No segment with id "<< id;
+}
+
+void BodyManager::setSegmentTranslation(quint32 id, qreal x, qreal y, qreal z)
+{
+    if(m_segments.contains(id))
+        m_segments.value(id)->setTranslation(QVector3D(x,y,z));
+    else
+        qCritical() << __PRETTY_FUNCTION__ << "No segment with id "<< id;
+}
+
+
+QVector3D BodyManager::getSegmentRestRotation(quint32 id) const
+{
+    if(m_segments.contains(id)) {
+        return m_segments.value(id)->getRestRotation();
+    }
+    else {
+        qCritical() << __PRETTY_FUNCTION__ << "No Segment with id" << id;
+    }
+    return QVector3D();
+}
+
+QVector3D BodyManager::getSegmentRotation(quint32 id) const
+{
+    if(m_segments.contains(id)) {
+        return m_segments.value(id)->getRotation();
+    }
+    else {
+        qCritical() << __PRETTY_FUNCTION__ << "No Segment with id" << id;
+    }
+    return QVector3D();
+}
+
+QVector3D BodyManager::getSegmentRestTranslation(quint32 id) const
+{
+    if(m_segments.contains(id)) {
+        return m_segments.value(id)->getRestTranslation();
+    }
+    else {
+        qCritical() << __PRETTY_FUNCTION__ << "No Segment with id" << id;
+    }
+    return QVector3D();
+}
+
+QVector3D BodyManager::getSegmentScale(quint32 id) const
+{
+    if(m_segments.contains(id)) {
+        return m_segments.value(id)->getScale();
+    }
+    else {
+        qCritical() << __PRETTY_FUNCTION__ << "No Segment with id" << id;
+    }
+    return QVector3D();
+}
+
+QVector3D BodyManager::getSegmentTranslation(quint32 id) const
+{
+    if(m_segments.contains(id)) {
+        return m_segments.value(id)->getTranslation();
+    }
+    else {
+        qCritical() << __PRETTY_FUNCTION__ << "No Segment with id" << id;
+    }
+    return QVector3D();
+}
+
+
+
+BodyManager::~BodyManager()
 {
     foreach(Segment *s,m_segments) {
         s->deleteLater();

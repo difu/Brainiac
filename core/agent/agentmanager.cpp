@@ -1018,15 +1018,16 @@ void AgentManager::setBodyEditorTranslation(quint32 id, qint32 x, qint32 y)
 
 void AgentManager::setSegmentDimensions(quint32 id, qreal x, qreal y, qreal z)
 {
-    SkeletonNode *n=m_masterAgent->getBody()->getSkeletonNodeById(id);
-    SkeletonNodeBox *node=dynamic_cast<SkeletonNodeBox *>(n);
-    if(node) {
-        foreach(Agent *agent, m_agents) {
-            agent->getBody()->getSkeletonNodeById(id)->setScale(QVector3D(x,y,z));
-        }
-    } else {
-        qWarning()<< __PRETTY_FUNCTION__ << "Segment with id "<<id<<"is not a Cube!";
-    }
+//    SkeletonNode *n=m_masterAgent->getBody()->getSkeletonNodeById(id);
+//    SkeletonNodeBox *node=dynamic_cast<SkeletonNodeBox *>(n);
+//    if(node) {
+//        foreach(Agent *agent, m_agents) {
+//            agent->getBody()->getSkeletonNodeById(id)->setScale(QVector3D(x,y,z));
+//        }
+//    } else {
+//        qWarning()<< __PRETTY_FUNCTION__ << "Segment with id "<<id<<"is not a Cube!";
+//    }
+    m_bodyManager->setSegmentScale(id,x,y,z);
 }
 
 void AgentManager::setSegmentRotationTranslationOrder(quint32 id, QList<BrainiacGlobals::RotTrans> list)
@@ -1054,34 +1055,38 @@ void AgentManager::setSegmentRotationTranslationOrder(quint32 id, QList<Brainiac
 void AgentManager::setSegmentRestRotation(quint32 id, qreal x, qreal y, qreal z)
 {
     //m_masterAgent->getBody()->getSkeletonNodeById(id)->setRestRotation(QVector3D(x,y,z));
-    foreach(Agent *agent, m_agents) {
-        agent->getBody()->getSkeletonNodeById(id)->setRestRotation(QVector3D(x,y,z));
-    }
+//    foreach(Agent *agent, m_agents) {
+//        //agent->getBody()->getSkeletonNodeById(id)->setRestRotation(QVector3D(x,y,z));
+//    }
+    m_bodyManager->setSegmentRestRotation(id,x,y,z);
 }
 
 void AgentManager::setSegmentRestTranslation(quint32 id, qreal x, qreal y, qreal z)
 {
     //m_masterAgent->getBody()->getSkeletonNodeById(id)->setRestTranslation(QVector3D(x,y,z));
-    foreach(Agent *agent, m_agents) {
-        agent->getBody()->getSkeletonNodeById(id)->setRestTranslation(QVector3D(x,y,z));
-    }
-        qDebug()<< __PRETTY_FUNCTION__;
+//    foreach(Agent *agent, m_agents) {
+//        agent->getBody()->getSkeletonNodeById(id)->setRestTranslation(QVector3D(x,y,z));
+//    }
+//        qDebug()<< __PRETTY_FUNCTION__;
+    m_bodyManager->setSegmentRestTranslation(id,x,y,z);
 }
 
 void AgentManager::setSegmentRotation(quint32 id, qreal x, qreal y, qreal z)
 {
     //m_masterAgent->getBody()->getSkeletonNodeById(id)->setRotation(QVector3D(x,y,z));
-    foreach(Agent *agent, m_agents) {
-        agent->getBody()->getSkeletonNodeById(id)->setRotation(QVector3D(x,y,z));
-    }
+//    foreach(Agent *agent, m_agents) {
+//        //agent->getBody()->getSkeletonNodeById(id)->setRotation(QVector3D(x,y,z));
+//    }
+    m_bodyManager->setSegmentRotation(id,x,y,z);
 }
 
 void AgentManager::setSegmentTranslation(quint32 id, qreal x, qreal y, qreal z)
 {
     //m_masterAgent->getBody()->getSkeletonNodeById(id)->setTranslation(QVector3D(x,y,z));
-    foreach(Agent *agent, m_agents) {
-        agent->getBody()->getSkeletonNodeById(id)->setTranslation(QVector3D(x,y,z));
-    }
+//    foreach(Agent *agent, m_agents) {
+//        agent->getBody()->getSkeletonNodeById(id)->setTranslation(QVector3D(x,y,z));
+//    }
+    m_bodyManager->setSegmentTranslation(id,x,y,z);
 }
 
 void AgentManager::setFuzzyAndIsSoundRule(quint32 id, bool isSoundRule)

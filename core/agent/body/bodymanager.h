@@ -155,6 +155,28 @@ public:
      * @return bool
      */
     bool createNewSegment();
+
+    QVector3D getSegmentRestRotation(quint32 id) const;
+
+    QVector3D getSegmentRotation(quint32 id) const;
+
+    QVector3D getSegmentScale(quint32 id) const;
+
+    QVector3D getSegmentRestTranslation(quint32 id) const;
+
+    QVector3D getSegmentTranslation(quint32 id) const;
+
+    void setSegmentScale(quint32 id, qreal x, qreal y, qreal z);
+
+    void setSegmentRestRotation(quint32 id, qreal x, qreal y, qreal z);
+
+    void setSegmentRotation(quint32, qreal y, qreal y, qreal z);
+
+    void setSegmentRestTranslation(quint32 id, qreal x, qreal y, qreal z);
+
+    void setSegmentTranslation(quint32, qreal y, qreal y, qreal z);
+
+
     /**
      * @brief
      * @fn ~BodyManager

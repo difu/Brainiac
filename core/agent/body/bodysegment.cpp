@@ -23,8 +23,9 @@ BodySegment::BodySegment(Body *body, SegmentShape *segmentShape):MatrixTransform
 {
     m_channelHandler=new BodySegmentSignalHandler(this);
     m_geode=new osg::Geode;
-    addChild(m_transformNode);
     m_transformNode=new osg::MatrixTransform();
+    m_transformNode->setName("Transform");
+    addChild(m_transformNode);
     m_transformNode->setMatrix(m_segmentShape->getTransform()->getMatrix());
     m_transformNode->addChild(m_geode);
     m_geode->addDrawable(m_segmentShape->getShapeDrawable().get());
@@ -33,20 +34,24 @@ BodySegment::BodySegment(Body *body, SegmentShape *segmentShape):MatrixTransform
     setName(m_segmentShape->getName().toStdString());
 }
 
-void BodySegment::computeRestMatrix() {
-    if(m_restMatrixDirty) {
+void BodySegment::computeMatrix() {
+    m_transformNode->setMatrix(m_segmentShape->getTransform()->getMatrix());
+}
+
+void BodySegment::computeRestMatrix(bool force) {
+    if(m_restMatrixDirty || force==true) {
         osg::Matrix m;
         foreach(BrainiacGlobals::RotTrans rotTrans,m_segmentShape->getRotationTranslationOrder()) {
             switch(rotTrans) {
             case BrainiacGlobals::RX:
                 //m.rotate()
-                m*=osg::Matrix::rotate(m_segmentShape->getRestRotation().x(),osg::Vec3d(1.0f,0.0f,0.0f));
+                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_segmentShape->getRestRotation().x()),osg::Vec3d(1.0f,0.0f,0.0f));
                 break;
             case BrainiacGlobals::RY:
-                m*=osg::Matrix::rotate(m_segmentShape->getRestRotation().y(),osg::Vec3d(0.0f,1.0f,0.0f));
+                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_segmentShape->getRestRotation().y()),osg::Vec3d(0.0f,1.0f,0.0f));
                 break;
             case BrainiacGlobals::RZ:
-                m*=osg::Matrix::rotate(m_segmentShape->getRestRotation().z(),osg::Vec3d(0.0f,0.0f,1.0f));
+                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_segmentShape->getRestRotation().z()),osg::Vec3d(0.0f,0.0f,1.0f));
                 break;
             case BrainiacGlobals::TX:
                 m*=osg::Matrix::translate(m_segmentShape->getRestTranslation().x(),0.0f,0.0f);

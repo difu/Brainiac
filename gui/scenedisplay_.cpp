@@ -20,6 +20,7 @@
 
 SceneDisplay_::SceneDisplay_(Scene *scene): OsgMultithreadedViewerWidget(0,scene->getRootSceneNode())
 {
+    setWindowTitle("Scene");
 
 }
 

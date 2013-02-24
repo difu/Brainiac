@@ -19,6 +19,7 @@
 #include "segmenteditor.h"
 #include "gui/brainiacslider.h"
 #include "core/agent/agentmanager.h"
+#include "core/agent/body/bodymanager.h"
 #include "core/agent/agent.h"
 #include "core/agent/body/body.h"
 #include "core/agent/body/skeletonnode.h"
@@ -266,25 +267,30 @@ void SegmentEditor::setSegmentConfig(AgentManager *manager, quint32 id)
 
 void SegmentEditor::updateEditor()
 {
-    m_SliderRx->setValue(m_agentManager->getMasterAgent()->getBody()->getSkeletonNodeById(m_id)->getRotation().x());
-    m_SliderRy->setValue(m_agentManager->getMasterAgent()->getBody()->getSkeletonNodeById(m_id)->getRotation().y());
-    m_SliderRz->setValue(m_agentManager->getMasterAgent()->getBody()->getSkeletonNodeById(m_id)->getRotation().z());
+    QVector3D rot=m_agentManager->getBodyManager()->getSegmentRotation(m_id);
+    m_SliderRx->setValue(rot.x());
+    m_SliderRy->setValue(rot.y());
+    m_SliderRz->setValue(rot.z());
 
-    m_SliderRestRx->setValue(m_agentManager->getMasterAgent()->getBody()->getSkeletonNodeById(m_id)->getRestRotation().x());
-    m_SliderRestRy->setValue(m_agentManager->getMasterAgent()->getBody()->getSkeletonNodeById(m_id)->getRestRotation().y());
-    m_SliderRestRz->setValue(m_agentManager->getMasterAgent()->getBody()->getSkeletonNodeById(m_id)->getRestRotation().z());
+    QVector3D restRot=m_agentManager->getBodyManager()->getSegmentRestRotation(m_id);
+    m_SliderRestRx->setValue(restRot.x());
+    m_SliderRestRy->setValue(restRot.y());
+    m_SliderRestRz->setValue(restRot.z());
 
-    m_SliderTx->setValue(m_agentManager->getMasterAgent()->getBody()->getSkeletonNodeById(m_id)->getTranslation().x());
-    m_SliderTy->setValue(m_agentManager->getMasterAgent()->getBody()->getSkeletonNodeById(m_id)->getTranslation().y());
-    m_SliderTz->setValue(m_agentManager->getMasterAgent()->getBody()->getSkeletonNodeById(m_id)->getTranslation().z());
+    QVector3D trans=m_agentManager->getBodyManager()->getSegmentTranslation(m_id);
+    m_SliderTx->setValue(trans.x());
+    m_SliderTy->setValue(trans.y());
+    m_SliderTz->setValue(trans.z());
 
-    m_SliderRestTx->setValue(m_agentManager->getMasterAgent()->getBody()->getSkeletonNodeById(m_id)->getRestTranslation().x());
-    m_SliderRestTy->setValue(m_agentManager->getMasterAgent()->getBody()->getSkeletonNodeById(m_id)->getRestTranslation().y());
-    m_SliderRestTz->setValue(m_agentManager->getMasterAgent()->getBody()->getSkeletonNodeById(m_id)->getRestTranslation().z());
+    QVector3D restTrans=m_agentManager->getBodyManager()->getSegmentRestTranslation(m_id);
+    m_SliderRestTx->setValue(restTrans.x());
+    m_SliderRestTy->setValue(restTrans.y());
+    m_SliderRestTz->setValue(restTrans.z());
 
-    m_SliderDimensionX->setValue(m_agentManager->getMasterAgent()->getBody()->getSkeletonNodeById(m_id)->getScale().x());
-    m_SliderDimensionY->setValue(m_agentManager->getMasterAgent()->getBody()->getSkeletonNodeById(m_id)->getScale().y());
-    m_SliderDimensionZ->setValue(m_agentManager->getMasterAgent()->getBody()->getSkeletonNodeById(m_id)->getScale().z());
+    QVector3D scale=m_agentManager->getBodyManager()->getSegmentScale(m_id);
+    m_SliderDimensionX->setValue(scale.x());
+    m_SliderDimensionY->setValue(scale.y());
+    m_SliderDimensionZ->setValue(scale.z());
 }
 
 SegmentEditor::~SegmentEditor()

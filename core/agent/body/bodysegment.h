@@ -38,9 +38,11 @@ public:
      * @param segmentShape the SegmentShape this BodySegment is based on
      */
     BodySegment(Body *body,SegmentShape *segmentShape);
-    void computeRestMatrix();
+    void computeRestMatrix(bool force=true);
+    void computeMatrix();
     quint32 getId() const { return m_segmentShape->getId(); }
     quint32 getParentId() const { return m_segmentShape->getParentId(); }
+    SegmentShape *getSegmentShape() const { return m_segmentShape; }
 protected :
     BodySegmentSignalHandler *m_channelHandler;
     Body *m_body; //!< The Body this BodySegment belongs to

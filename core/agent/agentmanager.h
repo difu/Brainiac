@@ -191,6 +191,8 @@ public:
     Agent* getBodyAgent() {return m_spBodyAgent;}
     QString & getName() {return m_name;}
 
+    BodyManager *getBodyManager() { return m_bodyManager; }
+
     /**
      * @brief returns a modifiable reference to the segment id generator
      *
