@@ -22,14 +22,19 @@
 BodySegment::BodySegment(Body *body, SegmentShape *segmentShape):MatrixTransform(),m_body(body),m_segmentShape(segmentShape)
 {
     m_channelHandler=new BodySegmentSignalHandler(this);
-    addChild(m_segmentShape->getGLSegment());
-    m_matrixDirty=true;
-    computeMatrix();
+    m_geode=new osg::Geode;
+    addChild(m_transformNode);
+    m_transformNode=new osg::MatrixTransform();
+    m_transformNode->setMatrix(m_segmentShape->getTransform()->getMatrix());
+    m_transformNode->addChild(m_geode);
+    m_geode->addDrawable(m_segmentShape->getShapeDrawable().get());
+    m_restMatrixDirty=true;
+    computeRestMatrix();
     setName(m_segmentShape->getName().toStdString());
 }
 
-void BodySegment::computeMatrix() {
-    if(m_matrixDirty) {
+void BodySegment::computeRestMatrix() {
+    if(m_restMatrixDirty) {
         osg::Matrix m;
         foreach(BrainiacGlobals::RotTrans rotTrans,m_segmentShape->getRotationTranslationOrder()) {
             switch(rotTrans) {
@@ -56,7 +61,7 @@ void BodySegment::computeMatrix() {
         }
         this->setMatrix(m);
         //this->setMatrix(osg::Matrix::translate(25.0f, 0.0f, 0.0f ));
-        m_matrixDirty=false;
+        m_restMatrixDirty=false;
     }
 }
 

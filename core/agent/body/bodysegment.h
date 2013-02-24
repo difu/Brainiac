@@ -19,6 +19,7 @@
 #define BODYSEGMENT_H
 
 #include <osg/MatrixTransform>
+#include <osg/Geode>
 #include "core/agent/body/segmentshape.h"
 
 class BodySegmentSignalHandler;
@@ -37,7 +38,7 @@ public:
      * @param segmentShape the SegmentShape this BodySegment is based on
      */
     BodySegment(Body *body,SegmentShape *segmentShape);
-    void computeMatrix();
+    void computeRestMatrix();
     quint32 getId() const { return m_segmentShape->getId(); }
     quint32 getParentId() const { return m_segmentShape->getParentId(); }
 protected :
@@ -45,7 +46,9 @@ protected :
     Body *m_body; //!< The Body this BodySegment belongs to
     virtual ~BodySegment();
     SegmentShape *m_segmentShape;
-    bool m_matrixDirty;
+    bool m_restMatrixDirty;
+    osg::ref_ptr<osg::Geode> m_geode; /**< the geometry node that holds the ShapeDrawable */
+    osg::ref_ptr<osg::MatrixTransform> m_transformNode;
 };
 
 #endif // BODYSEGMENT_H

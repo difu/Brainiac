@@ -76,7 +76,7 @@ void Segment::updateAndNotify()
                               m_segmentTranslation.z());
 
 
-    m_transformNode.get()->setMatrix(m);
+    m_transformNode->setMatrix(m);
 
     emit updated();
     emit updated(m_segmentId);

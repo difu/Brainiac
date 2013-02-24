@@ -21,7 +21,7 @@ SegmentShape::SegmentShape(const Segment &other ):Segment(other)
 {
     m_shapeDrawable=new osg::ShapeDrawable;
     m_transformNode.get()->setName(getName().toStdString());
-    m_geode=new osg::Geode;
+    //m_geode=new osg::Geode;
     switch(m_segmentType) {
     case BrainiacGlobals::SPHERESEGMENT:
         m_shapeDrawable->setShape( new osg::Sphere(osg::Vec3(0.0f, 0.0f, 0.0f),
@@ -34,8 +34,8 @@ SegmentShape::SegmentShape(const Segment &other ):Segment(other)
 
     }
 
-    m_geode->addDrawable(m_shapeDrawable);
-    m_transformNode->addChild(m_geode);
+    //m_geode->addDrawable(m_shapeDrawable);
+    //m_transformNode->addChild(m_geode);
     qDebug() << __PRETTY_FUNCTION__ << "Shape created" << other.getName();
 }
 

@@ -39,16 +39,8 @@ public:
  */
     SegmentShape(const Segment &other);
 
-    /**
-     * @brief returns the GL segment
-     *
-     * A smart pointer of the transformation node that contains the rotation, translation, scale followd by a geode that contains the geometry is returned.
-     * The transformation node is to be added to the rest transformation node of the skeleton of the agent.
-     *
-     * @fn getGLSegment
-     * @return osg::ref_ptr<osg::Transform> smart pointer of the transformation node of the Segment that is added to the skeleton
-     */
-    osg::ref_ptr<osg::Transform> getGLSegment() { return m_transformNode; }
+    osg::ref_ptr<osg::ShapeDrawable> getShapeDrawable() const { return m_shapeDrawable; }
+
     /**
      * @brief Destructor
      *
@@ -57,8 +49,8 @@ public:
     virtual ~SegmentShape();
 
 protected:
-    osg::ref_ptr<osg::Geode> m_geode; /**< the geometry node that holds the ShapeDrawable */
-    osg::ref_ptr<osg::ShapeDrawable> m_shapeDrawable; /**< the node that holds the geometyr */
+    //osg::ref_ptr<osg::Geode> m_geode; /**< the geometry node that holds the ShapeDrawable */
+    osg::ref_ptr<osg::ShapeDrawable> m_shapeDrawable; /**< the node that holds the geometry */
 };
 
 #endif // SEGMENTSHAPE_H

@@ -99,6 +99,8 @@ public:
      */
     QVector3D& getRestRotation() { return m_segmentRestRotation; }
 
+    osg::ref_ptr<osg::MatrixTransform> getTransform() const { return m_transformNode; }
+
     /**
      * @brief
      *
