@@ -103,6 +103,17 @@ bool BodyManager::createNewSegment()
     return true;
 }
 
+Segment BodyManager::getRootSegment() const
+{
+    foreach(SegmentShape *seg,m_segments) {
+        if(seg->getParentId()==0) {
+            return Segment(*seg);
+        }
+    }
+    qDebug() << __PRETTY_FUNCTION__ << "No root segment for agent " << m_agentManager->getName();
+    return Segment();
+}
+
 QList<quint32> BodyManager::getSegmentChildrenIds(quint32 id) const
 {
     SegmentShape *s=m_segments.value(id);

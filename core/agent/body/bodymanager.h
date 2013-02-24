@@ -156,6 +156,8 @@ public:
      */
     bool createNewSegment();
 
+    Segment getRootSegment() const;
+
     QVector3D getSegmentRestRotation(quint32 id) const;
 
     QVector3D getSegmentRotation(quint32 id) const;

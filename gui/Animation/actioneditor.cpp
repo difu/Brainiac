@@ -188,7 +188,7 @@ void ActionEditor::setActiveAnimation(quint32 animId)
     m_agent->getOutputChannel("ty")->setValue(0);
     m_agent->getOutputChannel("tz")->setValue(0);
 
-    m_activeAnimation=new ModifiableAnimation(m_agentManager->getAnimations()->value(animId),m_agent->getBody());
+    m_activeAnimation=new ModifiableAnimation(m_agentManager->getAnimations()->value(animId),m_agentManager);
     m_activeAnimationId=animId;
     ui->lineEditAnimationName->setText(m_activeAnimation->name());
     //m_activeAnimation=m_agentManager->getAnimations()->value(animId);

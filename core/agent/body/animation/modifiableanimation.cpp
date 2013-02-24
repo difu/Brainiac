@@ -19,21 +19,28 @@
 #include "modifiableanimation.h"
 
 #include <QDebug>
+#include "core/agent/agent.h"
 #include "core/agent/body/body.h"
-#include "core/agent/body/skeletonnode.h"
+#include "core/agent/agentmanager.h"
+#include "core/agent/body/bodymanager.h"
+#include "core/agent/body/segmentshape.h"
+//#include "core/agent/body/skeletonnode.h"
+#include <QQuaternion>
 #include "core/agent/body/animation/animationcurve.h"
 #include "cml/cml.h"
 #include "cml/mathlib/matrix_rotation.h"
 
-ModifiableAnimation::ModifiableAnimation( Animation *animation, Body *body) : Animation(animation)
+ModifiableAnimation::ModifiableAnimation( Animation *animation, AgentManager *agentManager) : Animation(animation)
 {
     m_startTime=0.0f;
     m_endTime=getLength(true);
     m_crossFadeTime=0;
-    m_body=body;
+    m_body=agentManager->getMasterAgent()->getBody();
+    m_agentManager=agentManager;
     m_origAnimation=(animation);
     setAnimationType(m_animType);
-    qDebug() << __PRETTY_FUNCTION__ << "Root bone node " << m_body->getRootBone()->getName();
+    //qDebug() << __PRETTY_FUNCTION__ << "Root bone node " << m_body->getRootBone()->getName();
+    qDebug() << __PRETTY_FUNCTION__ << "Root bone node_ " << agentManager->getBodyManager()->getRootSegment().getName();
     qDebug() << __PRETTY_FUNCTION__ << "Startime" << m_startTime << "End Time" << m_endTime;
 }
 
@@ -106,18 +113,19 @@ bool ModifiableAnimation::createAgentCurves()
 
         QWriteLocker wLocker(&m_rwLock);
         Q_UNUSED(wLocker);
-        SkeletonNode *rootBone=m_body->getRootBone();
-        AnimationCurve *rootBoneTxCurve=curves().value(rootBone->getName()%":tx",0);
+        //SkeletonNode *rootBone=m_body->getRootBone();
+        Segment seg=m_agentManager->getBodyManager()->getRootSegment();
+        AnimationCurve *rootBoneTxCurve=curves().value(seg.getName()%":tx",0);
         if(!rootBoneTxCurve) {
             qWarning() << __PRETTY_FUNCTION__ <<"No TX root bone curve!";
             return false;
         }
-        AnimationCurve *rootBoneTyCurve=curves().value(rootBone->getName()%":ty",0);
+        AnimationCurve *rootBoneTyCurve=curves().value(seg.getName()%":ty",0);
         if(!rootBoneTyCurve) {
             qWarning() << __PRETTY_FUNCTION__ <<"No TY root bone curve!";
             return false;
         }
-        AnimationCurve *rootBoneTzCurve=curves().value(rootBone->getName()%":tz",0);
+        AnimationCurve *rootBoneTzCurve=curves().value(seg.getName()%":tz",0);
         if(!rootBoneTzCurve) {
             qWarning() << __PRETTY_FUNCTION__ <<"No TZ root bone curve!";
             return false;
@@ -201,11 +209,11 @@ qreal ModifiableAnimation::getCrossfadedValue(const QString &curve, qreal time) 
 
 QVector3D ModifiableAnimation::getRootBoneTranslation(qreal time) const
 {
-    SkeletonNode *rootBone=m_body->getRootBone();
-    if(rootBone) {
-        qreal x=getValue(rootBone->objectName()%":tx",time);
-        qreal y=getValue(rootBone->objectName()%":ty",time);
-        qreal z=getValue(rootBone->objectName()%":tz",time);
+    Segment seg=m_agentManager->getBodyManager()->getRootSegment();
+    if(seg.getId()>0) {
+        qreal x=getValue(seg.getName()%":tx",time);
+        qreal y=getValue(seg.getName()%":ty",time);
+        qreal z=getValue(seg.getName()%":tz",time);
         //qDebug() << __PRETTY_FUNCTION__ << x<< y<< z << rootBone->objectName();
         return QVector3D(x,y,z);
     }
@@ -214,10 +222,10 @@ QVector3D ModifiableAnimation::getRootBoneTranslation(qreal time) const
 
 bool ModifiableAnimation::isRootBoneCurve(const QString &curve) const
 {
-    SkeletonNode *rootBone=m_body->getRootBone();
-    if(rootBone) {
-        return curve==rootBone->objectName()%":tx" || curve==rootBone->objectName()%":ty" || curve==rootBone->objectName()%":tz"
-            || curve==rootBone->objectName()%":rx" || curve==rootBone->objectName()%":ry" || curve==rootBone->objectName()%":rz";
+    Segment seg=m_agentManager->getBodyManager()->getRootSegment();
+    if(seg.getId()>0) {
+        return curve==seg.getName()%":tx" || curve==seg.getName()%":ty" || curve==seg.getName()%":tz"
+            || curve==seg.getName()%":rx" || curve==seg.getName()%":ry" || curve==seg.getName()%":rz";
     } else {
         return false;
     }
@@ -286,71 +294,72 @@ void ModifiableAnimation::setTansformRotation(qreal yAxisRot)
     if(yAxisRot>0.0f) {
         isPositiveYAngle=true;
     }
-    SkeletonNode *rootBone=m_body->getRootBone();
+    //SkeletonNode *rootBone=m_body->getRootBone();
+    Segment seg=m_agentManager->getBodyManager()->getRootSegment();
 
-    AnimationCurve *rootBoneTxCurve=curves().value(rootBone->getName()%":tx",0);
+    AnimationCurve *rootBoneTxCurve=curves().value(seg.getName()%":tx",0);
     if(!rootBoneTxCurve) {
         qWarning() << __PRETTY_FUNCTION__ <<"No TX root bone curve!";
         return;
     }
-    AnimationCurve *origRootBoneTxCurve=m_origAnimation->curves().value(rootBone->getName()%":tx",0);
+    AnimationCurve *origRootBoneTxCurve=m_origAnimation->curves().value(seg.getName()%":tx",0);
     if(!origRootBoneTxCurve) {
         qWarning() << __PRETTY_FUNCTION__ <<"No original TX root bone curve!";
         return;
     }
 
 
-    AnimationCurve *rootBoneTyCurve=curves().value(rootBone->getName()%":ty",0);
+    AnimationCurve *rootBoneTyCurve=curves().value(seg.getName()%":ty",0);
     if(!rootBoneTyCurve) {
         qWarning() << __PRETTY_FUNCTION__ <<"No TY root bone curve!";
         return;
     }
-    AnimationCurve *origRootBoneTyCurve=m_origAnimation->curves().value(rootBone->getName()%":ty",0);
+    AnimationCurve *origRootBoneTyCurve=m_origAnimation->curves().value(seg.getName()%":ty",0);
     if(!origRootBoneTyCurve) {
         qWarning() << __PRETTY_FUNCTION__ <<"No original TY root bone curve!";
         return;
     }
 
-    AnimationCurve *rootBoneTzCurve=curves().value(rootBone->getName()%":tz",0);
+    AnimationCurve *rootBoneTzCurve=curves().value(seg.getName()%":tz",0);
     if(!rootBoneTzCurve) {
         qWarning() << __PRETTY_FUNCTION__ <<"No TZ root bone curve!";
         return;
     }
-    AnimationCurve *origRootBoneTzCurve=m_origAnimation->curves().value(rootBone->getName()%":tz",0);
+    AnimationCurve *origRootBoneTzCurve=m_origAnimation->curves().value(seg.getName()%":tz",0);
     if(!origRootBoneTzCurve) {
         qWarning() << __PRETTY_FUNCTION__ <<"No original TZ root bone curve!";
         return;
     }
 
 
-    AnimationCurve *rootBoneRxCurve=curves().value(rootBone->getName()%":rx",0);
+    AnimationCurve *rootBoneRxCurve=curves().value(seg.getName()%":rx",0);
     if(!rootBoneRxCurve) {
         qWarning() << __PRETTY_FUNCTION__ <<"No RX root bone curve!";
         return;
     }
-    AnimationCurve *origRootBoneRxCurve=m_origAnimation->curves().value(rootBone->getName()%":rx",0);
+    AnimationCurve *origRootBoneRxCurve=m_origAnimation->curves().value(seg.getName()%":rx",0);
     if(!origRootBoneRxCurve) {
         qWarning() << __PRETTY_FUNCTION__ <<"No original RX root bone curve!";
         return;
     }
 
-    AnimationCurve *rootBoneRyCurve=curves().value(rootBone->getName()%":ry",0);
+    AnimationCurve *rootBoneRyCurve=curves().value(seg.getName()%":ry",0);
     if(!rootBoneRyCurve) {
         qWarning() << __PRETTY_FUNCTION__ <<"No RY root bone curve!";
         return;
     }
-    AnimationCurve *origRootBoneRyCurve=m_origAnimation->curves().value(rootBone->getName()%":ry",0);
+    AnimationCurve *origRootBoneRyCurve=m_origAnimation->curves().value(seg.getName()%":ry",0);
     if(!origRootBoneRyCurve) {
         qWarning() << __PRETTY_FUNCTION__ <<"No original RY root bone curve!";
         return;
     }
 
-    AnimationCurve *rootBoneRzCurve=curves().value(rootBone->getName()%":rz",0);
+    AnimationCurve *rootBoneRzCurve=curves().value(seg.getName()%":rz",0);
     if(!rootBoneRzCurve) {
         qWarning() << __PRETTY_FUNCTION__ <<"No RZ root bone curve!";
         return;
     }
-    AnimationCurve *origRootBoneRzCurve=m_origAnimation->curves().value(rootBone->getName()%":rz",0);
+    AnimationCurve *origRootBoneRzCurve=m_origAnimation->curves().value(seg.getName()%":rz",0);
     if(!origRootBoneRzCurve) {
         qWarning() << __PRETTY_FUNCTION__ <<"No original RZ root bone curve!";
         return;
@@ -386,7 +395,7 @@ void ModifiableAnimation::setTansformRotation(qreal yAxisRot)
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     QList<BrainiacGlobals::RotTrans> rotList;
-    foreach(BrainiacGlobals::RotTrans rot,rootBone->getRotationTranslationOrder()) {
+    foreach(BrainiacGlobals::RotTrans rot,seg.getRotationTranslationOrder()) {
         switch( rot ) {
         case BrainiacGlobals::RX:
         case BrainiacGlobals::RY:

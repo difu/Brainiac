@@ -21,6 +21,7 @@
 
 Segment::Segment()
 {
+    m_segmentId=0;
     m_transformNode=new osg::MatrixTransform;
     m_segmentRotTransOrder.append(BrainiacGlobals::RX);
     m_segmentRotTransOrder.append(BrainiacGlobals::RY);

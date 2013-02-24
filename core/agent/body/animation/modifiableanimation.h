@@ -21,6 +21,7 @@
 #include "core/agent/body/animation/animation.h"
 #include "core/brainiacglobals.h"
 
+class AgentManager;
 class Body;
 
 /**
@@ -39,7 +40,7 @@ public:
  * @fn ModifiableAnimation
  * @param animation
  */
-    ModifiableAnimation(Animation *animation, Body *body);
+    ModifiableAnimation(Animation *animation, AgentManager *agentManager);
     virtual ~ModifiableAnimation();
 
     /**
@@ -204,6 +205,7 @@ protected:
     bool m_crossFadeTy;
     bool m_crossFadeTz;
     Body *m_body;
+    AgentManager *m_agentManager;
     Animation *m_origAnimation;
 };
 
