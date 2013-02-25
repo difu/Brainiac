@@ -182,14 +182,27 @@ public:
     /**
      * @brief returns a pointer to the body agent
      *
-     * The body agent ios a special purpose agent. It is used by the ActionEditor.
+     * The body agent is a special purpose agent. It is used by the BodyEditor.
      *
      * @sa getMasterAgent()
      * @fn getBodyAgent
      * @return Agent
      */
     Agent* getBodyAgent() {return m_spBodyAgent;}
+
+    /**
+     * @brief returns a pointer to the actions agent
+     *
+     * The action agent is a special purpose agent. It is used by the ActionEditor.
+     *
+     * @sa getMasterAgent()
+     * @fn getActionAgent
+     * @return Agent
+     */
+    Agent* getActionAgent() {return m_spActionAgent;}
+
     QString & getName() {return m_name;}
+    QString getName() const { return m_name;}
 
     BodyManager *getBodyManager() { return m_bodyManager; }
 
@@ -393,7 +406,8 @@ public:
 
 protected:
     Agent *m_masterAgent; /**< special purpose agent. The reference all other instances are created from */
-    Agent *m_spBodyAgent; /**< special purpose agent. This agent will be used within the ActionEditor */
+    Agent *m_spBodyAgent; /**< special purpose agent. This agent will be used within the BodyEditor */
+    Agent *m_spActionAgent; /**< special purpose agent. This agent will be used within the ActionEditor */
     BodyManager *m_bodyManager;
     QString m_name;
     QString m_fileName;

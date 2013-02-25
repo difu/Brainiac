@@ -54,7 +54,9 @@ AgentManager::AgentManager(Scene *scene, Group *group)
     m_masterAgent->getBody()->setAnimations(&m_animations);
     m_agents.append(m_masterAgent);
     m_spBodyAgent=cloneAgent(0);
+    m_spActionAgent=cloneAgent(0);
     m_agents.append(m_spBodyAgent);
+    m_agents.append(m_spActionAgent);
 }
 
 void AgentManager::addSkeletonNodeFromConfig(QXmlStreamReader *reader, quint32 id, QString name, quint32 parent, quint32 editorX, quint32 editorY)
