@@ -28,7 +28,7 @@ class Animation;
 class BrainiacSlider;
 class LoopEditorScene;
 class ModifiableAnimation;
-class SkeletonNode;
+class Segment;
 class ActionDisplay;
 class Scene;
 
@@ -46,7 +46,7 @@ class ActionEditor;
 class ActionEditor : public QDialog
 {
     Q_OBJECT
-    
+
 public:
     explicit ActionEditor(Scene *scene, QWidget *parent = 0);
     void setAgentManager(AgentManager *manager);
@@ -65,7 +65,7 @@ public slots:
 protected:
     void applyAnimation();
     void setActiveAnimation(quint32 animId);
-    void addCurvesToList(SkeletonNode *node, quint32 level);
+    void addCurvesToList(const Segment &seg, quint32 level);
     void refreshCurveList();
     void updateLoopUI();
     void timerEvent(QTimerEvent *);

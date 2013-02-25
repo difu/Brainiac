@@ -25,6 +25,8 @@
 #include "core/agent/agent.h"
 #include "core/agent/channel.h"
 #include "core/agent/body/body.h"
+#include "core/agent/body/bodymanager.h"
+#include "core/agent/body/segment.h"
 #include "core/agent/body/skeletonnode.h"
 #include "core/agent/body/animation/animation.h"
 #include "core/agent/body/animation/animationcurve.h"
@@ -93,7 +95,7 @@ ActionEditor::ActionEditor(Scene *scene, QWidget *parent) :
     connect(m_sliderTransformYRot,SIGNAL(valueChanged(qreal)),this,SLOT(uiTranslationYRotChanged(qreal)));
 }
 
-void ActionEditor::addCurvesToList(SkeletonNode *node, quint32 level)
+void ActionEditor::addCurvesToList(const Segment &seg, quint32 level)
 {
     //QHashIterator<QString, AnimationCurve*> i(m_activeAnimation->curves());
     foreach(QString curveName,m_activeAnimation->curveNames()) {
@@ -105,7 +107,7 @@ void ActionEditor::addCurvesToList(SkeletonNode *node, quint32 level)
         QString channelType=completeName.split(':').at(1);
 
         //qDebug() << __PRETTY_FUNCTION__ << channelName << channelType << node->objectName() << level;
-        if( channelName == node->objectName()) {
+        if( channelName == seg.getName()) {
             QString prependedName=completeName;
             for(quint32 j=0;j<level;j++) {
                 prependedName.prepend("    ");
@@ -124,11 +126,10 @@ void ActionEditor::addCurvesToList(SkeletonNode *node, quint32 level)
     }
 
     level++;
-    foreach(QGLSceneNode *n,node->children()) {
-        SkeletonNode *sn=dynamic_cast<SkeletonNode *>(n);
-        if(sn) {
-            addCurvesToList(sn,level);
-        }
+    foreach(quint32 childId ,m_agentManager->getBodyManager()->getSegmentChildrenIds(seg.getId())) {
+        //SkeletonNode *sn=dynamic_cast<SkeletonNode *>(n);
+        addCurvesToList(m_agentManager->getBodyManager()->getSegment(childId),level);
+
     }
 
 }
@@ -171,7 +172,8 @@ void ActionEditor::refreshCurveList()
                 channelItem->setTextColor(BrainiacGlobals::defaultZColor);
         }
     }
-    addCurvesToList(m_agentManager->getMasterAgent()->getBody()->getRootSkeletonNode(),0);
+    //addCurvesToList(m_agentManager->getMasterAgent()->getBody()->getRootSkeletonNode(),0);
+    addCurvesToList(m_agentManager->getBodyManager()->getRootSegment(),0);
 }
 
 void ActionEditor::setActiveAnimation(quint32 animId)
@@ -201,14 +203,15 @@ void ActionEditor::setActiveAnimation(quint32 animId)
 void ActionEditor::setAgentManager(AgentManager *manager)
 {
     m_agentManager=manager;
-    if(m_agent) {
-        delete m_agent;
-    }
+//    if(m_agent) {
+//        delete m_agent;
+//    }
     m_activeAnimationId=0;
 //    m_agent=m_agentManager->getBodyAgent();
     Agent *bodyAgent=m_agentManager->getBodyAgent(); /**< @todo Use this agent, when AgentManager is fixed */
-    m_agent=m_agentManager->cloneAgent(0);
-    m_agent->setObjectName("ActionEditorAgent");
+    //m_agent=m_agentManager->cloneAgent(0);
+    //m_agent->setObjectName("ActionEditorAgent");
+    m_agent=bodyAgent;
     m_actionDisplay->setAgent(m_agent);
     qDebug() << __PRETTY_FUNCTION__ << "Active AgentManager" << manager->getGroup()->getName();
     ui->listAnimation->clear();

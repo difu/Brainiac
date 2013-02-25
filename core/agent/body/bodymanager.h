@@ -49,6 +49,25 @@ public:
      * @param agent the Agent this body should be applied
      */
     void applyBodyOnAgent(Agent *agent);
+
+    /**
+     * @brief getSegment
+     * returns the Segment
+     *
+     * If there is no Segment with given id an empty Segment with id 0 is returned
+     * @param id the id of the segment
+     * @return the Segment
+     */
+    Segment getSegment(quint32 id) const;
+
+    /**
+     * @brief getSegmentChildrenIds
+     * Returns the ids of all children of a Segment
+     * @param id the id of the Segment
+     * @return QList<quint32> an array of all ids
+     */
+    QList<quint32> getSegmentChildrenIds(quint32 id) const;
+
     /**
      * @brief
      *
@@ -202,7 +221,6 @@ protected:
      */
     void addSegmentsToAgent(Agent *agent, quint32 startSegmentId);
 
-    QList<quint32> getSegmentChildrenIds(quint32 id) const;
     AgentManager *m_agentManager; /**< The AgentManager this BodyManagers belongs to */
     Segment m_newSegment; /**< Temporary Segment */
     QHash<quint32, SegmentShape *> m_segments; /**< TODO */

@@ -103,6 +103,15 @@ bool BodyManager::createNewSegment()
     return true;
 }
 
+Segment BodyManager::getSegment(quint32 id) const
+{
+    if(m_segments.contains(id)) {
+        return Segment(*m_segments.value(id));
+    }
+    else
+        return Segment();
+}
+
 Segment BodyManager::getRootSegment() const
 {
     foreach(SegmentShape *seg,m_segments) {
