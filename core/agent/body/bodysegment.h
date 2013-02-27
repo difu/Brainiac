@@ -38,12 +38,14 @@ public:
      * @param segmentShape the SegmentShape this BodySegment is based on
      */
     BodySegment(Body *body,SegmentShape *segmentShape);
-    void computeRestMatrix(bool force=true);
+    void computeRestMatrix();
     void computeMatrix();
     quint32 getId() const { return m_segmentShape->getId(); }
     quint32 getParentId() const { return m_segmentShape->getParentId(); }
     SegmentShape *getSegmentShape() const { return m_segmentShape; }
+    void setRestMatrixDirty() { m_restMatrixDirty=true; }
 protected :
+    virtual void traverse(osg::NodeVisitor &nv);
     BodySegmentSignalHandler *m_channelHandler;
     Body *m_body; //!< The Body this BodySegment belongs to
     virtual ~BodySegment();

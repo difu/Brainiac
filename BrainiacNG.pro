@@ -176,7 +176,7 @@ FORMS    += gui/mainwindow.ui \
 RESOURCES += \
     brainiac.qrc
 
-macx: LIBS += -L/usr/local/lib/ -losg -losgQt -losgViewer -losgGA -losgDB -lOpenThreads -losgFX
+macx: LIBS += -L/usr/local/lib/ -losg -losgQt -losgViewer -losgGA -losgDB -lOpenThreads -losgFX -losgUtil
 macx: LIBS += -framework glut
 macx: INCLUDEPATH += /usr/local/include
 macx: DEPENDPATH += /usr/local/include

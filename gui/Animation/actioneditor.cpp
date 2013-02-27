@@ -27,7 +27,6 @@
 #include "core/agent/body/body.h"
 #include "core/agent/body/bodymanager.h"
 #include "core/agent/body/segment.h"
-#include "core/agent/body/skeletonnode.h"
 #include "core/agent/body/animation/animation.h"
 #include "core/agent/body/animation/animationcurve.h"
 #include "core/agent/body/animation/animationplayer.h"

@@ -18,6 +18,7 @@
 #include "bodysegment.h"
 #include "core/agent/body/bodysegmentsignalhandler.h"
 #include "core/agent/body/segmentshape.h"
+#include <osgUtil/UpdateVisitor>
 
 BodySegment::BodySegment(Body *body, SegmentShape *segmentShape):MatrixTransform(),m_body(body),m_segmentShape(segmentShape)
 {
@@ -38,8 +39,8 @@ void BodySegment::computeMatrix() {
     m_transformNode->setMatrix(m_segmentShape->getTransform()->getMatrix());
 }
 
-void BodySegment::computeRestMatrix(bool force) {
-    if(m_restMatrixDirty || force==true) {
+void BodySegment::computeRestMatrix() {
+    if(m_restMatrixDirty) {
         osg::Matrix m;
         foreach(BrainiacGlobals::RotTrans rotTrans,m_segmentShape->getRotationTranslationOrder()) {
             switch(rotTrans) {
@@ -68,6 +69,16 @@ void BodySegment::computeRestMatrix(bool force) {
         //this->setMatrix(osg::Matrix::translate(25.0f, 0.0f, 0.0f ));
         m_restMatrixDirty=false;
     }
+}
+
+void BodySegment::traverse(osg::NodeVisitor &nv)
+{
+    //osgUtil::UpdateVisitor *uv=dynamic_cast<osgUtil::UpdateVisitor *> (&nv);
+    //if(uv) {
+    //    qDebug() << __PRETTY_FUNCTION__;
+        computeRestMatrix();
+    //}
+    osg::MatrixTransform::traverse(nv);
 }
 
 BodySegment::~BodySegment()

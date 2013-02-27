@@ -28,6 +28,7 @@ BodySegmentSignalHandler::BodySegmentSignalHandler(BodySegment *bodySegment, QOb
 void BodySegmentSignalHandler::matricesChanged()
 {
 //    qDebug() << __PRETTY_FUNCTION__ <<"Matrices changed";
-    m_bodySegment->computeRestMatrix(true);
+    m_bodySegment->setRestMatrixDirty();
+    //m_bodySegment->computeRestMatrix();
     m_bodySegment->computeMatrix();
 }
