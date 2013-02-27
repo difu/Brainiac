@@ -68,7 +68,7 @@ public:
         if(scene)
             m_rootNode->addChild(scene);
         else {
-            m_rootNode->addChild(osgDB::readNodeFile("/Users/dirkfuchs/Desktop/ground.obj"));
+            //m_rootNode->addChild(osgDB::readNodeFile("/Users/dirkfuchs/Desktop/ground.obj"));
         }
         m_viewer.setSceneData(m_rootNode);
         m_viewer.addEventHandler( new osgViewer::StatsHandler );
