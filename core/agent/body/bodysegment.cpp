@@ -18,7 +18,11 @@
 #include "bodysegment.h"
 #include "core/agent/body/bodysegmentsignalhandler.h"
 #include "core/agent/body/segmentshape.h"
+#include "core/agent/channel.h"
+#include "core/agent/agent.h"
+#include "core/agent/body/body.h"
 #include <osgUtil/UpdateVisitor>
+#include <QObject>
 
 BodySegment::BodySegment(Body *body, SegmentShape *segmentShape):MatrixTransform(),m_body(body),m_segmentShape(segmentShape)
 {
@@ -31,8 +35,9 @@ BodySegment::BodySegment(Body *body, SegmentShape *segmentShape):MatrixTransform
     m_transformNode->addChild(m_geode);
     m_geode->addDrawable(m_segmentShape->getShapeDrawable().get());
     m_restMatrixDirty=true;
-    computeRestMatrix();
     setName(m_segmentShape->getName().toStdString());
+    createChannels();
+    computeRestMatrix();
 }
 
 void BodySegment::computeMatrix() {
@@ -46,22 +51,22 @@ void BodySegment::computeRestMatrix() {
             switch(rotTrans) {
             case BrainiacGlobals::RX:
                 //m.rotate()
-                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_segmentShape->getRestRotation().x()),osg::Vec3d(1.0f,0.0f,0.0f));
+                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_segmentShape->getRestRotation().x()+m_channelRx->getValue()),osg::Vec3d(1.0f,0.0f,0.0f));
                 break;
             case BrainiacGlobals::RY:
-                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_segmentShape->getRestRotation().y()),osg::Vec3d(0.0f,1.0f,0.0f));
+                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_segmentShape->getRestRotation().y()+m_channelRy->getValue()),osg::Vec3d(0.0f,1.0f,0.0f));
                 break;
             case BrainiacGlobals::RZ:
-                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_segmentShape->getRestRotation().z()),osg::Vec3d(0.0f,0.0f,1.0f));
+                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_segmentShape->getRestRotation().z()+m_channelRz->getValue()),osg::Vec3d(0.0f,0.0f,1.0f));
                 break;
             case BrainiacGlobals::TX:
-                m*=osg::Matrix::translate(m_segmentShape->getRestTranslation().x(),0.0f,0.0f);
+                m*=osg::Matrix::translate(m_segmentShape->getRestTranslation().x()+m_channelTx->getValue(),0.0f,0.0f);
                 break;
             case BrainiacGlobals::TY:
-                m*=osg::Matrix::translate(0.0f,m_segmentShape->getRestTranslation().y(),0.0f);
+                m*=osg::Matrix::translate(0.0f,m_segmentShape->getRestTranslation().y()+m_channelTy->getValue(),0.0f);
                 break;
             case BrainiacGlobals::TZ:
-                m*=osg::Matrix::translate(0.0f,0.0f,m_segmentShape->getRestTranslation().z());
+                m*=osg::Matrix::translate(0.0f,0.0f,m_segmentShape->getRestTranslation().z()+m_channelTz->getValue());
                 break;
             }
         }
@@ -69,6 +74,40 @@ void BodySegment::computeRestMatrix() {
         //this->setMatrix(osg::Matrix::translate(25.0f, 0.0f, 0.0f ));
         m_restMatrixDirty=false;
     }
+}
+
+void BodySegment::createChannels()
+{
+    QString segName(getName().c_str());
+    qDebug() << __PRETTY_FUNCTION__ << "creating channels for Segment" << segName;
+    m_channelRx=new Channel();
+    QObject::connect(m_channelRx,SIGNAL(valueChanged(qreal)),m_channelHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
+    m_body->getAgent()->addOutputChannel(m_channelRx,segName % ":rx");
+
+    m_channelRy=new Channel();
+    QObject::connect(m_channelRy,SIGNAL(valueChanged(qreal)),m_channelHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
+    m_body->getAgent()->addOutputChannel(m_channelRy,segName % ":ry");
+
+    m_channelRz=new Channel();
+    QObject::connect(m_channelRz,SIGNAL(valueChanged(qreal)),m_channelHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
+    m_body->getAgent()->addOutputChannel(m_channelRz,segName % ":rz");
+
+    m_channelTx=new Channel();
+    QObject::connect(m_channelTx,SIGNAL(valueChanged(qreal)),m_channelHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
+    m_body->getAgent()->addOutputChannel(m_channelTx,segName % ":tx");
+
+    m_channelTy=new Channel();
+    QObject::connect(m_channelTy,SIGNAL(valueChanged(qreal)),m_channelHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
+    m_body->getAgent()->addOutputChannel(m_channelTy,segName % ":ty");
+
+    m_channelTz=new Channel();
+    QObject::connect(m_channelTz,SIGNAL(valueChanged(qreal)),m_channelHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
+    m_body->getAgent()->addOutputChannel(m_channelTz,segName % ":tz");
+
+    m_color=new Channel();
+    m_color->init(0); //!< @todo color connect
+    m_body->getAgent()->addOutputChannel(m_color,segName % ":color");
+
 }
 
 void BodySegment::traverse(osg::NodeVisitor &nv)

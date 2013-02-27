@@ -32,6 +32,7 @@ signals:
 
 public slots:
     void matricesChanged();
+    void restMatrixChanged();
 
 protected:
     BodySegment *m_bodySegment;

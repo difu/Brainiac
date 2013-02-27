@@ -159,31 +159,31 @@ void SkeletonNode::createChannels()
 {
     m_channelRx=new Channel();
     connect(m_channelRx,SIGNAL(valueChanged(qreal)),this,SLOT(channelRxChanged(qreal)),Qt::DirectConnection);
-    m_body->getAgent()->addOutputChannel(m_channelRx,this->objectName() % ":rx");
+    m_body->getAgent()->addOutputChannel(m_channelRx,this->objectName() % ":rx_");
 
     m_channelRy=new Channel();
     connect(m_channelRy,SIGNAL(valueChanged(qreal)),this,SLOT(channelRyChanged(qreal)),Qt::DirectConnection);
-    m_body->getAgent()->addOutputChannel(m_channelRy,this->objectName() % ":ry");
+    m_body->getAgent()->addOutputChannel(m_channelRy,this->objectName() % ":ry_");
 
     m_channelRz=new Channel();
     connect(m_channelRz,SIGNAL(valueChanged(qreal)),this,SLOT(channelRzChanged(qreal)),Qt::DirectConnection);
-    m_body->getAgent()->addOutputChannel(m_channelRz,this->objectName() % ":rz");
+    m_body->getAgent()->addOutputChannel(m_channelRz,this->objectName() % ":rz_");
 
     m_channelTx=new Channel();
     connect(m_channelTx,SIGNAL(valueChanged(qreal)),this,SLOT(channelTxChanged(qreal)),Qt::DirectConnection);
-    m_body->getAgent()->addOutputChannel(m_channelTx,this->objectName() % ":tx");
+    m_body->getAgent()->addOutputChannel(m_channelTx,this->objectName() % ":tx_");
 
     m_channelTy=new Channel();
     connect(m_channelTy,SIGNAL(valueChanged(qreal)),this,SLOT(channelTyChanged(qreal)),Qt::DirectConnection);
-    m_body->getAgent()->addOutputChannel(m_channelTy,this->objectName() % ":ty");
+    m_body->getAgent()->addOutputChannel(m_channelTy,this->objectName() % ":ty_");
 
     m_channelTz=new Channel();
     connect(m_channelTz,SIGNAL(valueChanged(qreal)),this,SLOT(channelTzChanged(qreal)),Qt::DirectConnection);
-    m_body->getAgent()->addOutputChannel(m_channelTz,this->objectName() % ":tz");
+    m_body->getAgent()->addOutputChannel(m_channelTz,this->objectName() % ":tz_");
 
     m_color=new Channel();
     m_color->init(0);
-    m_body->getAgent()->addOutputChannel(m_color,this->objectName() % ":color");
+    m_body->getAgent()->addOutputChannel(m_color,this->objectName() % ":color_");
 
 }
 

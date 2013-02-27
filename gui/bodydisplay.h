@@ -28,7 +28,10 @@ class QGLAbstractScene;
 class SkeletonNode;
 class QGLCamera;
 class AgentManager;
-
+/**
+ * @brief The BodyDisplay class
+ * @deprecated
+ */
 class BodyDisplay : public BrainiacDisplay
 {
     Q_OBJECT

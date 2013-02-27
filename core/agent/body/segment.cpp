@@ -71,8 +71,6 @@ void Segment::updateAndNotify()
     m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_segmentRotation.y()),osg::Vec3f(0.0f,1.0f,0.0f));
     m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_segmentRotation.z()),osg::Vec3f(0.0f,0.0f,1.0f));
 
-    qDebug() << __PRETTY_FUNCTION__ << m_segmentRotation;
-
     m*=osg::Matrix::translate(m_segmentTranslation.x(),
                               m_segmentTranslation.y(),
                               m_segmentTranslation.z());

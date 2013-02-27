@@ -24,6 +24,7 @@
 
 class BodySegmentSignalHandler;
 class Body;
+class Channel;
 
 /**
  * @brief The BodySegment class
@@ -45,6 +46,7 @@ public:
     SegmentShape *getSegmentShape() const { return m_segmentShape; }
     void setRestMatrixDirty() { m_restMatrixDirty=true; }
 protected :
+    void createChannels();
     virtual void traverse(osg::NodeVisitor &nv);
     BodySegmentSignalHandler *m_channelHandler;
     Body *m_body; //!< The Body this BodySegment belongs to
@@ -53,6 +55,13 @@ protected :
     bool m_restMatrixDirty;
     osg::ref_ptr<osg::Geode> m_geode; /**< the geometry node that holds the ShapeDrawable */
     osg::ref_ptr<osg::MatrixTransform> m_transformNode;
+    Channel *m_color; //!< segement´s color Channel
+    Channel *m_channelTx; //!< x translation (input and output)
+    Channel *m_channelTy; //!< y translation (input and output)
+    Channel *m_channelTz; //!< z translation (input and output)
+    Channel *m_channelRx; //!< x rotation (input and output)
+    Channel *m_channelRy; //!< y rotation (input and output)
+    Channel *m_channelRz; //!< z rotation (input and output)
 };
 
 #endif // BODYSEGMENT_H

@@ -152,11 +152,11 @@ protected:
     QMenu *m_viewMenu;
 
     SceneDisplay *m_sceneDisplay; //!< Window that shows the rendered gl scene
-    BodyDisplay *m_bodyDisplay; //!< Window that shows the body of selected agent
+    //BodyDisplay *m_bodyDisplay; //!< Window that shows the body of selected agent
     ActionEditor *m_actionEditor;  /**< Window of ActionEditor */
 
     BodyDisplay_ *m_bodyDisplayOSG;
-    SceneDisplay_ *m_sceneDisplayOSG;
+    SceneDisplay_ *m_sceneDisplayOSG; //!< Window that shows the body of selected agent
 
 public slots:
     void statusBarMessageChange( const QString & message );

@@ -32,3 +32,8 @@ void BodySegmentSignalHandler::matricesChanged()
     //m_bodySegment->computeRestMatrix();
     m_bodySegment->computeMatrix();
 }
+
+void BodySegmentSignalHandler::restMatrixChanged()
+{
+    m_bodySegment->setRestMatrixDirty();
+}

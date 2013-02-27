@@ -207,10 +207,10 @@ void ActionEditor::setAgentManager(AgentManager *manager)
 //    }
     m_activeAnimationId=0;
 //    m_agent=m_agentManager->getBodyAgent();
-    Agent *bodyAgent=m_agentManager->getActionAgent();
+    //Agent *bodyAgent=m_agentManager->getActionAgent();
     //m_agent=m_agentManager->cloneAgent(0);
     //m_agent->setObjectName("ActionEditorAgent");
-    m_agent=bodyAgent;
+    m_agent=m_agentManager->getActionAgent();
     m_actionDisplay->setAgent(m_agent);
     qDebug() << __PRETTY_FUNCTION__ << "Active AgentManager" << manager->getGroup()->getName();
     ui->listAnimation->clear();

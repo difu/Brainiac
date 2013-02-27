@@ -90,14 +90,14 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
     widget->setLayout(m_layout);
     setCentralWidget(widget);
 
-    m_bodyDisplay=new BodyDisplay(this->m_scene);
+    //m_bodyDisplay=new BodyDisplay(this->m_scene);
 
     m_bodyDisplayOSG=new BodyDisplay_();
     m_sceneDisplayOSG=new SceneDisplay_(this->m_scene);
 
     m_sceneDisplay=new SceneDisplay(this->m_scene,m_scene->getCameras().first());
     connect(m_outputEditor,SIGNAL(updateGLContent()),m_sceneDisplay,SLOT(update()));
-    connect(m_segmentEditor,SIGNAL(updateGLContent()),m_bodyDisplay,SLOT(update()));
+    //connect(m_segmentEditor,SIGNAL(updateGLContent()),m_bodyDisplay,SLOT(update()));
 
     // When a frame has been calculated update display
     connect(m_scene->getSimulation(),SIGNAL(frameDone()),m_sceneDisplay,SLOT(update()),Qt::DirectConnection);
@@ -370,7 +370,7 @@ void MainWindow::editorNodeClick(ItemEditorWidgetsBase::editMessage msg)
         grp=(Group *)msg.object;
         m_groupEditor->setGroup(grp);
         m_activeAgentManager=grp->getAgentManager();
-        m_bodyDisplay->setAgentManager(m_activeAgentManager);
+        //m_bodyDisplay->setAgentManager(m_activeAgentManager);
         m_bodyDisplayOSG->setAgentManager(m_activeAgentManager);
         break;
     case BrainiacGlobals::OUTPUT:
@@ -559,7 +559,8 @@ void MainWindow::setEditMode(EditMode em)
         m_editorView->setScene(m_sceneEditor);
         break;
     case MainWindow::BODY:
-        m_bodyDisplay->setAgentManager(m_activeAgentManager);
+        //m_bodyDisplay->setAgentManager(m_activeAgentManager);
+        m_bodyDisplayOSG->setAgentManager(m_activeAgentManager);
         if(m_bodyEditors.contains(m_activeAgentManager)) {
             m_editorView->setScene(m_bodyEditors.value(m_activeAgentManager));
         }
