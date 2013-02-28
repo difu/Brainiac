@@ -144,6 +144,11 @@ void MainWindow::closeEvent(QCloseEvent *ev)
         m_sceneDisplayOSG->deleteLater();
         m_sceneDisplayOSG=0;
     }
+    if(m_actionEditor) {
+        m_actionEditor->hide();
+        m_actionEditor->deleteLater();
+        m_actionEditor=0;
+    }
     writeSettings();
     ev->accept();
 }

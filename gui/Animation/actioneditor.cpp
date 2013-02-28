@@ -32,6 +32,7 @@
 #include "core/agent/body/animation/animationplayer.h"
 #include "core/agent/body/animation/modifiableanimation.h"
 #include "gui/actiondisplay.h"
+#include "gui/Animation/actiondisplay_.h"
 #include "gui/brainiacslider.h"
 #include "gui/Animation/loopeditorscene.h"
 #include <QListWidgetItem>
@@ -50,9 +51,15 @@ ActionEditor::ActionEditor(Scene *scene, QWidget *parent) :
     //setWindowModality(Qt::Tool);
     connect(ui->listAnimation,SIGNAL(currentRowChanged(int)),this,SLOT(animationSelectionChanged(int)));
     m_actionDisplay=new ActionDisplay(this);
-    connect(m_actionDisplay,SIGNAL(animationOneFrameBackward()),this,SLOT(animationOneFrameBackward()));
-    connect(m_actionDisplay,SIGNAL(animationOneFrameForward()),this,SLOT(animationOneFrameForward()));
-    connect(m_actionDisplay,SIGNAL(animationRunningToggled()),this,SLOT(animationRunningToggle()));
+    m_actionDisplay_=new ActionDisplay_(this);
+//    connect(m_actionDisplay,SIGNAL(animationOneFrameBackward()),this,SLOT(animationOneFrameBackward()));
+//    connect(m_actionDisplay,SIGNAL(animationOneFrameForward()),this,SLOT(animationOneFrameForward()));
+//    connect(m_actionDisplay,SIGNAL(animationRunningToggled()),this,SLOT(animationRunningToggle()));
+
+    connect(m_actionDisplay_,SIGNAL(animationOneFrameBackward()),this,SLOT(animationOneFrameBackward()));
+    connect(m_actionDisplay_,SIGNAL(animationOneFrameForward()),this,SLOT(animationOneFrameForward()));
+    connect(m_actionDisplay_,SIGNAL(animationRunningToggled()),this,SLOT(animationRunningToggle()));
+
     connect(ui->lineEditAnimationName,SIGNAL(returnPressed()),this,SLOT(animationNameChanged()));
     connect(ui->tabWidgetMain,SIGNAL(currentChanged(int)),this,SLOT(uiTabChanged(int)));
     startTimer(1000/m_scene->getSimulation()->getFps());
@@ -212,6 +219,7 @@ void ActionEditor::setAgentManager(AgentManager *manager)
     //m_agent->setObjectName("ActionEditorAgent");
     m_agent=m_agentManager->getActionAgent();
     m_actionDisplay->setAgent(m_agent);
+    m_actionDisplay_->setAgentManager(m_agentManager);
     qDebug() << __PRETTY_FUNCTION__ << "Active AgentManager" << manager->getGroup()->getName();
     ui->listAnimation->clear();
     ui->listCurves->clear();
@@ -241,6 +249,7 @@ void ActionEditor::setAgentManager(AgentManager *manager)
 void ActionEditor::hide()
 {
     m_actionDisplay->hide();
+    m_actionDisplay_->hide();
     QDialog::hide();
 }
 
@@ -248,6 +257,7 @@ void ActionEditor::show()
 {
     QDialog::show();
     m_actionDisplay->show();
+    m_actionDisplay_->show();
     ui->tabWidgetMain->setCurrentIndex(0);
 }
 
@@ -426,5 +436,6 @@ void ActionEditor::uiTabChanged(int tabIndex)
 
 ActionEditor::~ActionEditor()
 {
+    m_actionDisplay_->deleteLater();
     delete ui;
 }

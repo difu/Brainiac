@@ -30,6 +30,7 @@ class LoopEditorScene;
 class ModifiableAnimation;
 class Segment;
 class ActionDisplay;
+class ActionDisplay_;
 class Scene;
 
 class QDoubleValidator;
@@ -74,6 +75,7 @@ protected:
     ModifiableAnimation *m_activeAnimation;
     quint32 m_activeAnimationId;
     ActionDisplay *m_actionDisplay; /**< TODO */
+    ActionDisplay_ *m_actionDisplay_; /**< The OSGWindow that displays the agent */
     Scene *m_scene;
     QMutex m_animationChangeMutex;
     LoopEditorScene *m_loopEditorScene;
