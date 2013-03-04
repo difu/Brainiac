@@ -43,7 +43,8 @@ class KeyPressReleaseEater : public QObject
              QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
              qDebug("Ate key press %d", keyEvent->key());
              emit keyPressed((Qt::Key)keyEvent->key());
-             return true;
+             return false; // continue event processing
+             //QObject::eventFilter(obj, event);
          } else {
              // standard event processing
              return QObject::eventFilter(obj, event);
@@ -90,7 +91,11 @@ public:
 protected:
     virtual void run() {
         if (viewerPtr) {
-            viewerPtr->run();
+            //viewerPtr->run();
+            while (!viewerPtr->done()) {
+                viewerPtr->frame();
+                usleep(15000); /**< @todo calculate that dynamically. 15k -> 60fps w/ 5 agents in scene */
+            }
         }
     }
 };
@@ -129,6 +134,7 @@ public:
         m_thread.viewerPtr = &m_viewer;
         m_thread.start();
         setGeometry( 100, 100, 800, 600 );
+        setWindowFlags(Qt::Tool);
         show();
     }
     osg::Camera* createCamera( int x, int y, int w, int h )
