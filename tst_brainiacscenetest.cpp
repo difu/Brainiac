@@ -179,6 +179,13 @@ void BrainiacSceneTest::compareScene1Scene2Agents()
     QHash<quint32, SegmentShape *> agent1Segs=m_group1Scene1->getAgentManager()->getBodyManager()->getSegments();
     QHash<quint32, SegmentShape *> agent2Segs=m_group1Scene2->getAgentManager()->getBodyManager()->getSegments();
     QVERIFY2(agent1Segs.count()==agent2Segs.count(),"Number of segments differs");
+    foreach(SegmentShape *seg,m_group1Scene1->getAgentManager()->getBodyManager()->getSegments()) {
+        SegmentShape *seg2=agent2Segs.value(seg->getId());
+        QVERIFY2(seg->getRestRotation()==seg2->getRestRotation(),"RestRotation differs");
+        QVERIFY2(seg->getRotation()==seg2->getRotation(),"Rotation differs");
+        QVERIFY2(seg->getRestTranslation()==seg2->getRestTranslation(),"RestTranslation differs");
+        QVERIFY2(seg->getTranslation()==seg2->getTranslation(),"Translation differs");
+    }
 
 }
 
@@ -194,11 +201,54 @@ void BrainiacSceneTest::sceneTestCase1()
 
 void BrainiacSceneTest::createBody(AgentManager *am)
 {
+    QVector3D vec;
     QString segName="Seg1";
     BodyManager *bm=am->getBodyManager();
+
+    am->setBodyEditorTranslation(1,123,456);
     bm->setNewSegmentId(1);
     bm->setNewSegmentName(segName);
     bm->setNewSegmentParentId(0);
+    bm->setNewSegmentType(BrainiacGlobals::SPHERESEGMENT);
+    bm->createNewSegment();
+
+    segName="Seg2";
+    am->setBodyEditorTranslation(2,789,1012);
+    bm->setNewSegmentId(2);
+    bm->setNewSegmentName(segName);
+    bm->setNewSegmentParentId(1);
+    bm->setNewSegmentType(BrainiacGlobals::SPHERESEGMENT);
+    bm->setNewSegmentColor(0.5f);
+    vec=QVector3D(0.1f,0.2f,0.3f);
+    bm->setNewSegmentRestRotation(vec);
+    vec=QVector3D(0.4f,0.5f,0.6f);
+    bm->setNewSegmentRestTranslation(vec);
+    bm->createNewSegment();
+
+    segName="Seg3";
+    am->setBodyEditorTranslation(2,789,1012);
+    bm->setNewSegmentId(3);
+    bm->setNewSegmentName(segName);
+    bm->setNewSegmentParentId(1);
+    bm->setNewSegmentType(BrainiacGlobals::SPHERESEGMENT);
+    bm->setNewSegmentColor(0.5f);
+    vec=QVector3D(0.1f,0.2f,0.3f);
+    bm->setNewSegmentRestRotation(vec);
+    vec=QVector3D(0.4f,0.5f,0.6f);
+    bm->setNewSegmentRestTranslation(vec);
+    bm->createNewSegment();
+
+    segName="Seg4";
+    am->setBodyEditorTranslation(2,789,1012);
+    bm->setNewSegmentId(4);
+    bm->setNewSegmentName(segName);
+    bm->setNewSegmentParentId(2);
+    bm->setNewSegmentType(BrainiacGlobals::SPHERESEGMENT);
+    bm->setNewSegmentColor(0.5f);
+    vec=QVector3D(0.1f,0.2f,0.3f);
+    bm->setNewSegmentRestRotation(vec);
+    vec=QVector3D(0.4f,0.5f,0.6f);
+    bm->setNewSegmentRestTranslation(vec);
     bm->createNewSegment();
 }
 

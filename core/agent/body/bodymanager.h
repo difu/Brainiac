@@ -81,6 +81,12 @@ public:
     QList<quint32> getSegmentChildIds(quint32 id) const;
 
     /**
+     * @brief hasRootSegment
+     * @return true, if this body has a root segment
+     */
+    bool hasRootSegment() const;
+
+    /**
      * @brief
      *
      * @fn resetNewSegmentProperties

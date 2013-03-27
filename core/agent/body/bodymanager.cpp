@@ -115,6 +115,9 @@ Segment BodyManager::getSegment(quint32 id) const
 QList<quint32> BodyManager::getTraversedSegmentIds() const
 {
     QList<quint32> ids;
+    if(!hasRootSegment()) {
+        return ids;
+    }
     quint32 rootId=getRootSegment().getId();
 //    ids.append(rootId);
     getTraversedSegmentIdsRec(&ids,rootId);
@@ -132,7 +135,7 @@ void BodyManager::getTraversedSegmentIdsRec(QList<quint32> *list,quint32 startId
 Segment BodyManager::getRootSegment() const
 {
     foreach(SegmentShape *seg,m_segments) {
-        if(seg->getParentId()==0) {
+        if(seg->isRootSegment()) {
             return Segment(*seg);
         }
     }
@@ -147,10 +150,18 @@ QList<quint32> BodyManager::getSegmentChildIds(quint32 id) const
     foreach(SegmentShape* segShape,m_segments) {
         if(segShape->getParentId()==s->getId()) {
             childIds.append(segShape->getId());
-            qDebug() << __PRETTY_FUNCTION__ << "Child found: "<< segShape->getId() << "#" << childIds.count();
+            //qDebug() << __PRETTY_FUNCTION__ << "Child found: "<< segShape->getId() << "#" << childIds.count();
         }
     }
     return childIds;
+}
+
+bool BodyManager::hasRootSegment() const {
+    foreach(SegmentShape* segShape,m_segments) {
+        if(segShape->isRootSegment())
+            return true;
+    }
+    return false;
 }
 
 void BodyManager::resetNewSegmentProperties()

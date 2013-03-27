@@ -163,7 +163,6 @@ void AgentManager::addSkeletonNodeFromConfig(QXmlStreamReader *reader, quint32 i
 
     m_masterAgent->getBody()->addSkeletonNode(newNode,parent);
     setBodyEditorTranslation(id,editorX,editorY);
-    qDebug() << __PRETTY_FUNCTION__ << "" << translation << rotation << name << scale << color << editorX << editorY;
 }
 
 quint32 AgentManager::addAndFuzz(quint32 editorX, quint32 editorY)
@@ -768,18 +767,18 @@ bool AgentManager::saveConfig()
 //    stream.writeAttribute("editorx", QString::number(m_editX));
 //    stream.writeAttribute("editory", QString::number(m_editY));
     stream.writeStartElement("Body");
-    foreach(QGLSceneNode *n,m_masterAgent->getBody()->getRootSkeletonNode()->allChildren()) {
-        SkeletonNode *node=dynamic_cast<SkeletonNode *> (n);
-        if(node) {
+    foreach(quint32 id, m_bodyManager->getTraversedSegmentIds()) {
+        Segment node=m_bodyManager->getSegment(id);
+        //if(node) {
              stream.writeStartElement("Segment");
-             stream.writeAttribute("id", QString::number(node->getId()));
-             stream.writeAttribute("parent", QString::number(node->getParentId()));
-             stream.writeAttribute("name", node->objectName());
-             stream.writeAttribute("editorx",QString::number(m_editorSkeletonNodeLocations.value(node->getId()).x()));
-             stream.writeAttribute("editory",QString::number(m_editorSkeletonNodeLocations.value(node->getId()).y()));
+             stream.writeAttribute("id", QString::number(node.getId()));
+             stream.writeAttribute("parent", QString::number(node.getParentId()));
+             stream.writeAttribute("name", node.objectName());
+             stream.writeAttribute("editorx",QString::number(m_editorSkeletonNodeLocations.value(node.getId()).x()));
+             stream.writeAttribute("editory",QString::number(m_editorSkeletonNodeLocations.value(node.getId()).y()));
              stream.writeStartElement("Color");
-             stream.writeAttribute("value", QString::number(node->getInitColor(),'f'));
-             if(node->getColor()->isInherited()) {
+             stream.writeAttribute("value", QString::number(node.getColor(),'f'));
+             if(node.getColorInherited()) {
                  stream.writeAttribute("inherited", "true");
              } else {
                  stream.writeAttribute("inherited", "false");
@@ -787,36 +786,36 @@ bool AgentManager::saveConfig()
              stream.writeEndElement(); //Color
 
              stream.writeStartElement(BrainiacGlobals::XmlRestTranslationTag);
-             stream.writeAttribute("x",  QString::number(node->getRestTranslation().x(),'f'));
-             stream.writeAttribute("y",  QString::number(node->getRestTranslation().y(),'f'));
-             stream.writeAttribute("z",  QString::number(node->getRestTranslation().z(),'f'));
+             stream.writeAttribute("x",  QString::number(node.getRestTranslation().x(),'f'));
+             stream.writeAttribute("y",  QString::number(node.getRestTranslation().y(),'f'));
+             stream.writeAttribute("z",  QString::number(node.getRestTranslation().z(),'f'));
              stream.writeEndElement(); //RestTranslation
              stream.writeStartElement(BrainiacGlobals::XmlRestRotationTag);
-             stream.writeAttribute("x",  QString::number(node->getRestRotation().x(),'f'));
-             stream.writeAttribute("y",  QString::number(node->getRestRotation().y(),'f'));
-             stream.writeAttribute("z",  QString::number(node->getRestRotation().z(),'f'));
+             stream.writeAttribute("x",  QString::number(node.getRestRotation().x(),'f'));
+             stream.writeAttribute("y",  QString::number(node.getRestRotation().y(),'f'));
+             stream.writeAttribute("z",  QString::number(node.getRestRotation().z(),'f'));
              stream.writeEndElement(); //RestRotation
 
              stream.writeStartElement(BrainiacGlobals::XmlTranslationTag);
-             stream.writeAttribute("x",  QString::number(node->getTranslation().x(),'f'));
-             stream.writeAttribute("y",  QString::number(node->getTranslation().y(),'f'));
-             stream.writeAttribute("z",  QString::number(node->getTranslation().z(),'f'));
+             stream.writeAttribute("x",  QString::number(node.getTranslation().x(),'f'));
+             stream.writeAttribute("y",  QString::number(node.getTranslation().y(),'f'));
+             stream.writeAttribute("z",  QString::number(node.getTranslation().z(),'f'));
              stream.writeEndElement(); //Translation
              stream.writeStartElement(BrainiacGlobals::XmlRotationTag);
-             stream.writeAttribute("x",  QString::number(node->getRotation().x(),'f'));
-             stream.writeAttribute("y",  QString::number(node->getRotation().y(),'f'));
-             stream.writeAttribute("z",  QString::number(node->getRotation().z(),'f'));
+             stream.writeAttribute("x",  QString::number(node.getRotation().x(),'f'));
+             stream.writeAttribute("y",  QString::number(node.getRotation().y(),'f'));
+             stream.writeAttribute("z",  QString::number(node.getRotation().z(),'f'));
              stream.writeEndElement(); //Rotation
 
              stream.writeStartElement(BrainiacGlobals::XmlScaleTag);
-             stream.writeAttribute("x",  QString::number(node->getScale().x(),'f'));
-             stream.writeAttribute("y",  QString::number(node->getScale().y(),'f'));
-             stream.writeAttribute("z",  QString::number(node->getScale().z(),'f'));
+             stream.writeAttribute("x",  QString::number(node.getScale().x(),'f'));
+             stream.writeAttribute("y",  QString::number(node.getScale().y(),'f'));
+             stream.writeAttribute("z",  QString::number(node.getScale().z(),'f'));
              stream.writeEndElement(); // Scale
 
              stream.writeStartElement(BrainiacGlobals::XmlRotTransOrderTag);
              QString rotTrans;
-             foreach(BrainiacGlobals::RotTrans rt,node->getRotationTranslationOrder()) {
+             foreach(BrainiacGlobals::RotTrans rt,node.getRotationTranslationOrder()) {
                  if(rt==BrainiacGlobals::RX) {
                      rotTrans.append("RX");
                  } else if(rt==BrainiacGlobals::RY) {
@@ -836,10 +835,10 @@ bool AgentManager::saveConfig()
 
              stream.writeEndElement(); // RotTransOrder
 
-             if(dynamic_cast<SkeletonNodeSphere *>(node)) {
+             if(node.getType()==BrainiacGlobals::SPHERESEGMENT) {
                  stream.writeStartElement(BrainiacGlobals::XmlSphereTag);
                  stream.writeEndElement();
-             } else if (dynamic_cast<SkeletonNodeBox *>(node)) {
+             } else if (node.getType()==BrainiacGlobals::BOXSEGMENT) {
                  stream.writeStartElement(BrainiacGlobals::XmlBoxTag);
                  stream.writeEndElement();
              } else {
@@ -847,7 +846,7 @@ bool AgentManager::saveConfig()
              }
 
              stream.writeEndElement(); // Segment
-        }
+        //}
     }
 
 
