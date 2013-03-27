@@ -79,7 +79,7 @@ void BodySegment::computeRestMatrix() {
 void BodySegment::createChannels()
 {
     QString segName(getName().c_str());
-    qDebug() << __PRETTY_FUNCTION__ << "creating channels for Segment" << segName;
+    //qDebug() << __PRETTY_FUNCTION__ << "creating channels for Segment" << segName;
     m_channelRx=new Channel();
     QObject::connect(m_channelRx,SIGNAL(valueChanged(qreal)),m_channelHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
     m_body->getAgent()->addOutputChannel(m_channelRx,segName % ":rx");

@@ -108,7 +108,7 @@ void::Group::setAgentFileName(QString fileName)
         m_agentFileNameAbsolute.append(fileName);
     }
 
-    qDebug() << "FileName "<< m_agentFileName;
+//    qDebug() << "FileName "<< m_agentFileName;
 }
 
 void Group::setEditorTranslation(qint32 x, qint32 y)

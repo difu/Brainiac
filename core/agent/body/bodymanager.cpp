@@ -50,7 +50,7 @@ void BodyManager::addSegmentsToAgent(Agent *agent, quint32 startSegmentId)
 void BodyManager::applyBodyOnAgent(Agent *agent)
 {
     if(m_segments.count()==0) {
-        qDebug() << __PRETTY_FUNCTION__ << "No segments found!";
+        //qDebug() << __PRETTY_FUNCTION__ << "No segments found!";
         return;
     }
     Segment *rootSeg=0;

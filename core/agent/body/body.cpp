@@ -103,7 +103,7 @@ void Body::copySkeletonNode(SkeletonNode *n)
 
 void Body::addBodySegment(osg::ref_ptr<BodySegment> bodySegment, quint32 parentId)
 {
-    qDebug( ) << __PRETTY_FUNCTION__ << "Added BodySegment with parentId" << parentId;
+    //qDebug( ) << __PRETTY_FUNCTION__ << "Added BodySegment with parentId" << parentId;
     //BodySegment *bs=bodySegment.get();
     m_bodySegments.insert(bodySegment.get()->getId(),bodySegment.get());
     if(parentId==0) {

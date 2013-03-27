@@ -61,6 +61,12 @@ public:
     Segment getSegment(quint32 id) const;
 
     /**
+     * @brief getSegments returns all Segments
+     * @return
+     */
+    QHash<quint32, SegmentShape *> getSegments() const { return m_segments; }
+
+    /**
      * @brief getSegmentChildrenIds
      * Returns the ids of all children of a Segment
      * @param id the id of the Segment
