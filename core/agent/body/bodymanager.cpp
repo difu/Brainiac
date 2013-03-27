@@ -41,7 +41,7 @@ void BodyManager::addSegmentsToAgent(Agent *agent, quint32 startSegmentId)
     qDebug()<< __PRETTY_FUNCTION__ << "Adding segment id" << startSegmentId;
     osg::ref_ptr<BodySegment> bs=new BodySegment(agent->getBody(), m_segments.value(startSegmentId));
     agent->getBody()->addBodySegment(bs.get(),bs.get()->getParentId());
-    foreach(quint32 childId,getSegmentChildrenIds(startSegmentId)) {
+    foreach(quint32 childId,getSegmentChildIds(startSegmentId)) {
         qDebug() << __PRETTY_FUNCTION__ << "Add child " << childId;
         this->addSegmentsToAgent(agent,childId);
     }
@@ -112,6 +112,23 @@ Segment BodyManager::getSegment(quint32 id) const
         return Segment();
 }
 
+QList<quint32> BodyManager::getTraversedSegmentIds() const
+{
+    QList<quint32> ids;
+    quint32 rootId=getRootSegment().getId();
+//    ids.append(rootId);
+    getTraversedSegmentIdsRec(&ids,rootId);
+    return ids;
+}
+
+void BodyManager::getTraversedSegmentIdsRec(QList<quint32> *list,quint32 startId) const
+{
+    list->append(startId);
+    foreach(quint32 childId, getSegmentChildIds(startId)) {
+        getTraversedSegmentIdsRec(list,childId);
+    }
+}
+
 Segment BodyManager::getRootSegment() const
 {
     foreach(SegmentShape *seg,m_segments) {
@@ -123,7 +140,7 @@ Segment BodyManager::getRootSegment() const
     return Segment();
 }
 
-QList<quint32> BodyManager::getSegmentChildrenIds(quint32 id) const
+QList<quint32> BodyManager::getSegmentChildIds(quint32 id) const
 {
     SegmentShape *s=m_segments.value(id);
     QList<quint32> childIds;

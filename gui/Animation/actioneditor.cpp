@@ -132,7 +132,7 @@ void ActionEditor::addCurvesToList(const Segment &seg, quint32 level)
     }
 
     level++;
-    foreach(quint32 childId ,m_agentManager->getBodyManager()->getSegmentChildrenIds(seg.getId())) {
+    foreach(quint32 childId ,m_agentManager->getBodyManager()->getSegmentChildIds(seg.getId())) {
         //SkeletonNode *sn=dynamic_cast<SkeletonNode *>(n);
         addCurvesToList(m_agentManager->getBodyManager()->getSegment(childId),level);
 

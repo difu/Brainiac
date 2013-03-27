@@ -62,17 +62,23 @@ public:
 
     /**
      * @brief getSegments returns all Segments
-     * @return
+     * @return the Segment
      */
     QHash<quint32, SegmentShape *> getSegments() const { return m_segments; }
 
     /**
-     * @brief getSegmentChildrenIds
+     * @brief getTraversedSegmentIds returns traversed child ids starting from the root segment
+     * @return a list with traversed ids
+     */
+    QList<quint32> getTraversedSegmentIds() const;
+
+    /**
+     * @brief getSegmentChildIds
      * Returns the ids of all children of a Segment
      * @param id the id of the Segment
      * @return QList<quint32> an array of all ids
      */
-    QList<quint32> getSegmentChildrenIds(quint32 id) const;
+    QList<quint32> getSegmentChildIds(quint32 id) const;
 
     /**
      * @brief
@@ -226,6 +232,7 @@ protected:
      * @param startSegmentId the id of the segment to start the recursion
      */
     void addSegmentsToAgent(Agent *agent, quint32 startSegmentId);
+    void getTraversedSegmentIdsRec(QList<quint32> *list, quint32 startId) const;
 
     AgentManager *m_agentManager; /**< The AgentManager this BodyManagers belongs to */
     Segment m_newSegment; /**< Temporary Segment */
