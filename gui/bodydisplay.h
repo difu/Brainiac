@@ -25,7 +25,6 @@
 class Camera;
 class Scene;
 class QGLAbstractScene;
-class SkeletonNode;
 class QGLCamera;
 class AgentManager;
 /**
@@ -43,7 +42,6 @@ protected:
     void keyPressEvent(QKeyEvent *e);
     void paintGL(QGLPainter *painter);
 
-    SkeletonNode *m_rootSkeletonNode;
     Scene *m_scene;
     AgentManager *m_agentManager;
 };

@@ -25,7 +25,6 @@ class Agent;
 class Camera;
 class Scene;
 class QGLAbstractScene;
-class SkeletonNode;
 class QGLCamera;
 class AgentManager;
 

@@ -183,9 +183,10 @@ void SegmentEditor::editSymetric(bool editSymetric)
 
 quint32 SegmentEditor::getSymetricSegmentId() const
 {
-    SkeletonNode *node=m_agentManager->getMasterAgent()->getBody()->getSkeletonNodeById(m_id);
-    if(node) {
-        QString name=node->objectName();
+//    SkeletonNode *node=m_agentManager->getMasterAgent()->getBody()->getSkeletonNodeById(m_id);
+    Segment *seg=m_agentManager->getBodyManager()->getSegments().value(m_id);
+    if(seg) {
+        QString name=seg->getName();
         QString otherName;
         if(name.startsWith('r')) {
             otherName="l";
@@ -195,9 +196,14 @@ quint32 SegmentEditor::getSymetricSegmentId() const
             return 0;
         }
         otherName=otherName%name.mid(1);
-        SkeletonNode *node=m_agentManager->getMasterAgent()->getBody()->getSkeletonNodeByName(otherName);
-        if(node) {
-            return node->getId();
+//        SkeletonNode *node=m_agentManager->getMasterAgent()->getBody()->getSkeletonNodeByName(otherName);
+//        if(node) {
+//            return node->getId();
+//        }
+        foreach(Segment *otherSeg, m_agentManager->getBodyManager()->getSegments()) {
+            if(QString::compare(seg,otherSeg,Qt::CaseSensitive)==0) {
+                return otherSeg->getId();
+            }
         }
     } else {
         qWarning() << __PRETTY_FUNCTION__ << "No segment with id "<< m_id << "found!";
