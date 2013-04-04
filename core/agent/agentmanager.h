@@ -165,7 +165,7 @@ public:
     quint32 getId() { return m_id; }
     qint32 getEditorTranslationX() { return m_editX; }
     qint32 getEditorTranslationY() { return m_editY; }
-    QHash<quint32, QPoint> getEditorSkeletonNodeLocations();
+    QHash<quint32, QPoint> getEditorSegmentNodeLocations();
     QHash<quint32, QPoint> getEditorFuzzyLocations();
     Group* getGroup() { return m_group; }
 
@@ -416,7 +416,7 @@ protected:
     Group *m_group;
     Scene *m_scene;
     QHash<quint32, QPoint> m_editorFuzzyLocations;
-    QHash<quint32, QPoint> m_editorSkeletonNodeLocations;
+    QHash<quint32, QPoint> m_editorSegmentNodeLocations;
     IdGenerator m_brainIdGenerator;
     IdGenerator m_animationIdGenerator;
     IdGenerator m_segmentIdGenerator;

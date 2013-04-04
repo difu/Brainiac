@@ -201,7 +201,7 @@ quint32 SegmentEditor::getSymetricSegmentId() const
 //            return node->getId();
 //        }
         foreach(Segment *otherSeg, m_agentManager->getBodyManager()->getSegments()) {
-            if(QString::compare(seg,otherSeg,Qt::CaseSensitive)==0) {
+            if(QString::compare(name,otherName,Qt::CaseSensitive)==0) {
                 return otherSeg->getId();
             }
         }

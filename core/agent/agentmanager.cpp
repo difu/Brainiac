@@ -437,9 +437,9 @@ void AgentManager::deleteFuzz(quint32 fuzzId)
     updateSoundConfigs();
 }
 
-QHash<quint32, QPoint> AgentManager::getEditorSkeletonNodeLocations()
+QHash<quint32, QPoint> AgentManager::getEditorSegmentNodeLocations()
 {
-    return m_editorSkeletonNodeLocations;
+    return m_editorSegmentNodeLocations;
 }
 
 QHash<quint32, QPoint> AgentManager::getEditorFuzzyLocations()
@@ -774,8 +774,8 @@ bool AgentManager::saveConfig()
              stream.writeAttribute("id", QString::number(node.getId()));
              stream.writeAttribute("parent", QString::number(node.getParentId()));
              stream.writeAttribute("name", node.objectName());
-             stream.writeAttribute("editorx",QString::number(m_editorSkeletonNodeLocations.value(node.getId()).x()));
-             stream.writeAttribute("editory",QString::number(m_editorSkeletonNodeLocations.value(node.getId()).y()));
+             stream.writeAttribute("editorx",QString::number(m_editorSegmentNodeLocations.value(node.getId()).x()));
+             stream.writeAttribute("editory",QString::number(m_editorSegmentNodeLocations.value(node.getId()).y()));
              stream.writeStartElement("Color");
              stream.writeAttribute("value", QString::number(node.getColor(),'f'));
              if(node.getColorInherited()) {
@@ -1014,7 +1014,7 @@ void AgentManager::setBodyEditorTranslation(quint32 id, qint32 x, qint32 y)
     QPoint point;//=m_editorFuzzyLocations.value(id);
     point.setX(x);
     point.setY(y);
-    m_editorSkeletonNodeLocations.insert(id,point);
+    m_editorSegmentNodeLocations.insert(id,point);
 }
 
 void AgentManager::setSegmentDimensions(quint32 id, qreal x, qreal y, qreal z)
