@@ -19,7 +19,6 @@
 #ifndef SCENEDISPLAY_H
 #define SCENEDISPLAY_H
 
-#include <qglview.h>
 #include <QCloseEvent>
 #include <QVector3D>
 #include "gui/brainiacdisplay.h"

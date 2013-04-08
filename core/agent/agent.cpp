@@ -37,7 +37,7 @@ Agent::Agent(Scene *scene, quint32 id) :
     m_id=id;
     m_scene=scene;
     createChannels();
-    m_body=new Body(this,0);
+    m_body=new Body(this);
     m_brain=new Brain(this,0);
     m_renderSoundEmission=true;
 }
@@ -48,7 +48,7 @@ Agent::Agent(Agent *agent, quint32 id)  :
     m_id=id;
     createChannels();
     m_scene=agent->getScene();
-    m_body=new Body(this,agent->getBody());
+    m_body=new Body(this);
     m_brain=new Brain(this,agent->getBrain());
     m_renderSoundEmission=true;
 }

@@ -18,7 +18,7 @@
 
 #ifndef ACTIONDISPLAY_H
 #define ACTIONDISPLAY_H
-#include "gui/brainiacdisplay.h"
+//#include "gui/brainiacdisplay.h"
 #include <QCloseEvent>
 
 class Agent;

@@ -28,8 +28,9 @@
 #include "core/agent/agent.h"
 #include "core/agent/brain/brain.h"
 #include "core/agent/brain/output.h"
-#include "core/agent/body/skeletonnode.h"
+//#include "core/agent/body/skeletonnode.h"
 #include "core/agent/body/body.h"
+#include "core/agent/body/bodymanager.h"
 
 EditorItem::EditorItem(BrainiacGlobals::ItemType type, void *object,quint32 id)
 {
@@ -146,10 +147,10 @@ void EditorItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
         painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,myManager->getMasterAgent()->getBrain()->getFuzzy(m_id)->getName());
     } else if(m_type==BrainiacGlobals::CUBE) {
         AgentManager *myManager=(AgentManager*)m_object;
-        painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,myManager->getMasterAgent()->getBody()->getSkeletonNodeById(m_id)->objectName());
+        painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,myManager->getBodyManager()->getSegment(m_id).getName());
     } else if(m_type==BrainiacGlobals::SPHERE) {
         AgentManager *myManager=(AgentManager*)m_object;
-        painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,myManager->getMasterAgent()->getBody()->getSkeletonNodeById(m_id)->objectName());
+        painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,myManager->getBodyManager()->getSegment(m_id).getName());
     }
     painter->drawImage(QPoint(relxPos+4,relyPos+6),m_symbolPic);
 

@@ -31,8 +31,6 @@
 #include "gui/sceneeditor/sceneeditor.h"
 #include "gui/sceneeditor/groupeditor.h"
 #include "gui/editoritem.h"
-#include "gui/scenedisplay.h"
-#include "gui/bodydisplay.h"
 #include "gui/Animation/actioneditor.h"
 #include "gui/bodyeditor/bodydisplay_.h"
 #include "gui/scenedisplay_.h"
@@ -95,12 +93,12 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
     m_bodyDisplayOSG=new BodyDisplay_();
     m_sceneDisplayOSG=new SceneDisplay_(this->m_scene);
 
-    m_sceneDisplay=new SceneDisplay(this->m_scene,m_scene->getCameras().first());
-    connect(m_outputEditor,SIGNAL(updateGLContent()),m_sceneDisplay,SLOT(update()));
+    //m_sceneDisplay=new SceneDisplay(this->m_scene,m_scene->getCameras().first());
+    //connect(m_outputEditor,SIGNAL(updateGLContent()),m_sceneDisplay,SLOT(update()));
     //connect(m_segmentEditor,SIGNAL(updateGLContent()),m_bodyDisplay,SLOT(update()));
 
     // When a frame has been calculated update display
-    connect(m_scene->getSimulation(),SIGNAL(frameDone()),m_sceneDisplay,SLOT(update()),Qt::DirectConnection);
+//    connect(m_scene->getSimulation(),SIGNAL(frameDone()),m_sceneDisplay,SLOT(update()),Qt::DirectConnection);
 
     connect(m_sceneEditor,SIGNAL(selectionChanged()),this,SLOT(sceneEditorItemClicked()));
 

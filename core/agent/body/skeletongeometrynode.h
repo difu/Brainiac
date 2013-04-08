@@ -19,7 +19,6 @@
 #ifndef SKELETONGEOMETRYNODE_H
 #define SKELETONGEOMETRYNODE_H
 
-#include "qglscenenode.h"
 
 /**
  * @brief Represents the drawn geometry of a SkeletonNode (e.g. Sphere)

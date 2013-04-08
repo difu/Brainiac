@@ -20,15 +20,14 @@
 #define SKELETONNODE_H
 
 #include "core/brainiacglobals.h"
-#include "qglscenenode.h"
 #include <QMatrix4x4>
 
 class Body;
 class Channel;
 
-class QGraphicsRotation3D;
-class QGraphicsTranslation3D;
-class QGraphicsScale3D;
+//class QGraphicsRotation3D;
+//class QGraphicsTranslation3D;
+//class QGraphicsScale3D;
 class SkeletonGeometryNode;
 /**
  * @brief A Node of the Agent s skeleton

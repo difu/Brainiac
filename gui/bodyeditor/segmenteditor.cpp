@@ -22,9 +22,6 @@
 #include "core/agent/body/bodymanager.h"
 #include "core/agent/agent.h"
 #include "core/agent/body/body.h"
-#include "core/agent/body/skeletonnode.h"
-#include "core/agent/body/skeletonnodebox.h"
-#include "core/agent/body/skeletonnodesphere.h"
 #include "ui_segmenteditor.h"
 
 SegmentEditor::SegmentEditor(Scene *scene, QWidget *parent) :

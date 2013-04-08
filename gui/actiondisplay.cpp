@@ -51,7 +51,7 @@ void ActionDisplay::keyPressEvent(QKeyEvent *e)
         }
     }
     if(m_agent) {
-        m_agent->getBody()->showBoneCoordCrosses(m_showAgentBoneCoordCrosses);
+        //m_agent->getBody()->showBoneCoordCrosses(m_showAgentBoneCoordCrosses);
     }
 }
 
@@ -63,9 +63,9 @@ void ActionDisplay::paintGL(QGLPainter *painter)
     if(m_agent)
     {
         if(m_renderSkeleton) {
-            m_agent->getBody()->renderSkeleton(painter);
+            //m_agent->getBody()->renderSkeleton(painter);
         }
-        m_agent->getBody()->getRootSkeletonNode()->draw(painter);
+        //m_agent->getBody()->getRootSkeletonNode()->draw(painter);
     }
     if(!m_followAgent) {
         m_cameraCenterPos=m_camera->center();

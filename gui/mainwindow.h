@@ -42,7 +42,7 @@ class OutputEditor;
 class DefuzzEditor;
 class FuzzyEditor;
 class NoiseEditor;
-class SceneDisplay;
+//class SceneDisplay;
 class BodyDisplay;
 class SegmentEditor;
 class ActionEditor;
@@ -151,7 +151,7 @@ protected:
     QMenu *m_simulationMenu;
     QMenu *m_viewMenu;
 
-    SceneDisplay *m_sceneDisplay; //!< Window that shows the rendered gl scene
+    //SceneDisplay *m_sceneDisplay; //!< Window that shows the rendered gl scene
     //BodyDisplay *m_bodyDisplay; //!< Window that shows the body of selected agent
     ActionEditor *m_actionEditor;  /**< Window of ActionEditor */
 

@@ -31,7 +31,6 @@
 #include "core/agent/body/animation/animationcurve.h"
 #include "core/agent/body/animation/animationplayer.h"
 #include "core/agent/body/animation/modifiableanimation.h"
-#include "gui/actiondisplay.h"
 #include "gui/Animation/actiondisplay_.h"
 #include "gui/brainiacslider.h"
 #include "gui/Animation/loopeditorscene.h"
@@ -50,7 +49,7 @@ ActionEditor::ActionEditor(Scene *scene, QWidget *parent) :
     m_activeAnimationId=0;
     //setWindowModality(Qt::Tool);
     connect(ui->listAnimation,SIGNAL(currentRowChanged(int)),this,SLOT(animationSelectionChanged(int)));
-    m_actionDisplay=new ActionDisplay(this);
+    //m_actionDisplay=new ActionDisplay(this);
     m_actionDisplay_=new ActionDisplay_(this);
 //    connect(m_actionDisplay,SIGNAL(animationOneFrameBackward()),this,SLOT(animationOneFrameBackward()));
 //    connect(m_actionDisplay,SIGNAL(animationOneFrameForward()),this,SLOT(animationOneFrameForward()));
@@ -218,7 +217,7 @@ void ActionEditor::setAgentManager(AgentManager *manager)
     //m_agent=m_agentManager->cloneAgent(0);
     //m_agent->setObjectName("ActionEditorAgent");
     m_agent=m_agentManager->getActionAgent();
-    m_actionDisplay->setAgent(m_agent);
+    //m_actionDisplay->setAgent(m_agent);
     m_actionDisplay_->setAgentManager(m_agentManager);
     qDebug() << __PRETTY_FUNCTION__ << "Active AgentManager" << manager->getGroup()->getName();
     ui->listAnimation->clear();
@@ -248,7 +247,7 @@ void ActionEditor::setAgentManager(AgentManager *manager)
 
 void ActionEditor::hide()
 {
-    m_actionDisplay->hide();
+    //m_actionDisplay->hide();
     m_actionDisplay_->hide();
     QDialog::hide();
 }
@@ -256,7 +255,7 @@ void ActionEditor::hide()
 void ActionEditor::show()
 {
     QDialog::show();
-    m_actionDisplay->show();
+    //m_actionDisplay->show();
     m_actionDisplay_->show();
     ui->tabWidgetMain->setCurrentIndex(0);
 }
@@ -308,8 +307,8 @@ void ActionEditor::applyAnimation()
             }
             m_agent->advance(Agent::NONE);
             m_agent->advanceCommit();
-            m_actionDisplay->setCameraOffset(m_activeAnimation->getRootBoneTranslation(m_animationTime));
-            m_actionDisplay->updateGL();
+            //m_actionDisplay->setCameraOffset(m_activeAnimation->getRootBoneTranslation(m_animationTime));
+            //m_actionDisplay->updateGL();
             m_loopEditorScene->updateTime(m_animationTime);
         }
     }

@@ -29,7 +29,6 @@ class BrainiacSlider;
 class LoopEditorScene;
 class ModifiableAnimation;
 class Segment;
-class ActionDisplay;
 class ActionDisplay_;
 class Scene;
 
@@ -74,7 +73,7 @@ protected:
     Agent *m_agent;
     ModifiableAnimation *m_activeAnimation;
     quint32 m_activeAnimationId;
-    ActionDisplay *m_actionDisplay; /**< TODO */
+//    ActionDisplay *m_actionDisplay; /**< TODO */
     ActionDisplay_ *m_actionDisplay_; /**< The OSGWindow that displays the agent */
     Scene *m_scene;
     QMutex m_animationChangeMutex;

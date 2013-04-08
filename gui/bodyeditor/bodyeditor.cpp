@@ -20,9 +20,6 @@
 #include "core/agent/agent.h"
 #include "core/agent/agentmanager.h"
 #include "core/agent/body/body.h"
-#include "core/agent/body/skeletonnode.h"
-#include "core/agent/body/skeletonnodesphere.h"
-#include "core/agent/body/skeletonnodebox.h"
 #include "core/agent/body/bodymanager.h"
 #include "core/agent/body/segment.h"
 #include "core/brainiacglobals.h"
@@ -34,7 +31,7 @@
 BodyEditor::BodyEditor(Scene *scene, AgentManager *agentManager) : EditorBase(scene)
 {
     m_agentManager=agentManager;
-
+    QHash<quint32, BodyEditorItem*> segItems;
     foreach(Segment *seg,m_agentManager->getBodyManager()->getSegments()) {
         BodyEditorItem *item=0;
         switch(seg->getType()) {
@@ -55,28 +52,19 @@ BodyEditor::BodyEditor(Scene *scene, AgentManager *agentManager) : EditorBase(sc
         default:
             qCritical() << __PRETTY_FUNCTION__ << "seg Type not handled" << seg->getType();
         }
+        segItems.insert(seg->getId(),item);
     }
-
-    foreach (QGraphicsItem *item, items()) {
-        if(item->type()==EditorItem::Type) {
-            EditorItem *parentEditorItem = qgraphicsitem_cast<EditorItem*> (item);
-
-//            foreach(QGLSceneNode *childNode, parentManager->getMasterAgent()->getBody()->getSkeletonNodeById(parentEditorItem->getId())->children()) {
-//                SkeletonNode *skelChildNode=dynamic_cast<SkeletonNode *>(childNode);
-//                if(skelChildNode) {
-//                    foreach (QGraphicsItem *childItem, items()) {
-//                        if(childItem->type()==EditorItem::Type) {
-//                            EditorItem *childEditorItem = qgraphicsitem_cast<EditorItem*> (childItem);
-//                            if(childEditorItem->getId() == skelChildNode->getId()) {
-//                                EditorItemConnector *connector=new EditorItemConnector(parentEditorItem,childEditorItem);
-//                                addItem(connector);
-//                            }
-//                        }
-//                    }
-//                }
-//            }
+    foreach(Segment *seg,m_agentManager->getBodyManager()->getSegments()) {
+        if(seg->getParentId()) {
+            BodyEditorItem *parentItem=segItems.value(seg->getParentId(),0);
+            if(parentItem) {
+                EditorItemConnector *connector=new EditorItemConnector(parentItem,segItems.value(seg->getId()));
+                addItem(connector);
+            }
         }
     }
+
+
     //! \bug  OK..Doing Here really nasty stuff. The Connectors are NOT SHOWING when scene is initially displayed So move all items one to the right and back again to schedule a redraw... Why the F*CK
     foreach (QGraphicsItem *item, items()) {
         if (item->type() == BodyEditorItem::Type) {

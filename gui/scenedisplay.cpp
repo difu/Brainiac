@@ -92,7 +92,7 @@ void SceneDisplay::initializeGL(QGLPainter *painter)
 
     m_rootSceneNode = new QGLSceneNode(0);
     foreach(Agent *agent, m_scene->getAgents()) {
-        m_rootSceneNode->addNode((QGLSceneNode*)agent->getBody()->getRootSkeletonNode());
+        //m_rootSceneNode->addNode((QGLSceneNode*)agent->getBody()->getRootSkeletonNode());
     }
 
     p_scene = QGLAbstractScene::loadScene(QLatin1String("/Users/dirkfuchs/Desktop/ground.obj"));
