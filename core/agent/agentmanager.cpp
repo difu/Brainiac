@@ -1033,6 +1033,7 @@ void AgentManager::setSegmentRotationTranslationOrder(quint32 id, QList<Brainiac
 //    foreach(Agent *agent, m_agents) {
 //        agent->getBody()->getSkeletonNodeById(id)->setRotTransOrder(list);
 //    }
+    m_bodyManager->setSegmentRotationTranslationOrder(id,list);
 }
 
 void AgentManager::setSegmentRestRotation(quint32 id, qreal x, qreal y, qreal z)

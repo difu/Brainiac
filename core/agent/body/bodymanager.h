@@ -213,6 +213,14 @@ public:
 
     void setSegmentRestTranslation(quint32 id, qreal x, qreal y, qreal z);
 
+    /**
+     * @brief
+     *
+     * @fn setSegmentRotationTranslationOrder
+     * @param order
+     */
+    void setSegmentRotationTranslationOrder(quint32 id, QList<BrainiacGlobals::RotTrans> order );
+
     void setSegmentTranslation(quint32, qreal y, qreal y, qreal z);
 
 

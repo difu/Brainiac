@@ -143,6 +143,7 @@ HEADERS  += gui/mainwindow.h \
     core/agent/body/segmentshape.h \
     core/agent/body/bodysegment.h \
     core/agent/body/bodysegmentsignalhandler.h \
+    gui/scenedisplay_.h \
     gui/Animation/actiondisplay_.h
 
 FORMS    += gui/mainwindow.ui \

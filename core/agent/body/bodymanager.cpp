@@ -279,7 +279,13 @@ QVector3D BodyManager::getSegmentTranslation(quint32 id) const
     return QVector3D();
 }
 
-
+void BodyManager::setSegmentRotationTranslationOrder(quint32 id, QList<BrainiacGlobals::RotTrans> order)
+{
+    if(m_segments.contains(id))
+        m_segments.value(id)->setRotationTranslationOrder(order);
+    else
+        qCritical() << __PRETTY_FUNCTION__ << "No segment with id "<< id;
+}
 
 BodyManager::~BodyManager()
 {
