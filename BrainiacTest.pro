@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       += testlib
-QT       += core gui opengl qt warn_on qt3d
+QT       += core gui opengl
 CONFIG += qt3d
 TARGET = tst_brainiacscenetest
 CONFIG   += console
@@ -36,7 +36,6 @@ SOURCES += gui/mainwindow.cpp \
     core/agent/body/body.cpp \
     core/brainiaccolor.cpp \
     core/agent/channel.cpp \
-    gui/scenedisplay.cpp \
     core/camera.cpp \
     gui/editorbase.cpp \
     gui/editoritem.cpp \
@@ -64,19 +63,13 @@ SOURCES += gui/mainwindow.cpp \
     gui/braineditor/fuzzyeditorcurveeditor.cpp \
     gui/braineditor/fuzzyeditorcurvepoint.cpp \
     core/generator/locator.cpp \
-    core/agent/body/skeletonnode.cpp \
-    core/agent/body/skeletonnodesphere.cpp \
-    core/agent/body/skeletonnodebox.cpp \
     gui/bodyeditor/bodyeditor.cpp \
     gui/bodyeditor/bodyeditoritem.cpp \
-    core/agent/body/skeletongeometrynode.cpp \
     gui/bodyeditor/segmenteditor.cpp \
-    gui/brainiacdisplay.cpp \
     core/agent/body/animation/animation.cpp \
     core/agent/body/animation/animationcurve.cpp \
     core/agent/body/animation/animationplayer.cpp \
     gui/Animation/actioneditor.cpp \
-    gui/actiondisplay.cpp \
     core/agent/body/animation/modifiableanimation.cpp \
     gui/Animation/loopeditorscene.cpp \
     gui/Animation/editorlineitem.cpp \
@@ -110,7 +103,6 @@ HEADERS  += gui/mainwindow.h \
     core/agent/body/body.h \
     core/brainiaccolor.h \
     core/agent/channel.h \
-    gui/scenedisplay.h \
     core/camera.h \
     gui/editorbase.h \
     gui/editoritem.h \
@@ -138,19 +130,13 @@ HEADERS  += gui/mainwindow.h \
     gui/braineditor/fuzzyeditorcurveeditor.h \
     gui/braineditor/fuzzyeditorcurvepoint.h \
     core/generator/locator.h \
-    core/agent/body/skeletonnode.h \
-    core/agent/body/skeletonnodesphere.h \
-    core/agent/body/skeletonnodebox.h \
     gui/bodyeditor/bodyeditor.h \
     gui/bodyeditor/bodyeditoritem.h \
-    core/agent/body/skeletongeometrynode.h \
     gui/bodyeditor/segmenteditor.h \
-    gui/brainiacdisplay.h \
     core/agent/body/animation/animation.h \
     core/agent/body/animation/animationcurve.h \
     core/agent/body/animation/animationplayer.h \
     gui/Animation/actioneditor.h \
-    gui/actiondisplay.h \
     core/agent/body/animation/modifiableanimation.h \
     gui/Animation/loopeditorscene.h \
     gui/Animation/editorlineitem.h \

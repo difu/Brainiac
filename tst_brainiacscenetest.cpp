@@ -7,6 +7,14 @@
 #include "core/agent/agentmanager.h"
 #include "core/agent/body/bodymanager.h"
 #include "core/group/group.h"
+#include "core/agent/agent.h"
+#include "core/agent/brain/brain.h"
+
+#include "core/agent/brain/fuzzyand.h"
+#include "core/agent/brain/input.h"
+#include "core/agent/brain/fuzzyor.h"
+
+    Q_DECLARE_METATYPE(FuzzyAnd::Mode)
 
 class BrainiacSceneTest : public QObject
 {
@@ -30,11 +38,15 @@ private Q_SLOTS:
     void saveScene2Agents();
     void checkAgentProperties();
     void compareScene1Scene2Agents();
+    void testAnd_data();
+    void testAnd();
+    void testOr();
     void cleanupTestCase();
     void sceneTestCase1();
 
 private:
     void createBody(AgentManager *am, int var);
+    void createBrain(AgentManager *am);
     Scene *m_testScene1;
     QTemporaryFile m_scene1File;
 
@@ -49,6 +61,12 @@ private:
 
     static const int m_numberOfTestGroups=5;
     QVector3D m_testVec;
+
+    quint32 m_testAndId;
+    quint32 m_testOrId;
+    quint32 m_testInput1Id;
+    quint32 m_testInput2Id;
+    quint32 m_testInput3Id;
 };
 
 BrainiacSceneTest::BrainiacSceneTest()
@@ -71,6 +89,7 @@ void BrainiacSceneTest::createScene1()
         grp->setName(grpName);
         m_scene1Groups.insert(id,grp);
         createBody(grp->getAgentManager(),id);
+        createBrain(grp->getAgentManager());
     }
 
     QVERIFY(m_testScene1->getAgents().count()==0);
@@ -167,6 +186,7 @@ void BrainiacSceneTest::compareScene1Scene2Agents()
         i.next();
         QHash<quint32, SegmentShape *> agent1Segs=i.value()->getAgentManager()->getBodyManager()->getSegments();
         Group *scene2grp=m_testScene2->getGroup(i.key());
+        m_scene2Groups.insert(scene2grp->getId(),scene2grp);
         QHash<quint32, SegmentShape *> agent2Segs=scene2grp->getAgentManager()->getBodyManager()->getSegments();
         QVERIFY2(agent1Segs.count()==agent2Segs.count(),"Number of segments differs");
         foreach(SegmentShape *seg,i.value()->getAgentManager()->getBodyManager()->getSegments()) {
@@ -177,6 +197,90 @@ void BrainiacSceneTest::compareScene1Scene2Agents()
             QVERIFY2(seg->getTranslation()==seg2->getTranslation(),"Translation differs");
         }
     }
+
+}
+
+void BrainiacSceneTest::testAnd_data()
+{
+    QTest::addColumn<qreal>("in1");
+    QTest::addColumn<qreal>("in2");
+    QTest::addColumn<qreal>("in3");
+    QTest::addColumn<FuzzyAnd::Mode>("mode");
+    QTest::addColumn<qreal>("result");
+
+    QTest::newRow("all low Mode MIN") << 0.0 << 0.0 << 0.0 << FuzzyAnd::MIN << 0.0;
+    QTest::newRow("all high Mode MIN")<< 1.0 << 1.0 << 1.0 << FuzzyAnd::MIN << 1.0;
+    QTest::newRow("mix Mode MIN") << 0.1 << 0.3 << 0.2 << FuzzyAnd::MIN << 0.1;
+
+    QTest::newRow("all low Mode PROD") << 0.0 << 0.0 << 0.0 << FuzzyAnd::PRODUCT << 0.0;
+    QTest::newRow("all high Mode PROD")<< 1.0 << 1.0 << 1.0 << FuzzyAnd::PRODUCT << 1.0;
+    QTest::newRow("mix Mode PROD") << 0.1 << 0.3 << 0.2 << FuzzyAnd::PRODUCT << 0.1*0.2*0.3;
+}
+
+void BrainiacSceneTest::testAnd()
+{
+    AgentManager *am=0;
+    QVERIFY2(m_scene2Groups.count()>0,"No Scene 2 Groups!");
+    Group *grp=m_scene2Groups.begin().value();
+    am=grp->getAgentManager();
+    FuzzyBase *fuzz=am->getMasterAgent()->getBrain()->getFuzzy(m_testAndId);
+    FuzzyAnd *testAnd=dynamic_cast<FuzzyAnd *>(fuzz);
+    if(!testAnd) {
+        QFAIL("No test and found!");
+    }
+    FuzzyBase *fuzz1=am->getMasterAgent()->getBrain()->getFuzzy(m_testInput1Id);
+    FuzzyBase *fuzz2=am->getMasterAgent()->getBrain()->getFuzzy(m_testInput2Id);
+    FuzzyBase *fuzz3=am->getMasterAgent()->getBrain()->getFuzzy(m_testInput3Id);
+
+    Input *input1=dynamic_cast<Input *>(fuzz1);
+    Input *input2=dynamic_cast<Input *>(fuzz2);
+    Input *input3=dynamic_cast<Input *>(fuzz3);
+
+    if(!(input1&&input2&&input3)) {
+        QFAIL("Parents of AND are not Inputs!");
+    }
+
+    QCOMPARE(testAnd->getParents().count(),3);
+
+    QFETCH(qreal, in1);
+    QFETCH(qreal, in2);
+    QFETCH(qreal, in3);
+    QFETCH(FuzzyAnd::Mode, mode);
+    QFETCH(qreal, result);
+
+    testAnd->setMode(mode);
+    input1->setResult(in1);
+    input2->setResult(in2);
+    input3->setResult(in3);
+
+    QCOMPARE(testAnd->getResult(), result);
+}
+
+void BrainiacSceneTest::testOr()
+{
+    AgentManager *am=0;
+    QVERIFY2(m_scene2Groups.count()>0,"No Scene 2 Groups!");
+    Group *grp=m_scene2Groups.begin().value();
+    am=grp->getAgentManager();
+    FuzzyBase *fuzz=am->getMasterAgent()->getBrain()->getFuzzy(m_testOrId);
+    FuzzyOr *testOr=dynamic_cast<FuzzyOr *>(fuzz);
+    if(!testOr) {
+        QFAIL("No test or found!");
+    }
+    FuzzyBase *fuzz1=am->getMasterAgent()->getBrain()->getFuzzy(m_testInput1Id);
+    FuzzyBase *fuzz2=am->getMasterAgent()->getBrain()->getFuzzy(m_testInput2Id);
+    FuzzyBase *fuzz3=am->getMasterAgent()->getBrain()->getFuzzy(m_testInput3Id);
+
+    Input *input1=dynamic_cast<Input *>(fuzz1);
+    Input *input2=dynamic_cast<Input *>(fuzz2);
+    Input *input3=dynamic_cast<Input *>(fuzz3);
+
+    if(!(input1&&input2&&input3)) {
+        QFAIL("Parents of OR are not Inputs!");
+    }
+
+    QCOMPARE(testOr->getParents().count(),3);
+
 
 }
 
@@ -255,6 +359,30 @@ void BrainiacSceneTest::createBody(AgentManager *am, int var)
     vec=m_testVec*(float) var;
     bm->setNewSegmentRestTranslation(vec);
     bm->createNewSegment();
+}
+
+void BrainiacSceneTest::createBrain(AgentManager *am)
+{
+    m_testAndId=am->addAndFuzz(50,50);
+    am->setFuzzyName(m_testAndId,"AND");
+
+    m_testOrId=am->addOrFuzz(55,55);
+    am->setFuzzyName(m_testOrId,"OR");
+
+    m_testInput1Id=am->addInputFuzz(100,100);
+    am->setFuzzyName(m_testInput1Id,"TESTINPUT1");
+    m_testInput2Id=am->addInputFuzz(200,300);
+    am->setFuzzyName(m_testInput2Id,"TESTINPUT2");
+    m_testInput3Id=am->addInputFuzz(300,300);
+    am->setFuzzyName(m_testInput3Id,"TESTINPUT3");
+
+    am->addConnector(m_testAndId,m_testInput1Id,false);
+    am->addConnector(m_testAndId,m_testInput2Id,false);
+    am->addConnector(m_testAndId,m_testInput3Id,false);
+
+    am->addConnector(m_testOrId,m_testInput1Id,false);
+    am->addConnector(m_testOrId,m_testInput2Id,false);
+    am->addConnector(m_testOrId,m_testInput3Id,false);
 }
 
 QTEST_MAIN(BrainiacSceneTest)

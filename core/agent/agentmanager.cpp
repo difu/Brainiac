@@ -1248,7 +1248,7 @@ void AgentManager::setNoiseRate(quint32 id, qreal rate)
 
 void AgentManager::updateSoundConfigs()
 {
-    qDebug() << __PRETTY_FUNCTION__;
+    //qDebug() << __PRETTY_FUNCTION__;
     bool currentTest;
     foreach(FuzzyBase *fuzz, m_masterAgent->getBrain()->getFuzzies()) {
         currentTest=true;
@@ -1285,8 +1285,8 @@ void AgentManager::updateSoundConfigs()
             if(fuzz->getType()==FuzzyBase::AND) {
                 this->setFuzzyAndIsSoundRule(fuzz->getId(),currentTest);
                 //qDebug() << __PRETTY_FUNCTION__ << "set" << currentTest;
-            } else {
-                qDebug() << __PRETTY_FUNCTION__ << "Todo: OR Rule";
+            } else {  //!<  @todo SoundConfig
+               // qDebug() << __PRETTY_FUNCTION__ << "Todo: OR Rule";
             }
 
             //currentTest=false;
