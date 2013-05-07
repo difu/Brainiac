@@ -164,6 +164,10 @@ public:
         return m_glWindow;
     }
 
+    osgGA::CameraManipulator* getCameraManipulator() {
+        return m_viewer.getCameraManipulator();
+    }
+
 protected:
     osgViewer::Viewer m_viewer;
     osg::Group *m_rootNode;

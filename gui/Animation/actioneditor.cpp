@@ -335,6 +335,7 @@ void ActionEditor::timerEvent(QTimerEvent *)
     }
     ui->label_CurrentTime->setText(QString::number(m_animationTime));
     applyAnimation();
+    m_actionDisplay_->updateCameraMatrix();
 }
 
 void ActionEditor::updateLoopUI()

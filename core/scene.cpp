@@ -82,7 +82,7 @@ void Scene::createAgents(Generator *gen)
                 agent->setRestRotation(0,trans.w(),0);
                 m_agents.append(agent); // add the agent to all the other agents of the scene
                 //grp->addAgent(agent);
-                m_rootNode.get()->addChild(agent->getBody()->getRootSegment());
+                m_rootNode.get()->addChild(agent->getBody()->getBodyRoot());
                 agent->reset();
                 QString name;
                 name=grp->getName()+QString::number(agent->getId());

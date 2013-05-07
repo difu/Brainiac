@@ -214,7 +214,7 @@ public:
     virtual ~Animation();
 protected:
     mutable qreal m_length;
-    QHash<QString, AnimationCurve*> m_curves; /**< all AnimationCurves, QString is the curve name, that correspondents to the agent´s SkeletonNode channel @sa SkeletonNode @sa Channel */
+    QHash<QString, AnimationCurve*> m_curves; /**< all AnimationCurves, QString is the curve name, that correspondents to the agent´s BodySegement channel @sa BodySegment @sa Channel */
     QString m_name; /**< name of this Animation */
     QString m_fileName; /**< filename relative to scenefile */
     bool m_isLoopedAnimation;

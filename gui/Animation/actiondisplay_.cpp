@@ -21,6 +21,8 @@
 #include "core/agent/agentmanager.h"
 #include "core/agent/body/body.h"
 
+
+
 ActionDisplay_::ActionDisplay_(QWidget *parent):
     OsgMultithreadedViewerWidget(0)
 {
@@ -31,7 +33,20 @@ ActionDisplay_::ActionDisplay_(QWidget *parent):
     setFocusPolicy(Qt::StrongFocus);
     //getGlWindow()->getGLWidget()->installEventFilter(new KeyPressEater());
     connect(getGlWindow()->getKeyPressedReleasedEater(),SIGNAL(keyPressed(Qt::Key)),this,SLOT(keyPressed(Qt::Key)));
+    m_followAgent=false;
 
+}
+
+void ActionDisplay_::followUnfollowAgent()
+{
+    if(m_followAgent) {
+        osg::Matrixd camMatrix;
+        camMatrix.set(getCameraManipulator()->getMatrix());
+        m_followDist.set(m_agentManager->getActionAgent()->getPosition()->x()-camMatrix.getTrans().x(),m_agentManager->getActionAgent()->getPosition()->y()-camMatrix.getTrans().y(),m_agentManager->getActionAgent()->getPosition()->z()-camMatrix.getTrans().z());
+        qDebug() << __PRETTY_FUNCTION__ << "Track on" << m_followDist.x() << m_followDist.y() << m_followDist.z();
+    } else {
+        qDebug() << __PRETTY_FUNCTION__ << "Track off";
+    }
 }
 
 void ActionDisplay_::keyPressed(Qt::Key key)
@@ -44,6 +59,7 @@ void ActionDisplay_::keyPressed(Qt::Key key)
         emit animationOneFrameForward();
     } else if(key==Qt::Key_F) {
         m_followAgent=!m_followAgent;
+        followUnfollowAgent();
     }
 }
 
@@ -67,7 +83,19 @@ void ActionDisplay_::keyPressed(Qt::Key key)
 
 void ActionDisplay_::setAgentManager(AgentManager *agentManager)
 {
+    m_followAgent=false;
     m_agentManager=agentManager;
     m_rootNode->removeChildren(0,m_rootNode->getNumChildren());
-    m_rootNode->addChild(m_agentManager->getActionAgent()->getBody()->getRootSegment());
+    m_rootNode->addChild(m_agentManager->getActionAgent()->getBody()->getBodyRoot());
+    followUnfollowAgent();
+}
+
+void ActionDisplay_::updateCameraMatrix()
+{
+    if(m_followAgent) {
+        osg::Matrixd camMatrix;
+        camMatrix.set(getCameraManipulator()->getMatrix());
+        camMatrix.setTrans(m_agentManager->getActionAgent()->getPosition()->x()-m_followDist.x(),m_agentManager->getActionAgent()->getPosition()->y()-m_followDist.y(),m_agentManager->getActionAgent()->getPosition()->z()-m_followDist.z());
+        getCameraManipulator()->setByMatrix(camMatrix);
+    }
 }

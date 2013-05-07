@@ -38,11 +38,11 @@ void BodyManager::addSegmentToAgents(quint32 id)
 
 void BodyManager::addSegmentsToAgent(Agent *agent, quint32 startSegmentId)
 {
-    qDebug()<< __PRETTY_FUNCTION__ << "Adding segment id" << startSegmentId;
+//    qDebug()<< __PRETTY_FUNCTION__ << "Adding segment id" << startSegmentId;
     osg::ref_ptr<BodySegment> bs=new BodySegment(agent->getBody(), m_segments.value(startSegmentId));
     agent->getBody()->addBodySegment(bs.get(),bs.get()->getParentId());
     foreach(quint32 childId,getSegmentChildIds(startSegmentId)) {
-        qDebug() << __PRETTY_FUNCTION__ << "Add child " << childId;
+//        qDebug() << __PRETTY_FUNCTION__ << "Add child " << childId;
         this->addSegmentsToAgent(agent,childId);
     }
 }

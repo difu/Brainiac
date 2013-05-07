@@ -15,6 +15,7 @@
 #include "core/agent/brain/fuzzyor.h"
 
     Q_DECLARE_METATYPE(FuzzyAnd::Mode)
+    Q_DECLARE_METATYPE(FuzzyOr::Mode)
 
 class BrainiacSceneTest : public QObject
 {
@@ -24,6 +25,11 @@ public:
     BrainiacSceneTest();
 
 private Q_SLOTS:
+    /**
+     * @brief initTestCase
+     *
+     * initializes a scene with groups/agents, saves it and reloads it into a new Scene and compares the to scenes
+     */
     void initTestCase();
 
     /**
@@ -31,15 +37,10 @@ private Q_SLOTS:
      *
      * creates a scene (Scene1), adds two groups.
      */
-    void createScene1();
-    void saveScene1Agents();
-    void saveScene1();
-    void loadScene2fromScene1();
-    void saveScene2Agents();
-    void checkAgentProperties();
-    void compareScene1Scene2Agents();
+//    void checkAgentProperties();
     void testAnd_data();
     void testAnd();
+    void testOr_data();
     void testOr();
     void cleanupTestCase();
     void sceneTestCase1();
@@ -77,10 +78,6 @@ BrainiacSceneTest::BrainiacSceneTest()
 void BrainiacSceneTest::initTestCase()
 {
     m_testVec=QVector3D(1.0f,2.0f,3.0f);
-}
-
-void BrainiacSceneTest::createScene1()
-{
     m_testScene1=new Scene();
     for(int id=1;id<=m_numberOfTestGroups;id++) {
         Group *grp=new Group(m_testScene1);
@@ -94,11 +91,8 @@ void BrainiacSceneTest::createScene1()
 
     QVERIFY(m_testScene1->getAgents().count()==0);
     QVERIFY(m_testScene1->getGroups().count()==m_numberOfTestGroups);
-}
 
-void BrainiacSceneTest::saveScene1Agents()
-{
-
+    // Save scene 1 agents
     QString sceneFileNameTemplate=QDir::toNativeSeparators(QDir::tempPath()%"/BrainiacTestScene1XXXXXX.xml");
     QVERIFY2(m_scene1File.open(),"Temp file for scene 1 could not be opened");
 
@@ -117,23 +111,16 @@ void BrainiacSceneTest::saveScene1Agents()
         grp->getAgentManager()->setFileName(tmpFile->fileName());
         QVERIFY2(grp->getAgentManager()->saveConfig(),"Error saving agent");
     }
-}
 
-void BrainiacSceneTest::saveScene1()
-{
+    // Save scene 1
     QVERIFY2(m_testScene1->saveConfig(m_scene1File.fileName()),"Error saving Scene 1");
-}
 
-void BrainiacSceneTest::loadScene2fromScene1()
-{
+    // Load scene 2
     m_testScene2=new Scene();
     QVERIFY2(m_testScene2->openConfig(m_testScene1->getFileName()),"Error loading scene 2 from scene 1 file");
     QVERIFY2(m_testScene2->getGroups().count()==m_numberOfTestGroups,"Number of groups is not equal");
-}
 
-void BrainiacSceneTest::saveScene2Agents()
-{
-
+    // Save agents of scene 2
     for( int id=1; id <= m_numberOfTestGroups; id++) {
         QString agentFilename=QString("/BrainiacTestAgent")%QString::number(id)%QString("Scene2XXXXXX.xml");
         QString agentFileNameTemplate=QDir::toNativeSeparators(QDir::tempPath()%agentFilename);
@@ -167,20 +154,9 @@ void BrainiacSceneTest::saveScene2Agents()
             QVERIFY(true);
         }
     }
-}
 
-void BrainiacSceneTest::checkAgentProperties()
-{
-    QHashIterator<quint32, Group *> i(m_scene1Groups);
-    while (i.hasNext()) {
-        i.next();
-        Group *grp=i.value();
-        AgentManager *mgr=grp->getAgentManager();
-    }
-}
+    //Compare scene 1 and scene 2
 
-void BrainiacSceneTest::compareScene1Scene2Agents()
-{
     QHashIterator<quint32, Group *> i(m_scene1Groups);
     while (i.hasNext()) {
         i.next();
@@ -198,7 +174,19 @@ void BrainiacSceneTest::compareScene1Scene2Agents()
         }
     }
 
+
 }
+
+
+//void BrainiacSceneTest::checkAgentProperties()
+//{
+//    QHashIterator<quint32, Group *> i(m_scene1Groups);
+//    while (i.hasNext()) {
+//        i.next();
+//        Group *grp=i.value();
+//        AgentManager *mgr=grp->getAgentManager();
+//    }
+//}
 
 void BrainiacSceneTest::testAnd_data()
 {
@@ -256,6 +244,31 @@ void BrainiacSceneTest::testAnd()
     QCOMPARE(testAnd->getResult(), result);
 }
 
+void BrainiacSceneTest::testOr_data()
+{
+    QTest::addColumn<qreal>("in1");
+    QTest::addColumn<qreal>("in2");
+    QTest::addColumn<qreal>("in3");
+    QTest::addColumn<FuzzyOr::Mode>("mode");
+    QTest::addColumn<qreal>("result");
+
+    QTest::newRow("all low Mode MAX") << 0.0 << 0.0 << 0.0 << FuzzyOr::MAX << 0.0;
+    QTest::newRow("all high Mode MAX")<< 1.0 << 1.0 << 1.0 << FuzzyOr::MAX << 1.0;
+    QTest::newRow("one high Mode MAX")<< 0.0 << 1.0 << 0.0 << FuzzyOr::MAX << 1.0;
+    QTest::newRow("Mode MAX check bounds")<< -1.0 << 1.5 << 3.0 << FuzzyOr::SUM << 1.0;
+
+    QTest::newRow("mix Mode MAX") << 0.1 << 0.3 << 0.2 << FuzzyOr::MAX << 0.3;
+
+    QTest::newRow("all low Mode SUM") << 0.0 << 0.0 << 0.0 << FuzzyOr::SUM << 0.0;
+    QTest::newRow("all high Mode SUM")<< 1.0 << 1.0 << 1.0 << FuzzyOr::SUM << 1.0;
+    QTest::newRow("one high Mode SUM")<< 0.0 << 1.0 << 0.0 << FuzzyOr::SUM << 1.0;
+    QTest::newRow("high Mode SUM check bounds")<< 1.0 << 1.5 << 1.0 << FuzzyOr::SUM << 1.0;
+
+
+    QTest::newRow("mix Mode SUM") << 0.1 << 0.3 << 0.2 << FuzzyOr::SUM << 0.1+0.3+0.2;
+}
+
+
 void BrainiacSceneTest::testOr()
 {
     AgentManager *am=0;
@@ -280,6 +293,19 @@ void BrainiacSceneTest::testOr()
     }
 
     QCOMPARE(testOr->getParents().count(),3);
+
+    QFETCH(qreal, in1);
+    QFETCH(qreal, in2);
+    QFETCH(qreal, in3);
+    QFETCH(FuzzyOr::Mode, mode);
+    QFETCH(qreal, result);
+
+    testOr->setMode(mode);
+    input1->setResult(in1);
+    input2->setResult(in2);
+    input3->setResult(in3);
+
+    QCOMPARE(testOr->getResult(), result);
 
 
 }

@@ -530,7 +530,7 @@ void Agent::reset()
 void Agent::setObjectName(const QString &name)
 {
     QObject::setObjectName(name);
-    m_body->getRootSegment().get()->setName(name.toStdString());
+    m_body->getBodyRoot().get()->setName(name.toStdString());
 }
 
 void Agent::setRotation(qreal x, qreal y, qreal z)

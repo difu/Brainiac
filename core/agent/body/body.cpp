@@ -33,8 +33,8 @@ Body::Body(Agent *agent)
 {
     m_agent=agent;
     m_animationPlayer=new AnimationPlayer(this);
-    m_rootSegment=new osg::PositionAttitudeTransform;
-    m_rootSegment.get()->setName("AgentBody Root Segment");
+    m_bodyRoot=new osg::PositionAttitudeTransform;
+    m_bodyRoot.get()->setName("AgentBody Root Segment");
 
 }
 
@@ -44,9 +44,9 @@ void Body::addBodySegment(osg::ref_ptr<BodySegment> bodySegment, quint32 parentI
     //BodySegment *bs=bodySegment.get();
     m_bodySegments.insert(bodySegment.get()->getId(),bodySegment.get());
     if(parentId==0) {
-        osg::PositionAttitudeTransform *trans=m_rootSegment.get();
+        osg::PositionAttitudeTransform *trans=m_bodyRoot.get();
         trans->addChild(bodySegment);
-        m_rootSegment.get()->addChild(bodySegment.get());
+        m_bodyRoot.get()->addChild(bodySegment.get());
         return;
     }
     BodySegment *bs=m_bodySegments.value(parentId,0);
@@ -74,12 +74,12 @@ void Body::setAnimations(QHash<quint32, Animation *> *animations)
 
 void Body::updatePosition() {
     if(m_agent) {
-       osg::PositionAttitudeTransform *posTrans=m_rootSegment.get();
+       osg::PositionAttitudeTransform *posTrans=m_bodyRoot.get();
         posTrans->setPosition(osg::Vec3d(m_agent->getPosition()->x(),m_agent->getPosition()->y(),m_agent->getPosition()->z()));
     }
 }
 
 Body::~Body()
 {
-    m_agent->getScene()->getRootSceneNode()->removeChild(m_rootSegment);
+    m_agent->getScene()->getRootSceneNode()->removeChild(m_bodyRoot);
 }

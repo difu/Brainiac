@@ -210,6 +210,7 @@ void MainWindow::createEditModeWidgets()
     m_editModeComboBox->addItem("Brain", QVariant(MainWindow::BRAIN));
     m_editModeComboBox->addItem("Body", QVariant(MainWindow::BODY));
     m_editModeComboBox->addItem("Scene", QVariant(MainWindow::SCENE));
+    m_editModeComboBox->addItem("Motion", QVariant(MainWindow::MOTION));
     QHBoxLayout *northLayout = new QHBoxLayout();
     QDialog *northDialog = new QDialog();
     northLayout->addStretch();
@@ -257,7 +258,7 @@ void MainWindow::createEditorItemBars()
     myVBoxlayout=new QVBoxLayout();
     m_bodyEditorItems = new QWidget(m_editorItems);
     myVBoxlayout->addWidget(new QLabel("CUBE"));
-    myVBoxlayout->addWidget(new QLabel("Sphere"));
+    myVBoxlayout->addWidget(new QLabel("SPHERE"));
     myVBoxlayout->addStretch();
     m_bodyEditorItems->setLayout(myVBoxlayout);
 
@@ -579,7 +580,10 @@ void MainWindow::setEditMode(EditMode em)
             m_editorView->setScene(0);
         }
         break;
+    case MainWindow::MOTION:
+        break;
     }
+
 }
 
 void MainWindow::showActionEditor()

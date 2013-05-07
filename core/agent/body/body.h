@@ -49,7 +49,7 @@ public:
      */
     void setAnimations(QHash<quint32,Animation *> *animations);
 
-    osg::ref_ptr<osg::PositionAttitudeTransform> getRootSegment() { return m_rootSegment; }
+    osg::ref_ptr<osg::PositionAttitudeTransform> getBodyRoot() { return m_bodyRoot; }
     Agent* getAgent();
     void updatePosition();
     ~Body();
@@ -60,7 +60,7 @@ protected:
 
     QHash<quint32, BodySegment* > m_bodySegments;
 
-    osg::ref_ptr<osg::PositionAttitudeTransform> m_rootSegment;
+    osg::ref_ptr<osg::PositionAttitudeTransform> m_bodyRoot;
 };
 
 #endif // BODY_H

@@ -19,5 +19,5 @@ void BodyDisplay_::setAgentManager(AgentManager *agentManager)
 {
     m_agentManager=agentManager;
     m_rootNode->removeChildren(0,m_rootNode->getNumChildren());
-    m_rootNode->addChild(m_agentManager->getBodyAgent()->getBody()->getRootSegment());
+    m_rootNode->addChild(m_agentManager->getBodyAgent()->getBody()->getBodyRoot());
 }

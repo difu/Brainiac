@@ -19,6 +19,7 @@
 #ifndef ACTIONDISPLAY__H
 #define ACTIONDISPLAY__H
 #include "gui/osgmultithreadedqtwidget.h"
+#include "osg/Vec3d"
 
 class AgentManager;
 /**
@@ -42,14 +43,19 @@ public:
     void setAgentManager( AgentManager *agentManager );
 
 protected:
+    void followUnfollowAgent();
+
     bool m_followAgent;
     AgentManager *m_agentManager;
+    osg::Vec3d m_followDist;
+//    osg::Matrixd m_cameraMatrix;
 
 signals:
     void animationRunningToggled();
     void animationOneFrameForward();
     void animationOneFrameBackward();
 public slots:
+    void updateCameraMatrix();
 protected slots:
     void keyPressed(Qt::Key key);
 };

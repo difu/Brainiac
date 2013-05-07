@@ -65,7 +65,7 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(Scene *scene, QWidget *parent = 0);
-    enum EditMode{ BRAIN, BODY, SCENE };
+    enum EditMode{ BRAIN, BODY, SCENE, MOTION };
     EditMode getEditMode() { return m_editMode; }
     void setScene(Scene *scene) { m_scene=scene; } //!< Setter method for the scene to be handled
     void setEditMode(EditMode em);
