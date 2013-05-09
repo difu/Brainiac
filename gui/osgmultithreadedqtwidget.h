@@ -74,7 +74,9 @@ public:
 class RenderThread : public QThread
 {
 public:
-    RenderThread() : QThread(), viewerPtr(0) {}
+    RenderThread() : QThread(), viewerPtr(0),m_targetFPS(60) {
+        calcTargetFPSParams();
+    }
 
     virtual ~RenderThread()
     {
@@ -85,20 +87,33 @@ public:
         }
 
     }
+    int m_targetFPS;
+    int m_waitMS,m_waitUS;
 
     osgViewer::Viewer* viewerPtr;
 
 protected:
+    void calcTargetFPSParams() {
+        m_waitMS=1000/m_targetFPS;
+        m_waitUS=1000000/m_targetFPS;
+    }
+
     virtual void run() {
         if (viewerPtr) {
             //viewerPtr->run();
             while (!viewerPtr->done()) {
+                QTime t;
+                t.start();
                 viewerPtr->frame();
-                usleep(15000); /**< @todo calculate that dynamically. 15k -> 60fps w/ 5 agents in scene */
+                int elapsed=t.elapsed();
+                if(elapsed<m_waitMS) {
+                    usleep(m_waitUS-elapsed*1000);
+                }
             }
         }
     }
 };
+
 
 class OsgMultithreadedViewerWidget : public QWidget
 {
@@ -121,7 +136,8 @@ public:
         osgGA::TrackballManipulator *tbm=new osgGA::TrackballManipulator;
         tbm->setHomePosition(osg::Vec3f(-300,0,0),osg::Vec3f(),osg::Vec3f(0,1,0));
         m_viewer.setCameraManipulator(tbm  );
-        //_viewer.setThreadingModel( osgViewer::Viewer::CullThreadPerCameraDrawThreadPerContext );
+        //m_viewer.setThreadingModel( osgViewer::Viewer::CullThreadPerCameraDrawThreadPerContext );
+        //m_viewer.setRunFrameScheme(osgViewer::ViewerBase::ON_DEMAND);
 
         osgQt::GraphicsWindowQt* gw = dynamic_cast<osgQt::GraphicsWindowQt*>( m_camera->getGraphicsContext() );
         if ( gw )
