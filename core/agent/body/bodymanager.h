@@ -209,7 +209,7 @@ public:
 
     void setSegmentRestRotation(quint32 id, qreal x, qreal y, qreal z);
 
-    void setSegmentRotation(quint32, qreal y, qreal y, qreal z);
+    void setSegmentRotation(quint32 id, qreal x, qreal y, qreal z);
 
     void setSegmentRestTranslation(quint32 id, qreal x, qreal y, qreal z);
 
@@ -221,7 +221,7 @@ public:
      */
     void setSegmentRotationTranslationOrder(quint32 id, QList<BrainiacGlobals::RotTrans> order );
 
-    void setSegmentTranslation(quint32, qreal y, qreal y, qreal z);
+    void setSegmentTranslation(quint32 id, qreal x, qreal y, qreal z);
 
 
     /**
