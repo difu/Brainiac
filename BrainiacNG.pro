@@ -169,7 +169,12 @@ macx: INCLUDEPATH += /usr/local/include
 macx: DEPENDPATH += /usr/local/include
 
 
-QMAKE_CFLAGS_X86_64 += -mmacosx-version-min=10.7
+unix: LIBS += -L/usr/lib/ -losg -losgQt -losgViewer -losgGA -losgDB -lOpenThreads -losgFX -losgUtil
+unix: INCLUDEPATH += /usr/include
+unix: DEPENDPATH += /usr/include
+
+
+mac: QMAKE_CFLAGS_X86_64 += -mmacosx-version-min=10.7
 QMAKE_CXXFLAGS_X86_64 = $$QMAKE_CFLAGS_X86_64
 
 LASTCOMMIT= $$system(git log | head -1 | awk \'{print $2;}\')

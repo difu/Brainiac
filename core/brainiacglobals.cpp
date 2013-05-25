@@ -17,6 +17,7 @@
 
 
 #include "brainiacglobals.h"
+#include <limits>
 
 QColor BrainiacGlobals::getColorFromBrainiacColorValue(qreal colVal)
 {

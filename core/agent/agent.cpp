@@ -26,8 +26,6 @@
 #include "channel.h"
 #include "core/scene.h"
 #include <QtOpenGL>
-#include <glu.h>
-#include <GLUT/glut.h>
 #include <QDebug>
 #include <QtGlobal>
 

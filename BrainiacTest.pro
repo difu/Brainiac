@@ -82,7 +82,8 @@ SOURCES += gui/mainwindow.cpp \
     core/agent/body/bodysegment.cpp \
     core/agent/body/bodysegmentsignalhandler.cpp \
     gui/scenedisplay_.cpp \
-    gui/Animation/actiondisplay_.cpp
+    gui/Animation/actiondisplay_.cpp \
+    core/agent/body/animation/motiontreemanager.cpp
 
 HEADERS  += gui/mainwindow.h \
     core/scene.h \
@@ -151,7 +152,8 @@ HEADERS  += gui/mainwindow.h \
     core/agent/body/bodysegment.h \
     core/agent/body/bodysegmentsignalhandler.h \
     gui/scenedisplay_.h \
-    gui/Animation/actiondisplay_.h
+    gui/Animation/actiondisplay_.h \
+    core/agent/body/animation/motiontreemanager.h
 
 FORMS    += gui/mainwindow.ui \
     gui/sceneeditor/groupeditor.ui \
@@ -168,10 +170,16 @@ FORMS    += gui/mainwindow.ui \
 RESOURCES += \
     brainiac.qrc
 
-macx: LIBS += -L/usr/local/lib/ -losg -losgQt -losgViewer -losgGA -losgDB -lOpenThreads -losgFX
+
+macx: LIBS += -L/usr/local/lib/ -losg -losgQt -losgViewer -losgGA -losgDB -lOpenThreads -losgFX -losgUtil
 macx: LIBS += -framework glut
 macx: INCLUDEPATH += /usr/local/include
 macx: DEPENDPATH += /usr/local/include
+
+
+unix: LIBS += -L/usr/lib/ -losg -losgQt -losgViewer -losgGA -losgDB -lOpenThreads -losgFX -losgUtil
+unix: INCLUDEPATH += /usr/include
+unix: DEPENDPATH += /usr/include
 
 
 QMAKE_CFLAGS_X86_64 += -mmacosx-version-min=10.7

@@ -25,8 +25,7 @@
 #include "core/agent/body/bodysegment.h"
 
 #include <QColor>
-#include <glu.h>
-#include <GLUT/glut.h>
+
 
 
 Body::Body(Agent *agent)
