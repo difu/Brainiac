@@ -1,22 +1,8 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2013-01-12T15:08:34
-#
-#-------------------------------------------------
+QT       += widgets testlib
 
-QT       += testlib
-QT       += core gui opengl
-CONFIG += qt3d
-TARGET = tst_brainiacscenetest
-CONFIG   += console
-CONFIG   -= app_bundle
-
-TEMPLATE = app
-
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 SOURCES += tst_brainiacscenetest.cpp
-DEFINES += SRCDIR=\\\"$$PWD/\\\"
-
 SOURCES += gui/mainwindow.cpp \
     core/scene.cpp \
     core/agent/brain/fuzzybase.cpp \
@@ -36,7 +22,6 @@ SOURCES += gui/mainwindow.cpp \
     core/agent/body/body.cpp \
     core/brainiaccolor.cpp \
     core/agent/channel.cpp \
-    core/camera.cpp \
     gui/editorbase.cpp \
     gui/editoritem.cpp \
     gui/braineditor/braineditor.cpp \
@@ -104,7 +89,6 @@ HEADERS  += gui/mainwindow.h \
     core/agent/body/body.h \
     core/brainiaccolor.h \
     core/agent/channel.h \
-    core/camera.h \
     gui/editorbase.h \
     gui/editoritem.h \
     gui/braineditor/braineditor.h \
@@ -167,25 +151,30 @@ FORMS    += gui/mainwindow.ui \
     gui/Animation/actioneditor.ui \
     gui/braineditor/andeditor.ui
 
-RESOURCES += \
+RESOURCES +=  \
+    testData.qrc\
     brainiac.qrc
 
 
 macx: LIBS += -L/usr/local/lib/ -losg -losgQt -losgViewer -losgGA -losgDB -lOpenThreads -losgFX -losgUtil
 macx: LIBS += -framework glut
+macx: LIBS += -framework QtConcurrent
 macx: INCLUDEPATH += /usr/local/include
 macx: DEPENDPATH += /usr/local/include
 
 
-unix: LIBS += -L/usr/lib/ -losg -losgQt -losgViewer -losgGA -losgDB -lOpenThreads -losgFX -losgUtil
+unix: LIBS += -L/usr/lib -losg -losgQt -losgViewer -losgGA -losgDB -lOpenThreads -losgFX -losgUtil
 unix: INCLUDEPATH += /usr/include
 unix: DEPENDPATH += /usr/include
+QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
 
+QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
 
-QMAKE_CFLAGS_X86_64 += -mmacosx-version-min=10.7
+mac: QMAKE_CFLAGS_X86_64 += -mmacosx-version-min=10.9
 QMAKE_CXXFLAGS_X86_64 = $$QMAKE_CFLAGS_X86_64
 
 LASTCOMMIT= $$system(git log | head -1 | awk \'{print $2;}\')
 DEFINES += "__LASTCOMMIT__=\'\"($$LASTCOMMIT)\"\'"
 message( Last Commit ($$LASTCOMMIT). )
+
 

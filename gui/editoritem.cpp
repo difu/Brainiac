@@ -31,6 +31,7 @@
 //#include "core/agent/body/skeletonnode.h"
 #include "core/agent/body/body.h"
 #include "core/agent/body/bodymanager.h"
+#include <qdrawutil.h>
 
 EditorItem::EditorItem(BrainiacGlobals::ItemType type, void *object,quint32 id)
 {

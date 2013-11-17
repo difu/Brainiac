@@ -2,7 +2,7 @@
 #define OSGVIEWERWIDGET_H
 
 #include <QtCore/QtCore>
-#include <QtGui/QtGui>
+#include <QtWidgets/QtWidgets>
 #include <osgDB/ReadFile>
 #include <osgGA/TrackballManipulator>
 #include <osgViewer/ViewerEventHandlers>

@@ -217,6 +217,17 @@ FuzzyBase* Brain::getFuzzy(quint32 id) const
     }
     return 0;
 }
+
+FuzzyBase* Brain::getFuzzyByName(const QString &name)
+{
+    foreach(FuzzyBase *fuzzy,m_fuzzies) {
+        if(fuzzy->getName().compare(name)==0) {
+            return fuzzy;
+        }
+    }
+    return 0;
+}
+
 QList<FuzzyBase *> Brain::getFuzzies() const
 {
     return m_fuzzies;

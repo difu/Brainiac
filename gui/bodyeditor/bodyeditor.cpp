@@ -78,7 +78,7 @@ BodyEditor::BodyEditor(Scene *scene, AgentManager *agentManager) : EditorBase(sc
 void BodyEditor::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsScene::mousePressEvent(event);
-    BodyEditorItem *item=qgraphicsitem_cast<BodyEditorItem *>(itemAt( event->scenePos().x(), event->scenePos().y()) );
+    BodyEditorItem *item=qgraphicsitem_cast<BodyEditorItem *>(itemAt( event->scenePos().x(), event->scenePos().y(),QTransform()) );
     ItemEditorWidgetsBase::editMessage msg;
     if( item ) {
         if(item->getType() == BrainiacGlobals::CUBE) {

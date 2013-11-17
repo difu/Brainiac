@@ -18,6 +18,7 @@
 
 #include "animationcurve.h"
 #include <QDebug>
+#include <QtGlobal>
 
 AnimationCurve::AnimationCurve()
 {
@@ -35,7 +36,7 @@ void AnimationCurve::addKeyFrame(qreal time, qreal value)
     // check, if we have already a keyframe at given time.
     // if so, change its value
     for(int i=0; i<m_keyFrames.count();i++) {
-        if(qFuzzyCompare(m_keyFrames.at(i).x(),time)) {
+        if(qFuzzyCompare((qreal)m_keyFrames.at(i).x(),time)) {
             m_keyFrames[i].setY(value);
             return;
         }
@@ -123,7 +124,7 @@ qreal AnimationCurve::getValue(qreal time) const
             return m_keyFrames.first().y();
         } else {
             for(int i=1;i<m_keyFrames.size();++i) {
-                if(qFuzzyCompare(time,m_keyFrames.at(i-1).x())) {
+                if(qFuzzyCompare(time,(qreal)m_keyFrames.at(i-1).x())) {
                     return m_keyFrames.at(i-1).y();
                 }
                 qreal lower=m_keyFrames.at(i-1).x();

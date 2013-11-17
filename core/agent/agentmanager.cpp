@@ -35,6 +35,7 @@
 #include "core/agent/body/animation/animationcurve.h"
 #include "core/agent/body/animation/animation.h"
 #include "core/agent/body/bodymanager.h"
+#include "core/agent/body/segment.h"
 #include <QFile>
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
@@ -650,27 +651,38 @@ bool AgentManager::loadSkeleton(const QString &filename)
         return false;
     }
     QFileInfo fInfo(file);
-    //if(!fInfo.completeSuffix().compare(QString("bvh"))==0) {
+    if(fInfo.completeSuffix().compare(QString("bvh"),Qt::CaseInsensitive)==0) {
         return loadSkeletonBVH(file);
-    //}
-
+    }
+    return false;
 }
 
 bool AgentManager::loadSkeletonBVH( QFile &file)
 {
-//    quint32 nodeId=0;
-//    QString nodeName;
-//    bool isEndSite=false;
-//    QList<SkeletonNode *> nodeStack;
-//    while (!file.atEnd()) {
-//        QByteArray line = file.readLine().trimmed();
-//        if(line.startsWith("End Site")) {
-//            isEndSite=true;
-//            continue;
-//        }
-//        if(line.startsWith("ROOT") || line.startsWith("JOINT")) {
-//            nodeId++;
-//            nodeName=line.split(' ').last();
+    quint32 nodeId=0;
+    QString nodeName;
+    bool isEndSite=false;
+    QList<quint32> nodeStack; // Pointer, QObjects must not have a copy constructor
+    while (!file.atEnd()) {
+        QByteArray line = file.readLine().trimmed();
+        if(line.startsWith("End Site")) {
+            isEndSite=true;
+            continue;
+        }
+        if(line.startsWith("ROOT") || line.startsWith("JOINT")) {
+            nodeId++;
+            nodeName=line.split(' ').last();
+            Segment seg;
+            seg.setName(nodeName);
+            seg.setId(nodeId);
+
+            if(nodeStack.empty()) {
+                // we have the root node!
+                seg.setParentId(0);
+            } else {
+                seg.setParentId(nodeStack.last());
+            }
+
 //            SkeletonNodeBox *box=new SkeletonNodeBox(nodeId,nodeName,m_masterAgent->getBody());
 //            //SkeletonNode *box=new SkeletonNode(SkeletonNode::TUBE,nodeId,nodeName,m_masterAgent->getBody());
 //            box->setColor(0.1f);
@@ -679,47 +691,67 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
 //            } else {
 //                nodeStack.last()->addNode(box);
 //            }
-//            setBodyEditorTranslation(nodeId,1800+nodeId*5,1800+nodeId*5);
-//            nodeStack.push_back(box);
-//        } else if(line.startsWith("OFFSET")) {
-//            if(!isEndSite) {
-//                QVector3D translation;
-//                translation.setX(line.split(' ').at(1).toDouble());
-//                translation.setY(line.split(' ').at(2).toDouble());
-//                translation.setZ(line.split(' ').at(3).toDouble());
-//                nodeStack.last()->setRestTranslation(translation);
-//            }
-//        } else if(line.startsWith("}")) {
-//            if(isEndSite) {
-//                isEndSite=false;
-//                continue;
-//            } else if(!nodeStack.isEmpty()) {
-//                nodeStack.removeLast();
-//            } else {
-//                qWarning() << __PRETTY_FUNCTION__ << "error while parsing "<< line << "NodeId" << nodeName;
-//                return false;
-//            }
-//        } else if(line.startsWith("CHANNELS")) {
-//            QList<BrainiacGlobals::RotTrans> rt;
-//            foreach(QByteArray channelItem,line.split(' ')) {
-//                if(channelItem=="Xrotation")
-//                    rt.prepend(BrainiacGlobals::RX);
-//                else if(channelItem=="Yrotation")
-//                    rt.prepend(BrainiacGlobals::RY);
-//                else if(channelItem=="Zrotation")
-//                    rt.prepend(BrainiacGlobals::RZ);
-//                else if(channelItem=="Xposition")
-//                    rt.prepend(BrainiacGlobals::TX);
-//                else if(channelItem=="Yposition")
-//                    rt.prepend(BrainiacGlobals::TY);
-//                else if(channelItem=="Zposition")
-//                    rt.prepend(BrainiacGlobals::TZ);
-//            }
-//            setSegmentRotationTranslationOrder(nodeId,rt);
+            setBodyEditorTranslation(nodeId,1800+nodeId*5,1800+nodeId*5);
+            nodeStack.push_back(seg.getId());
+            m_bodyManager->setNewSegmentBySegment(seg);
+
+            bool success=m_bodyManager->createNewSegment(true);
+            if(!success) {
+                qDebug() << __PRETTY_FUNCTION__ << "Whoops";
+            }
+        } else if(line.startsWith("OFFSET")) {
+            if(!isEndSite) {
+                QVector3D translation;
+                translation.setX(line.split(' ').at(1).toDouble());
+                translation.setY(line.split(' ').at(2).toDouble());
+                translation.setZ(line.split(' ').at(3).toDouble());
+                if(nodeStack.empty()) {
+                    qDebug() << __PRETTY_FUNCTION__ << "Parse error";
+                    return false;
+                } else {
+                    //nodeStack.last()->setRestTranslation(translation);
+                    m_bodyManager->setSegmentRestTranslation(nodeStack.last(),translation.x(),translation.y(),translation.z());
+                }
+            }
+        } else if(line.startsWith("}")) {
+            if(isEndSite) {
+                isEndSite=false;
+                continue;
+            } else if(!nodeStack.isEmpty()) {
+                nodeStack.removeLast();
+                if(false) {
+                    qDebug() << __PRETTY_FUNCTION__ << "Parse error?!";
+                    /**
+                     * @todo delete nodeStack, body etc properly
+                     */
+
+                    return false;
+                }
+            } else {
+                qWarning() << __PRETTY_FUNCTION__ << "error while parsing "<< line << "NodeId" << nodeName;
+                return false;
+            }
+        } else if(line.startsWith("CHANNELS")) {
+            QList<BrainiacGlobals::RotTrans> rt;
+            foreach(QByteArray channelItem,line.split(' ')) {
+                if(channelItem=="Xrotation")
+                    rt.prepend(BrainiacGlobals::RX);
+                else if(channelItem=="Yrotation")
+                    rt.prepend(BrainiacGlobals::RY);
+                else if(channelItem=="Zrotation")
+                    rt.prepend(BrainiacGlobals::RZ);
+                else if(channelItem=="Xposition")
+                    rt.prepend(BrainiacGlobals::TX);
+                else if(channelItem=="Yposition")
+                    rt.prepend(BrainiacGlobals::TY);
+                else if(channelItem=="Zposition")
+                    rt.prepend(BrainiacGlobals::TZ);
+            }
+            setSegmentRotationTranslationOrder(nodeId,rt);
 //            //qDebug() <<  __PRETTY_FUNCTION__ << "Rot Trans order" << nodeStack.last()->objectName() << "" << rt;
-//        }
-//        //qDebug() << line;
-//    }
+        }
+        //qDebug() << __PRETTY_FUNCTION__  << line;
+    }
 //    foreach(SkeletonNode *n,m_masterAgent->getBody()->getAllSkeletonNodes()) {
 //        foreach(QGLSceneNode *childNode,n->children()) {
 //            SkeletonNode *childSkelNode=dynamic_cast<SkeletonNode *>(childNode);

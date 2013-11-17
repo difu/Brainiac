@@ -4,7 +4,12 @@
 #
 #-------------------------------------------------
 
-QT       += core gui opengl qt warn_on
+
+QT       += core gui
+QT += concurrent
+
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
 TARGET = BrainiacNG
 TEMPLATE = app
 
@@ -29,7 +34,6 @@ SOURCES += main.cpp\
     core/agent/body/body.cpp \
     core/brainiaccolor.cpp \
     core/agent/channel.cpp \
-    core/camera.cpp \
     gui/editorbase.cpp \
     gui/editoritem.cpp \
     gui/braineditor/braineditor.cpp \
@@ -97,7 +101,6 @@ HEADERS  += gui/mainwindow.h \
     core/agent/body/body.h \
     core/brainiaccolor.h \
     core/agent/channel.h \
-    core/camera.h \
     gui/editorbase.h \
     gui/editoritem.h \
     gui/braineditor/braineditor.h \
@@ -165,16 +168,17 @@ RESOURCES += \
 
 macx: LIBS += -L/usr/local/lib/ -losg -losgQt -losgViewer -losgGA -losgDB -lOpenThreads -losgFX -losgUtil
 macx: LIBS += -framework glut
+macx: LIBS += -framework QtConcurrent
 macx: INCLUDEPATH += /usr/local/include
 macx: DEPENDPATH += /usr/local/include
 
 
-unix: LIBS += -L/usr/lib/ -losg -losgQt -losgViewer -losgGA -losgDB -lOpenThreads -losgFX -losgUtil
+unix: LIBS += -L/usr/lib -losg -losgQt -losgViewer -losgGA -losgDB -lOpenThreads -losgFX -losgUtil
 unix: INCLUDEPATH += /usr/include
 unix: DEPENDPATH += /usr/include
+QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
 
-
-mac: QMAKE_CFLAGS_X86_64 += -mmacosx-version-min=10.7
+mac: QMAKE_CFLAGS_X86_64 += -mmacosx-version-min=10.9
 QMAKE_CXXFLAGS_X86_64 = $$QMAKE_CFLAGS_X86_64
 
 LASTCOMMIT= $$system(git log | head -1 | awk \'{print $2;}\')

@@ -105,6 +105,7 @@ void Channel::init(qreal value)
 
                 @param parent this channel´s parent
                 @param inherited true, if this channel should inherit
+                @todo rewrite that inherited is no more needed, to prevent unexpected behavior when parent changes and signal to previous parent is not disconnected
 
 **/
 void Channel::setInherited(Channel *parent, bool inherited)

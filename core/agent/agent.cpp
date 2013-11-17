@@ -25,7 +25,7 @@
 #include "core/brainiacglobals.h"
 #include "channel.h"
 #include "core/scene.h"
-#include <QtOpenGL>
+//#include <QtOpenGL>
 #include <QDebug>
 #include <QtGlobal>
 

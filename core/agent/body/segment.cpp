@@ -51,6 +51,25 @@ Segment::Segment(const Segment &other):QObject()
     updateAndNotify();
 }
 
+
+void Segment::copyFromOther(const Segment &other)
+{
+    m_transformNode=new osg::MatrixTransform;
+    m_segmentRotation=other.getRotation();
+    m_segmentTranslation=other.getTranslation();
+    m_segmentRestRotation=other.getRestRotation();
+    m_segmentRestTranslation=other.getRestTranslation();
+    m_segmentScale=other.getScale();
+    m_segmentId=other.getId();
+    m_segmentParentId=other.getParentId();
+    m_segmentType=other.getType();
+    QObject::setObjectName(other.getName());
+    m_segmentColor=other.getColor();
+    m_segmentColorInherited=other.getColorInherited();
+    m_segmentRotTransOrder=other.getRotationTranslationOrder();
+    updateAndNotify();
+}
+
 void Segment::setRotationTranslationOrder(QList<BrainiacGlobals::RotTrans> list)
 {
     m_segmentRotTransOrder.clear();

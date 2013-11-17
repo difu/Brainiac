@@ -55,7 +55,7 @@ void SceneEditor::refresh()
 
 void SceneEditor::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     QGraphicsScene::mousePressEvent(event);
-    SceneEditorItem *item = qgraphicsitem_cast<SceneEditorItem *>(itemAt( event->scenePos().x(), event->scenePos().y()) );
+    SceneEditorItem *item = qgraphicsitem_cast<SceneEditorItem *>(itemAt( event->scenePos().x(), event->scenePos().y(), QTransform()) );
     ItemEditorWidgetsBase::editMessage msg;
     if( item ) {
         if(item->getType() == BrainiacGlobals::GROUP) {

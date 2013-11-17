@@ -134,6 +134,15 @@ public:
 
     **/
     FuzzyBase* getFuzzy(quint32 id) const;
+
+    /** \brief returns the pointer to the fuzzie´s is
+                    The fuzzy is returned that first matches the name
+                    @param name the name of the fuzz
+                    @returns the pointer to the fuzz node
+
+    **/
+    FuzzyBase* getFuzzyByName(const QString& name);
+
     QList <FuzzyBase *> getFuzzies() const;
     ~Brain();
 

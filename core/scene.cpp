@@ -25,7 +25,7 @@
 #include "generator/generator.h"
 #include "generator/pointgenerator.h"
 #include "group/group.h"
-#include "camera.h"
+//#include "camera.h"
 #include "agent/body/body.h"
 #include <QDebug>
 #include <osgDB/WriteFile>
@@ -34,7 +34,7 @@ Scene::Scene(QObject *parent) :
     QObject(parent)
 {
     // add basic camera
-    m_cameras.append(new Camera(this,0,100,200)); //!< \todo handle (delete?) this camera when scene is loaded
+    //m_cameras.append(new Camera(this,0,100,200)); //!< \todo handle (delete?) this camera when scene is loaded
     m_simulation=new Simulation(this);
     m_rootNode=new osg::Group;
     m_rootNode.get()->setName("Scene root node");

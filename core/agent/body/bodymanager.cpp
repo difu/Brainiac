@@ -70,7 +70,7 @@ void BodyManager::applyBodyOnAgent(Agent *agent)
 
 }
 
-bool BodyManager::createNewSegment()
+bool BodyManager::createNewSegment(bool processRootId)
 {
     // first check, if everything is valid
 
@@ -90,7 +90,7 @@ bool BodyManager::createNewSegment()
         resetNewSegmentProperties();
         return false;
     }
-    if(m_newSegment.getId()==0) {
+    if(m_newSegment.getId()==0 && !processRootId) {
         m_newSegment.setId(m_agentManager->getSegmentIdGenerator().getNewId());
     } else {
         m_agentManager->getSegmentIdGenerator().registerId(m_newSegment.getId());
@@ -176,6 +176,12 @@ void BodyManager::resetNewSegmentProperties()
     m_newSegment.setName("New Segment");
     m_newSegment.setId(0);
     m_newSegment.setParentId(0);
+}
+
+
+void BodyManager::setNewSegmentBySegment(Segment &other)
+{
+    m_newSegment.copyFromOther(other);
 }
 
 void BodyManager::setNewSegmentRotationTranslationOrder(QList<BrainiacGlobals::RotTrans> order)

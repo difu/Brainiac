@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include "gui/mainwindow.h"
 #include <QDebug>
 #include <iostream>
@@ -43,20 +43,20 @@ int main(int argc, char *argv[])
     a.setStyleSheet(styleSheet);
 
     // Parse parameters
-    int num = qApp->argc() ;
+    int num = qApp->arguments().count();
     bool batchMode=false;
     QString sceneFileName;
 
     Scene *theScene=new Scene();
 
     for ( int i = 0; i < num; i++ ) {
-        QString s = qApp->argv()[i] ;
+        QString s = qApp->arguments().at(i) ;
         if ( s.startsWith( "--batch" ) ) {
             qDebug() << "Running in batch mode";
             batchMode=true;
         } else if ( s.startsWith( "--scene" ) ) {
             if( i+1 < num )  { // do we have a next argument?
-                sceneFileName=qApp->argv()[i+1];
+                sceneFileName=qApp->arguments().at(i+1);
                 qDebug() << "loading scene file "<< sceneFileName;
                 if( !theScene->openConfig(sceneFileName) ) {
                     qCritical() << "Error while opening scene file!";

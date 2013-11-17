@@ -17,7 +17,7 @@
 
 
 #include "simulation.h"
-#include "QtConcurrentMap"
+#include <QtConcurrent/QtConcurrent>
 #include "core/agent/agent.h"
 #include "core/scene.h"
 

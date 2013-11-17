@@ -19,12 +19,13 @@
 #include "editoritemconnector.h"
 #include "editoritem.h"
 
-#include <QtGui>
+#include <QtWidgets>
 #include <math.h>
 EditorItemConnector::EditorItemConnector(EditorItem *startItem, EditorItem *endItem,
          QGraphicsItem *parent, QGraphicsScene *scene)
-    : QGraphicsLineItem(parent, scene)
+    : QGraphicsLineItem(parent)
 {
+
     m_StartItem = startItem;
     m_EndItem = endItem;
     m_inverted = false;

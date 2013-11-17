@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/"/>
+    <qresource prefix="/animation">
+        <file alias="start-walk.bhv">testdata/bvh/start-walk.bvh</file>
+        <file alias="walk-cycle.bvh">testdata/bvh/walk-cycle.bvh</file>
+    </qresource>
+</RCC>

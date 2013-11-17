@@ -21,7 +21,7 @@
 
 #include <QWidget>
 #include <QtCore/QtCore>
-#include <QtGui/QtGui>
+#include <QtWidgets/QtWidgets>
 #include <osgDB/ReadFile>
 #include <osg/ShapeDrawable>
 #include <osg/MatrixTransform>
@@ -136,6 +136,7 @@ public:
         osgGA::TrackballManipulator *tbm=new osgGA::TrackballManipulator;
         tbm->setHomePosition(osg::Vec3f(-300,0,0),osg::Vec3f(),osg::Vec3f(0,1,0));
         m_viewer.setCameraManipulator(tbm  );
+        m_viewer.setThreadingModel(osgViewer::Viewer::SingleThreaded);
         //m_viewer.setThreadingModel( osgViewer::Viewer::CullThreadPerCameraDrawThreadPerContext );
         //m_viewer.setRunFrameScheme(osgViewer::ViewerBase::ON_DEMAND);
 

@@ -167,7 +167,7 @@ void BrainEditor::setSelectedAgent(Agent *agent)
 
 void BrainEditor::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     QGraphicsScene::mousePressEvent(event);
-    BrainEditorItem *item = qgraphicsitem_cast<BrainEditorItem *>(itemAt( event->scenePos().x(), event->scenePos().y()) );
+    BrainEditorItem *item = qgraphicsitem_cast<BrainEditorItem *>(itemAt( event->scenePos().x(), event->scenePos().y(),QTransform()) );
     ItemEditorWidgetsBase::editMessage msg;
     if( item ) {
         if(item->getType() == BrainiacGlobals::OUTPUT) {

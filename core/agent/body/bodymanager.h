@@ -92,6 +92,14 @@ public:
      * @fn resetNewSegmentProperties
      */
     void resetNewSegmentProperties();
+
+    /**
+     * @brief sets new segment by another
+     *
+     * @fn setNewSegmentBySegment
+     * @param other
+     */
+    void setNewSegmentBySegment(Segment &other);
     /**
      * @brief
      *
@@ -191,7 +199,7 @@ public:
      * @fn createNewSegment
      * @return bool
      */
-    bool createNewSegment();
+    bool createNewSegment(bool processRootId=false);
 
     Segment getRootSegment() const;
 

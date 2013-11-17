@@ -46,6 +46,8 @@ public:
  */
     Segment( const Segment& other );
 
+    void copyFromOther( const Segment &other);
+
     /**
      * @brief Destructor
      *

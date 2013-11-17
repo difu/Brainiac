@@ -22,7 +22,7 @@
 
 #include <QDebug>
 
-EditorLineItem::EditorLineItem(QGraphicsScene *scene):QGraphicsLineItem(0,scene)
+EditorLineItem::EditorLineItem(QGraphicsScene *scene):QGraphicsLineItem(0)
 {
     setLine(0,0,0,200);
 }

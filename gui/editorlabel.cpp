@@ -17,7 +17,7 @@
 
 
 #include "editorlabel.h"
-#include <QtGui>
+#include <QtWidgets>
 #include <QDebug>
 
 
