@@ -55,6 +55,31 @@ public:
  */
     Animation(QHash<QString, AnimationCurve*> curves, QString name);
 
+    /**
+     * @brief add a curve with given name
+     *
+     * @param curveName the name of the curve to be added
+     */
+    void addCurve(const QString &curveName);
+
+    /**
+     * @brief add a curve with given name
+     *
+     * @param curveName the name of the curve to be added
+      *@param curve the curve to be added
+     */
+    void addCurve(const QString &curveName, AnimationCurve curve);
+
+    /**
+     * @brief add a latchcurve with given name
+     *
+     * @param clatchName the name of the latch curve to be added
+     */
+    void addLatchCurve(const QString &latchName);
+
+    void addLatch(const QString &latchName, qreal start, qreal length);
+    void addLatch(const QString &latchName, QVector2D latch);
+
     BrainiacGlobals::AnimationType animationType() const { return m_animType; }
 
     /**

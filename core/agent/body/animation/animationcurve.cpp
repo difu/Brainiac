@@ -57,6 +57,11 @@ void AnimationCurve::addKeyFrame(qreal time, qreal value)
 
 }
 
+void AnimationCurve::addKeyFrame(QVector2D kf)
+{
+    addKeyFrame(kf.x(),kf.y());
+}
+
 AnimationCurve* AnimationCurve::clone()
 {
     AnimationCurve *c=new AnimationCurve(this);
@@ -138,7 +143,7 @@ qreal AnimationCurve::getValue(qreal time) const
             return m_keyFrames.last().y();
         }
     }
-    return 0.0f;
+    return 0.0;
 }
 
 void AnimationCurve::dPrintKeyFrames(quint32 start=0, quint32 end=1000) const

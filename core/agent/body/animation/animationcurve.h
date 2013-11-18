@@ -52,6 +52,15 @@ public:
      */
     void addKeyFrame(qreal time, qreal value);
 
+    /**
+     * @brief adds a keyframe to this AnimationCurve
+     *
+     * @fn addKeyFrame
+     * @param kf the keyframe, x is time, y is value
+
+     */
+    void addKeyFrame(QVector2D kf);
+
     AnimationCurve* clone();
 
     /**

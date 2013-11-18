@@ -47,6 +47,51 @@ Animation::Animation(QHash<QString, AnimationCurve *> curves, QString name="")
     calculateLength();
 }
 
+void Animation::addCurve(const QString &curveName)
+{
+    QWriteLocker wLocker(&m_rwLock);
+    Q_UNUSED(wLocker);
+    AnimationCurve *c=new AnimationCurve();
+    m_curves.insert(curveName,c);
+    wLocker.unlock();
+    calculateLength();
+}
+
+void Animation::addCurve(const QString &curveName, AnimationCurve curve)
+{
+    QWriteLocker wLocker(&m_rwLock);
+    Q_UNUSED(wLocker);
+    AnimationCurve *c=new AnimationCurve(&curve);
+    m_curves.insert(curveName,c);
+    wLocker.unlock();
+    calculateLength();
+}
+
+void Animation::addLatchCurve(const QString &latchName)
+{
+    QWriteLocker wLocker(&m_rwLock);
+    Q_UNUSED(wLocker);
+    LatchCurve *curve = new LatchCurve();
+    m_latchCurves.insert(latchName,curve);
+}
+
+void Animation::addLatch(const QString &latchName, qreal start, qreal length)
+{
+    QWriteLocker wLocker(&m_rwLock);
+    Q_UNUSED(wLocker);
+    LatchCurve *c=m_latchCurves.value(latchName,0);
+    if(c) {
+        c->addLatch(start,length);
+    } else {
+        qDebug() << __PRETTY_FUNCTION__ << "latch with name " << latchName << "not found!";
+    }
+}
+
+void Animation::addLatch(const QString &latchName, QVector2D latch)
+{
+    addLatch(latchName,latch.x(),latch.y());
+}
+
 void Animation::copyFromAnimation(Animation *animation)
 {
     deleteCurves();
@@ -146,7 +191,10 @@ qreal Animation::getValue(const QString &curve, qreal time) const
     AnimationCurve *c=m_curves.value(curve,0);
     if(c) {
         return c->getValue(time);
-    } else return 0.0f;
+    } else {
+        qDebug() << __PRETTY_FUNCTION__ << "Curve " << curve << " not found";
+        return 0.0;
+    }
 
 }
 
@@ -222,12 +270,38 @@ Animation* Animation::loadAnimation(QString fileName)
     anim->setAnimationType(animType);
     anim->setIsLoopedAnimation(isLoopedAnimation);
     anim->setIsRetriggerable(isRetriggerable);
-//    out << m_animType;
-//    out << m_isLoopedAnimation;
-//    out << m_isRetriggerable;
+
+//    QHashIterator<QString, LatchCurve*> iLatch(m_latchCurves) ;
+//    out << m_latchCurves.count();
+//    while(iLatch.hasNext()) {
+//        iLatch.next();
+//        out << iLatch.key();
+//        LatchCurve *latch=iLatch.value();
+//        out << latch->latches().count();
+//        foreach(QVector2D l, latch->latches()) {
+//            out << l;
+//        }
+//    }
+    int numOfLatchCurves;
+    in >> numOfLatchCurves;
+    for( int i=0; i<numOfLatchCurves; i++ ) {
+        QString latchName;
+        in >> latchName;
+        int numOfLatches;
+        in >> numOfLatches;
+        //LatchCurve *curve=new LatchCurve();
+        anim->addLatchCurve(latchName);
+        for( int i=0;i<numOfLatches;i++) {
+            qreal time,length;
+            in >> time;
+            in >> length;
+            anim->addLatch(latchName,time,length);
+        }
+    }
+
 
     anim->setFileName(fileName);
-    qDebug( )  << "Magic number <<" << magicNumber << version << name <<  numOfCurves;
+    //qDebug( )  << "Magic number <<" << magicNumber << version << name <<  numOfCurves;
     return anim;
 }
 
@@ -270,6 +344,18 @@ bool Animation::saveAnimation(QString &fileName)
     out << (quint32)m_animType;
     out << m_isLoopedAnimation;
     out << m_isRetriggerable;
+    QHashIterator<QString, LatchCurve*> iLatch(m_latchCurves) ;
+    out << m_latchCurves.count();
+    while(iLatch.hasNext()) {
+        iLatch.next();
+        out << iLatch.key(); // name of latch
+        LatchCurve *latch=iLatch.value();
+        out << latch->latches().count();
+        foreach(QVector2D l, latch->latches()) {
+            out << l;
+        }
+    }
+
     return true;
 }
 
