@@ -46,17 +46,17 @@ private Q_SLOTS:
      *
      * creates a scene (Scene1), adds some groups. The scene will be saved, loaded again and compared to the initial setup
      */
-    void sceneTestCase1();
+    void sceneCreateLoadSave();
 
     void parseBVH();
 
-    void testAnimation_data();
-    void testAnimation();
+    void animation_data();
+    void animation();
 
-    void testAnd_data();
-    void testAnd();
-    void testOr_data();
-    void testOr();
+    void fuzzyAnd_data();
+    void fuzzyAnd();
+    void fuzzyOr_data();
+    void fuzzyOr();
     void cleanupTestCase();
 
 
@@ -121,7 +121,7 @@ void BrainiacSceneTest::parseBVH()
 
 }
 
-void BrainiacSceneTest::testAnimation_data()
+void BrainiacSceneTest::animation_data()
 {
     QTest::addColumn<QString>("animationName");
 
@@ -172,7 +172,7 @@ void BrainiacSceneTest::testAnimation_data()
 
 }
 
-void BrainiacSceneTest::testAnimation()
+void BrainiacSceneTest::animation()
 {
     QTemporaryFile animFile;
 
@@ -289,7 +289,7 @@ void BrainiacSceneTest::testAnimation()
 
 }
 
-void BrainiacSceneTest::testAnd_data()
+void BrainiacSceneTest::fuzzyAnd_data()
 {
     QTest::addColumn<qreal>("in1");
     QTest::addColumn<qreal>("in2");
@@ -306,7 +306,7 @@ void BrainiacSceneTest::testAnd_data()
     QTest::newRow("mix Mode PROD") << 0.1 << 0.3 << 0.2 << FuzzyAnd::PRODUCT << 0.1*0.2*0.3;
 }
 
-void BrainiacSceneTest::testAnd()
+void BrainiacSceneTest::fuzzyAnd()
 {
     Scene *testScene1=new Scene();
     Group *grp=new Group(testScene1);
@@ -352,7 +352,7 @@ void BrainiacSceneTest::testAnd()
     QCOMPARE(testAnd->getResult(), result);
 }
 
-void BrainiacSceneTest::testOr_data()
+void BrainiacSceneTest::fuzzyOr_data()
 {
     QTest::addColumn<qreal>("in1");
     QTest::addColumn<qreal>("in2");
@@ -379,7 +379,7 @@ void BrainiacSceneTest::testOr_data()
 }
 
 
-void BrainiacSceneTest::testOr()
+void BrainiacSceneTest::fuzzyOr()
 {
     Scene *testScene1=new Scene();
     Group *grp=new Group(testScene1);
@@ -431,7 +431,7 @@ void BrainiacSceneTest::cleanupTestCase()
 
 }
 
-void BrainiacSceneTest::sceneTestCase1()
+void BrainiacSceneTest::sceneCreateLoadSave()
 {
     Scene *testScene1;
     QTemporaryFile scene1File;
