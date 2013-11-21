@@ -36,6 +36,7 @@
 #include "core/agent/body/animation/animation.h"
 #include "core/agent/body/bodymanager.h"
 #include "core/agent/body/segment.h"
+#include "core/brainiacerror.h"
 #include <QFile>
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
@@ -706,6 +707,7 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
                 translation.setY(line.split(' ').at(2).toDouble());
                 translation.setZ(line.split(' ').at(3).toDouble());
                 if(nodeStack.empty()) {
+                    //BrainiacGlobals::LAST_ERROR_TEXT=QString("Parse Error in BVH file");
                     qDebug() << __PRETTY_FUNCTION__ << "Parse error";
                     return false;
                 } else {

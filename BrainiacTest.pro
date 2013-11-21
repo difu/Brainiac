@@ -68,7 +68,8 @@ SOURCES += gui/mainwindow.cpp \
     core/agent/body/bodysegmentsignalhandler.cpp \
     gui/scenedisplay_.cpp \
     gui/Animation/actiondisplay_.cpp \
-    core/agent/body/animation/motiontreemanager.cpp
+    core/agent/body/animation/motiontreemanager.cpp \
+    core/brainiacerror.cpp
 
 HEADERS  += gui/mainwindow.h \
     core/scene.h \
@@ -137,7 +138,8 @@ HEADERS  += gui/mainwindow.h \
     core/agent/body/bodysegmentsignalhandler.h \
     gui/scenedisplay_.h \
     gui/Animation/actiondisplay_.h \
-    core/agent/body/animation/motiontreemanager.h
+    core/agent/body/animation/motiontreemanager.h \
+    core/brainiacerror.h
 
 FORMS    += gui/mainwindow.ui \
     gui/sceneeditor/groupeditor.ui \
