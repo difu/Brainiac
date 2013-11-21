@@ -59,6 +59,7 @@ void Scene::clear()
         delete grp;
     }
     m_groups.clear();
+    m_agents.clear();
 }
 
 void Scene::createAgents()
