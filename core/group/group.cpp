@@ -121,3 +121,9 @@ void Group::setName(QString name)
 {
     m_name=QString(name);
 }
+
+Group::~Group()
+{
+    m_agents.clear();
+    delete(m_agentManager);
+}

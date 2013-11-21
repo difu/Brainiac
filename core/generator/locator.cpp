@@ -25,6 +25,7 @@ Locator::Locator(Group *group, qreal x, qreal y, qreal z, qreal w)
     m_position.setY(y);
     m_position.setZ(z);
     m_group=group;
+    m_agent=0;
 }
 
 QVector4D& Locator::getLocation()

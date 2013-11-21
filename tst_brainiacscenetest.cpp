@@ -118,7 +118,7 @@ void BrainiacSceneTest::parseBVH()
         }
     }
     QVERIFY2(foundNonZeroTranslation==true,"BVH only has zero length segments!");
-
+    testScene1->deleteLater();
 }
 
 void BrainiacSceneTest::animation_data()
@@ -286,7 +286,7 @@ void BrainiacSceneTest::animation()
     QCOMPARE(testAnim.latches().count(),loadedAnimation->latches().count());
     QVERIFY2(loadedAnimation->latches().value(latchCurve1)->latches().at(0)==l1_1,"Latchcurve 1 latch 1 of loaded animation differs");
     QVERIFY2(loadedAnimation->latches().value(latchCurve2)->latches().at(0)==l2_1,"Latchcurve 1 latch 1 of loaded animation differs");
-
+    delete(loadedAnimation);
 }
 
 void BrainiacSceneTest::fuzzyAnd_data()
@@ -350,6 +350,7 @@ void BrainiacSceneTest::fuzzyAnd()
     input3->setResult(in3);
 
     QCOMPARE(testAnd->getResult(), result);
+    testScene1->deleteLater();
 }
 
 void BrainiacSceneTest::fuzzyOr_data()
@@ -423,7 +424,6 @@ void BrainiacSceneTest::fuzzyOr()
 
     QCOMPARE(testOr->getResult(), result);
     testScene1->deleteLater();
-
 }
 
 void BrainiacSceneTest::cleanupTestCase()
@@ -560,7 +560,8 @@ void BrainiacSceneTest::sceneCreateLoadSave()
         QVERIFY2(file->remove(),"Scene 2 files could not be removed");
         file->deleteLater();
     }
-
+    testScene1->deleteLater();
+    testScene2->deleteLater();
 }
 
 void BrainiacSceneTest::createBody(AgentManager *am, int var)

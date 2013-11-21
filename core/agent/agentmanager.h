@@ -403,7 +403,7 @@ public:
     void setFileName( QString fileName ) { m_fileName=fileName; }
 
     void updateSoundConfigs();
-
+    ~AgentManager();
 protected:
     Agent *m_masterAgent; /**< special purpose agent. The reference all other instances are created from */
     Agent *m_spBodyAgent; /**< special purpose agent. This agent will be used within the BodyEditor */

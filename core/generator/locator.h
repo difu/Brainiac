@@ -23,6 +23,7 @@
 #include <QVector4D>
 
 class Group;
+class Agent;
 
 /**
  * @brief Describes an agent position in the Scene
@@ -43,13 +44,16 @@ public:
  */
     Locator(Group *group, qreal x, qreal y, qreal z, qreal w);
 
-    Group* getGroup() const {return m_group;}
+    Group* getGroup() {return m_group;}
+    Agent* getAgent() {return m_agent;}
     /**
      * @brief returns the xyz position and rotation angle around y axis
      *
-     * @return QVector4D * position and rotation
+     * @return QVector4D * position and y rotation
      */
     QVector4D& getLocation();
+
+    void setAgent(Agent *agent) { m_agent=agent;}
 
     /**
      * @brief Destructor
@@ -60,6 +64,7 @@ public:
 protected:
     QVector4D m_position; /**< Position and rotation of agent */
     Group *m_group; /**< Group of this locator */
+    Agent *m_agent; /**< Agent of this locator */
 };
 
 #endif // LOCATOR_H

@@ -1330,3 +1330,9 @@ void AgentManager::updateSoundConfigs()
         }
     }
 }
+AgentManager::~AgentManager() {
+    delete(m_bodyManager);
+    foreach(Agent *agent,m_agents) {
+        agent->deleteLater();
+    }
+}

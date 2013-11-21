@@ -83,6 +83,7 @@ public:
     void setName( QString name );
     void setAgentFileName( QString fileName );
     AgentManager* getAgentManager() { return m_agentManager; }
+    ~Group();
 
 protected:
     QString m_name;
