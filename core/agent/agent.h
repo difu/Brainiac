@@ -219,7 +219,7 @@ public:
 
     /** \brief returns the position of the agent in world space
     **/
-    const QVector3D *getPosition() const;
+    const QVector3D getPosition() const;
     /** \brief returns the rotation of the agent in world space
     **/
     const QVector3D *getRotation() const;

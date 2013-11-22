@@ -155,7 +155,7 @@ void Agent::advance(int mode)
             }
 
             // Sound Stuff
-            QVector3D loudAgentPosition=QVector3D(otherAgent->getPosition()->x(),otherAgent->getPosition()->y(),otherAgent->getPosition()->z());
+            QVector3D loudAgentPosition=QVector3D(otherAgent->getPosition().x(),otherAgent->getPosition().y(),otherAgent->getPosition().z());
             //        qreal distance=(loudAgentPosition-m_position).length();
             //        //qDebug() << "Distcance from agent " << m_id << "to " << agent->getId() << " is" << distance;
             //        qreal loudAmplitude=otherAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_a)->getValue();
@@ -346,7 +346,7 @@ qreal Agent::getOtherAgentRelativeAngle(const Agent *otherAgent) const
 
     // the absolute angle
     qreal angle=acos(scalar/(distVect.length())) * ((double)180.0)/BrainiacGlobals::PI;// + yRotation;
-    if(m_position.z()<otherAgent->getPosition()->z()) {
+    if(m_position.z()<otherAgent->getPosition().z()) {
         angle=360.0f-angle;
     }
 
@@ -363,7 +363,7 @@ qreal Agent::getOtherAgentRelativeAngle(const Agent *otherAgent) const
     rightPoint.setY(0.0f);
     //qDebug() << "Position:" << m_position << "left:" << leftPoint << "right:" << rightPoint << yRotation;
 
-    QVector3D otherPos(otherAgent->getPosition()->x(),otherAgent->getPosition()->y(),otherAgent->getPosition()->z());
+    QVector3D otherPos(otherAgent->getPosition().x(),otherAgent->getPosition().y(),otherAgent->getPosition().z());
 
     //qDebug() << "Other Agent Pos" << otherPos;
 
@@ -443,12 +443,12 @@ qreal Agent::getOtherAgentSoundReception(const Agent *otherAgent) const
 
 QVector3D Agent::getOtherAgentRelativePosition(const Agent *otherAgent) const
 {
-    return QVector3D(otherAgent->getPosition()->x(),otherAgent->getPosition()->y(),otherAgent->getPosition()->z())-m_position;
+    return QVector3D(otherAgent->getPosition().x(),otherAgent->getPosition().y(),otherAgent->getPosition().z())-m_position;
 }
 
-const QVector3D* Agent::getPosition() const
+const QVector3D Agent::getPosition() const
 {
-    return &m_position;
+    return m_position;
 }
 
 const QVector3D* Agent::getRotation() const
@@ -488,7 +488,7 @@ void Agent::renderGL()
     // Draw sound emission
     if(m_renderSoundEmission) {
         glPushMatrix();
-        glTranslated(getPosition()->x(),getPosition()->y(),getPosition()->z());
+        glTranslated(getPosition().x(),getPosition().y(),getPosition().z());
         glEnable(GL_DEPTH_TEST);
         glBegin(GL_LINE_LOOP);
             glRotated(getRotation()->x(),1,0,0);
