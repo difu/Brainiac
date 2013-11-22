@@ -79,6 +79,25 @@ void Simulation::advanceCommitDone()
 }
 
 
+void Simulation::advanceOneFrame()
+{
+    if(m_simMutex.tryLock() ) {
+        m_t.start();
+        // Kepp the List up2date
+        m_agents=m_scene->getAgents();
+        QtConcurrent::blockingMap(m_agents,&::advanceAgent);
+        QtConcurrent::blockingMap(m_agents,&::advanceAgentCommit);
+        m_currentFrame++;
+        emit frameDone();
+        m_simMutex.unlock();
+        m_frameCalculationTime=m_t.elapsed();
+    } else {
+        qDebug() << __PRETTY_FUNCTION__ << "simualtion is locked!";
+
+    }
+
+}
+
 quint32 Simulation::getCurrentFrame() const
 {
     return m_currentFrame;
@@ -108,6 +127,7 @@ void Simulation::resetSimulation() {
     QList<Agent *> agents=m_scene->getAgents();
     stopSimulation();
     QtConcurrent::blockingMap(agents,&::agentReset);
+    m_currentFrame=0;
     m_simMutex.unlock();
 }
 

@@ -41,6 +41,11 @@ Scene::Scene(QObject *parent) :
 }
 
 
+void Scene::addGenerator(Generator *gen)
+{
+    m_generators.append(gen);
+}
+
 void Scene::addGroup(Group *group)
 {
     m_groupIdGenerator.registerId(group->getId());

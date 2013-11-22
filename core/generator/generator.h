@@ -65,6 +65,11 @@ public:
      */
     GeneratorType getType() const { return m_genType; }
 
+    void setCenter(QVector3D &center ) { m_centerPos=center; }
+    void setGroupRatios( QHash<quint32,qreal> ratios) { m_groupRatio=ratios; }
+    void setNumber(quint32 number) { m_number=number; }
+    void setAngleNoise(qreal noise) { m_angleNoise=noise; }
+    void setDistance(qreal distance) { m_distance=distance; }
     virtual void loadConfig(QXmlStreamReader *xml)=0;
     virtual void saveConfig(QXmlStreamWriter *xml)=0;
     virtual void generateLocators()=0;

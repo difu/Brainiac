@@ -42,6 +42,12 @@ class Simulation : public QObject
 public:
     explicit Simulation(Scene *scene);
 
+    /**
+     * @brief advances the simulation one frame
+     * This method blocks until calculation is done
+     *
+     */
+    void advanceOneFrame();
 
     /**
      * @brief returns the current frame of the Simulation

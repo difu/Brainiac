@@ -23,10 +23,13 @@
 
 Generator::Generator(GeneratorType genType,Scene *scene):m_genType(genType),m_scene(scene),m_id(0)
 {
-
+    m_angle=0;
+    m_angleNoise=0;
+    m_distance=1.0;
+    m_number=0;
 }
 
-const QList <Locator *>* Generator::getLocations() const
+const QList<Locator *> *Generator::getLocations() const
 {
     return &m_locations;
 }

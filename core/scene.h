@@ -46,8 +46,10 @@ class Scene : public QObject
 public:
     explicit Scene(QObject *parent = 0);
     ~Scene();
+    void addGenerator(Generator *gen);
     void addGroup(Group *group);
     void clear(); //!< deletes all contents from this scene
+    void createAgents();
     QList<Agent *> getAgents();
     QList<Camera *> getCameras();
     Group *getGroup(quint32 id);
@@ -93,7 +95,6 @@ public:
     void setFileName(const QString &fileName) { m_fileName=fileName; }
 
 protected:
-    void createAgents();
     void createAgents(Generator *gen);
     QString m_fileName; //!< the filename of this scene´s config file
     QXmlStreamWriter m_streamWriter;

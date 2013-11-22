@@ -74,7 +74,7 @@ void Body::setAnimations(QHash<quint32, Animation *> *animations)
 void Body::updatePosition() {
     if(m_agent) {
        osg::PositionAttitudeTransform *posTrans=m_bodyRoot.get();
-        posTrans->setPosition(osg::Vec3d(m_agent->getPosition()->x(),m_agent->getPosition()->y(),m_agent->getPosition()->z()));
+        posTrans->setPosition(osg::Vec3d(m_agent->getPosition().x(),m_agent->getPosition().y(),m_agent->getPosition().z()));
     }
 }
 

@@ -173,7 +173,7 @@ void Brain::connectFuzzies(quint32 childId, quint32 parentId, bool inverted)
         child->calculate();
     } else {
         qDebug() << __PRETTY_FUNCTION__ << "Whoops! Source or dest are invalid! " << child << parent;
-        qDebug() << __PRETTY_FUNCTION__ << m_agent->getId() << m_agent->getPosition()->x() << m_agent->getPosition()->z();
+        qDebug() << __PRETTY_FUNCTION__ << m_agent->getId() << m_agent->getPosition().x() << m_agent->getPosition().z();
     }
 }
 
@@ -199,7 +199,7 @@ void Brain::disconnectFuzzies(quint32 childId, quint32 parentId)
 //        qDebug() << __PRETTY_FUNCTION__ << "Disconnected" << child << parent;
     } else {
         qDebug() << __PRETTY_FUNCTION__ << "Whoops! Source or dest are invalid! " << child << parent;
-        qDebug() << __PRETTY_FUNCTION__ << m_agent->getId() << m_agent->getPosition()->x() << m_agent->getPosition()->z();
+        qDebug() << __PRETTY_FUNCTION__ << m_agent->getId() << m_agent->getPosition().x() << m_agent->getPosition().z();
     }
 }
 

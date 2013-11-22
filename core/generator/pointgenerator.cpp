@@ -38,6 +38,9 @@ void PointGenerator::addLocation(qreal x, qreal y, qreal z, qreal w, Group *grou
 void PointGenerator::generateLocators()
 {
     static qreal min_rad=1.0f;
+    if(m_groupRatio.count()==0) {
+        qDebug() << __PRETTY_FUNCTION__ << "Gen "  << m_id << " has no groupratio!";
+    }
     QHashIterator<quint32,qreal> groupRatioIt(m_groupRatio);
     Q_ASSERT(groupRatioIt.hasNext());
     groupRatioIt.next();
@@ -90,6 +93,7 @@ void PointGenerator::generateLocators()
         }
         m_locations.append(newLoc);
     }
+    Q_ASSERT(m_locations.count()==(int)m_number);
 }
 
 void PointGenerator::loadConfig(QXmlStreamReader *xml)

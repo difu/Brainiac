@@ -4,10 +4,13 @@
 #include <QTemporaryFile>
 
 #include "core/scene.h"
+#include "core/simulation.h"
+#include "core/generator/pointgenerator.h"
 #include "core/agent/agentmanager.h"
 #include "core/agent/agent.h"
 
 #include "core/agent/brain/brain.h"
+#include "core/agent/channel.h"
 
 #include "core/agent/body/bodymanager.h"
 
@@ -57,6 +60,7 @@ private Q_SLOTS:
     void fuzzyAnd();
     void fuzzyOr_data();
     void fuzzyOr();
+    void simulation1();
     void cleanupTestCase();
 
 
@@ -562,6 +566,37 @@ void BrainiacSceneTest::sceneCreateLoadSave()
     }
     testScene1->deleteLater();
     testScene2->deleteLater();
+}
+
+void BrainiacSceneTest::simulation1()
+{
+    int numOfAgents=2;
+    Scene testScene1;
+    Group *testGroup1=new Group(&testScene1);
+    PointGenerator *gen=new PointGenerator(&testScene1);
+    QHash<quint32,qreal> groupRatio; groupRatio.insert(testGroup1->getId(),1);
+    gen->setNumber(numOfAgents);
+    gen->setGroupRatios(groupRatio);
+    testScene1.addGenerator(gen);
+    testScene1.createAgents();
+    QVERIFY2(testScene1.getAgents().count()==numOfAgents,"Wrong number of agents created!");
+    testGroup1->getAgentManager()->addOutputFuzz("tz","tz",0,10,10,10);
+    QHash<Agent *,QVector3D > agentPos;
+
+    // Walk 3 frames straight ahead
+    foreach(Agent *agent, testScene1.getAgents()) {
+        agent->getOutputChannel("tz")->setValue(1);
+        agentPos.insert(agent, agent->getPosition());
+    }
+    for(int i=0; i<3; i++) {
+        testScene1.getSimulation()->advanceOneFrame();
+        foreach(Agent *agent, testScene1.getAgents()) {
+            QVector3D newPos=agentPos.value(agent)+QVector3D(0,0,1)*(i+1);
+            //qDebug()  << newPos << agent->getPosition();
+            QVERIFY2(agent->getPosition()!=agentPos.value(agent),"Agent hasnt moved");
+            QVERIFY2(qFuzzyCompare(agent->getPosition(),newPos),"");
+        }
+    }
 }
 
 void BrainiacSceneTest::createBody(AgentManager *am, int var)
