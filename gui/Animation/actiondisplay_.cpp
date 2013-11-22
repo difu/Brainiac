@@ -42,7 +42,7 @@ void ActionDisplay_::followUnfollowAgent()
     if(m_followAgent) {
         osg::Matrixd camMatrix;
         camMatrix.set(getCameraManipulator()->getMatrix());
-        m_followDist.set(m_agentManager->getActionAgent()->getPosition()->x()-camMatrix.getTrans().x(),m_agentManager->getActionAgent()->getPosition()->y()-camMatrix.getTrans().y(),m_agentManager->getActionAgent()->getPosition()->z()-camMatrix.getTrans().z());
+        m_followDist.set(m_agentManager->getActionAgent()->getPosition().x()-camMatrix.getTrans().x(),m_agentManager->getActionAgent()->getPosition().y()-camMatrix.getTrans().y(),m_agentManager->getActionAgent()->getPosition().z()-camMatrix.getTrans().z());
         qDebug() << __PRETTY_FUNCTION__ << "Track on" << m_followDist.x() << m_followDist.y() << m_followDist.z();
     } else {
         qDebug() << __PRETTY_FUNCTION__ << "Track off";
@@ -95,7 +95,7 @@ void ActionDisplay_::updateCameraMatrix()
     if(m_followAgent) {
         osg::Matrixd camMatrix;
         camMatrix.set(getCameraManipulator()->getMatrix());
-        camMatrix.setTrans(m_agentManager->getActionAgent()->getPosition()->x()-m_followDist.x(),m_agentManager->getActionAgent()->getPosition()->y()-m_followDist.y(),m_agentManager->getActionAgent()->getPosition()->z()-m_followDist.z());
+        camMatrix.setTrans(m_agentManager->getActionAgent()->getPosition().x()-m_followDist.x(),m_agentManager->getActionAgent()->getPosition().y()-m_followDist.y(),m_agentManager->getActionAgent()->getPosition().z()-m_followDist.z());
         getCameraManipulator()->setByMatrix(camMatrix);
     }
 }
