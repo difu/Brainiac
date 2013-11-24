@@ -15,6 +15,10 @@ BodyDisplay_::BodyDisplay_() : OsgMultithreadedViewerWidget()
     show();
 }
 
+BodyDisplay_::~BodyDisplay_() {
+    qDebug() << __PRETTY_FUNCTION__;
+}
+
 void BodyDisplay_::setAgentManager(AgentManager *agentManager)
 {
     m_agentManager=agentManager;

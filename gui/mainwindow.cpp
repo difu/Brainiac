@@ -63,17 +63,6 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
     m_layout=new MainWindowLayout();
     QWidget *widget = new QWidget;
 
-//    /* Test */
-//    Group *testGrp=new Group(m_scene);
-//    testGrp->setId(10);
-//    testGrp->setName("BVHImportTest");
-//    testGrp->getAgentManager()->loadSkeleton("/Users/dirkfuchs/Programming/bvh_player/Male1_A1_Stand.bvh");
-////    testGrp->getAgentManager()->setFileName("/Users/dirkfuchs/Programming/BrainiacNG/tmpTestData/agent4_bvh.xml");
-//    //bool bla=testGrp->getAgentManager()->loadConfig();
-//    //testGrp->getAgentManager()->loadAnimation("/Users/dirkfuchs/Programming/bvh_player/Male1_A1_Stand.bvh");
-//    testGrp->setEditorTranslation(2200,2000);
-//    /* /Test */
-
     createEditorItemBars();
     createEditors();
     createEditorWidgets();
@@ -132,21 +121,22 @@ void MainWindow::addAgentManager(AgentManager *agentManager)
 
 void MainWindow::closeEvent(QCloseEvent *ev)
 {
-    if(m_bodyDisplayOSG) {
-        m_bodyDisplayOSG->hide();
-        m_bodyDisplayOSG->deleteLater();
-        m_bodyDisplayOSG=0;
-    }
-    if(m_sceneDisplayOSG) {
-        m_sceneDisplayOSG->hide();
-        m_sceneDisplayOSG->deleteLater();
-        m_sceneDisplayOSG=0;
-    }
-    if(m_actionEditor) {
-        m_actionEditor->hide();
-        m_actionEditor->deleteLater();
-        m_actionEditor=0;
-    }
+    //! \bug Crashes since QT5
+//    if(m_bodyDisplayOSG) {
+//        m_bodyDisplayOSG->hide();
+//        m_bodyDisplayOSG->deleteLater();
+//        m_bodyDisplayOSG=0;
+//    }
+//    if(m_sceneDisplayOSG) {
+//        m_sceneDisplayOSG->hide();
+//        m_sceneDisplayOSG->deleteLater();
+//        m_sceneDisplayOSG=0;
+//    }
+//    if(m_actionEditor) {
+//        m_actionEditor->hide();
+//        m_actionEditor->deleteLater();
+//        m_actionEditor=0;
+//    }
     writeSettings();
     ev->accept();
 }

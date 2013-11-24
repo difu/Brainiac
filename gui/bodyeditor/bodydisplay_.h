@@ -27,6 +27,7 @@ class BodyDisplay_ : public OsgMultithreadedViewerWidget
 {
 public:
     BodyDisplay_();
+    virtual ~BodyDisplay_();
     /**
      * @brief setAgentManager
      * sets the current agent manager

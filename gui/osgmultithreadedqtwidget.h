@@ -31,6 +31,39 @@
 #include <osgViewer/Viewer>
 #include <osgQt/GraphicsWindowQt>
 
+class ViewerWidget : public QWidget
+{
+public:
+    ViewerWidget( osg::Camera* camera, osg::Node* scene )
+    :   QWidget()
+    {
+        m_viewer.setCamera( camera );
+        m_viewer.setSceneData( scene );
+        m_viewer.addEventHandler( new osgViewer::StatsHandler );
+        m_viewer.setCameraManipulator( new osgGA::TrackballManipulator );
+        m_viewer.setThreadingModel( osgViewer::Viewer::SingleThreaded );
+
+        osgQt::GraphicsWindowQt* gw = dynamic_cast<osgQt::GraphicsWindowQt*>( camera->getGraphicsContext() );
+        if ( gw )
+        {
+            QVBoxLayout* layout = new QVBoxLayout;
+            layout->addWidget( gw->getGLWidget() );
+            setLayout( layout );
+        }
+
+        connect( &m_timer, SIGNAL(timeout()), this, SLOT(update()) );
+        m_timer.start( 40 );
+    }
+
+protected:
+    virtual void paintEvent( QPaintEvent* event )
+    { m_viewer.frame(); }
+
+    osgViewer::Viewer m_viewer;
+    QTimer m_timer;
+    osg::Group *m_rootNode;
+};
+
 
 class KeyPressReleaseEater : public QObject
  {
@@ -65,6 +98,7 @@ public:
         getGLWidget()->installEventFilter(m_kpEater);
     }
     virtual ~BrainiacGlWindow(){
+        getGLWidget()->removeEventFilter(m_kpEater);
         m_kpEater->deleteLater();
     }
     KeyPressReleaseEater *getKeyPressedReleasedEater() { return m_kpEater; }
@@ -129,7 +163,7 @@ public:
         if(scene)
             m_rootNode->addChild(scene);
         else {
-            //m_rootNode->addChild(osgDB::readNodeFile("/Users/dirkfuchs/Desktop/ground.obj"));
+            m_rootNode->addChild(osgDB::readNodeFile("/ground.obj"));
         }
         m_viewer.setSceneData(m_rootNode);
         m_viewer.addEventHandler( new osgViewer::StatsHandler );
@@ -140,20 +174,34 @@ public:
         //m_viewer.setThreadingModel( osgViewer::Viewer::CullThreadPerCameraDrawThreadPerContext );
         //m_viewer.setRunFrameScheme(osgViewer::ViewerBase::ON_DEMAND);
 
-        osgQt::GraphicsWindowQt* gw = dynamic_cast<osgQt::GraphicsWindowQt*>( m_camera->getGraphicsContext() );
-        if ( gw )
+        m_gw = dynamic_cast<osgQt::GraphicsWindowQt*>( m_camera->getGraphicsContext() );
+        if ( m_gw )
         {
             QVBoxLayout* layout = new QVBoxLayout;
-            layout->addWidget( gw->getGLWidget() );
+            layout->addWidget( m_gw->getGLWidget() );
             setLayout( layout );
         }
-
-        m_thread.viewerPtr = &m_viewer;
-        m_thread.start();
+        if(false) {
+            m_thread.viewerPtr = &m_viewer;
+            m_thread.start();
+        } else {
+            connect( &m_timer, SIGNAL(timeout()), this, SLOT(update()) );
+            m_timer.start( 40 );
+        }
         setGeometry( 100, 100, 800, 600 );
         setWindowFlags(Qt::Tool);
         show();
     }
+    virtual ~OsgMultithreadedViewerWidget() {
+//        qDebug() << __PRETTY_FUNCTION__;
+//        delete(m_gw);
+//        qDebug() << __PRETTY_FUNCTION__ << " m_gw deleted";
+//        delete(m_glWindow);
+//        qDebug() << __PRETTY_FUNCTION__ << "done..";
+
+
+    }
+
     osg::Camera* createCamera( int x, int y, int w, int h )
     {
         osg::DisplaySettings* ds = osg::DisplaySettings::instance().get();
@@ -186,11 +234,14 @@ public:
     }
 
 protected:
+    virtual void paintEvent( QPaintEvent* event ) { m_viewer.frame(); }
     osgViewer::Viewer m_viewer;
     osg::Group *m_rootNode;
     osg::Camera* m_camera;
     RenderThread m_thread;
     BrainiacGlWindow *m_glWindow;
+    QTimer m_timer;
+    osgQt::GraphicsWindowQt *m_gw;
 };
 
 #endif // OSGMULTITHREADEDQTWIDGET_H
