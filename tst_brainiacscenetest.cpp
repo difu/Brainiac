@@ -570,7 +570,8 @@ void BrainiacSceneTest::sceneCreateLoadSave()
 
 void BrainiacSceneTest::simulation1()
 {
-    int numOfAgents=2;
+    int numOfAgents=10;
+    int numOfFrames=10;
     Scene testScene1;
     Group *testGroup1=new Group(&testScene1);
     PointGenerator *gen=new PointGenerator(&testScene1);
@@ -583,20 +584,51 @@ void BrainiacSceneTest::simulation1()
     testGroup1->getAgentManager()->addOutputFuzz("tz","tz",0,10,10,10);
     QHash<Agent *,QVector3D > agentPos;
 
-    // Walk 3 frames straight ahead
+    // Walk "numOfFrames" frames straight ahead
     foreach(Agent *agent, testScene1.getAgents()) {
         agent->getOutputChannel("tz")->setValue(1);
         agentPos.insert(agent, agent->getPosition());
     }
-    for(int i=0; i<3; i++) {
+    for(int i=0; i<numOfFrames; i++) {
         testScene1.getSimulation()->advanceOneFrame();
         foreach(Agent *agent, testScene1.getAgents()) {
             QVector3D newPos=agentPos.value(agent)+QVector3D(0,0,1)*(i+1);
             //qDebug()  << newPos << agent->getPosition();
             QVERIFY2(agent->getPosition()!=agentPos.value(agent),"Agent hasnt moved");
-            QVERIFY2(qFuzzyCompare(agent->getPosition(),newPos),"");
+            QVERIFY2(qFuzzyCompare(agent->getPosition(),newPos),"Wrong agent position when walking straight");
         }
     }
+    QVERIFY2((int)testScene1.getSimulation()->getCurrentFrame()==numOfFrames,"Wrong frame count");
+    testScene1.getSimulation()->resetSimulation();
+    QVERIFY2((int)testScene1.getSimulation()->getCurrentFrame()==0,"Wrong frame count after reset");
+
+    foreach(Agent *agent, testScene1.getAgents()) {
+        QVERIFY2(agent->getPosition()==agentPos.value(agent),"Agent pos was not reset");
+    }
+
+    // Turn 90 degrees, stop walking
+    foreach(Agent *agent, testScene1.getAgents()) {
+        agent->getOutputChannel("tz")->setValue(0);
+        agent->getOutputChannel("ry")->setValue(90);
+    }
+    // Stop turning, start walking
+    testScene1.getSimulation()->advanceOneFrame();
+    foreach(Agent *agent, testScene1.getAgents()) {
+        agent->getOutputChannel("tz")->setValue(1);
+        agent->getOutputChannel("ry")->setValue(0);
+    }
+    for(int i=0; i<numOfFrames; i++) {
+        testScene1.getSimulation()->advanceOneFrame();
+        foreach(Agent *agent, testScene1.getAgents()) {
+            QVector3D newPos=agentPos.value(agent)+QVector3D(1,0,0)*(i+1);
+            // qDebug()  << newPos << agent->getPosition();
+            QVERIFY2(agent->getPosition()!=agentPos.value(agent),"Agent hasnt moved");
+            QVERIFY2(qFuzzyCompare(agent->getPosition(),newPos),"Wrong agent position when walking straight");
+        }
+    }
+//    QBENCHMARK {
+//        testScene1.getSimulation()->advanceOneFrame();
+//    }
 }
 
 void BrainiacSceneTest::createBody(AgentManager *am, int var)
