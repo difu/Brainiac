@@ -49,7 +49,7 @@ public:
                     currently set fix to 100
                     @returns 100.0f
     **/
-    const static qreal getMaxRate() {return 100.0f;}
+    static qreal getMaxRate() {return 100.0f;}
 
     /** \brief sets the rate of this agent
         the rate is a time based value in which the value changes between to pseudo random numbers. \n

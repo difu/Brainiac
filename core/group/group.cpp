@@ -29,7 +29,7 @@ Group::Group(Scene *scene)
 {
     m_scene=scene;
     m_id=m_editX=m_editY=0;
-    m_agentManager=new AgentManager(m_scene, this);
+    m_agentManager=new AgentManager(this);
     m_scene->addGroup(this);
 }
 

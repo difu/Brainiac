@@ -76,6 +76,7 @@ public:
     QString & getName() {return m_name;}
     quint32 getNextAgentId();
     QString & getAgentFileName() { return m_agentFileName; }
+    Scene* getScene() { return m_scene;}
     void loadConfig(QXmlStreamReader *xml);
     void saveConfig(QXmlStreamWriter *xml);
     void setEditorTranslation(qint32 x, qint32 y);

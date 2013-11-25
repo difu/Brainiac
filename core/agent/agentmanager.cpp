@@ -43,10 +43,10 @@
 #include <QDebug>
 #include <QVector3D>
 
-AgentManager::AgentManager(Scene *scene, Group *group)
+AgentManager::AgentManager(Group *group)
 {
-    m_scene=scene;
     m_group=group;
+    m_scene=m_group->getScene();
     m_id=0;
     m_bodyManager=new BodyManager(this);
     m_masterAgent=new Agent(m_scene,0); // Id 0 is ok, its just a master agent
@@ -664,6 +664,7 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
     QString nodeName;
     bool isEndSite=false;
     QList<quint32> nodeStack; // Pointer, QObjects must not have a copy constructor
+    QHash<quint32, QVector3D> siteOffsets;
     while (!file.atEnd()) {
         QByteArray line = file.readLine().trimmed();
         if(line.startsWith("End Site")) {
@@ -676,6 +677,7 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
             Segment seg;
             seg.setName(nodeName);
             seg.setId(nodeId);
+            seg.setType(BrainiacGlobals::TUBESEGMENT);
 
             if(nodeStack.empty()) {
                 // we have the root node!
@@ -708,11 +710,24 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
                 translation.setZ(line.split(' ').at(3).toDouble());
                 if(nodeStack.empty()) {
                     //BrainiacGlobals::LAST_ERROR_TEXT=QString("Parse Error in BVH file");
+                    BrainiacError::setLastError(BrainiacError::FILE_PARSER_FAILED,"",0,"BVH File corrupt. Offset tag, but nodestack is empty!");
                     qDebug() << __PRETTY_FUNCTION__ << "Parse error";
                     return false;
                 } else {
                     //nodeStack.last()->setRestTranslation(translation);
                     m_bodyManager->setSegmentRestTranslation(nodeStack.last(),translation.x(),translation.y(),translation.z());
+                }
+            } else { // End Site
+                if(!nodeStack.isEmpty()) {
+                    QVector3D translation;
+                    translation.setX(line.split(' ').at(1).toDouble());
+                    translation.setY(line.split(' ').at(2).toDouble());
+                    translation.setZ(line.split(' ').at(3).toDouble());
+                    siteOffsets.insert(nodeStack.last(),translation);
+                } else {
+                    BrainiacError::setLastError(BrainiacError::FILE_PARSER_FAILED,"",0,"BVH File corrupt. Offset tag, but nodestack is empty!");
+                    qDebug() << __PRETTY_FUNCTION__ << "Parse error";
+                    return false;
                 }
             }
         } else if(line.startsWith("}")) {
@@ -754,6 +769,38 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
         }
         //qDebug() << __PRETTY_FUNCTION__  << line;
     }
+    foreach(SegmentShape *seg,m_bodyManager->getSegments()) {
+        qDebug() << "Processing " << seg->getName() << seg->getId();
+        QVector3D offset;
+        foreach(quint32 childId,m_bodyManager->getSegmentChildIds(seg->getId()) ) {
+            offset+=m_bodyManager->getSegment(childId).getRestTranslation();
+        }
+        m_bodyManager->setSegmentScale(seg->getId(),5,10,5);
+        if(m_bodyManager->getSegmentChildIds(seg->getId()).count()>0) {
+            offset/=m_bodyManager->getSegmentChildIds(seg->getId()).count();
+            m_bodyManager->setSegmentTranslation(seg->getId(),offset.x()/2,offset.y()/2,offset.z()/2);
+            QVector3D diff=- offset;
+            qreal length=diff.length();
+            qreal xrot=acos(-diff.x()/length);
+            qreal yrot=acos(-diff.y()/length);
+            qreal zrot=acos(-diff.z()/length);
+            m_bodyManager->setSegmentScale(seg->getId(),5,length,5);
+            m_bodyManager->setSegmentRotation(seg->getId(),BrainiacGlobals::rad2grad(xrot),BrainiacGlobals::rad2grad(yrot),BrainiacGlobals::rad2grad(zrot));
+
+
+        } else {
+            if(siteOffsets.contains(seg->getId())) {
+                QVector3D siteOffset=siteOffsets.value(seg->getId());
+                m_bodyManager->setSegmentTranslation(seg->getId(),siteOffset.x(),siteOffset.y(),siteOffset.z());
+            } else {
+                BrainiacError::setLastError(BrainiacError::FILE_PARSER_FAILED,"",0,"BVH File corrupt. Node End Site vector found");
+                qDebug() << __PRETTY_FUNCTION__ << "Parse error";
+                return false;
+
+            }
+        }
+    }
+
 //    foreach(SkeletonNode *n,m_masterAgent->getBody()->getAllSkeletonNodes()) {
 //        foreach(QGLSceneNode *childNode,n->children()) {
 //            SkeletonNode *childSkelNode=dynamic_cast<SkeletonNode *>(childNode);
@@ -765,6 +812,7 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
 //    }
 
 //    //qDumpScene(m_masterAgent->getBody()->getRootSkeletonNode());
+    m_bodyManager->dDumpBody();
     return true;
 }
 

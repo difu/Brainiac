@@ -34,7 +34,7 @@ class BodyManager;
 class AgentManager
 {
 public:
-    AgentManager(Scene *scene, Group *group);
+    AgentManager(Group *group);
 
     // Brain stuff
     /** \brief adds an And fuzz rule to all agent brains

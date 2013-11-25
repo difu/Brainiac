@@ -26,6 +26,9 @@ SegmentShape::SegmentShape(const Segment &other ):Segment(other)
         m_shapeDrawable->setShape( new osg::Sphere(osg::Vec3(0.0f, 0.0f, 0.0f),
                                                 1.0f) );
         break;
+    case BrainiacGlobals::TUBESEGMENT:
+        m_shapeDrawable->setShape( new osg::Capsule(osg::Vec3(0.0f, 0.0f, 0.0f),1,1));
+        break;
     default:
         m_shapeDrawable->setShape( new osg::Box(osg::Vec3(0.0f, 0.0f, 0.0f),
                                                 1.0f, 1.0f, 1.0f) );

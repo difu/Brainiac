@@ -293,6 +293,13 @@ void BodyManager::setSegmentRotationTranslationOrder(quint32 id, QList<BrainiacG
         qCritical() << __PRETTY_FUNCTION__ << "No segment with id "<< id;
 }
 
+void BodyManager::dDumpBody()
+{
+    foreach(Segment *seg,m_segments) {
+        qDebug() << seg->getId() << seg->getName() << seg->getParentId() << seg->getRestTranslation() << seg->getTranslation() << seg->getRotation();
+    }
+}
+
 BodyManager::~BodyManager()
 {
     foreach(Segment *s,m_segments) {

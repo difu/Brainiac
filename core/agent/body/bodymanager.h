@@ -231,6 +231,7 @@ public:
 
     void setSegmentTranslation(quint32 id, qreal x, qreal y, qreal z);
 
+    void dDumpBody();
 
     /**
      * @brief
