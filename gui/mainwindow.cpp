@@ -388,7 +388,8 @@ void MainWindow::editorNodeClick(ItemEditorWidgetsBase::editMessage msg)
         m_noiseEditor->setNoiseConfig(mgr,msg.id);
         break;
     case BrainiacGlobals::CUBE:
-        case BrainiacGlobals::SPHERE:
+    case BrainiacGlobals::TUBE:
+    case BrainiacGlobals::SPHERE:
         mgr=(AgentManager *)msg.object;
         m_segmentEditor->setSegmentConfig(mgr,msg.id);
         break;
@@ -401,7 +402,7 @@ void MainWindow::editorNodeClick(ItemEditorWidgetsBase::editMessage msg)
     m_defuzzEditor->setVisible(msg.type==BrainiacGlobals::DEFUZZ);
     m_fuzzyEditor->setVisible(msg.type==BrainiacGlobals::FUZZ);
     m_noiseEditor->setVisible(msg.type==BrainiacGlobals::NOISE);
-    m_segmentEditor->setVisible(msg.type==BrainiacGlobals::CUBE || msg.type==BrainiacGlobals::SPHERE);
+    m_segmentEditor->setVisible(msg.type==BrainiacGlobals::CUBE || msg.type==BrainiacGlobals::SPHERE || msg.type==BrainiacGlobals::TUBE);
 }
 
 void MainWindow::readSettings()

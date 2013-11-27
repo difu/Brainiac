@@ -779,18 +779,27 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
         if(m_bodyManager->getSegmentChildIds(seg->getId()).count()>0) {
             offset/=m_bodyManager->getSegmentChildIds(seg->getId()).count();
             m_bodyManager->setSegmentTranslation(seg->getId(),offset.x()/2,offset.y()/2,offset.z()/2);
-            QVector3D diff=- offset;
+            QVector3D diff=seg->getRestRotation()- offset;
             qreal length=diff.length();
-            qreal xrot=acos(-diff.x()/length);
-            qreal yrot=acos(-diff.y()/length);
-            qreal zrot=acos(-diff.z()/length);
+            qreal xrot=acos(diff.x()/length);
+            qreal yrot=acos(diff.y()/length);
+            qreal zrot=acos(diff.z()/length);
             m_bodyManager->setSegmentScale(seg->getId(),5,length,5);
-            m_bodyManager->setSegmentRotation(seg->getId(),BrainiacGlobals::rad2grad(xrot),BrainiacGlobals::rad2grad(yrot),BrainiacGlobals::rad2grad(zrot));
-
+            m_bodyManager->setSegmentRotation(seg->getId(),BrainiacGlobals::rad2grad(xrot),BrainiacGlobals::rad2grad(yrot)-90,BrainiacGlobals::rad2grad(zrot)); //! \todo 90 degrees offset configurable
+            qDebug() << "Rots:"  << BrainiacGlobals::rad2grad(xrot) << BrainiacGlobals::rad2grad(yrot) << BrainiacGlobals::rad2grad(zrot);
 
         } else {
             if(siteOffsets.contains(seg->getId())) {
                 QVector3D siteOffset=siteOffsets.value(seg->getId());
+                m_bodyManager->setSegmentTranslation(seg->getId(),siteOffset.x()/2,siteOffset.y()/2,siteOffset.z()/2);
+                QVector3D diff=seg->getRestRotation()- siteOffset;
+                qreal length=diff.length();
+                qreal xrot=acos(diff.x()/length);
+                qreal yrot=acos(diff.y()/length);
+                qreal zrot=acos(diff.z()/length);
+                m_bodyManager->setSegmentScale(seg->getId(),5,length,5);
+                m_bodyManager->setSegmentRotation(seg->getId(),BrainiacGlobals::rad2grad(xrot),BrainiacGlobals::rad2grad(yrot),BrainiacGlobals::rad2grad(zrot));
+
                 m_bodyManager->setSegmentTranslation(seg->getId(),siteOffset.x(),siteOffset.y(),siteOffset.z());
             } else {
                 BrainiacError::setLastError(BrainiacError::FILE_PARSER_FAILED,"",0,"BVH File corrupt. Node End Site vector found");

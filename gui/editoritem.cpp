@@ -152,6 +152,9 @@ void EditorItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     } else if(m_type==BrainiacGlobals::SPHERE) {
         AgentManager *myManager=(AgentManager*)m_object;
         painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,myManager->getBodyManager()->getSegment(m_id).getName());
+    } else if(m_type==BrainiacGlobals::TUBE) {
+        AgentManager *myManager=(AgentManager*)m_object;
+        painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,myManager->getBodyManager()->getSegment(m_id).getName());
     }
     painter->drawImage(QPoint(relxPos+4,relyPos+6),m_symbolPic);
 

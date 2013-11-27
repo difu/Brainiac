@@ -26,7 +26,7 @@
 ActionDisplay_::ActionDisplay_(QWidget *parent):
     OsgMultithreadedViewerWidget(0)
 {
-    setParent(parent);
+    //setParent(parent);
     setWindowFlags(Qt::Tool);
     setWindowTitle("Action Editor");
     hide();

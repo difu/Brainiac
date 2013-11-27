@@ -35,7 +35,7 @@ SegmentShape::SegmentShape(const Segment &other ):Segment(other)
         break;
 
     }
-    m_shapeDrawable->setColor( osg::Vec4(0.0f, 0.0f, 1.0f, 1.0f) );
+    m_shapeDrawable->setColor( osg::Vec4(1.0f, 1.0f, 1.0f, 1.0f) );
     m_shapeDrawable->setName("ShapeDrawable");
     //qDebug() << __PRETTY_FUNCTION__ << "Shape created" << other.getName();
 }

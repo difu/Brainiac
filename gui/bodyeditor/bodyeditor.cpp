@@ -86,6 +86,13 @@ void BodyEditor::mousePressEvent(QGraphicsSceneMouseEvent *event)
             msg.type=BrainiacGlobals::CUBE;
             msg.id=item->getId();
             emit itemClicked(msg);
+        } else if (item->getType() == BrainiacGlobals::TUBE) {
+            msg.object=item->getObject();
+            msg.type=BrainiacGlobals::TUBE;
+            msg.id=item->getId();
+            emit itemClicked(msg);
+        } else {
+            qDebug() << __PRETTY_FUNCTION__ << "Item type " << item->getType() << "not yet implemented";
         }
     }
 }
