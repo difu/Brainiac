@@ -21,6 +21,12 @@
 SceneDisplay_::SceneDisplay_(Scene *scene): OsgMultithreadedViewerWidget(0,scene->getRootSceneNode())
 {
     setWindowTitle("Scene");
+    connect(getGlWindow()->getKeyPressedReleasedEater(),SIGNAL(keyPressed(Qt::Key)),this,SLOT(keyPressed(Qt::Key)));
+
+}
+
+void SceneDisplay_::keyPressed(Qt::Key key)
+{
 
 }
 

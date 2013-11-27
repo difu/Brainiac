@@ -28,11 +28,14 @@ class Scene;
  */
 class SceneDisplay_ : public OsgMultithreadedViewerWidget
 {
+    Q_OBJECT
 public:
     SceneDisplay_(Scene *scene);
     virtual ~SceneDisplay_();
 protected:
     Scene *m_scene;
+protected slots:
+    void keyPressed(Qt::Key key);
 };
 
 #endif // SCENEDISPLAY__H

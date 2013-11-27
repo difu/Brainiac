@@ -27,6 +27,10 @@
 #include <osg/MatrixTransform>
 #include <osgGA/TrackballManipulator>
 #include <osgGA/SphericalManipulator>
+#include <osgGA/FlightManipulator>
+#include <osgGA/DriveManipulator>
+#include <osgGA/TerrainManipulator>
+#include <osgGA/KeySwitchMatrixManipulator>
 #include <osgViewer/ViewerEventHandlers>
 #include <osgViewer/Viewer>
 #include <osgQt/GraphicsWindowQt>
@@ -152,6 +156,7 @@ protected:
 class OsgMultithreadedViewerWidget : public QWidget
 {
 public:
+    enum Manipulator {TRACKBALL,SPHERICAL};
     OsgMultithreadedViewerWidget( osg::Camera* camera=0, osg::Node* scene=0 ) :   QWidget()
     {
         m_camera=camera;
@@ -167,12 +172,31 @@ public:
         }
         m_viewer.setSceneData(m_rootNode);
         m_viewer.addEventHandler( new osgViewer::StatsHandler );
-        osgGA::TrackballManipulator *tbm=new osgGA::TrackballManipulator;
-        tbm->setHomePosition(osg::Vec3f(-300,0,0),osg::Vec3f(),osg::Vec3f(0,1,0));
-        m_viewer.setCameraManipulator(tbm  );
+        m_trackBallManipulator=new osgGA::TrackballManipulator;
+        m_sphericalManipulatior=new osgGA::SphericalManipulator;
+//        m_currentManipulator=m_trackBallManipulator;
+//        m_currentManipulator->setHomePosition(osg::Vec3f(-300,0,0),osg::Vec3f(),osg::Vec3f(0,1,0));
+        //m_viewer.setCameraManipulator(m_currentManipulator  );
+//        changeManipulator(TRACKBALL);
+        osg::ref_ptr<osgGA::KeySwitchMatrixManipulator> keyswitchManipulator = new osgGA::KeySwitchMatrixManipulator;
+
+        keyswitchManipulator->addMatrixManipulator( '1', "Trackball", new osgGA::TrackballManipulator() );
+        keyswitchManipulator->addMatrixManipulator( '2', "Flight", new osgGA::FlightManipulator() );
+        keyswitchManipulator->addMatrixManipulator( '3', "Drive", new osgGA::DriveManipulator() );
+//        unsigned int num = keyswitchManipulator->getNumMatrixManipulators();
+        keyswitchManipulator->addMatrixManipulator( '4', "Terrain", new osgGA::TerrainManipulator() );
+        keyswitchManipulator->addMatrixManipulator( '5', "SPHERIC", new osgGA::SphericalManipulator() );
+        keyswitchManipulator->setHomePosition(osg::Vec3f(-300,0,0),osg::Vec3f(),osg::Vec3f(0,1,0));
+        m_viewer.setCameraManipulator(keyswitchManipulator);
+
         m_viewer.setThreadingModel(osgViewer::Viewer::SingleThreaded);
         //m_viewer.setThreadingModel( osgViewer::Viewer::CullThreadPerCameraDrawThreadPerContext );
         //m_viewer.setRunFrameScheme(osgViewer::ViewerBase::ON_DEMAND);
+
+
+
+
+
 
         m_gw = dynamic_cast<osgQt::GraphicsWindowQt*>( m_camera->getGraphicsContext() );
         if ( m_gw )
@@ -243,6 +267,9 @@ protected:
     BrainiacGlWindow *m_glWindow;
     QTimer m_timer;
     osgQt::GraphicsWindowQt *m_gw;
+    osgGA::TrackballManipulator *m_trackBallManipulator;
+    osgGA::SphericalManipulator *m_sphericalManipulatior;
+    osgGA::CameraManipulator *m_currentManipulator;
 };
 
 #endif // OSGMULTITHREADEDQTWIDGET_H
