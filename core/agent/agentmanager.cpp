@@ -132,6 +132,10 @@ void AgentManager::addSkeletonNodeFromConfig(QXmlStreamReader *reader, quint32 i
             QXmlStreamAttributes attribs = reader->attributes();
             reader->skipCurrentElement();
             m_bodyManager->setNewSegmentType(BrainiacGlobals::BOXSEGMENT);
+        } else if(reader->name()==BrainiacGlobals::XmlTubeTag) {
+            QXmlStreamAttributes attribs = reader->attributes();
+            reader->skipCurrentElement();
+            m_bodyManager->setNewSegmentType(BrainiacGlobals::TUBESEGMENT);
         }
     }
 
@@ -770,7 +774,7 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
         //qDebug() << __PRETTY_FUNCTION__  << line;
     }
     foreach(SegmentShape *seg,m_bodyManager->getSegments()) {
-        qDebug() << "Processing " << seg->getName() << seg->getId();
+//        qDebug() << "Processing " << seg->getName() << seg->getId();
         QVector3D offset;
         foreach(quint32 childId,m_bodyManager->getSegmentChildIds(seg->getId()) ) {
             offset+=m_bodyManager->getSegment(childId).getRestTranslation();
@@ -784,9 +788,9 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
             qreal xrot=acos(diff.x()/length);
             qreal yrot=acos(diff.y()/length);
             qreal zrot=acos(diff.z()/length);
-            m_bodyManager->setSegmentScale(seg->getId(),5,length,5);
+            m_bodyManager->setSegmentScale(seg->getId(),1,length,1);
             m_bodyManager->setSegmentRotation(seg->getId(),BrainiacGlobals::rad2grad(xrot),BrainiacGlobals::rad2grad(yrot)-90,BrainiacGlobals::rad2grad(zrot)); //! \todo 90 degrees offset configurable
-            qDebug() << "Rots:"  << BrainiacGlobals::rad2grad(xrot) << BrainiacGlobals::rad2grad(yrot) << BrainiacGlobals::rad2grad(zrot);
+//            qDebug() << "Rots:"  << BrainiacGlobals::rad2grad(xrot) << BrainiacGlobals::rad2grad(yrot) << BrainiacGlobals::rad2grad(zrot);
 
         } else {
             if(siteOffsets.contains(seg->getId())) {
@@ -797,7 +801,7 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
                 qreal xrot=acos(diff.x()/length);
                 qreal yrot=acos(diff.y()/length);
                 qreal zrot=acos(diff.z()/length);
-                m_bodyManager->setSegmentScale(seg->getId(),5,length,5);
+                m_bodyManager->setSegmentScale(seg->getId(),1,length,1);
                 m_bodyManager->setSegmentRotation(seg->getId(),BrainiacGlobals::rad2grad(xrot),BrainiacGlobals::rad2grad(yrot),BrainiacGlobals::rad2grad(zrot));
 
                 m_bodyManager->setSegmentTranslation(seg->getId(),siteOffset.x(),siteOffset.y(),siteOffset.z());
@@ -821,7 +825,7 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
 //    }
 
 //    //qDumpScene(m_masterAgent->getBody()->getRootSkeletonNode());
-    m_bodyManager->dDumpBody();
+//    m_bodyManager->dDumpBody();
     return true;
 }
 
@@ -914,8 +918,12 @@ bool AgentManager::saveConfig()
              } else if (node.getType()==BrainiacGlobals::BOXSEGMENT) {
                  stream.writeStartElement(BrainiacGlobals::XmlBoxTag);
                  stream.writeEndElement();
+             } else if (node.getType()==BrainiacGlobals::TUBESEGMENT) {
+                 stream.writeStartElement(BrainiacGlobals::XmlTubeTag);
+                 stream.writeEndElement();
              } else {
-                 qCritical() << __PRETTY_FUNCTION__<< "Error while saving: Unknown SkeletonNode type";
+                 qCritical() << __PRETTY_FUNCTION__<< "Error while saving: Unknown node type " << node.getType() << node.getName();
+                 return false;
              }
 
              stream.writeEndElement(); // Segment

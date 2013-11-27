@@ -642,7 +642,7 @@ void BrainiacSceneTest::createBody(AgentManager *am, int var)
     bm->setNewSegmentId(1);
     bm->setNewSegmentName(segName);
     bm->setNewSegmentParentId(0);
-    bm->setNewSegmentType(BrainiacGlobals::SPHERESEGMENT);
+    bm->setNewSegmentType(BrainiacGlobals::TUBESEGMENT);
     bm->setNewSegmentColor(0.1f);
     vec=testVec*(float) var;
     bm->setNewSegmentRestRotation(vec);
@@ -655,7 +655,7 @@ void BrainiacSceneTest::createBody(AgentManager *am, int var)
     bm->setNewSegmentId(2);
     bm->setNewSegmentName(segName);
     bm->setNewSegmentParentId(1);
-    bm->setNewSegmentType(BrainiacGlobals::SPHERESEGMENT);
+    bm->setNewSegmentType(BrainiacGlobals::BOXSEGMENT);
     bm->setNewSegmentColor(0.2f);
     vec=testVec*(float) var;
     bm->setNewSegmentRestRotation(vec);

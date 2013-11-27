@@ -96,6 +96,7 @@ const char* const BrainiacGlobals::XmlRestRotationTag="RestRotation\0";
 const char* const BrainiacGlobals::XmlRestTranslationTag="RestTranslation\0";
 const char* const BrainiacGlobals::XmlSphereTag="Sphere\0";
 const char* const BrainiacGlobals::XmlBoxTag="Box\0";
+const char* const BrainiacGlobals::XmlTubeTag="Tube\0";
 const char* const BrainiacGlobals::XmlRotTransOrderTag="RotTransOrder\0;";
 
 const char* const BrainiacGlobals::FuzzAndModeMin="min\0";

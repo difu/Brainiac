@@ -91,6 +91,7 @@ public:
     static const char* const XmlRestTranslationTag;
     static const char* const XmlSphereTag;
     static const char* const XmlBoxTag;
+    static const char* const XmlTubeTag;
     static const char* const XmlRotTransOrderTag;
 
     static const char* const FuzzAndModeMin;
