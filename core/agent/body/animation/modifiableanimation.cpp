@@ -57,10 +57,10 @@ void ModifiableAnimation::bake()
         foreach(QVector2D kf, origCuve->keyFrames()) {
             if(kf.x()>m_startTime && kf.x() < m_endTime) {
                 newCurve->addKeyFrame(kf.x()-m_startTime,this->getValue(curveName,kf.x()));
-                qDebug() << __PRETTY_FUNCTION__ << curveName << kf.x() << kf.y() << this->getValue(curveName,kf.x()) << Animation::getValue(curveName,kf.x());
+                //qDebug() << __PRETTY_FUNCTION__ << curveName << kf.x() << kf.y() << this->getValue(curveName,kf.x()) << Animation::getValue(curveName,kf.x());
             }
         }
-        qDebug() << __PRETTY_FUNCTION__ << curveName <<" oldKF" << origCuve->keyFrames().count() << "NewKF" << newCurve->keyFrames().count();
+        //qDebug() << __PRETTY_FUNCTION__ << curveName <<" oldKF" << origCuve->keyFrames().count() << "NewKF" << newCurve->keyFrames().count();
         newCurves.insert(curveName,newCurve);
         delete origCuve;
     }
@@ -105,7 +105,7 @@ void ModifiableAnimation::createAgentCurve(AnimationCurve *rootCurve, AnimationC
 
 bool ModifiableAnimation::createAgentCurves()
 {
-    if(!hasAgentCurves()) {
+    if(hasAgentCurves()) {
         qDebug() << __PRETTY_FUNCTION__ << "AgentRootCurves already exist! nothing is created";
     } else {
         AnimationCurve *txCurve;
