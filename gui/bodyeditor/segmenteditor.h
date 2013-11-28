@@ -39,7 +39,7 @@ class SegmentEditor;
 class SegmentEditor : public QWidget, public ItemEditorWidgetsBase
 {
     Q_OBJECT
-    
+
 public:
     explicit SegmentEditor(Scene *scene, QWidget *parent = 0);
     ~SegmentEditor();
@@ -87,7 +87,8 @@ protected:
     void createTxSliders();
 
     /**
-     * @brief creates all dimensionsliders, also radius slider of sphere primitive
+     * @brief creates all dimensionsliders
+     * ,Includes radius, diameter, length slider of sphere and tube primitive
      *
      * @fn createDimensionSliders
      */
@@ -118,6 +119,12 @@ protected:
     BrainiacSlider *m_SliderDimensionX;
     BrainiacSlider *m_SliderDimensionY;
     BrainiacSlider *m_SliderDimensionZ;
+
+    BrainiacSlider *m_SliderSphereRadius;
+
+    BrainiacSlider *m_SliderTubeLength;
+    BrainiacSlider *m_SliderTubeDiameter;
+
 protected slots:
     /**
      * @brief called when any rest translation has changed e.g. by slider

@@ -152,25 +152,52 @@ void SegmentEditor::createDimensionSliders()
     m_SliderDimensionY=new BrainiacSlider(ui->frameShapeDims);
     m_SliderDimensionZ=new BrainiacSlider(ui->frameShapeDims);
 
+    m_SliderSphereRadius=new BrainiacSlider(ui->frameShapeDims);
+
+    m_SliderTubeDiameter=new BrainiacSlider(ui->frameShapeDims);
+    m_SliderTubeLength=new BrainiacSlider(ui->frameShapeDims);
+
     m_SliderDimensionX->setSliderColor(BrainiacGlobals::defaultXColor);
     m_SliderDimensionY->setSliderColor(BrainiacGlobals::defaultYColor);
     m_SliderDimensionZ->setSliderColor(BrainiacGlobals::defaultZColor);
+
+    m_SliderSphereRadius->setSliderColor(BrainiacGlobals::defaultRadiusColor);
+
+    m_SliderTubeDiameter->setSliderColor(BrainiacGlobals::defaultDiameterColor);
+    m_SliderTubeLength->setSliderColor(BrainiacGlobals::defaultLengthColor);
 
     m_SliderDimensionX->setGeometry(0,2,300,40);
     m_SliderDimensionY->setGeometry(0,35,300,40);
     m_SliderDimensionZ->setGeometry(0,69,300,40);
 
+    m_SliderSphereRadius->setGeometry(0,2,300,40);
+
+    m_SliderTubeDiameter->setGeometry(0,35,300,40);
+    m_SliderTubeLength->setGeometry(0,69,300,40);
+
     m_SliderDimensionX->setText("x");
     m_SliderDimensionY->setText("y");
     m_SliderDimensionZ->setText("z");
+
+    m_SliderSphereRadius->setText("radius");
+
+    m_SliderTubeDiameter->setText("length");
+    m_SliderTubeLength->setText("diameter");
 
     m_SliderDimensionX->setRange(0.0f,50.0f);
     m_SliderDimensionY->setRange(0.0f,50.0f);
     m_SliderDimensionZ->setRange(0.0f,50.0f);
 
+    m_SliderSphereRadius->setRange(0.0f,50.0f);
+    m_SliderTubeDiameter->setRange(0.0f,50.0f);
+    m_SliderTubeLength->setRange(0.0f,50.0f);
+
     connect(m_SliderDimensionX,SIGNAL(valueChanged(qreal)),this,SLOT(manualDimensionsChanged(qreal)));
     connect(m_SliderDimensionY,SIGNAL(valueChanged(qreal)),this,SLOT(manualDimensionsChanged(qreal)));
     connect(m_SliderDimensionZ,SIGNAL(valueChanged(qreal)),this,SLOT(manualDimensionsChanged(qreal)));
+    connect(m_SliderSphereRadius,SIGNAL(valueChanged(qreal)),this,SLOT(manualDimensionsChanged(qreal)));
+    connect(m_SliderTubeDiameter,SIGNAL(valueChanged(qreal)),this,SLOT(manualDimensionsChanged(qreal)));
+    connect(m_SliderTubeLength,SIGNAL(valueChanged(qreal)),this,SLOT(manualDimensionsChanged(qreal)));
 }
 
 void SegmentEditor::editSymetric(bool editSymetric)
@@ -211,11 +238,34 @@ quint32 SegmentEditor::getSymetricSegmentId() const
 
 void SegmentEditor::manualDimensionsChanged(qreal value) {
     Q_UNUSED(value);
-    m_agentManager->setSegmentDimensions(m_id,m_SliderDimensionX->getValue(),m_SliderDimensionY->getValue(),m_SliderDimensionZ->getValue());
-    if(m_editSymetric) {
-        quint32 otherId=getSymetricSegmentId();
-        m_agentManager->setSegmentDimensions(otherId,m_SliderDimensionX->getValue(),m_SliderDimensionY->getValue(),m_SliderDimensionZ->getValue());
+    switch(m_agentManager->getBodyManager()->getSegment(m_id).getType()) {
+    case BrainiacGlobals::BOXSEGMENT:
+        m_agentManager->setSegmentDimensions(m_id,m_SliderDimensionX->getValue(),m_SliderDimensionY->getValue(),m_SliderDimensionZ->getValue());
+        if(m_editSymetric) {
+            quint32 otherId=getSymetricSegmentId();
+            //m_agentManager->setSegmentDimensions(otherId,m_SliderDimensionX->getValue(),m_SliderDimensionY->getValue(),m_SliderDimensionZ->getValue());
+        }
+        break;
+    case BrainiacGlobals::SPHERESEGMENT:
+        m_agentManager->setSegmentDimensions(m_id,m_SliderSphereRadius->getValue(),m_SliderSphereRadius->getValue(),m_SliderSphereRadius->getValue());
+        if(m_editSymetric) {
+            quint32 otherId=getSymetricSegmentId();
+            //m_agentManager->setSegmentDimensions(otherId,m_SliderSphereRadius->getValue(),m_SliderSphereRadius->getValue(),m_SliderSphereRadius->getValue());
+        }
+        break;
+    case BrainiacGlobals::TUBESEGMENT:
+        m_agentManager->setSegmentDimensions(m_id,m_SliderTubeLength->getValue(),m_SliderTubeLength->getValue(),m_SliderTubeDiameter->getValue());
+        if(m_editSymetric) {
+            quint32 otherId=getSymetricSegmentId();
+            //m_agentManager->setSegmentDimensions(otherId,m_SliderTubeDiameter->getValue(),m_SliderTubeLength->getValue(),m_SliderTubeDiameter->getValue());
+        }
+        break;
+    default:
+        qCritical() << __PRETTY_FUNCTION__ << "Segment type" << m_agentManager->getBodyManager()->getSegment(m_id).getType() << "not yet implemented!";
+        break;
     }
+
+
     emit updateGLContent();
     this->updateEditor();
 }
@@ -265,6 +315,17 @@ void SegmentEditor::setSegmentConfig(AgentManager *manager, quint32 id)
 {
     m_agentManager=manager;
     m_id=id;
+
+    Segment s=m_agentManager->getBodyManager()->getSegment(m_id);
+    m_SliderDimensionX->setVisible(s.getType()==BrainiacGlobals::BOXSEGMENT);
+    m_SliderDimensionY->setVisible(s.getType()==BrainiacGlobals::BOXSEGMENT);
+    m_SliderDimensionZ->setVisible(s.getType()==BrainiacGlobals::BOXSEGMENT);
+
+    m_SliderSphereRadius->setVisible(s.getType()==BrainiacGlobals::SPHERESEGMENT);
+
+    m_SliderTubeDiameter->setVisible(s.getType()==BrainiacGlobals::TUBESEGMENT);
+    m_SliderTubeLength->setVisible(s.getType()==BrainiacGlobals::TUBESEGMENT);
+
     updateEditor();
 }
 
@@ -291,9 +352,26 @@ void SegmentEditor::updateEditor()
     m_SliderRestTz->setValue(restTrans.z());
 
     QVector3D scale=m_agentManager->getBodyManager()->getSegmentScale(m_id);
-    m_SliderDimensionX->setValue(scale.x());
-    m_SliderDimensionY->setValue(scale.y());
-    m_SliderDimensionZ->setValue(scale.z());
+
+    switch(m_agentManager->getBodyManager()->getSegment(m_id).getType()) {
+    case BrainiacGlobals::BOXSEGMENT:
+        m_SliderDimensionX->setValue(scale.x());
+        m_SliderDimensionY->setValue(scale.y());
+        m_SliderDimensionZ->setValue(scale.z());
+        break;
+    case BrainiacGlobals::SPHERESEGMENT:
+        m_SliderSphereRadius->setValue(scale.x());
+        break;
+    case BrainiacGlobals::TUBESEGMENT:
+        m_SliderTubeDiameter->setValue(scale.z());
+        m_SliderTubeLength->setValue(scale.x());
+        break;
+    default:
+        qCritical() << __PRETTY_FUNCTION__ << "Segment type" << m_agentManager->getBodyManager()->getSegment(m_id).getType() << "not yet implemented!";
+        break;
+    }
+
+
 }
 
 SegmentEditor::~SegmentEditor()

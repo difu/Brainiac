@@ -115,6 +115,9 @@ public:
     static QColor defaultXColor;
     static QColor defaultYColor;
     static QColor defaultZColor;
+    static QColor defaultRadiusColor;
+    static QColor defaultLengthColor;
+    static QColor defaultDiameterColor;
 
     static const quint32 animationFileFormatMagicNumber=0xA1B2C3D4; /**< Magic number to identify the Brainiac Animation Fileformat */
     static const qint32 animationFileFormatVersion=100; /**< Version of Brainiac Animation File Format */

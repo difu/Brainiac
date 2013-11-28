@@ -120,3 +120,6 @@ const char* const BrainiacGlobals::ChannelName_Sound_f="sound.f\0";
 QColor BrainiacGlobals::defaultXColor=QColor(200,0,0);
 QColor BrainiacGlobals::defaultYColor=QColor(0,200,0);
 QColor BrainiacGlobals::defaultZColor=QColor(200,200,0);
+QColor BrainiacGlobals::defaultDiameterColor=QColor(50,50,200);
+QColor BrainiacGlobals::defaultLengthColor=QColor(10,10,250);
+QColor BrainiacGlobals::defaultRadiusColor=QColor(50,50,200);
