@@ -434,7 +434,7 @@ protected:
     void addTimerFuzz(quint32 id, QString name, qreal rate, QString mode, quint32 editorX, quint32 editorY);
 
     // Body stuff
-    void addSkeletonNodeFromConfig( QXmlStreamReader *reader, quint32 id, QString name, quint32 parent, quint32 editorX, quint32 editorY );
+    void addSegmentFromConfig( QXmlStreamReader *reader, quint32 id, QString name, quint32 parent, quint32 editorX, quint32 editorY );
     /**
      * @brief loads a bvh skeleton
      *

@@ -58,7 +58,7 @@ AgentManager::AgentManager(Group *group)
     m_agents.append(m_spActionAgent);
 }
 
-void AgentManager::addSkeletonNodeFromConfig(QXmlStreamReader *reader, quint32 id, QString name, quint32 parent, quint32 editorX, quint32 editorY)
+void AgentManager::addSegmentFromConfig(QXmlStreamReader *reader, quint32 id, QString name, quint32 parent, quint32 editorX, quint32 editorY)
 {
     QVector3D translation;
     QVector3D rotation;
@@ -461,7 +461,7 @@ bool AgentManager::loadConfig()
 //                                            addSphereFromConfig(&reader,attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("parent").toString().toInt());
 //                                            //reader.skipCurrentElement();
 //                                        }
-                                        addSkeletonNodeFromConfig(&reader,attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("parent").toString().toInt(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
+                                        addSegmentFromConfig(&reader,attribs.value("id").toString().toInt(),attribs.value("name").toString(),attribs.value("parent").toString().toInt(),attribs.value("editorx").toString().toInt(),attribs.value("editory").toString().toInt());
 
                                     }else {
                                         reader.skipCurrentElement();
