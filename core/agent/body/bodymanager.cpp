@@ -106,6 +106,17 @@ bool BodyManager::createNewSegment(bool processRootId)
     return true;
 }
 
+QList<quint32> BodyManager::getChildIds(quint32 id) const
+{
+    QList<quint32> children;
+    foreach(SegmentShape *seg, m_segments) {
+        if(seg->getParentId()==id) {
+            children.append(seg->getId());
+        }
+    }
+    return children;
+}
+
 Segment BodyManager::getSegment(quint32 id) const
 {
     if(m_segments.contains(id)) {

@@ -52,6 +52,13 @@ public:
     void applyBodyOnAgent(Agent *agent);
 
     /**
+     * @brief returns a list of the Segment with id child ids
+     * @param id the id of the Segment
+     * @return QList<quint32> list of the child ids
+     */
+    QList<quint32> getChildIds(quint32 id) const;
+
+    /**
      * @brief getSegment
      * returns the Segment
      *

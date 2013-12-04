@@ -24,7 +24,7 @@
 EditorBase::EditorBase(Scene *scene)
 {
     m_scene=scene;
-    setSceneRect(0, 0, 4000, 4000);
+//    setSceneRect(0, 0, 4000, 4000);
     m_viewHasNeverBeenSet=true;
 }
 

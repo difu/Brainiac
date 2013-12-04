@@ -84,7 +84,7 @@ void EditorItem::addConnector(EditorItemConnector *connector){
 
 QRectF EditorItem::boundingRect() const
 {
-    return QRectF(relxPos - adjust*15, relyPos - adjust*15,_width + adjust*15, _height + adjust*15);
+    return QRectF(relxPos - adjust*15, relyPos - adjust*15,WIDTH + adjust*15, HEIGHT + adjust*15);
 }
 
 QVariant EditorItem::itemChange(GraphicsItemChange change,
@@ -110,11 +110,11 @@ void EditorItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
 {
     Q_UNUSED(option);
     Q_UNUSED(widget);
-    QLinearGradient myGrad(relxPos, relyPos, relxPos+_width, relyPos+_height);
+    QLinearGradient myGrad(relxPos, relyPos, relxPos+WIDTH, relyPos+HEIGHT);
     myGrad.setColorAt(0.5, Qt::gray);
     myGrad.setColorAt(1, Qt::white);
     QBrush myBrush( myGrad );
-    qDrawShadePanel(painter, relxPos, relyPos, _width, _height, QPalette(QColor(30, 30, 30, 127)),true,4, &myBrush);
+    qDrawShadePanel(painter, relxPos, relyPos, WIDTH, HEIGHT, QPalette(QColor(30, 30, 30, 127)),true,4, &myBrush);
     painter->setPen(Qt::black);
     if(m_type==BrainiacGlobals::GROUP) {
         Group *myGroup=(Group*)m_object;
@@ -161,14 +161,14 @@ void EditorItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     if( this->isSelected() ) {
         painter->setPen(Qt::red);
         painter->setBrush(Qt::NoBrush);
-        painter->drawRect( QRectF(relxPos - adjust, relyPos - adjust,_width + adjust, _height + adjust) );
+        painter->drawRect( QRectF(relxPos - adjust, relyPos - adjust,WIDTH + adjust, HEIGHT + adjust) );
     }
 }
 
 QPainterPath EditorItem::shape() const
 {
     QPainterPath path;
-    path.addRect(relxPos, relyPos, _width, _height);
+    path.addRect(relxPos, relyPos, WIDTH, HEIGHT);
     return path;
 }
 

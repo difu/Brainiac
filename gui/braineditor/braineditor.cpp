@@ -40,7 +40,7 @@ void BrainEditor::addFuzzyItem(quint32 id)
 {
     if(m_agentManager->getMasterAgent()->getBrain()->getFuzzy(id)) {
         BrainEditorItem *item=new BrainEditorItem((BrainiacGlobals::ItemType)m_agentManager->getFuzzType(id),m_agentManager,id);
-        item->setPos(m_agentManager->getEditorFuzzyLocations().value(id).x()+BrainEditorItem::_width,m_agentManager->getEditorFuzzyLocations().value(id).y());
+        item->setPos(m_agentManager->getEditorFuzzyLocations().value(id).x()+BrainEditorItem::WIDTH,m_agentManager->getEditorFuzzyLocations().value(id).y());
         addItem(item);
         //qDebug() << __PRETTY_FUNCTION__ <<  item->getId() << item->getType();
     } else {

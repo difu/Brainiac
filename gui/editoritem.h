@@ -46,8 +46,8 @@ public:
 
     static const qint32 relxPos = -150;
     static const qint32 relyPos = -50;
-    static const qint32 _height = 50;
-    static const qint32 _width = 120;
+    static const qint32 HEIGHT = 50;
+    static const qint32 WIDTH = 120;
     static const qint32 _raster = 10;
 
     int type() const {

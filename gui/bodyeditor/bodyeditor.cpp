@@ -28,43 +28,8 @@
 
 #include <QGraphicsSceneMouseEvent>
 
-BodyEditor::BodyEditor(Scene *scene, AgentManager *agentManager) : EditorBase(scene)
+BodyEditor::BodyEditor(Scene *scene, AgentManager *agentManager) : m_agentManager(agentManager), EditorBase(scene)
 {
-    m_agentManager=agentManager;
-//    QHash<quint32, BodyEditorItem*> segItems;
-//    foreach(Segment *seg,m_agentManager->getBodyManager()->getSegments()) {
-//        BodyEditorItem *item=0;
-//        switch(seg->getType()) {
-//        case BrainiacGlobals::SPHERE:
-//            item=new BodyEditorItem(BrainiacGlobals::SPHERE,m_agentManager,seg->getId());
-//            item->setPos(agentManager->getEditorSegmentNodeLocations().value(seg->getId()).x(),agentManager->getEditorSegmentNodeLocations().value(seg->getId()).y());
-//            addItem(item);
-//            break;
-//        case BrainiacGlobals::TUBE:
-//            item=new BodyEditorItem(BrainiacGlobals::TUBE,m_agentManager,seg->getId());
-//            item->setPos(agentManager->getEditorSegmentNodeLocations().value(seg->getId()).x(),agentManager->getEditorSegmentNodeLocations().value(seg->getId()).y());
-//            addItem(item);
-//            break;
-//        case BrainiacGlobals::CUBE:
-//            item=new BodyEditorItem(BrainiacGlobals::CUBE,m_agentManager,seg->getId());
-//            item->setPos(agentManager->getEditorSegmentNodeLocations().value(seg->getId()).x(),agentManager->getEditorSegmentNodeLocations().value(seg->getId()).y());
-//            addItem(item);
-//        default:
-//            qCritical() << __PRETTY_FUNCTION__ << "seg Type not handled" << seg->getType();
-//        }
-//        segItems.insert(seg->getId(),item);
-//    }
-//    foreach(Segment *seg,m_agentManager->getBodyManager()->getSegments()) {
-//        if(seg->getParentId()) {
-//            BodyEditorItem *parentItem=segItems.value(seg->getParentId(),0);
-//            if(parentItem) {
-//                EditorItemConnector *connector=new EditorItemConnector(parentItem,segItems.value(seg->getId()));
-//                addItem(connector);
-//            }
-//        }
-//    }
-
-
 
 }
 
@@ -104,6 +69,72 @@ void BodyEditor::addSegment(quint32 id)
     }
 }
 
+void BodyEditor::autoArrange()
+{
+    Segment rootSeg=m_agentManager->getBodyManager()->getRootSegment();
+    foreach(quint32 childId, m_agentManager->getBodyManager()->getChildIds(rootSeg.getId())) {
+        autoArrangeRec(childId);
+    }
+
+}
+
+void BodyEditor::autoArrangeRec(quint32 segId)
+{
+    Segment seg=m_agentManager->getBodyManager()->getSegment(segId);
+    quint32 parentId=m_agentManager->getBodyManager()->getSegment(segId).getParentId();
+    BodyEditorItem *parentItem=getItem(parentId);
+    BodyEditorItem *myItem=getItem(segId);
+    if(!parentItem)
+        return;
+    QPointF parentPos=parentItem->pos();
+    qreal factor=1.3;
+    switch(getDirection(seg.getRestTranslation())) {
+    case BrainiacGlobals::NORTH:
+        myItem->setPos(parentPos.x(),parentPos.y()-factor*EditorItem::HEIGHT);
+        break;
+    case BrainiacGlobals::SOUTH:
+        myItem->setPos(parentPos.x(),parentPos.y()+factor*EditorItem::HEIGHT);
+        break;
+    case BrainiacGlobals::EAST:
+        myItem->setPos(parentPos.x()-factor*EditorItem::WIDTH,parentPos.y());
+        break;
+    case BrainiacGlobals::WEST:
+        myItem->setPos(parentPos.x()+factor*EditorItem::WIDTH,parentPos.y());
+        break;
+    }
+    foreach(quint32 childId, m_agentManager->getBodyManager()->getChildIds(segId)) {
+        autoArrangeRec(childId);
+    }
+}
+
+BodyEditorItem* BodyEditor::getItem(quint32 id)
+{
+    foreach (QGraphicsItem *item, items()) {
+        if (item->type() == BodyEditorItem::Type) {
+            BodyEditorItem *eItem=(BodyEditorItem *)item;
+            if( eItem->getId()==id) {
+                return eItem;
+            }
+        }
+    }
+    return 0;
+}
+
+BrainiacGlobals::Direction BodyEditor::getDirection(const QVector3D &vec) const
+{
+    qreal y=vec.y();
+    qreal minXZ=qMin(vec.x(),vec.z());
+    qreal maxXZ=qMax(vec.x(),vec.z());
+    if(y>=0 && y>= maxXZ) {
+        return BrainiacGlobals::NORTH;
+    } else if (y<0 && y<minXZ) {
+        return BrainiacGlobals::SOUTH;
+    } else if (qAbs(minXZ)>maxXZ && minXZ<0) {
+        return BrainiacGlobals::WEST;
+    } else {
+        return BrainiacGlobals::EAST;
+    }
+}
 void BodyEditor::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsScene::mousePressEvent(event);

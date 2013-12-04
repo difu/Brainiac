@@ -23,6 +23,7 @@
 
 class AgentManager;
 class Agent;
+class BodyEditorItem;
 
 class BodyEditor : public EditorBase
 {
@@ -30,10 +31,15 @@ class BodyEditor : public EditorBase
 public:
     explicit BodyEditor(Scene *scene, AgentManager *agentManager);
     void addSegment(quint32 id);
+    BodyEditorItem* getItem(quint32 id);
+    void autoArrange();
     void updateItemLocations();
 protected:
     AgentManager *m_agentManager; //!< the agentmanager
+    void autoArrangeRec(quint32 segId);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
+private:
+    BrainiacGlobals::Direction getDirection( const QVector3D& vec) const;
 signals:
 
 public slots:

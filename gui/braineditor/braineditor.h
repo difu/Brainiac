@@ -21,6 +21,7 @@
 
 #include <QGraphicsScene>
 #include "gui/editorbase.h"
+#include "core/brainiacglobals.h"
 
 class AgentManager;
 class Agent;
@@ -50,6 +51,7 @@ protected:
     BrainEditorItem *m_connectSourceItem; //!< holds the source fuzz when in connection mode
     Agent *m_selectedAgent; //!< the currently selected agent of this editor. This agent´s fuzz results are displayed
     AgentManager *m_agentManager; //!< the agentmanager of this braineditor
+
 signals:
     void statusBarMessageChanged( const QString & message );
     void itemsDelete();

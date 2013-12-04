@@ -722,7 +722,7 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
 //            } else {
 //                nodeStack.last()->addNode(box);
 //            }
-            setBodyEditorTranslation(nodeId,1800+nodeId*5,1800+nodeId*5);
+            setBodyEditorTranslation(nodeId,0,0);
             nodeStack.push_back(seg.getId());
             m_bodyManager->setNewSegmentBySegment(seg);
 
@@ -850,6 +850,7 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
 
 //    //qDumpScene(m_masterAgent->getBody()->getRootSkeletonNode());
 //    m_bodyManager->dDumpBody();
+    m_bodyManager->getBodyEdtor()->autoArrange();
     return true;
 }
 
