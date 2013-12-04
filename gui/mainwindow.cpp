@@ -472,7 +472,7 @@ void MainWindow::loadSkeleton()
     QFileInfo fInfo(m_scene->getFileName());
     QString fileName = QFileDialog::getOpenFileName(this,tr("Select a skeleton to import"),fInfo.absolutePath(),tr("BVH (*.bvh)"),&selectedFilter,options);
     Group *newGroup=new Group(m_scene);
-    newGroup->setId(10);
+    newGroup->setId(m_scene->getNewGroupId());
     newGroup->setName("BVHImportTest");
     newGroup->getAgentManager()->loadSkeleton(fileName);
     newGroup->setEditorTranslation(2200,2000);

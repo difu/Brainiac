@@ -65,6 +65,13 @@ public:
     QString getAbsoluteFileDir() const;
 
     /**
+     * @brief creates and returns a new id for a group to be added
+     *
+     * @return quint32 a new unique id
+     */
+    quint32 getNewGroupId() { return m_groupIdGenerator.getNewId(); }
+
+    /**
      * @brief returns the relative path of given file to the location of the scene file
      *
      * all files are saved relative to the scenefile
