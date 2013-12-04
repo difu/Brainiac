@@ -105,14 +105,14 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
 
 void MainWindow::addAgentManager(AgentManager *agentManager)
 {
-    BrainEditor *editor=new BrainEditor(m_scene,agentManager);
-    m_brainEditors.insert(agentManager,editor);
+    //BrainEditor *editor=new BrainEditor(m_scene,agentManager);
+    m_brainEditors.insert(agentManager,agentManager->getBrainEditor());
     // This signal activates editor in South region
-    connect(editor, SIGNAL(itemClicked(ItemEditorWidgetsBase::editMessage)),this,SLOT(editorNodeClick(ItemEditorWidgetsBase::editMessage)));
+    connect(agentManager->getBrainEditor(), SIGNAL(itemClicked(ItemEditorWidgetsBase::editMessage)),this,SLOT(editorNodeClick(ItemEditorWidgetsBase::editMessage)));
     // When a frame has been calculated update the braineditors to display the new values
-    connect(m_scene->getSimulation(),SIGNAL(frameDone()),editor,SLOT(update()),Qt::DirectConnection);
+    connect(m_scene->getSimulation(),SIGNAL(frameDone()),agentManager->getBrainEditor(),SLOT(update()),Qt::DirectConnection);
     // Display statusbar messages
-    connect(editor, SIGNAL(statusBarMessageChanged(QString)),this,SLOT(statusBarMessageChange(QString)));
+    connect(agentManager->getBrainEditor(), SIGNAL(statusBarMessageChanged(QString)),this,SLOT(statusBarMessageChange(QString)));
     BodyEditor *bodyEditor=new BodyEditor(m_scene,agentManager);
     m_bodyEditors.insert(agentManager,bodyEditor);
     connect(bodyEditor,SIGNAL(itemClicked(ItemEditorWidgetsBase::editMessage)),this,SLOT(editorNodeClick(ItemEditorWidgetsBase::editMessage)));
@@ -487,7 +487,7 @@ void MainWindow::loadSkeleton()
 void MainWindow::saveAgent()
 {
     if(m_activeAgentManager) {
-        m_brainEditors.value(m_activeAgentManager)->updateItemLocations();
+//        m_brainEditors.value(m_activeAgentManager)->updateItemLocations();
         m_bodyEditors.value(m_activeAgentManager)->updateItemLocations();
         if(!m_activeAgentManager->isFileNameSet()) {
             QString fileName = QFileDialog::getSaveFileName(this, tr("Save Agent as"),

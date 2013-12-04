@@ -34,81 +34,95 @@ BrainEditor::BrainEditor(Scene *scene, AgentManager *agentManager) : EditorBase(
     m_altPressed=false;
     m_shiftPressed=false;
     m_connectSourceItem=0;
-    foreach(FuzzyBase *fuzzy, m_agentManager->getMasterAgent()->getBrain()->getFuzzies())
-    {
-        if(fuzzy->getType()==FuzzyBase::OUTPUT) {
-            BrainEditorItem *item=new BrainEditorItem(BrainiacGlobals::OUTPUT,m_agentManager,fuzzy->getId());
-            item->setPos(m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).x(),m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).y());
-            //item->setFlag();
-            addItem(item);
-            continue;
-        } else if(fuzzy->getType()==FuzzyBase::INPUT) {
-            BrainEditorItem *item=new BrainEditorItem(BrainiacGlobals::INPUT,m_agentManager,fuzzy->getId());
-            item->setPos(m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).x(),m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).y());
-            //item->setFlag();
-            addItem(item);
-            continue;
-        } else if(fuzzy->getType()==FuzzyBase::NOISE) {
-            BrainEditorItem *item=new BrainEditorItem(BrainiacGlobals::NOISE,m_agentManager,fuzzy->getId());
-            item->setPos(m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).x(),m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).y());
-            addItem(item);
-            continue;
-        } else if(fuzzy->getType()==FuzzyBase::AND) {
-            BrainEditorItem *item=new BrainEditorItem(BrainiacGlobals::AND,m_agentManager,fuzzy->getId());
-            item->setPos(m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).x(),m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).y());
-            addItem(item);
-            continue;
-        } else if(fuzzy->getType()==FuzzyBase::OR) {
-            BrainEditorItem *item=new BrainEditorItem(BrainiacGlobals::OR,m_agentManager,fuzzy->getId());
-            item->setPos(m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).x(),m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).y());
-            addItem(item);
-            continue;
-        } else if(fuzzy->getType()==FuzzyBase::DEFUZZ) {
-            BrainEditorItem *item=new BrainEditorItem(BrainiacGlobals::DEFUZZ,m_agentManager,fuzzy->getId());
-            item->setPos(m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).x(),m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).y());
-            addItem(item);
-            continue;
-        } else if(fuzzy->getType()==FuzzyBase::FUZZ) {
-            BrainEditorItem *item=new BrainEditorItem(BrainiacGlobals::FUZZ,m_agentManager,fuzzy->getId());
-            item->setPos(m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).x(),m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).y());
-            addItem(item);
-            continue;
-        } else if(fuzzy->getType()==FuzzyBase::TIMER) {
-            BrainEditorItem *item=new BrainEditorItem(BrainiacGlobals::TIMER,m_agentManager,fuzzy->getId());
-            item->setPos(m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).x(),m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).y());
-            addItem(item);
-            continue;
-        }
+//    foreach(FuzzyBase *fuzzy, m_agentManager->getMasterAgent()->getBrain()->getFuzzies())
+//    {
+//        if(fuzzy->getType()==FuzzyBase::OUTPUT) {
+//            BrainEditorItem *item=new BrainEditorItem(BrainiacGlobals::OUTPUT,m_agentManager,fuzzy->getId());
+//            item->setPos(m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).x(),m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).y());
+//            //item->setFlag();
+//            addItem(item);
+//            continue;
+//        } else if(fuzzy->getType()==FuzzyBase::INPUT) {
+//            BrainEditorItem *item=new BrainEditorItem(BrainiacGlobals::INPUT,m_agentManager,fuzzy->getId());
+//            item->setPos(m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).x(),m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).y());
+//            //item->setFlag();
+//            addItem(item);
+//            continue;
+//        } else if(fuzzy->getType()==FuzzyBase::NOISE) {
+//            BrainEditorItem *item=new BrainEditorItem(BrainiacGlobals::NOISE,m_agentManager,fuzzy->getId());
+//            item->setPos(m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).x(),m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).y());
+//            addItem(item);
+//            continue;
+//        } else if(fuzzy->getType()==FuzzyBase::AND) {
+//            BrainEditorItem *item=new BrainEditorItem(BrainiacGlobals::AND,m_agentManager,fuzzy->getId());
+//            item->setPos(m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).x(),m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).y());
+//            addItem(item);
+//            continue;
+//        } else if(fuzzy->getType()==FuzzyBase::OR) {
+//            BrainEditorItem *item=new BrainEditorItem(BrainiacGlobals::OR,m_agentManager,fuzzy->getId());
+//            item->setPos(m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).x(),m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).y());
+//            addItem(item);
+//            continue;
+//        } else if(fuzzy->getType()==FuzzyBase::DEFUZZ) {
+//            BrainEditorItem *item=new BrainEditorItem(BrainiacGlobals::DEFUZZ,m_agentManager,fuzzy->getId());
+//            item->setPos(m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).x(),m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).y());
+//            addItem(item);
+//            continue;
+//        } else if(fuzzy->getType()==FuzzyBase::FUZZ) {
+//            BrainEditorItem *item=new BrainEditorItem(BrainiacGlobals::FUZZ,m_agentManager,fuzzy->getId());
+//            item->setPos(m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).x(),m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).y());
+//            addItem(item);
+//            continue;
+//        } else if(fuzzy->getType()==FuzzyBase::TIMER) {
+//            BrainEditorItem *item=new BrainEditorItem(BrainiacGlobals::TIMER,m_agentManager,fuzzy->getId());
+//            item->setPos(m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).x(),m_agentManager->getEditorFuzzyLocations().value(fuzzy->getId()).y());
+//            addItem(item);
+//            continue;
+//        }
+//    }
+//    foreach(FuzzyBase *fuzzy, m_agentManager->getMasterAgent()->getBrain()->getFuzzies())
+//    {
+//        if(fuzzy->hasChildren()) {
+//            EditorItem *eItemParent=0;
+//            EditorItem *eItemChild=0;
+//            foreach (QGraphicsItem *item, items()) {
+//                if(item->type()==EditorItem::Type) {
+//                    eItemParent=qgraphicsitem_cast<EditorItem*> (item);
+//                    if(eItemParent) {
+//                        if(eItemParent->getId()==fuzzy->getId()) {
+//                            //qDebug( ) << "Found parent" << eItemParent->getId();
+//                            foreach(FuzzyBase *fuzzChild, fuzzy->getChildren()) {
+//                                foreach (QGraphicsItem *childItem, items()) {
+//                                    if(childItem->type()==EditorItem::Type) {
+//                                        eItemChild=qgraphicsitem_cast<EditorItem*> (childItem);
+//                                        if(eItemChild->getId()==fuzzChild->getId()) {
+//                                            EditorItemConnector *connector=new EditorItemConnector(eItemParent,eItemChild);
+//                                            connector->setInverted(fuzzChild->isConnectionInverted(fuzzy->getId()));
+//                                            addItem(connector);
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+
+}
+
+void BrainEditor::addFuzzyItem(quint32 id)
+{
+    if(m_agentManager->getMasterAgent()->getBrain()->getFuzzy(id)) {
+        BrainEditorItem *item=new BrainEditorItem((BrainiacGlobals::ItemType)m_agentManager->getFuzzType(id),m_agentManager,id);
+        item->setPos(m_agentManager->getEditorFuzzyLocations().value(id).x()+BrainEditorItem::_width,m_agentManager->getEditorFuzzyLocations().value(id).y());
+        addItem(item);
+        qDebug() << __PRETTY_FUNCTION__ <<  item->getId() << item->getType();
+    } else {
+        qCritical() << __PRETTY_FUNCTION__ << "No item with id"  << id;
     }
-    foreach(FuzzyBase *fuzzy, m_agentManager->getMasterAgent()->getBrain()->getFuzzies())
-    {
-        if(fuzzy->hasChildren()) {
-            EditorItem *eItemParent=0;
-            EditorItem *eItemChild=0;
-            foreach (QGraphicsItem *item, items()) {
-                if(item->type()==EditorItem::Type) {
-                    eItemParent=qgraphicsitem_cast<EditorItem*> (item);
-                    if(eItemParent) {
-                        if(eItemParent->getId()==fuzzy->getId()) {
-                            //qDebug( ) << "Found parent" << eItemParent->getId();
-                            foreach(FuzzyBase *fuzzChild, fuzzy->getChildren()) {
-                                foreach (QGraphicsItem *childItem, items()) {
-                                    if(childItem->type()==EditorItem::Type) {
-                                        eItemChild=qgraphicsitem_cast<EditorItem*> (childItem);
-                                        if(eItemChild->getId()==fuzzChild->getId()) {
-                                            EditorItemConnector *connector=new EditorItemConnector(eItemParent,eItemChild);
-                                            connector->setInverted(fuzzChild->isConnectionInverted(fuzzy->getId()));
-                                            addItem(connector);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+
     //! \bug  OK..Doing Here really nasty stuff. The Connectors are NOT SHOWING when scene is initially displayed So move all items one to the right and back again to schedule a redraw... Why the F*CK
     foreach (QGraphicsItem *item, items()) {
         if (item->type() == BrainEditorItem::Type) {
@@ -118,6 +132,50 @@ BrainEditor::BrainEditor(Scene *scene, AgentManager *agentManager) : EditorBase(
         }
     }
 }
+
+void BrainEditor::addConnector(quint32 sourceId, quint32 destId)
+{
+    EditorItem *sourceItem=0;
+    EditorItem *destItem=0;
+    foreach (QGraphicsItem *item, items()) {
+        if(item->type()==EditorItem::Type) {
+            sourceItem=qgraphicsitem_cast<EditorItem*> (item);
+            if(!sourceItem) {
+                qCritical() << __PRETTY_FUNCTION__ << "No source item with id"  << sourceId;
+            }
+            if(sourceItem->getId()==sourceId) {
+                break;
+            }
+        }
+    }
+    foreach (QGraphicsItem *item, items()) {
+        if(item->type()==EditorItem::Type) {
+            destItem=qgraphicsitem_cast<EditorItem*> (item);
+            if(!destItem) {
+                qCritical() << __PRETTY_FUNCTION__ << "No dest item with id"  << destId;
+            }
+            if(destItem->getId()==destId) {
+                break;
+            }
+        }
+    }
+    EditorItemConnector *connector=new EditorItemConnector(sourceItem,destItem);
+    FuzzyBase *fuzz=m_agentManager->getMasterAgent()->getBrain()->getFuzzy(destId);
+    connector->setInverted(fuzz->isConnectionInverted(sourceId));
+    addItem(connector);
+
+    //! \bug  OK..Doing Here really nasty stuff. The Connectors are NOT SHOWING when scene is initially displayed So move all items one to the right and back again to schedule a redraw... Why the F*CK
+    foreach (QGraphicsItem *item, items()) {
+        if (item->type() == BrainEditorItem::Type) {
+            BrainEditorItem *eItem=(BrainEditorItem *)item;
+            eItem->setPos(eItem->x()+EditorItem::_raster,eItem->y());
+            eItem->setPos(eItem->x()-EditorItem::_raster,eItem->y());
+        }
+    }
+
+    qDebug() << __PRETTY_FUNCTION__ << sourceId << destId;
+}
+
 
 void BrainEditor::deleteSelectedItems()
 {
@@ -297,12 +355,5 @@ void BrainEditor::dropEvent(QGraphicsSceneDragDropEvent *event)
         default:
             qDebug()<<__PRETTY_FUNCTION__ << "Not a valid label!";
         }
-        if(fuzzId>0) {
-            BrainEditorItem *item=new BrainEditorItem(type,m_agentManager,fuzzId);
-            item->setPos(event->scenePos().x()+BrainEditorItem::_width,event->scenePos().y());
-            addItem(item);
-        }
-
     }
-
 }

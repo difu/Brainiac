@@ -31,6 +31,8 @@ class BrainEditor : public EditorBase
     Q_OBJECT
 public:
     explicit BrainEditor(Scene *scene, AgentManager *agentManager);
+    void addFuzzyItem(quint32 id);
+    void addConnector(quint32 sourceId, quint32 destId);
     Agent* getSelectedAgent();
     void setSelectedAgent(Agent *agent);
     void updateItemLocations();

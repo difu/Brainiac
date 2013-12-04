@@ -30,6 +30,7 @@ class QXmlStreamReader;
 class Scene;
 class Animation;
 class BodyManager;
+class BrainEditor;
 
 class AgentManager
 {
@@ -169,6 +170,8 @@ public:
     QHash<quint32, QPoint> getEditorFuzzyLocations();
     Group* getGroup() { return m_group; }
 
+    FuzzyBase::LogicType getFuzzType( quint32 fuzzId);
+    BrainEditor *getBrainEditor() { return m_brainEditor; }
     /**
      * @brief returns a pointer to the master gent
      *
@@ -422,6 +425,7 @@ protected:
     IdGenerator m_segmentIdGenerator;
     QHash<quint32,Animation *> m_animations;
     QList<Agent *> m_agents; /**< contains all agents, including special purpose agents like @sa m_masterAgent */
+    BrainEditor *m_brainEditor; /**< contains the editor widgets of the brain */
 
     // Brain stuff
     void addAndFuzz(quint32 id, QString name, QString mode, quint32 editorX, quint32 editorY);

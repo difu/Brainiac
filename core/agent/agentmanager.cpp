@@ -37,6 +37,7 @@
 #include "core/agent/body/bodymanager.h"
 #include "core/agent/body/segment.h"
 #include "core/brainiacerror.h"
+#include "gui/braineditor/braineditor.h"
 #include <QFile>
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
@@ -56,6 +57,7 @@ AgentManager::AgentManager(Group *group)
     m_spActionAgent=cloneAgent(0);
     m_agents.append(m_spBodyAgent);
     m_agents.append(m_spActionAgent);
+    m_brainEditor=new BrainEditor(m_scene,this);
 }
 
 void AgentManager::addSegmentFromConfig(QXmlStreamReader *reader, quint32 id, QString name, quint32 parent, quint32 editorX, quint32 editorY)
@@ -183,6 +185,7 @@ void AgentManager::addAndFuzz(quint32 id, QString name, QString mode, quint32 ed
     }
     m_brainIdGenerator.registerId(id);
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
+    m_brainEditor->addFuzzyItem(id);
 }
 
 quint32 AgentManager::addFuzzFuzz(quint32 editorX, quint32 editorY)
@@ -231,6 +234,7 @@ void AgentManager::addFuzzFuzz(quint32 id, QString name, QString mode, QString i
     }
     m_brainIdGenerator.registerId(id);
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
+    m_brainEditor->addFuzzyItem(id);
 }
 
 quint32 AgentManager::addDefuzz(quint32 editorX, quint32 editorY)
@@ -255,6 +259,7 @@ void AgentManager::addDefuzz(quint32 id, QString name, qreal defuzzValue, bool i
     }
     m_brainIdGenerator.registerId(id);
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
+    m_brainEditor->addFuzzyItem(id);
 }
 
 quint32 AgentManager::addOrFuzz(quint32 editorX, quint32 editorY)
@@ -283,6 +288,7 @@ void AgentManager::addOrFuzz(quint32 id, QString name, QString mode, quint32 edi
     }
     m_brainIdGenerator.registerId(id);
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
+    m_brainEditor->addFuzzyItem(id);
 }
 
 quint32 AgentManager::addOutputFuzz(quint32 editorX, quint32 editorY)
@@ -309,6 +315,7 @@ void AgentManager::addOutputFuzz(quint32 id, QString name, QString channel, qrea
     }
     m_brainIdGenerator.registerId(id);
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
+    m_brainEditor->addFuzzyItem(id);
 }
 
 quint32 AgentManager::addInputFuzz(quint32 editorX, quint32 editorY)
@@ -334,6 +341,7 @@ void AgentManager::addInputFuzz(quint32 id, QString name, QString channel, qreal
     setFuzzyChannelName(id,channel); //!< @bug @todo Channel name must be set here to determine if an input is a sound input node...
     m_brainIdGenerator.registerId(id);
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
+    m_brainEditor->addFuzzyItem(id);
 }
 
 quint32 AgentManager::addNoiseFuzz(quint32 editorX, quint32 editorY)
@@ -359,6 +367,7 @@ void AgentManager::addNoiseFuzz(quint32 id, QString name, qreal rate, quint32 ed
     }
     m_brainIdGenerator.registerId(id);
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
+    m_brainEditor->addFuzzyItem(id);
 }
 
 quint32 AgentManager::addTimerFuzz(quint32 editorX, quint32 editorY)
@@ -385,6 +394,7 @@ void AgentManager::addTimerFuzz(quint32 id, QString name, qreal rate, QString mo
     }
     m_brainIdGenerator.registerId(id);
     m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
+    m_brainEditor->addFuzzyItem(id);
 }
 
 void AgentManager::addConnector(quint32 childId, quint32 parentId, bool inverted)
@@ -394,6 +404,7 @@ void AgentManager::addConnector(quint32 childId, quint32 parentId, bool inverted
         agent->addConnection(childId, parentId, inverted);
     }
     updateSoundConfigs();
+    m_brainEditor->addConnector(parentId,childId);
 }
 
 Agent* AgentManager::cloneAgent(quint32 id)
@@ -437,6 +448,15 @@ QHash<quint32, QPoint> AgentManager::getEditorSegmentNodeLocations()
 QHash<quint32, QPoint> AgentManager::getEditorFuzzyLocations()
 {
     return m_editorFuzzyLocations;
+}
+
+FuzzyBase::LogicType AgentManager::getFuzzType(quint32 fuzzId)
+{
+    FuzzyBase *fuzz=m_masterAgent->getBrain()->getFuzzy(fuzzId);
+    if(fuzz) {
+        return fuzz->getType();
+    }
+    else return (FuzzyBase::LogicType) 0;
 }
 
 bool AgentManager::loadConfig()
@@ -831,6 +851,7 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
 
 bool AgentManager::saveConfig()
 {
+    m_brainEditor->updateItemLocations();
     QFile file(m_fileName);
     if(!file.open(QIODevice::WriteOnly) ) {
         return false;
