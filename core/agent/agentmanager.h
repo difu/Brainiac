@@ -209,6 +209,8 @@ public:
 
     BodyManager *getBodyManager() { return m_bodyManager; }
 
+    Scene* getScene() { return m_scene; }
+
     /**
      * @brief returns a modifiable reference to the segment id generator
      *

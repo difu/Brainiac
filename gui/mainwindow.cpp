@@ -36,6 +36,7 @@
 #include "gui/scenedisplay_.h"
 #include "editorlabel.h"
 #include "core/agent/agentmanager.h"
+#include "core/agent/body/bodymanager.h"
 #include "core/agent/agent.h"
 #include "core/scene.h"
 #include "core/simulation.h"
@@ -113,9 +114,9 @@ void MainWindow::addAgentManager(AgentManager *agentManager)
     connect(m_scene->getSimulation(),SIGNAL(frameDone()),agentManager->getBrainEditor(),SLOT(update()),Qt::DirectConnection);
     // Display statusbar messages
     connect(agentManager->getBrainEditor(), SIGNAL(statusBarMessageChanged(QString)),this,SLOT(statusBarMessageChange(QString)));
-    BodyEditor *bodyEditor=new BodyEditor(m_scene,agentManager);
-    m_bodyEditors.insert(agentManager,bodyEditor);
-    connect(bodyEditor,SIGNAL(itemClicked(ItemEditorWidgetsBase::editMessage)),this,SLOT(editorNodeClick(ItemEditorWidgetsBase::editMessage)));
+    //BodyEditor *bodyEditor=new BodyEditor(m_scene,agentManager);
+    m_bodyEditors.insert(agentManager,agentManager->getBodyManager()->getBodyEdtor());
+    connect(agentManager->getBodyManager()->getBodyEdtor(),SIGNAL(itemClicked(ItemEditorWidgetsBase::editMessage)),this,SLOT(editorNodeClick(ItemEditorWidgetsBase::editMessage)));
 
 }
 
@@ -488,7 +489,7 @@ void MainWindow::saveAgent()
 {
     if(m_activeAgentManager) {
 //        m_brainEditors.value(m_activeAgentManager)->updateItemLocations();
-        m_bodyEditors.value(m_activeAgentManager)->updateItemLocations();
+//        m_bodyEditors.value(m_activeAgentManager)->updateItemLocations();
         if(!m_activeAgentManager->isFileNameSet()) {
             QString fileName = QFileDialog::getSaveFileName(this, tr("Save Agent as"),
                                         "",

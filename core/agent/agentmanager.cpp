@@ -38,6 +38,7 @@
 #include "core/agent/body/segment.h"
 #include "core/brainiacerror.h"
 #include "gui/braineditor/braineditor.h"
+#include "gui/bodyeditor/bodyeditor.h"
 #include <QFile>
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
@@ -152,11 +153,12 @@ void AgentManager::addSegmentFromConfig(QXmlStreamReader *reader, quint32 id, QS
     m_bodyManager->setNewSegmentScale(scale);
     m_bodyManager->setNewSegmentColor(color);
     m_bodyManager->setNewSegmentColorInherited(colorInherited);
+    setBodyEditorTranslation(id,editorX,editorY);
     m_bodyManager->createNewSegment();
 
 
     //m_masterAgent->getBody()->addSkeletonNode(newNode,parent);
-    setBodyEditorTranslation(id,editorX,editorY);
+
 }
 
 quint32 AgentManager::addAndFuzz(quint32 editorX, quint32 editorY)
@@ -429,6 +431,7 @@ void AgentManager::deleteConnector(quint32 childId, quint32 parentId)
         agent->deleteConnection(parentId,childId);
     }
     updateSoundConfigs();
+    m_brainEditor->deleteConnector(parentId,childId);
 }
 
 void AgentManager::deleteFuzz(quint32 fuzzId)
@@ -438,6 +441,7 @@ void AgentManager::deleteFuzz(quint32 fuzzId)
         agent->deleteFuzz(fuzzId);
     }
     updateSoundConfigs();
+    m_brainEditor->deleteFuzzyItem(fuzzId);
 }
 
 QHash<quint32, QPoint> AgentManager::getEditorSegmentNodeLocations()
@@ -852,6 +856,7 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
 bool AgentManager::saveConfig()
 {
     m_brainEditor->updateItemLocations();
+    m_bodyManager->getBodyEdtor()->updateItemLocations();
     QFile file(m_fileName);
     if(!file.open(QIODevice::WriteOnly) ) {
         return false;

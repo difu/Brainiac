@@ -31,41 +31,70 @@
 BodyEditor::BodyEditor(Scene *scene, AgentManager *agentManager) : EditorBase(scene)
 {
     m_agentManager=agentManager;
-    QHash<quint32, BodyEditorItem*> segItems;
-    foreach(Segment *seg,m_agentManager->getBodyManager()->getSegments()) {
-        BodyEditorItem *item=0;
-        switch(seg->getType()) {
-        case BrainiacGlobals::SPHERE:
-            item=new BodyEditorItem(BrainiacGlobals::SPHERE,m_agentManager,seg->getId());
-            item->setPos(agentManager->getEditorSegmentNodeLocations().value(seg->getId()).x(),agentManager->getEditorSegmentNodeLocations().value(seg->getId()).y());
-            addItem(item);
-            break;
-        case BrainiacGlobals::TUBE:
-            item=new BodyEditorItem(BrainiacGlobals::TUBE,m_agentManager,seg->getId());
-            item->setPos(agentManager->getEditorSegmentNodeLocations().value(seg->getId()).x(),agentManager->getEditorSegmentNodeLocations().value(seg->getId()).y());
-            addItem(item);
-            break;
-        case BrainiacGlobals::CUBE:
-            item=new BodyEditorItem(BrainiacGlobals::CUBE,m_agentManager,seg->getId());
-            item->setPos(agentManager->getEditorSegmentNodeLocations().value(seg->getId()).x(),agentManager->getEditorSegmentNodeLocations().value(seg->getId()).y());
-            addItem(item);
-        default:
-            qCritical() << __PRETTY_FUNCTION__ << "seg Type not handled" << seg->getType();
-        }
-        segItems.insert(seg->getId(),item);
+//    QHash<quint32, BodyEditorItem*> segItems;
+//    foreach(Segment *seg,m_agentManager->getBodyManager()->getSegments()) {
+//        BodyEditorItem *item=0;
+//        switch(seg->getType()) {
+//        case BrainiacGlobals::SPHERE:
+//            item=new BodyEditorItem(BrainiacGlobals::SPHERE,m_agentManager,seg->getId());
+//            item->setPos(agentManager->getEditorSegmentNodeLocations().value(seg->getId()).x(),agentManager->getEditorSegmentNodeLocations().value(seg->getId()).y());
+//            addItem(item);
+//            break;
+//        case BrainiacGlobals::TUBE:
+//            item=new BodyEditorItem(BrainiacGlobals::TUBE,m_agentManager,seg->getId());
+//            item->setPos(agentManager->getEditorSegmentNodeLocations().value(seg->getId()).x(),agentManager->getEditorSegmentNodeLocations().value(seg->getId()).y());
+//            addItem(item);
+//            break;
+//        case BrainiacGlobals::CUBE:
+//            item=new BodyEditorItem(BrainiacGlobals::CUBE,m_agentManager,seg->getId());
+//            item->setPos(agentManager->getEditorSegmentNodeLocations().value(seg->getId()).x(),agentManager->getEditorSegmentNodeLocations().value(seg->getId()).y());
+//            addItem(item);
+//        default:
+//            qCritical() << __PRETTY_FUNCTION__ << "seg Type not handled" << seg->getType();
+//        }
+//        segItems.insert(seg->getId(),item);
+//    }
+//    foreach(Segment *seg,m_agentManager->getBodyManager()->getSegments()) {
+//        if(seg->getParentId()) {
+//            BodyEditorItem *parentItem=segItems.value(seg->getParentId(),0);
+//            if(parentItem) {
+//                EditorItemConnector *connector=new EditorItemConnector(parentItem,segItems.value(seg->getId()));
+//                addItem(connector);
+//            }
+//        }
+//    }
+
+
+
+}
+
+void BodyEditor::addSegment(quint32 id)
+{
+    Segment seg=m_agentManager->getBodyManager()->getSegment(id);
+    if(seg.getId()==0) {
+        qCritical() << __PRETTY_FUNCTION__ << "Segment with id " << id << "does not exist!";
+        return;
     }
-    foreach(Segment *seg,m_agentManager->getBodyManager()->getSegments()) {
-        if(seg->getParentId()) {
-            BodyEditorItem *parentItem=segItems.value(seg->getParentId(),0);
-            if(parentItem) {
-                EditorItemConnector *connector=new EditorItemConnector(parentItem,segItems.value(seg->getId()));
-                addItem(connector);
+    BodyEditorItem *newItem=0;
+    newItem=new BodyEditorItem((BrainiacGlobals::ItemType)seg.getType(),m_agentManager,seg.getId());
+    newItem->setPos(m_agentManager->getEditorSegmentNodeLocations().value(seg.getId()).x(),m_agentManager->getEditorSegmentNodeLocations().value(seg.getId()).y());
+    addItem(newItem);
+    // qDebug() << "Added id " << id << m_agentManager->getEditorSegmentNodeLocations().value(seg.getId()).x()  << m_agentManager->getEditorSegmentNodeLocations().value(seg.getId()).y();
+    if(!seg.isRootSegment()) {
+        quint32 parentId=seg.getParentId();
+        foreach (QGraphicsItem *item, items()) {
+            if (item->type() == BodyEditorItem::Type) {
+                BodyEditorItem *eItem=(BodyEditorItem *)item;
+                if(eItem->getId()==parentId) {
+                    EditorItemConnector *connector=new EditorItemConnector(eItem,newItem);
+                    addItem(connector);
+                }
             }
         }
+
     }
 
-
-    //! \bug  OK..Doing Here really nasty stuff. The Connectors are NOT SHOWING when scene is initially displayed So move all items one to the right and back again to schedule a redraw... Why the F*CK
+    //! \bug  OK..Doing Here really nasty stuff. The Connectors are NOT SHOWING when scene is initially displayed. So move all items one to the right and back again to schedule a redraw... Why the F*CK
     foreach (QGraphicsItem *item, items()) {
         if (item->type() == BodyEditorItem::Type) {
             BodyEditorItem *eItem=(BodyEditorItem *)item;

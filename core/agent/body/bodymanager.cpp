@@ -21,11 +21,13 @@
 #include "core/agent/agent.h"
 #include "core/agent/body/body.h"
 #include "core/agent/body/bodysegment.h"
+#include "gui/bodyeditor/bodyeditor.h"
 
 BodyManager::BodyManager(AgentManager *manager)
 {
     m_agentManager=manager;
     resetNewSegmentProperties();
+    m_bodyEditor=new BodyEditor(m_agentManager->getScene(),m_agentManager); //!< @todo Fix this! Ugly!
 }
 
 void BodyManager::addSegmentToAgents(quint32 id)
@@ -100,6 +102,7 @@ bool BodyManager::createNewSegment(bool processRootId)
     m_segments.insert(newSegment->getId(),newSegment);
     addSegmentToAgents(newSegment->getId());
     resetNewSegmentProperties();
+    m_bodyEditor->addSegment(newSegment->getId());
     return true;
 }
 

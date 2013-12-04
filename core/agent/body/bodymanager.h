@@ -26,6 +26,7 @@
 
 class AgentManager;
 class Agent;
+class BodyEditor;
 
 /**
  * @brief
@@ -201,6 +202,13 @@ public:
      */
     bool createNewSegment(bool processRootId=false);
 
+    /**
+     * @brief creates a new segment
+     *
+     * @return BodyEditor * a pointer to the BodyEditor
+     */
+    BodyEditor *getBodyEdtor() { return m_bodyEditor; }
+
     Segment getRootSegment() const;
 
     QVector3D getSegmentRestRotation(quint32 id) const;
@@ -260,7 +268,7 @@ protected:
     AgentManager *m_agentManager; /**< The AgentManager this BodyManagers belongs to */
     Segment m_newSegment; /**< Temporary Segment */
     QHash<quint32, SegmentShape *> m_segments; /**< TODO */
-
+    BodyEditor *m_bodyEditor; /**< the BodyEditor */
 };
 
 #endif // BODYMANAGER_H
