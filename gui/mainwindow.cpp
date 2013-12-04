@@ -70,7 +70,6 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
     createActions();
     createMenues();
 
-    setEditMode(MainWindow::SCENE);
 
     //qDebug() << __PRETTY_FUNCTION__;
 
@@ -81,6 +80,7 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
 
     m_bodyDisplayOSG=new BodyDisplay_();
     m_sceneDisplayOSG=new SceneDisplay_(this->m_scene);
+    setEditMode(m_editMode);
 
     //m_sceneDisplay=new SceneDisplay(this->m_scene,m_scene->getCameras().first());
     //connect(m_outputEditor,SIGNAL(updateGLContent()),m_sceneDisplay,SLOT(update()));
@@ -412,6 +412,7 @@ void MainWindow::readSettings()
     settings.beginGroup("MainWindow");
     resize(settings.value("size", QSize(400, 400)).toSize());
     move(settings.value("pos", QPoint(200, 200)).toPoint());
+    m_editMode=(EditMode)settings.value("editMode").toInt();
     settings.endGroup();
 }
 
@@ -595,6 +596,7 @@ void MainWindow::writeSettings()
     settings.beginGroup("MainWindow");
     settings.setValue("size", size());
     settings.setValue("pos", pos());
+    settings.setValue("editMode",m_editMode);
     settings.endGroup();
 }
 

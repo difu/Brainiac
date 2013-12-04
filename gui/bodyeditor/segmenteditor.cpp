@@ -181,8 +181,8 @@ void SegmentEditor::createDimensionSliders()
 
     m_SliderSphereRadius->setText("radius");
 
-    m_SliderTubeDiameter->setText("length");
-    m_SliderTubeLength->setText("diameter");
+    m_SliderTubeDiameter->setText("diameter");
+    m_SliderTubeLength->setText("length");
 
     m_SliderDimensionX->setRange(0.0f,50.0f);
     m_SliderDimensionY->setRange(0.0f,50.0f);
@@ -254,7 +254,7 @@ void SegmentEditor::manualDimensionsChanged(qreal value) {
         }
         break;
     case BrainiacGlobals::TUBESEGMENT:
-        m_agentManager->setSegmentDimensions(m_id,m_SliderTubeLength->getValue(),m_SliderTubeLength->getValue(),m_SliderTubeDiameter->getValue());
+        m_agentManager->setSegmentDimensions(m_id,m_SliderTubeDiameter->getValue(),m_SliderTubeDiameter->getValue(),m_SliderTubeLength->getValue());
         if(m_editSymetric) {
             quint32 otherId=getSymetricSegmentId();
             //m_agentManager->setSegmentDimensions(otherId,m_SliderTubeDiameter->getValue(),m_SliderTubeLength->getValue(),m_SliderTubeDiameter->getValue());
