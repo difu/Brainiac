@@ -309,4 +309,5 @@ BodyManager::~BodyManager()
         s->deleteLater();
     }
     m_segments.clear();
+    m_bodyEditor->deleteLater();
 }

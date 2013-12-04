@@ -1426,4 +1426,5 @@ AgentManager::~AgentManager() {
     foreach(Agent *agent,m_agents) {
         agent->deleteLater();
     }
+    m_brainEditor->deleteLater();
 }
