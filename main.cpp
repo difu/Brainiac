@@ -28,8 +28,12 @@ int main(int argc, char *argv[])
 {
     setenv("OSG_GL_EXTENSION_DISABLE","GL_EXT_timer_query GL_ARB_timer_query",0); //!< @bug see http://forum.openscenegraph.org/viewtopic.php?t=11086
     QApplication a(argc, argv);
+    a.setApplicationName("Brainiac");
+    a.setApplicationVersion("0.01");
+    a.setOrganizationDomain("com");
+    a.setOrganizationName("Braniac");
     const QString gitVersion(__LASTCOMMIT__);
-    std::cout << "Brainiac V0.01" << std::endl << std::flush;
+    std::cout << std::endl << a.applicationName().toStdString() << " " << a.applicationVersion().toStdString() << std::endl << std::flush;
     std::cout << "Build from Git commit " << gitVersion.toStdString() << std::endl << std::flush;
     // Apply stylesheet
     QFile file(":/gui/brainiacStyleSheet.style");

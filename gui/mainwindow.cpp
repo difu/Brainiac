@@ -407,7 +407,7 @@ void MainWindow::editorNodeClick(ItemEditorWidgetsBase::editMessage msg)
 
 void MainWindow::readSettings()
 {
-    QSettings settings("Brainiac SW", "Brainiac");
+    QSettings settings(QApplication::instance()->organizationName(),QApplication::instance()->applicationName());
 
     settings.beginGroup("MainWindow");
     resize(settings.value("size", QSize(400, 400)).toSize());
@@ -591,7 +591,7 @@ void MainWindow::statusBarMessageChange(const QString &message)
 
 void MainWindow::writeSettings()
 {
-    QSettings settings("Brainiac SW", "Brainiac");
+    QSettings settings(QApplication::instance()->organizationName(),QApplication::instance()->applicationName());
 
     settings.beginGroup("MainWindow");
     settings.setValue("size", size());
