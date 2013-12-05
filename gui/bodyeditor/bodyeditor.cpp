@@ -125,9 +125,9 @@ BrainiacGlobals::Direction BodyEditor::getDirection(const QVector3D &vec) const
     qreal y=vec.y();
     qreal minXZ=qMin(vec.x(),vec.z());
     qreal maxXZ=qMax(vec.x(),vec.z());
-    if(y>=0 && y>= maxXZ) {
+    if(y>=0 && y>= maxXZ && y>=qMax(qAbs(minXZ),qAbs(maxXZ))) {
         return BrainiacGlobals::NORTH;
-    } else if (y<0 && y<minXZ) {
+    } else if (y<0 && y<minXZ && y<=qMin(-qAbs(minXZ),-qAbs(maxXZ))) {
         return BrainiacGlobals::SOUTH;
     } else if (qAbs(minXZ)>maxXZ && minXZ<0) {
         return BrainiacGlobals::WEST;
