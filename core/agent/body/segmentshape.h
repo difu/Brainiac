@@ -24,7 +24,7 @@
 #include <osg/Geode>
 
 /**
- * @brief This class describes as segment and also holds the geometry that is shared between all agents of an AgentManager
+ * @brief This class describes a segment and also holds the geometry that is shared between all agents of an AgentManager
  *
  * @class SegmentShape segmentshape.h "core/agent/body/segmentshape.h"
  */
