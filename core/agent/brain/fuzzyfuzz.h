@@ -171,7 +171,7 @@ public:
             @returns the (possible corrected) value pf the 4th member function point
     **/
     qreal setP4(qreal p4, bool check=false);
-    static const qreal MinDistBetweenPoints=0.000001f; //!< the minimum distance between two membership poinzs as they must never overlap
+    static const qreal MinDistBetweenPoints; //!< the minimum distance between two membership poinzs as they must never overlap
 
 protected:
     Mode m_mode; //!< Fuzzyfication mode

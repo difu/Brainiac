@@ -206,6 +206,8 @@ qreal FuzzyFuzz::getP4Abs() const
     }
 }
 
+const qreal FuzzyFuzz::MinDistBetweenPoints=0.000001f;
+
 void FuzzyFuzz::setMode(Mode mode)
 {
     m_mode=mode;
