@@ -170,7 +170,7 @@ public:
     qreal getEndTime() const {return m_endTime;}
     bool isRootBoneCurve( const QString &curve ) const;
 
-    static const qreal minDistTime=0.001f; /**< minimum time distance between start and end in ms */
+    static const qreal minDistTime; /**< minimum time distance between start and end in ms */
 protected:
 
     /**

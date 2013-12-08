@@ -149,7 +149,7 @@ qreal AnimationCurve::getValue(qreal time) const
 void AnimationCurve::dPrintKeyFrames(quint32 start=0, quint32 end=1000) const
 {
     qDebug() << __PRETTY_FUNCTION__;
-    for(int i=start;i<m_keyFrames.count()&& i < end;++i) {
+    for(quint32 i=start;i<m_keyFrames.count()&& i < end;++i) {
         qDebug() <<"Keyframe " << i << " Time: " << m_keyFrames.at(i).x() << "Value" << m_keyFrames.at(i).y();
     }
 }

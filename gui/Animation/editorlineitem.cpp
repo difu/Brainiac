@@ -24,5 +24,6 @@
 
 EditorLineItem::EditorLineItem(QGraphicsScene *scene):QGraphicsLineItem(0)
 {
+    Q_UNUSED(scene);
     setLine(0,0,0,200);
 }

@@ -99,8 +99,9 @@ qreal FuzzyFuzz::getFuzzOut( qreal min, qreal max, qreal val ) const
     if(normVal<m_p1)
         if(m_mode==DEACTIVATE) {
             return 1;
-        } else
+        } else {
             return 0;
+        }
 
     if(normVal<m_p2) {
         qreal p1p2norm=BrainiacGlobals::norm(m_p1,m_p2,normVal);

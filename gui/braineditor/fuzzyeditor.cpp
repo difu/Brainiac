@@ -111,7 +111,7 @@ void FuzzyEditor::modeTrapezoidPressed()
 void FuzzyEditor::pointChanged()
 {
     quint32 id=m_editor->getPointId();
-    qreal val;
+    qreal val=0;
     if(id==0)
         val=m_fuzz->getP1Abs();
     else if(id==1)

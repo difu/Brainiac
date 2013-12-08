@@ -60,8 +60,7 @@ public:
     }
 
 protected:
-    virtual void paintEvent( QPaintEvent* event )
-    { m_viewer.frame(); }
+    virtual void paintEvent( QPaintEvent* event ) { Q_UNUSED(event);  m_viewer.frame(); }
 
     osgViewer::Viewer m_viewer;
     QTimer m_timer;
@@ -112,7 +111,7 @@ public:
 class RenderThread : public QThread
 {
 public:
-    RenderThread() : QThread(), viewerPtr(0),m_targetFPS(60) {
+    RenderThread() : QThread(), m_targetFPS(60), viewerPtr(0) {
         calcTargetFPSParams();
     }
 
@@ -229,6 +228,7 @@ public:
     osg::Camera* createCamera( int x, int y, int w, int h )
     {
         osg::DisplaySettings* ds = osg::DisplaySettings::instance().get();
+        Q_UNUSED(ds);
         osg::ref_ptr<osg::GraphicsContext::Traits> traits = new osg::GraphicsContext::Traits;
         traits->windowDecoration = false;
         traits->x = x;
@@ -259,7 +259,7 @@ public:
     }
 
 protected:
-    virtual void paintEvent( QPaintEvent* event ) { m_viewer.frame(); }
+    virtual void paintEvent( QPaintEvent* event ) { Q_UNUSED(event);m_viewer.frame(); }
     osgViewer::Viewer m_viewer;
     osg::Group *m_rootNode;
     osg::Camera* m_camera;

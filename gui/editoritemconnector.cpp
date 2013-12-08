@@ -25,7 +25,7 @@ EditorItemConnector::EditorItemConnector(EditorItem *startItem, EditorItem *endI
          QGraphicsItem *parent, QGraphicsScene *scene)
     : QGraphicsLineItem(parent)
 {
-
+    Q_UNUSED(scene);
     m_StartItem = startItem;
     m_EndItem = endItem;
     m_inverted = false;

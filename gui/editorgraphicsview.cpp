@@ -117,6 +117,7 @@ void EditorGraphicsView::setScene(EditorBase *scene)
 
 void EditorGraphicsView::sliderMoved(int value)
 {
+    Q_UNUSED(value);
     EditorBase *editor=dynamic_cast<EditorBase *> (this->scene());
     if(editor) {
         editor->setViewMatrixAndViewTranslation(this->matrix(),this->horizontalScrollBar()->value(),this->verticalScrollBar()->value());

@@ -28,7 +28,7 @@
 
 #include <QGraphicsSceneMouseEvent>
 
-BodyEditor::BodyEditor(Scene *scene, AgentManager *agentManager) : m_agentManager(agentManager), EditorBase(scene)
+BodyEditor::BodyEditor(Scene *scene, AgentManager *agentManager) : EditorBase(scene), m_agentManager(agentManager)
 {
 
 }

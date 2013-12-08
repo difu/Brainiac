@@ -27,7 +27,7 @@ SceneDisplay_::SceneDisplay_(Scene *scene): OsgMultithreadedViewerWidget(0,scene
 
 void SceneDisplay_::keyPressed(Qt::Key key)
 {
-
+    Q_UNUSED(key);
 }
 
 SceneDisplay_::~SceneDisplay_()

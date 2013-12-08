@@ -232,6 +232,8 @@ bool ModifiableAnimation::isRootBoneCurve(const QString &curve) const
 
 }
 
+const qreal ModifiableAnimation::minDistTime=0.001f;
+
 void ModifiableAnimation::resetAgentCurves()
 {
     deleteCurves();
