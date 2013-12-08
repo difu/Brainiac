@@ -21,6 +21,7 @@
 #include "core/agent/channel.h"
 #include "core/agent/agent.h"
 #include "core/agent/body/body.h"
+#include "gui/coordcrossdrawable.h"
 #include <osgUtil/UpdateVisitor>
 #include <QObject>
 
@@ -38,6 +39,8 @@ BodySegment::BodySegment(Body *body, SegmentShape *segmentShape):MatrixTransform
     setName(m_segmentShape->getName().toStdString());
     createChannels();
     computeRestMatrix();
+    m_showPivotCoordCross=false;
+    m_pivotCoordCrossCreated=false;
 }
 
 void BodySegment::computeMatrix() {
@@ -108,6 +111,25 @@ void BodySegment::createChannels()
     m_color->init(0); //!< @todo color connect
     m_body->getAgent()->addOutputChannel(m_color,segName % ":color");
 
+}
+
+void BodySegment::showPivotCoordCross(bool show)
+{
+    if(!m_pivotCoordCrossCreated) {
+        m_switchPivotCross=new osg::Switch;
+
+        m_pivotCoordCrossCreated=true;
+        CoordCrossDrawable *sd=new CoordCrossDrawable;
+        osg::Geode *geod=new osg::Geode;
+
+        //sd->setShape(new CoordCrossDrawable());
+        //sd->setColor( osg::Vec4(1.0f, 1.0f, 1.0f, 1.0f) );
+        geod->addDrawable(sd);
+        m_switchPivotCross->addChild(geod,true);
+        this->addChild(m_switchPivotCross.get());
+        m_pivotCoordCrossCreated=true;
+    }
+    m_switchPivotCross->setValue(0,show);
 }
 
 void BodySegment::traverse(osg::NodeVisitor &nv)

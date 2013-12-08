@@ -81,7 +81,8 @@ SOURCES += main.cpp\
     gui/scenedisplay_.cpp \
     gui/Animation/actiondisplay_.cpp \
     core/agent/body/animation/motiontreemanager.cpp \
-    core/brainiacerror.cpp
+    core/brainiacerror.cpp \
+    gui/coordcrossdrawable.cpp
 
 HEADERS  += gui/mainwindow.h \
     core/scene.h \
@@ -151,7 +152,8 @@ HEADERS  += gui/mainwindow.h \
     gui/scenedisplay_.h \
     gui/Animation/actiondisplay_.h \
     core/agent/body/animation/motiontreemanager.h \
-    core/brainiacerror.h
+    core/brainiacerror.h \
+    gui/coordcrossdrawable.h
 
 FORMS    += gui/mainwindow.ui \
     gui/sceneeditor/groupeditor.ui \

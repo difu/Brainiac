@@ -325,7 +325,6 @@ void SegmentEditor::setSegmentConfig(AgentManager *manager, quint32 id)
 
     m_SliderTubeDiameter->setVisible(s.getType()==BrainiacGlobals::TUBESEGMENT);
     m_SliderTubeLength->setVisible(s.getType()==BrainiacGlobals::TUBESEGMENT);
-
     updateEditor();
 }
 

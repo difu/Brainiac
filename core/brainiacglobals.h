@@ -25,7 +25,7 @@
 class BrainiacGlobals
 {
 public:
-    static const qreal PI=3.14159265;
+    static const qreal PI;
     enum Direction {NORTH, SOUTH, EAST, WEST};
     enum ItemType {AND, OR, FUZZ, DEFUZZ, OUTPUT, INPUT, NOISE, TIMER, SPHERE, CUBE, TUBE, GROUP, AGENT};
     enum SegmentType {SPHERESEGMENT=BrainiacGlobals::SPHERE, BOXSEGMENT=BrainiacGlobals::CUBE, TUBESEGMENT=BrainiacGlobals::TUBE, NOPRIMITIVE};
@@ -119,6 +119,8 @@ public:
     static QColor defaultRadiusColor;
     static QColor defaultLengthColor;
     static QColor defaultDiameterColor;
+
+    static Qt::Key ToggleSegmentCoordCrossesKey;
 
     static const quint32 animationFileFormatMagicNumber=0xA1B2C3D4; /**< Magic number to identify the Brainiac Animation Fileformat */
     static const qint32 animationFileFormatVersion=100; /**< Version of Brainiac Animation File Format */

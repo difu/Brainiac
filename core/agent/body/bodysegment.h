@@ -20,6 +20,7 @@
 
 #include <osg/MatrixTransform>
 #include <osg/Geode>
+#include <osg/Switch>
 #include "core/agent/body/segmentshape.h"
 
 class BodySegmentSignalHandler;
@@ -45,16 +46,20 @@ public:
     quint32 getParentId() const { return m_segmentShape->getParentId(); }
     SegmentShape *getSegmentShape() const { return m_segmentShape; }
     void setRestMatrixDirty() { m_restMatrixDirty=true; }
-protected :
+    void showPivotCoordCross(bool show);
+protected:
     void createChannels();
     virtual void traverse(osg::NodeVisitor &nv);
     BodySegmentSignalHandler *m_channelHandler;
     Body *m_body; //!< The Body this BodySegment belongs to
+    bool m_showPivotCoordCross;
+    bool m_pivotCoordCrossCreated;
     virtual ~BodySegment();
     SegmentShape *m_segmentShape;
     bool m_restMatrixDirty;
     osg::ref_ptr<osg::Geode> m_geode; /**< the geometry node that holds the ShapeDrawable */
     osg::ref_ptr<osg::MatrixTransform> m_transformNode;
+    osg::ref_ptr<osg::Switch> m_switchPivotCross;
     Channel *m_color; //!< segement´s color Channel
     Channel *m_channelTx; //!< x translation (input and output)
     Channel *m_channelTy; //!< y translation (input and output)

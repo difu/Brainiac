@@ -34,6 +34,7 @@ Body::Body(Agent *agent)
     m_animationPlayer=new AnimationPlayer(this);
     m_bodyRoot=new osg::PositionAttitudeTransform;
     m_bodyRoot.get()->setName("AgentBody Root Segment");
+    m_showAllCoordCrosses=false;
 
 }
 
@@ -66,9 +67,35 @@ QHash<quint32,Animation *> * Body::getAnimations()
     return m_animationPlayer->getAnimations();
 }
 
+void Body::highlightSegment(quint32 id, bool unselectOthers)
+{
+    if(unselectOthers) {
+        foreach(BodySegment *seg, m_bodySegments) {
+            if(seg->getId()!=id) {
+                // Todo
+            } else {
+
+            }
+        }
+    }
+}
+
 void Body::setAnimations(QHash<quint32, Animation *> *animations)
 {
     m_animationPlayer->setAnimations(animations);
+}
+
+void Body::showPivotCoordCrosses(bool show)
+{
+    foreach(BodySegment *seg, m_bodySegments) {
+        seg->showPivotCoordCross(show);
+    }
+}
+
+void Body::toggleShowCoordCrosses()
+{
+    m_showAllCoordCrosses=!m_showAllCoordCrosses;
+    this->showPivotCoordCrosses(m_showAllCoordCrosses);
 }
 
 void Body::updatePosition() {

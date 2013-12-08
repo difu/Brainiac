@@ -25,6 +25,7 @@ class AgentManager;
 
 class BodyDisplay_ : public OsgMultithreadedViewerWidget
 {
+    Q_OBJECT
 public:
     BodyDisplay_();
     virtual ~BodyDisplay_();
@@ -37,6 +38,8 @@ public:
 
 protected:
     AgentManager *m_agentManager;
+protected slots:
+    void keyPressed(Qt::Key key);
 };
 
 #endif // BODYDISPLAY__H

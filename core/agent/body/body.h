@@ -39,15 +39,19 @@ public:
     QHash<quint32,Animation *> * getAnimations();
     AnimationPlayer* getAnimationPlayer() {return m_animationPlayer; }
 
+    void highlightSegment(quint32 id, bool unselectOthers=true);
+
     /**
      * @brief sets the current set of animations
      *
      * this allows setting of different animation sets of individual agents. Normally each agent instance of a group has a common set of animations. This allows setting of an individial set e.g. when editing in the action editor
      * @fn setAnimations
-     * @param QHash<quint32
-     * @param animations
+     * @param QHash<quint32, Animation *>
      */
     void setAnimations(QHash<quint32,Animation *> *animations);
+
+    void showPivotCoordCrosses(bool show);
+    void toggleShowCoordCrosses();
 
     osg::ref_ptr<osg::PositionAttitudeTransform> getBodyRoot() { return m_bodyRoot; }
     Agent* getAgent();
@@ -61,6 +65,7 @@ protected:
     QHash<quint32, BodySegment* > m_bodySegments;
 
     osg::ref_ptr<osg::PositionAttitudeTransform> m_bodyRoot;
+    bool m_showAllCoordCrosses;
 };
 
 #endif // BODY_H

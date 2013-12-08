@@ -65,6 +65,8 @@ const qreal BrainiacGlobals::randoms[]={
     0.991349259574559,0.36159173620198,0.514137232220538,0.593176028780888,0.577729841447816,0.090325321097616,0.748561434764159,0.549942131216852,0.543134604435192,0.831165896396961
 };
 
+const qreal BrainiacGlobals::PI=3.14159265;
+
 const qreal BrainiacGlobals::MAXQREAL=std::numeric_limits<qreal>::max();
 const qreal BrainiacGlobals::MINQREAL=-std::numeric_limits<qreal>::max();
 
@@ -116,6 +118,8 @@ const char* const BrainiacGlobals::ChannelName_Sound_ox="sound.ox\0";
 const char* const BrainiacGlobals::ChannelName_Sound_d="sound.d\0";
 const char* const BrainiacGlobals::ChannelName_Sound_a="sound.a\0";
 const char* const BrainiacGlobals::ChannelName_Sound_f="sound.f\0";
+
+Qt::Key BrainiacGlobals::ToggleSegmentCoordCrossesKey=Qt::Key_C;
 
 QColor BrainiacGlobals::defaultXColor=QColor(200,0,0);
 QColor BrainiacGlobals::defaultYColor=QColor(0,200,0);
