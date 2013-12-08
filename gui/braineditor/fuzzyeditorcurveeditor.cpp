@@ -59,8 +59,8 @@ void FuzzyEditorCurveEditor::updateEditor()
     qreal upPos=3;
     qreal downPos=this->sceneRect().height()-8;
     qreal yPos=upPos;
-    qreal lowerBound;
-    qreal upperBound;
+    qreal lowerBound=0;
+    qreal upperBound=0;
     switch(m_fuzz->getMode()) {
     case FuzzyFuzz::DIRAC:
         m_points=1;
@@ -76,7 +76,7 @@ void FuzzyEditorCurveEditor::updateEditor()
         m_points=4;
         break;
     }
-    qreal fuzzValue;
+    qreal fuzzValue=0;
     if(m_pointId==0) {
         fuzzValue=m_fuzz->getP1();
         lowerBound=0;
