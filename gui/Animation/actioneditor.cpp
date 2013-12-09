@@ -50,7 +50,7 @@ ActionEditor::ActionEditor(Scene *scene, QWidget *parent) :
     //setWindowModality(Qt::Tool);
     connect(ui->listAnimation,SIGNAL(currentRowChanged(int)),this,SLOT(animationSelectionChanged(int)));
     //m_actionDisplay=new ActionDisplay(this);
-    m_actionDisplay_=new ActionDisplay_(this);
+    m_actionDisplay_=new ActionDisplay_();
 //    connect(m_actionDisplay,SIGNAL(animationOneFrameBackward()),this,SLOT(animationOneFrameBackward()));
 //    connect(m_actionDisplay,SIGNAL(animationOneFrameForward()),this,SLOT(animationOneFrameForward()));
 //    connect(m_actionDisplay,SIGNAL(animationRunningToggled()),this,SLOT(animationRunningToggle()));

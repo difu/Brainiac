@@ -23,7 +23,7 @@
 
 
 
-ActionDisplay_::ActionDisplay_(QWidget *parent):
+ActionDisplay_::ActionDisplay_():
     OsgMultithreadedViewerWidget(0)
 {
     //setParent(parent);

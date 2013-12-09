@@ -33,7 +33,7 @@ public:
      * @brief ActionDisplay
      * The Constructor
      */
-    explicit ActionDisplay_(QWidget *parent);
+    explicit ActionDisplay_();
 
     /**
      * @brief setAgentManager
