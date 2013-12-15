@@ -22,6 +22,7 @@
 #include "core/agent/body/bodymanager.h"
 #include "core/agent/agent.h"
 #include "core/agent/body/body.h"
+#include "core/agent/body/bodysegment.h"
 #include "ui_segmenteditor.h"
 
 SegmentEditor::SegmentEditor(Scene *scene, QWidget *parent) :
@@ -207,7 +208,6 @@ void SegmentEditor::editSymetric(bool editSymetric)
 
 quint32 SegmentEditor::getSymetricSegmentId() const
 {
-//    SkeletonNode *node=m_agentManager->getMasterAgent()->getBody()->getSkeletonNodeById(m_id);
     Segment *seg=m_agentManager->getBodyManager()->getSegments().value(m_id);
     if(seg) {
         QString name=seg->getName();
@@ -220,10 +220,7 @@ quint32 SegmentEditor::getSymetricSegmentId() const
             return 0;
         }
         otherName=otherName%name.mid(1);
-//        SkeletonNode *node=m_agentManager->getMasterAgent()->getBody()->getSkeletonNodeByName(otherName);
-//        if(node) {
-//            return node->getId();
-//        }
+
         foreach(Segment *otherSeg, m_agentManager->getBodyManager()->getSegments()) {
             if(QString::compare(name,otherName,Qt::CaseSensitive)==0) {
                 return otherSeg->getId();
@@ -325,6 +322,7 @@ void SegmentEditor::setSegmentConfig(AgentManager *manager, quint32 id)
 
     m_SliderTubeDiameter->setVisible(s.getType()==BrainiacGlobals::TUBESEGMENT);
     m_SliderTubeLength->setVisible(s.getType()==BrainiacGlobals::TUBESEGMENT);
+    m_agentManager->getBodyAgent()->getBody()->highlightSegment(m_id);
     updateEditor();
 }
 

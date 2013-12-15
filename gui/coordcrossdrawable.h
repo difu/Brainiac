@@ -6,6 +6,12 @@
 #include <osg/Geometry>
 #include <osgViewer/Viewer>
 
+
+/**
+ * @brief A simple coordinate cross
+ *
+ * represents a simple coordinate cross
+ */
 class CoordCrossDrawable  : public osg::Drawable
 {
 public:

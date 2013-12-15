@@ -127,3 +127,5 @@ QColor BrainiacGlobals::defaultZColor=QColor(200,200,0);
 QColor BrainiacGlobals::defaultDiameterColor=QColor(50,50,200);
 QColor BrainiacGlobals::defaultLengthColor=QColor(10,10,250);
 QColor BrainiacGlobals::defaultRadiusColor=QColor(50,50,200);
+
+osg::ref_ptr<CoordCrossDrawable> BrainiacGlobals::CoordCross=new CoordCrossDrawable;

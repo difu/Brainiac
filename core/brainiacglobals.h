@@ -21,7 +21,12 @@
 
 #include<QtCore>
 #include<QColor>
+#include "gui/coordcrossdrawable.h"
 
+/**
+ * @brief Global data used by several components of Brainiac
+ *
+ */
 class BrainiacGlobals
 {
 public:
@@ -126,5 +131,7 @@ public:
     static const qint32 animationFileFormatVersion=100; /**< Version of Brainiac Animation File Format */
 
     static qreal getRand( quint32 index ) { return randoms[index%NUMBER_OF_RANDOMS]; }
+
+    static osg::ref_ptr<CoordCrossDrawable> CoordCross;
 };
 #endif // BRAINIACGLOBALS_H

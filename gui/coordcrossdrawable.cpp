@@ -8,8 +8,8 @@ CoordCrossDrawable::CoordCrossDrawable()
 
 osg::BoundingBox CoordCrossDrawable::computeBound() const
 {
-    osg::Vec3 min(-1,-1,-1), max(1,1,1);
-            return osg::BoundingBox(min, max);
+    osg::Vec3 min(0,0,0), max(1,1,1);
+    return osg::BoundingBox(min, max);
 }
 
 void CoordCrossDrawable::drawImplementation(osg::RenderInfo &renderInfo) const

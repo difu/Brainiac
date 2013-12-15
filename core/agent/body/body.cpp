@@ -72,9 +72,9 @@ void Body::highlightSegment(quint32 id, bool unselectOthers)
     if(unselectOthers) {
         foreach(BodySegment *seg, m_bodySegments) {
             if(seg->getId()!=id) {
-                // Todo
+                seg->highlight(false);
             } else {
-
+                seg->highlight(true);
             }
         }
     }

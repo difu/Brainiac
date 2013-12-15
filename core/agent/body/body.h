@@ -29,6 +29,11 @@ class AnimationPlayer;
 class Animation;
 class BodySegment;
 
+/**
+ * @brief The Agents Body
+ *
+ * Manages the Body of an Agent
+ */
 class Body
 {
 public:
@@ -37,6 +42,7 @@ public:
     void addBodySegment( osg::ref_ptr<BodySegment> bodySegment, quint32 parentId);
     void copyBody(Body *body);
     QHash<quint32,Animation *> * getAnimations();
+    BodySegment* getBodySegment(quint32 id) { return m_bodySegments.value(id,0); }
     AnimationPlayer* getAnimationPlayer() {return m_animationPlayer; }
 
     void highlightSegment(quint32 id, bool unselectOthers=true);

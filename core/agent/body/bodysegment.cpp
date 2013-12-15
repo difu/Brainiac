@@ -21,7 +21,7 @@
 #include "core/agent/channel.h"
 #include "core/agent/agent.h"
 #include "core/agent/body/body.h"
-#include "gui/coordcrossdrawable.h"
+
 #include <osgUtil/UpdateVisitor>
 #include <QObject>
 
@@ -29,11 +29,14 @@ BodySegment::BodySegment(Body *body, SegmentShape *segmentShape):MatrixTransform
 {
     m_channelHandler=new BodySegmentSignalHandler(this);
     m_geode=new osg::Geode;
+    m_switchHighlight=new osg::Switch;
     m_transformNode=new osg::MatrixTransform();
     m_transformNode->setName("Transform");
     addChild(m_transformNode);
     m_transformNode->setMatrix(m_segmentShape->getTransform()->getMatrix());
-    m_transformNode->addChild(m_geode);
+    m_transformNode->addChild(m_switchHighlight);
+    m_switchHighlight->addChild(m_geode,true);
+    //m_transformNode->addChild(m_geode);
     m_geode->addDrawable(m_segmentShape->getShapeDrawable().get());
     m_restMatrixDirty=true;
     setName(m_segmentShape->getName().toStdString());
@@ -41,6 +44,9 @@ BodySegment::BodySegment(Body *body, SegmentShape *segmentShape):MatrixTransform
     computeRestMatrix();
     m_showPivotCoordCross=false;
     m_pivotCoordCrossCreated=false;
+    m_isHiglighted=false;
+    m_highlghtedStructuresCreated=false;
+    m_shouldHighlight;
 }
 
 void BodySegment::computeMatrix() {
@@ -113,18 +119,23 @@ void BodySegment::createChannels()
 
 }
 
+void BodySegment::createHighlightStructures()
+{
+    m_highlightOutline=new osgFX::Outline;
+    m_highlightOutline->setWidth(8);
+    m_highlightOutline->setColor(osg::Vec4(1,1,0,1));
+    m_highlightOutline->addChild(m_geode);
+    m_switchHighlight->addChild(m_highlightOutline,false);
+    m_highlghtedStructuresCreated=true;
+}
+
 void BodySegment::showPivotCoordCross(bool show)
 {
     if(!m_pivotCoordCrossCreated) {
         m_switchPivotCross=new osg::Switch;
-
         m_pivotCoordCrossCreated=true;
-        CoordCrossDrawable *sd=new CoordCrossDrawable;
         osg::Geode *geod=new osg::Geode;
-
-        //sd->setShape(new CoordCrossDrawable());
-        //sd->setColor( osg::Vec4(1.0f, 1.0f, 1.0f, 1.0f) );
-        geod->addDrawable(sd);
+        geod->addDrawable(BrainiacGlobals::CoordCross.get());
         m_switchPivotCross->addChild(geod,true);
         this->addChild(m_switchPivotCross.get());
         m_pivotCoordCrossCreated=true;
@@ -132,17 +143,38 @@ void BodySegment::showPivotCoordCross(bool show)
     m_switchPivotCross->setValue(0,show);
 }
 
+void BodySegment::toggleHighlight()
+{
+    m_shouldHighlight=!m_shouldHighlight;
+}
+
 void BodySegment::traverse(osg::NodeVisitor &nv)
 {
-    //osgUtil::UpdateVisitor *uv=dynamic_cast<osgUtil::UpdateVisitor *> (&nv);
-    //if(uv) {
-    //    qDebug() << __PRETTY_FUNCTION__;
-        computeRestMatrix();
-    //}
+    computeRestMatrix();
+    if(m_shouldHighlight&&!m_isHiglighted) {
+        if(!m_highlghtedStructuresCreated) {
+            createHighlightStructures();
+        }
+        m_switchHighlight->setValue(0,false);
+        m_switchHighlight->setValue(1,true);
+        m_isHiglighted=true;
+    }
+    if(!m_shouldHighlight&&m_isHiglighted) {
+        m_switchHighlight->setValue(0,true);
+        m_switchHighlight->setValue(1,false);
+        m_isHiglighted=false;
+    }
     osg::MatrixTransform::traverse(nv);
 }
 
 BodySegment::~BodySegment()
 {
     m_channelHandler->deleteLater();
+    m_body->getAgent()->deleteChannel(m_channelRx);
+    m_body->getAgent()->deleteChannel(m_channelRy);
+    m_body->getAgent()->deleteChannel(m_channelRz);
+    m_body->getAgent()->deleteChannel(m_channelTx);
+    m_body->getAgent()->deleteChannel(m_channelTy);
+    m_body->getAgent()->deleteChannel(m_channelTz);
+    m_body->getAgent()->deleteChannel(m_color);
 }
