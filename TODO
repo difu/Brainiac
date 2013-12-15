@@ -1,3 +1,39 @@
 TODO:
- - Import of bvh and asf/amc files
-
+ - Import
+  - asf/amc files
+  - auto segment positioning
+  - imports to own class(es)?
+ - ActionEditor
+  - xz rot
+  - curve editing
+  - sequencer
+ - Generators
+  - more generators
+  - generator gui
+ - MotionTree
+  - GUI
+  - all of it
+ - skinning
+  - attaching mesh(es) to segments
+  - integration in BodyEditor
+ - finish BrainEditor GUI
+ - finish SceneEditor GUI
+  - Lights
+  - Cameras
+ - finish BodyEditor GUI
+  - highlightning segment
+  - silhouette shader
+  - skeleton
+ - terrain
+ - camera
+ - IK
+ - Camera/viewer movement
+ - unit tests
+  - simulations
+   - sound
+   - fuzzies
+  - body loading/saving
+  - generators
+ - Simulation
+  - Output
+  - Brain processing
