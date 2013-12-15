@@ -12,12 +12,14 @@ TODO:
   - generator gui
  - MotionTree
   - GUI
-  - all
+  - all of it
  - skinning
   - attaching mesh(es) to segments
   - integration in BodyEditor
  - finish BrainEditor GUI
  - finish SceneEditor GUI
+  - Lights
+  - Cameras
  - finish BodyEditor GUI
   - highlightning segment
   - silhouette shader
@@ -32,4 +34,6 @@ TODO:
    - fuzzies
   - body loading/saving
   - generators
- 
+ - Simulation
+  - Output
+  - Brain processing
