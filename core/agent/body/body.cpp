@@ -35,7 +35,17 @@ Body::Body(Agent *agent)
     m_bodyRoot=new osg::PositionAttitudeTransform;
     m_bodyRoot.get()->setName("AgentBody Root Segment");
     m_showAllCoordCrosses=false;
+    m_switchPositionMarker=new osg::Switch;
+    osg::Geode *geo=new osg::Geode;
+    geo->addDrawable(BrainiacGlobals::CoordCross.get());
 
+    // Switch Lightning off for position marker
+    osg::StateSet *state = geo->getOrCreateStateSet();
+    state->setMode( GL_LIGHTING, osg::StateAttribute::PROTECTED | osg::StateAttribute::OFF );
+
+    m_switchPositionMarker->addChild(geo,false);
+    m_bodyRoot->addChild(m_switchPositionMarker);
+    m_showPositionMarker=false;
 }
 
 void Body::addBodySegment(osg::ref_ptr<BodySegment> bodySegment, quint32 parentId)
@@ -96,6 +106,12 @@ void Body::toggleShowCoordCrosses()
 {
     m_showAllCoordCrosses=!m_showAllCoordCrosses;
     this->showPivotCoordCrosses(m_showAllCoordCrosses);
+}
+
+void Body::toggleShowPositionMarker()
+{
+    m_showPositionMarker=!m_showPositionMarker;
+    m_switchPositionMarker->setValue(0,m_showPositionMarker);
 }
 
 void Body::updatePosition() {

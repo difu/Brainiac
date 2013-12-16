@@ -51,15 +51,17 @@ void ActionDisplay_::followUnfollowAgent()
 
 void ActionDisplay_::keyPressed(Qt::Key key)
 {
-    if(key==Qt::Key_Space) {
+    if(key==BrainiacGlobals::AnimationPauseKey) {
         emit animationRunningToggled();
-    } else if(key==Qt::Key_Left) {
+    } else if(key==BrainiacGlobals::AnimationOneFrameForwardKey) {
         emit animationOneFrameBackward();
-    } else if(key==Qt::Key_Right) {
+    } else if(key==BrainiacGlobals::AnimationOneFrameBackwardKey) {
         emit animationOneFrameForward();
-    } else if(key==Qt::Key_F) {
+    } else if(key==BrainiacGlobals::ToogleFollowAgentKey) {
         m_followAgent=!m_followAgent;
         followUnfollowAgent();
+    } else if(key==BrainiacGlobals::ToggleAgentPositionMarkerKey) {
+        m_agentManager->getActionAgent()->getBody()->toggleShowPositionMarker();
     }
 }
 

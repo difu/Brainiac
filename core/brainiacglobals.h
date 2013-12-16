@@ -125,7 +125,12 @@ public:
     static QColor defaultLengthColor;
     static QColor defaultDiameterColor;
 
-    static Qt::Key ToggleSegmentCoordCrossesKey;
+    static Qt::Key AnimationOneFrameForwardKey; /**< default key to go one frame further */
+    static Qt::Key AnimationOneFrameBackwardKey; /**< default key to go one frame back */
+    static Qt::Key AnimationPauseKey; /**< default key to pause */
+    static Qt::Key ToogleFollowAgentKey; /**< default key to toggle to follow an agent */
+    static Qt::Key ToggleSegmentCoordCrossesKey; /**< default key to toggle an segments pivot point */
+    static Qt::Key ToggleAgentPositionMarkerKey; /**< default key to toggle an agents position and orientation marker */
 
     static const quint32 animationFileFormatMagicNumber=0xA1B2C3D4; /**< Magic number to identify the Brainiac Animation Fileformat */
     static const qint32 animationFileFormatVersion=100; /**< Version of Brainiac Animation File Format */

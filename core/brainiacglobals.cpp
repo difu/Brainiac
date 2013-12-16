@@ -120,6 +120,11 @@ const char* const BrainiacGlobals::ChannelName_Sound_a="sound.a\0";
 const char* const BrainiacGlobals::ChannelName_Sound_f="sound.f\0";
 
 Qt::Key BrainiacGlobals::ToggleSegmentCoordCrossesKey=Qt::Key_C;
+Qt::Key BrainiacGlobals::ToggleAgentPositionMarkerKey=Qt::Key_P;
+Qt::Key BrainiacGlobals::ToogleFollowAgentKey=Qt::Key_F;
+Qt::Key BrainiacGlobals::AnimationPauseKey=Qt::Key_Down;
+Qt::Key BrainiacGlobals::AnimationOneFrameBackwardKey=Qt::Key_Right;
+Qt::Key BrainiacGlobals::AnimationOneFrameForwardKey=Qt::Key_Left;
 
 QColor BrainiacGlobals::defaultXColor=QColor(200,0,0);
 QColor BrainiacGlobals::defaultYColor=QColor(0,200,0);

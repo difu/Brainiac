@@ -46,7 +46,7 @@ BodySegment::BodySegment(Body *body, SegmentShape *segmentShape):MatrixTransform
     m_pivotCoordCrossCreated=false;
     m_isHiglighted=false;
     m_highlghtedStructuresCreated=false;
-    m_shouldHighlight;
+    m_shouldHighlight=false;
 }
 
 void BodySegment::computeMatrix() {
@@ -136,6 +136,11 @@ void BodySegment::showPivotCoordCross(bool show)
         m_pivotCoordCrossCreated=true;
         osg::Geode *geod=new osg::Geode;
         geod->addDrawable(BrainiacGlobals::CoordCross.get());
+
+        // Switch Lightning off for coord cross
+        osg::StateSet *state = geod->getOrCreateStateSet();
+        state->setMode( GL_LIGHTING, osg::StateAttribute::PROTECTED | osg::StateAttribute::OFF );
+
         m_switchPivotCross->addChild(geod,true);
         this->addChild(m_switchPivotCross.get());
         m_pivotCoordCrossCreated=true;

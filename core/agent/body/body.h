@@ -23,6 +23,7 @@
 #include <QHash>
 
 #include <osg/PositionAttitudeTransform>
+#include <osg/Switch>
 
 class Agent;
 class AnimationPlayer;
@@ -59,6 +60,13 @@ public:
     void showPivotCoordCrosses(bool show);
     void toggleShowCoordCrosses();
 
+    /**
+     * @brief toggles the position marker
+     *
+     * the position marker shows the actual position and orientation of an agent
+     */
+    void toggleShowPositionMarker();
+
     osg::ref_ptr<osg::PositionAttitudeTransform> getBodyRoot() { return m_bodyRoot; }
     Agent* getAgent();
     void updatePosition();
@@ -71,7 +79,9 @@ protected:
     QHash<quint32, BodySegment* > m_bodySegments;
 
     osg::ref_ptr<osg::PositionAttitudeTransform> m_bodyRoot;
-    bool m_showAllCoordCrosses;
+    osg::ref_ptr<osg::Switch> m_switchPositionMarker; /**< Switch to toggle coord cross at agents position */
+    bool m_showPositionMarker; /**< property to toggle position marker */
+    bool m_showAllCoordCrosses; /**< property to toggle to show all coord crosses of all segments */
 };
 
 #endif // BODY_H

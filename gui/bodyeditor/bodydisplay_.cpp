@@ -31,5 +31,7 @@ void BodyDisplay_::keyPressed(Qt::Key key)
 {
     if(key==BrainiacGlobals::ToggleSegmentCoordCrossesKey) {
         m_agentManager->getBodyAgent()->getBody()->toggleShowCoordCrosses();
+    } else if(key==BrainiacGlobals::ToggleAgentPositionMarkerKey) {
+        m_agentManager->getBodyAgent()->getBody()->toggleShowPositionMarker();
     }
 }
