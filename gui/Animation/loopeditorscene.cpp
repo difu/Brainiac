@@ -29,21 +29,26 @@ LoopEditorScene::LoopEditorScene() : QGraphicsScene(0),m_animation(0)
     m_timeCurserItem=new EditorLineItem(this);
     pen.setColor(QColor(255,0,0));
     m_timeCurserItem->setPen(pen);
+    addItem(m_timeCurserItem);
 
     m_startCurserItem=new EditorLineItem(this);
     pen.setColor(QColor(0,255,0));
     m_startCurserItem->setPen(pen);
+    addItem(m_startCurserItem);
 
     m_endCurserItem=new EditorLineItem(this);
     pen.setColor(QColor(0,100,240));
     m_endCurserItem->setPen(pen);
+    addItem(m_endCurserItem);
 
     m_crossFadeEndItem=new EditorLineItem(this);
     pen.setColor(QColor(100,100,100));
     m_crossFadeEndItem->setPen(pen);
+    addItem(m_crossFadeEndItem);
 
     m_crossFadeStartItem=new EditorLineItem(this);
     m_crossFadeStartItem->setPen(pen);
+    addItem(m_crossFadeStartItem);
 }
 
 qreal LoopEditorScene::mapCurveRangeToHeight(qreal max, qreal min, qreal value) const
