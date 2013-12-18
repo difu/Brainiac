@@ -50,21 +50,16 @@ void SegmentShape::updateAndNotify()
         break;
 
     case BrainiacGlobals::TUBESEGMENT:
-        qDebug() << __PRETTY_FUNCTION__ << "Try to cast Tube..." << m_segmentType;
         cap=dynamic_cast<osg::Capsule *>(m_shape.get());
-        //cap=(osg::Capsule *) m_shape.get();
         if(cap) {
             cap->setHeight(getLength());
-            cap->setRadius(getDiameter());
-//            cap->setHeight(10);
-//            cap->setRadius(2);
-            qDebug() << "Updated!" << m_segmentSize;
+            cap->setRadius(getDiameter()/2);
         }
         break;
     case BrainiacGlobals::BOXSEGMENT:
-        box=dynamic_cast<osg::Box *>(m_shape.release());
+        box=dynamic_cast<osg::Box *>(m_shape.get());
         if(box) {
-            box->setHalfLengths(osg::Vec3d(m_segmentSize.x(),m_segmentSize.y(),m_segmentSize.z()));
+            box->setHalfLengths(osg::Vec3d(m_segmentSize.x()/2,m_segmentSize.y()/2,m_segmentSize.z()/2));
         }
         break;
     default:
