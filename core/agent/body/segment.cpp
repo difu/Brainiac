@@ -40,7 +40,7 @@ Segment::Segment(const Segment &other):QObject()
     m_segmentTranslation=other.getTranslation();
     m_segmentRestRotation=other.getRestRotation();
     m_segmentRestTranslation=other.getRestTranslation();
-    m_segmentScale=other.getScale();
+    m_segmentSize=other.getSize();
     m_segmentId=other.getId();
     m_segmentParentId=other.getParentId();
     m_segmentType=other.getType();
@@ -59,7 +59,7 @@ void Segment::copyFromOther(const Segment &other)
     m_segmentTranslation=other.getTranslation();
     m_segmentRestRotation=other.getRestRotation();
     m_segmentRestTranslation=other.getRestTranslation();
-    m_segmentScale=other.getScale();
+    m_segmentSize=other.getSize();
     m_segmentId=other.getId();
     m_segmentParentId=other.getParentId();
     m_segmentType=other.getType();
@@ -72,6 +72,11 @@ void Segment::copyFromOther(const Segment &other)
 
 void Segment::setRotationTranslationOrder(QList<BrainiacGlobals::RotTrans> list)
 {
+    if(list.count()<6)
+    {
+        qWarning() << __PRETTY_FUNCTION__ << "list contains less than six values "  << list;
+        return;
+    }
     m_segmentRotTransOrder.clear();
     m_segmentRotTransOrder=list;
     Q_ASSERT(m_segmentRotTransOrder.count()==6);
@@ -82,9 +87,9 @@ void Segment::updateAndNotify()
 {
     osg::Matrix m;
 
-    m*=osg::Matrix::scale(m_segmentScale.x(),
-                          m_segmentScale.y(),
-                          m_segmentScale.z());
+//    m*=osg::Matrix::scale(m_segmentSize.x(),
+//                          m_segmentSize.y(),
+//                          m_segmentSize.z());
 
     m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_segmentRotation.x()),osg::Vec3f(1.0f,0.0f,0.0f));
     m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_segmentRotation.y()),osg::Vec3f(0.0f,1.0f,0.0f));

@@ -90,7 +90,7 @@ public:
     static const char* const XmlEditorXPosAttrib; /**< X Position in an editor */
     static const char* const XmlEditorYPosAttrib; /**< Y Position in an editor */
 
-    static const char* const XmlScaleTag;
+    static const char* const XmlSizeTag;
     static const char* const XmlRotationTag;
     static const char* const XmlTranslationTag;
     static const char* const XmlRestRotationTag;

@@ -23,21 +23,57 @@ SegmentShape::SegmentShape(const Segment &other ):Segment(other)
     m_transformNode.get()->setName(getName().toStdString());
     switch(m_segmentType) {
     case BrainiacGlobals::SPHERESEGMENT:
-        m_shapeDrawable->setShape( new osg::Sphere(osg::Vec3(0.0f, 0.0f, 0.0f),
-                                                1.0f) );
-        break;
-    case BrainiacGlobals::TUBESEGMENT:
-        m_shapeDrawable->setShape( new osg::Capsule(osg::Vec3(0.0f, 0.0f, 0.0f),1,1));
-        break;
-    default:
-        m_shapeDrawable->setShape( new osg::Box(osg::Vec3(0.0f, 0.0f, 0.0f),
-                                                1.0f, 1.0f, 1.0f) );
+        m_shape=new osg::Sphere(osg::Vec3(0.0f, 0.0f, 0.0f),
+                                1.0f);
         break;
 
+//    case BrainiacGlobals::TUBESEGMENT:
+//        m_shape= new osg::Capsule(osg::Vec3(0.0f, 0.0f, 0.0f),1,1);
+//        break;
+    default:
+        break;
     }
+    //m_shapeDrawable->setShape( m_shape );
     m_shapeDrawable->setColor( osg::Vec4(1.0f, 1.0f, 1.0f, 1.0f) );
     m_shapeDrawable->setName("ShapeDrawable");
     //qDebug() << __PRETTY_FUNCTION__ << "Shape created" << other.getName();
+}
+
+void SegmentShape::updateAndNotify()
+{
+    osg::Sphere *sp;
+    osg::Capsule *cap;
+    osg::Box *box;
+    switch(m_segmentType) {
+    case BrainiacGlobals::SPHERESEGMENT:
+        sp=dynamic_cast<osg::Sphere *>(m_shape.release());
+        break;
+
+    case BrainiacGlobals::TUBESEGMENT:
+        qDebug() << __PRETTY_FUNCTION__ << "Try to cast Tube..." << m_segmentType;
+        cap=dynamic_cast<osg::Capsule *>(m_shape.get());
+        //cap=(osg::Capsule *) m_shape.get();
+        if(cap) {
+            cap->setHeight(getLength());
+            cap->setRadius(getDiameter());
+//            cap->setHeight(10);
+//            cap->setRadius(2);
+            qDebug() << "Updated!" << m_segmentSize;
+        }
+        break;
+    case BrainiacGlobals::BOXSEGMENT:
+        box=dynamic_cast<osg::Box *>(m_shape.release());
+        if(box) {
+            box->setHalfLengths(osg::Vec3d(m_segmentSize.x(),m_segmentSize.y(),m_segmentSize.z()));
+        }
+        break;
+    default:
+        //box=dynamic_cast<osg::Box *>(m_shape.release());
+        break;
+
+    }
+    m_shapeDrawable->dirtyDisplayList();
+    Segment::updateAndNotify();
 }
 
 SegmentShape::~SegmentShape()

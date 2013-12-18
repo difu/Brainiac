@@ -49,8 +49,15 @@ public:
     virtual ~SegmentShape();
 
 protected:
+    /**
+     * @brief updateAndNotify Updates internal data and emit signals
+     *
+     * Whenever this is called, the transformation matrix is re-calculated
+     */
+    virtual void updateAndNotify();
     //osg::ref_ptr<osg::Geode> m_geode; /**< the geometry node that holds the ShapeDrawable */
     osg::ref_ptr<osg::ShapeDrawable> m_shapeDrawable; /**< the node that holds the geometry */
+    osg::ref_ptr<osg::Shape> m_shape; /**< the the shape/geometry */
 };
 
 #endif // SEGMENTSHAPE_H

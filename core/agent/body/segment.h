@@ -56,12 +56,30 @@ public:
     virtual ~Segment();
 
     /**
+     * @brief returns the diameter this segment
+     * Use this if you want to query the diameter of the tube segment
+     * Internally the diameter is stored as the x component of the @sa m_segmentSize property.
+     * @fn getDiameter
+     * @return qreal the diameter
+     */
+    qreal getDiameter() const { return m_segmentSize.x(); }
+
+    /**
      * @brief returns the id of this segment
      *
      * @fn getId
      * @return quint32
      */
     quint32 getId() const { return m_segmentId; }
+
+    /**
+     * @brief returns the length this segment
+     * Use this if you want to query the length of the tube segment
+     * Internally the length is stored as the y component of the @sa m_segmentSize property.
+     * @fn getLength
+     * @return qreal the length
+     */
+    qreal getLength() const { return m_segmentSize.y(); }
 
     /**
      * @brief
@@ -136,7 +154,7 @@ public:
      *
      * @return QVector3D
      */
-    QVector3D getScale() const { return m_segmentScale; }
+    QVector3D getSize() const { return m_segmentSize; }
 
     /**
      * @brief
@@ -197,12 +215,32 @@ public:
     }
 
     /**
+     * @brief seth the diameter of this segment
+     * Internally the x property of @sa m_segmentSize is set. Use this if you want to change the diameter of the tube
+     *
+     * @fn setDiameter
+     * @param qreal diameter
+     */
+    void setDiameter(qreal diameter) {m_segmentSize.setX(diameter);
+                                    updateAndNotify();}
+
+    /**
      * @brief
      *
      * @fn setId
      * @param id
      */
     void setId(quint32 id) {m_segmentId=id;}
+
+    /**
+     * @brief seth the length of this segment
+     * Internally the y property of @sa m_segmentSize is set. Use this if you want to change the length of the tube
+     *
+     * @fn setLength
+     * @param qreal length
+     */
+    void setLength(qreal length) {m_segmentSize.setY(length);
+                                    updateAndNotify();}
 
     /**
      * @brief
@@ -251,13 +289,14 @@ public:
      * @param list
      */
     void setRotationTranslationOrder( QList<BrainiacGlobals::RotTrans> list);
+
     /**
      * @brief
      *
-     * @fn setScale
-     * @param scale
+     * @fn setSize
+     * @param size
      */
-    void setScale(const QVector3D &scale) {m_segmentScale=scale;
+    void setSize(const QVector3D &size) {m_segmentSize=size;
                                     updateAndNotify();}
     /**
      * @brief
@@ -297,12 +336,12 @@ protected:
      *
      * Whenever this is called, the transformation matrix is re-calculated
      */
-    void updateAndNotify();
+    virtual void updateAndNotify();
     QVector3D m_segmentRotation; /**< TODO */
     QVector3D m_segmentTranslation; /**< TODO */
     QVector3D m_segmentRestRotation; /**< TODO */
     QVector3D m_segmentRestTranslation; /**< TODO */
-    QVector3D m_segmentScale; /**< TODO */
+    QVector3D m_segmentSize; /**< TODO */
     quint32 m_segmentId; /**< the id of this segment */
     quint32 m_segmentParentId; /**< The Id of the parent Segment */
     BrainiacGlobals::SegmentType m_segmentType; /**< TODO */

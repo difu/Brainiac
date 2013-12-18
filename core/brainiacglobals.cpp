@@ -91,7 +91,7 @@ const char* const BrainiacGlobals::XmlRadiusAttrib="radius\0";
 const char* const BrainiacGlobals::XmlEditorXPosAttrib="editorX\0";
 const char* const BrainiacGlobals::XmlEditorYPosAttrib="editorY\0";
 
-const char* const BrainiacGlobals::XmlScaleTag="Scale\0";
+const char* const BrainiacGlobals::XmlSizeTag="Size\0";
 const char* const BrainiacGlobals::XmlTranslationTag="Translation\0";
 const char* const BrainiacGlobals::XmlRotationTag="Rotation\0";
 const char* const BrainiacGlobals::XmlRestRotationTag="RestRotation\0";

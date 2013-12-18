@@ -67,11 +67,12 @@ void AgentManager::addSegmentFromConfig(QXmlStreamReader *reader, quint32 id, QS
     QVector3D rotation;
     QVector3D restTranslation;
     QVector3D restRotation;
-    QVector3D scale;
+    QVector3D segSize;
     QList<BrainiacGlobals::RotTrans> rotTransOrder;
     qreal color;
     bool colorInherited;
     while(reader->readNextStartElement()) {
+        qDebug() << "Processing " << reader->name();
         if(reader->name()==BrainiacGlobals::XmlTranslationTag) {
             QXmlStreamAttributes attribs = reader->attributes();
             translation.setX(attribs.value("x").toString().toDouble());
@@ -101,11 +102,11 @@ void AgentManager::addSegmentFromConfig(QXmlStreamReader *reader, quint32 id, QS
             color=attribs.value("value").toString().toDouble();
             colorInherited=attribs.value("inherited").toString().compare("true",Qt::CaseInsensitive)==0;
             reader->skipCurrentElement();
-        } else if(reader->name()==BrainiacGlobals::XmlScaleTag) {
+        } else if(reader->name()==BrainiacGlobals::XmlSizeTag) {
             QXmlStreamAttributes attribs = reader->attributes();
-            scale.setX(attribs.value("x").toString().toDouble());
-            scale.setY(attribs.value("y").toString().toDouble());
-            scale.setZ(attribs.value("z").toString().toDouble());
+            segSize.setX(attribs.value("x").toString().toDouble());
+            segSize.setY(attribs.value("y").toString().toDouble());
+            segSize.setZ(attribs.value("z").toString().toDouble());
             reader->skipCurrentElement();
         } else if(reader->name()==BrainiacGlobals::XmlRotTransOrderTag) {
             QXmlStreamAttributes attribs = reader->attributes();
@@ -150,7 +151,7 @@ void AgentManager::addSegmentFromConfig(QXmlStreamReader *reader, quint32 id, QS
     m_bodyManager->setNewSegmentRotation(rotation);
     m_bodyManager->setNewSegmentTranslation(translation);
     m_bodyManager->setNewSegmentRotationTranslationOrder(rotTransOrder);
-    m_bodyManager->setNewSegmentScale(scale);
+    m_bodyManager->setNewSegmentSize(segSize);
     m_bodyManager->setNewSegmentColor(color);
     m_bodyManager->setNewSegmentColorInherited(colorInherited);
     setBodyEditorTranslation(id,editorX,editorY);
@@ -803,7 +804,7 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
         foreach(quint32 childId,m_bodyManager->getSegmentChildIds(seg->getId()) ) {
             offset+=m_bodyManager->getSegment(childId).getRestTranslation();
         }
-        m_bodyManager->setSegmentScale(seg->getId(),1,10,1);
+        m_bodyManager->setSegmentSize(seg->getId(),1,10,1);
         if(m_bodyManager->getSegmentChildIds(seg->getId()).count()>0) {
             offset/=m_bodyManager->getSegmentChildIds(seg->getId()).count()+1;
             m_bodyManager->setSegmentTranslation(seg->getId(),offset.x()/2,offset.y()/2,offset.z()/2);
@@ -812,7 +813,7 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
             qreal xrot=acos(diff.x()/length);
             qreal yrot=acos(diff.y()/length);
             qreal zrot=acos(diff.z()/length);
-            m_bodyManager->setSegmentScale(seg->getId(),1,1,length);
+            m_bodyManager->setSegmentSize(seg->getId(),1,1,length);
             m_bodyManager->setSegmentRotation(seg->getId(),BrainiacGlobals::rad2grad(xrot),BrainiacGlobals::rad2grad(yrot)-90.0,BrainiacGlobals::rad2grad(zrot)+90.0); //! \todo 90 degrees offset configurable
 //            qDebug() << "Rots:"  << BrainiacGlobals::rad2grad(xrot) << BrainiacGlobals::rad2grad(yrot) << BrainiacGlobals::rad2grad(zrot);
 
@@ -825,7 +826,7 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
                 qreal xrot=acos(diff.x()/length);
                 qreal yrot=acos(diff.y()/length);
                 qreal zrot=acos(diff.z()/length);
-                m_bodyManager->setSegmentScale(seg->getId(),1,1,length);
+                m_bodyManager->setSegmentSize(seg->getId(),1,1,length);
                 m_bodyManager->setSegmentRotation(seg->getId(),BrainiacGlobals::rad2grad(xrot),BrainiacGlobals::rad2grad(yrot),BrainiacGlobals::rad2grad(zrot));
 
                 m_bodyManager->setSegmentTranslation(seg->getId(),siteOffset.x(),siteOffset.y(),siteOffset.z());
@@ -838,18 +839,7 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
         }
     }
 
-//    foreach(SkeletonNode *n,m_masterAgent->getBody()->getAllSkeletonNodes()) {
-//        foreach(QGLSceneNode *childNode,n->children()) {
-//            SkeletonNode *childSkelNode=dynamic_cast<SkeletonNode *>(childNode);
-//            if(childSkelNode) {
-//                n->setTranslation(childSkelNode->getRestTranslation()/2.0f);
-//                n->setScale(QVector3D(1.0f,1.0f,childSkelNode->getRestTranslation().length()));
-//            }
-//        }
-//    }
 
-//    //qDumpScene(m_masterAgent->getBody()->getRootSkeletonNode());
-//    m_bodyManager->dDumpBody();
     m_bodyManager->getBodyEdtor()->autoArrange();
     return true;
 }
@@ -911,11 +901,11 @@ bool AgentManager::saveConfig()
              stream.writeAttribute("z",  QString::number(node.getRotation().z(),'f'));
              stream.writeEndElement(); //Rotation
 
-             stream.writeStartElement(BrainiacGlobals::XmlScaleTag);
-             stream.writeAttribute("x",  QString::number(node.getScale().x(),'f'));
-             stream.writeAttribute("y",  QString::number(node.getScale().y(),'f'));
-             stream.writeAttribute("z",  QString::number(node.getScale().z(),'f'));
-             stream.writeEndElement(); // Scale
+             stream.writeStartElement(BrainiacGlobals::XmlSizeTag);
+             stream.writeAttribute("x",  QString::number(node.getSize().x(),'f'));
+             stream.writeAttribute("y",  QString::number(node.getSize().y(),'f'));
+             stream.writeAttribute("z",  QString::number(node.getSize().z(),'f'));
+             stream.writeEndElement(); // Size
 
              stream.writeStartElement(BrainiacGlobals::XmlRotTransOrderTag);
              QString rotTrans;
@@ -1127,16 +1117,7 @@ void AgentManager::setBodyEditorTranslation(quint32 id, qint32 x, qint32 y)
 
 void AgentManager::setSegmentDimensions(quint32 id, qreal x, qreal y, qreal z)
 {
-//    SkeletonNode *n=m_masterAgent->getBody()->getSkeletonNodeById(id);
-//    SkeletonNodeBox *node=dynamic_cast<SkeletonNodeBox *>(n);
-//    if(node) {
-//        foreach(Agent *agent, m_agents) {
-//            agent->getBody()->getSkeletonNodeById(id)->setScale(QVector3D(x,y,z));
-//        }
-//    } else {
-//        qWarning()<< __PRETTY_FUNCTION__ << "Segment with id "<<id<<"is not a Cube!";
-//    }
-    m_bodyManager->setSegmentScale(id,x,y,z);
+    m_bodyManager->setSegmentSize(id,x,y,z);
 }
 
 void AgentManager::setSegmentRotationTranslationOrder(quint32 id, QList<BrainiacGlobals::RotTrans> list)
@@ -1155,19 +1136,11 @@ void AgentManager::setSegmentRotationTranslationOrder(quint32 id, QList<Brainiac
     if(!list.contains(BrainiacGlobals::TZ))
         list.append(BrainiacGlobals::TZ);
 
-//    m_masterAgent->getBody()->getSkeletonNodeById(id)->setRotTransOrder(list);
-//    foreach(Agent *agent, m_agents) {
-//        agent->getBody()->getSkeletonNodeById(id)->setRotTransOrder(list);
-//    }
     m_bodyManager->setSegmentRotationTranslationOrder(id,list);
 }
 
 void AgentManager::setSegmentRestRotation(quint32 id, qreal x, qreal y, qreal z)
 {
-    //m_masterAgent->getBody()->getSkeletonNodeById(id)->setRestRotation(QVector3D(x,y,z));
-//    foreach(Agent *agent, m_agents) {
-//        //agent->getBody()->getSkeletonNodeById(id)->setRestRotation(QVector3D(x,y,z));
-//    }
     m_bodyManager->setSegmentRestRotation(id,x,y,z);
 }
 

@@ -21,6 +21,8 @@
 #include "core/agent/agent.h"
 #include "core/agent/body/body.h"
 #include "core/agent/body/bodysegment.h"
+#include "core/agent/body/segmentbox.h"
+#include "core/agent/body/segmenttube.h"
 #include "gui/bodyeditor/bodyeditor.h"
 
 BodyManager::BodyManager(AgentManager *manager)
@@ -97,8 +99,21 @@ bool BodyManager::createNewSegment(bool processRootId)
     } else {
         m_agentManager->getSegmentIdGenerator().registerId(m_newSegment.getId());
     }
+    SegmentShape *newSegment=0;
 
-    SegmentShape *newSegment=new SegmentShape(m_newSegment);
+    switch(m_newSegment.getType()) {
+    case BrainiacGlobals::BOXSEGMENT:
+        newSegment=new SegmentBox(m_newSegment);
+        break;
+    case BrainiacGlobals::TUBESEGMENT:
+        newSegment=new SegmentTube(m_newSegment);
+        break;
+    default:
+        newSegment=new SegmentShape(m_newSegment);
+        break;
+    }
+
+    //SegmentShape *newSegment=new SegmentShape(m_newSegment);
     m_segments.insert(newSegment->getId(),newSegment);
     addSegmentToAgents(newSegment->getId());
     resetNewSegmentProperties();
@@ -186,7 +201,7 @@ void BodyManager::resetNewSegmentProperties()
     m_newSegment.setRotation(QVector3D());
     m_newSegment.setTranslation(QVector3D());
     m_newSegment.setRestTranslation(QVector3D());
-    m_newSegment.setScale(QVector3D());
+    m_newSegment.setSize(QVector3D());
     m_newSegment.setName("New Segment");
     m_newSegment.setId(0);
     m_newSegment.setParentId(0);
@@ -202,6 +217,23 @@ void BodyManager::setNewSegmentRotationTranslationOrder(QList<BrainiacGlobals::R
 {
     m_newSegment.setRotationTranslationOrder(order);
 }
+
+void BodyManager::setSegmentDiameter(quint32 id, qreal diameter)
+{
+    if(m_segments.contains(id))
+        m_segments.value(id)->setDiameter(diameter);
+    else
+        qCritical() << __PRETTY_FUNCTION__ << "No segment with id "<< id;
+}
+
+void BodyManager::setSegmentLength(quint32 id, qreal length)
+{
+    if(m_segments.contains(id))
+        m_segments.value(id)->setLength(length);
+    else
+        qCritical() << __PRETTY_FUNCTION__ << "No segment with id "<< id;
+}
+
 
 void BodyManager::setSegmentRestRotation(quint32 id, qreal x, qreal y, qreal z)
 {
@@ -227,10 +259,10 @@ void BodyManager::setSegmentRestTranslation(quint32 id, qreal x, qreal y, qreal 
         qCritical() << __PRETTY_FUNCTION__ << "No segment with id "<< id;
 }
 
-void BodyManager::setSegmentScale(quint32 id, qreal x, qreal y, qreal z)
+void BodyManager::setSegmentSize(quint32 id, qreal x, qreal y, qreal z)
 {
     if(m_segments.contains(id))
-        m_segments.value(id)->setScale(QVector3D(x,y,z));
+        m_segments.value(id)->setSize(QVector3D(x,y,z));
     else
         qCritical() << __PRETTY_FUNCTION__ << "No segment with id "<< id;
 }
@@ -243,6 +275,27 @@ void BodyManager::setSegmentTranslation(quint32 id, qreal x, qreal y, qreal z)
         qCritical() << __PRETTY_FUNCTION__ << "No segment with id "<< id;
 }
 
+qreal BodyManager::getSegmentDiameter(quint32 id) const
+{
+    if(m_segments.contains(id)) {
+        return m_segments.value(id)->getDiameter();
+    }
+    else {
+        qCritical() << __PRETTY_FUNCTION__ << "No Segment with id" << id;
+    }
+    return 0;
+}
+
+qreal BodyManager::getSegmentLength(quint32 id) const
+{
+    if(m_segments.contains(id)) {
+        return m_segments.value(id)->getLength();
+    }
+    else {
+        qCritical() << __PRETTY_FUNCTION__ << "No Segment with id" << id;
+    }
+    return 0;
+}
 
 QVector3D BodyManager::getSegmentRestRotation(quint32 id) const
 {
@@ -277,10 +330,10 @@ QVector3D BodyManager::getSegmentRestTranslation(quint32 id) const
     return QVector3D();
 }
 
-QVector3D BodyManager::getSegmentScale(quint32 id) const
+QVector3D BodyManager::getSegmentSize(quint32 id) const
 {
     if(m_segments.contains(id)) {
-        return m_segments.value(id)->getScale();
+        return m_segments.value(id)->getSize();
     }
     else {
         qCritical() << __PRETTY_FUNCTION__ << "No Segment with id" << id;

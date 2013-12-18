@@ -167,10 +167,10 @@ public:
     /**
      * @brief
      *
-     * @fn setNewSegmentScale
+     * @fn setNewSegmentSize
      * @param scale
      */
-    void setNewSegmentScale(QVector3D &scale) {m_newSegment.setScale(scale);}
+    void setNewSegmentSize(QVector3D &size) {m_newSegment.setSize(size);}
     /**
      * @brief
      *
@@ -218,23 +218,31 @@ public:
 
     Segment getRootSegment() const;
 
+    qreal getSegmentDiameter(quint32 id) const;
+
+    qreal getSegmentLength(quint32 id) const;
+
     QVector3D getSegmentRestRotation(quint32 id) const;
 
     QVector3D getSegmentRotation(quint32 id) const;
 
-    QVector3D getSegmentScale(quint32 id) const;
+    QVector3D getSegmentSize(quint32 id) const;
 
     QVector3D getSegmentRestTranslation(quint32 id) const;
 
     QVector3D getSegmentTranslation(quint32 id) const;
 
-    void setSegmentScale(quint32 id, qreal x, qreal y, qreal z);
+    void setSegmentSize(quint32 id, qreal x, qreal y, qreal z);
 
     void setSegmentRestRotation(quint32 id, qreal x, qreal y, qreal z);
 
     void setSegmentRotation(quint32 id, qreal x, qreal y, qreal z);
 
     void setSegmentRestTranslation(quint32 id, qreal x, qreal y, qreal z);
+
+    void setSegmentDiameter(quint32 id, qreal diameter);
+
+    void setSegmentLength(quint32 id, qreal length);
 
     /**
      * @brief

@@ -251,7 +251,9 @@ void SegmentEditor::manualDimensionsChanged(qreal value) {
         }
         break;
     case BrainiacGlobals::TUBESEGMENT:
-        m_agentManager->setSegmentDimensions(m_id,m_SliderTubeDiameter->getValue(),m_SliderTubeDiameter->getValue(),m_SliderTubeLength->getValue());
+        m_agentManager->getBodyManager()->setSegmentDiameter(m_id,m_SliderTubeDiameter->getValue());
+        m_agentManager->getBodyManager()->setSegmentLength(m_id,m_SliderTubeLength->getValue());
+        //m_agentManager->setSegmentDimensions(m_id,m_SliderTubeDiameter->getValue(),m_SliderTubeDiameter->getValue(),m_SliderTubeLength->getValue());
         if(m_editSymetric) {
             quint32 otherId=getSymetricSegmentId();
             //m_agentManager->setSegmentDimensions(otherId,m_SliderTubeDiameter->getValue(),m_SliderTubeLength->getValue(),m_SliderTubeDiameter->getValue());
@@ -348,20 +350,20 @@ void SegmentEditor::updateEditor()
     m_SliderRestTy->setValue(restTrans.y());
     m_SliderRestTz->setValue(restTrans.z());
 
-    QVector3D scale=m_agentManager->getBodyManager()->getSegmentScale(m_id);
+    QVector3D size=m_agentManager->getBodyManager()->getSegmentSize(m_id);
 
     switch(m_agentManager->getBodyManager()->getSegment(m_id).getType()) {
     case BrainiacGlobals::BOXSEGMENT:
-        m_SliderDimensionX->setValue(scale.x());
-        m_SliderDimensionY->setValue(scale.y());
-        m_SliderDimensionZ->setValue(scale.z());
+        m_SliderDimensionX->setValue(size.x());
+        m_SliderDimensionY->setValue(size.y());
+        m_SliderDimensionZ->setValue(size.z());
         break;
     case BrainiacGlobals::SPHERESEGMENT:
-        m_SliderSphereRadius->setValue(scale.x());
+        m_SliderSphereRadius->setValue(size.x());
         break;
     case BrainiacGlobals::TUBESEGMENT:
-        m_SliderTubeDiameter->setValue(scale.z());
-        m_SliderTubeLength->setValue(scale.x());
+        m_SliderTubeDiameter->setValue(m_agentManager->getBodyManager()->getSegmentDiameter(m_id));
+        m_SliderTubeLength->setValue(m_agentManager->getBodyManager()->getSegmentLength(m_id));
         break;
     default:
         qCritical() << __PRETTY_FUNCTION__ << "Segment type" << m_agentManager->getBodyManager()->getSegment(m_id).getType() << "not yet implemented!";
