@@ -24,6 +24,13 @@ class SegmentTube : public SegmentShape
 {
 public:
     SegmentTube(const SegmentShape &other );
+
+    /**
+     * @brief updateAndNotify Updates internal data and emit signals
+     *
+     * Whenever this is called, the transformation matrix is re-calculated
+     */
+    virtual void updateAndNotify();
 };
 
 #endif // SEGMENTTUBE_H

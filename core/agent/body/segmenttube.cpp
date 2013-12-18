@@ -23,3 +23,14 @@ SegmentTube::SegmentTube(const SegmentShape &other ):SegmentShape(other)
     m_shape= new osg::Capsule(osg::Vec3(0.0f, 0.0f, 0.0f),getDiameter(),getLength());
     m_shapeDrawable->setShape(m_shape);
 }
+
+void SegmentTube::updateAndNotify()
+{
+    osg::Capsule *cap;
+    cap=dynamic_cast<osg::Capsule *>(m_shape.get());
+    if(cap) {
+        cap->setHeight(getLength());
+        cap->setRadius(getDiameter()/2);
+    }
+    SegmentShape::updateAndNotify();
+}

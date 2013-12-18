@@ -22,3 +22,13 @@ SegmentBox::SegmentBox(const SegmentShape &other ):SegmentShape(other)
     m_shape= new osg::Box(osg::Vec3(0.0f, 0.0f, 0.0f),m_segmentSize.x(), m_segmentSize.y(), m_segmentSize.z());
     m_shapeDrawable->setShape(m_shape);
 }
+
+void SegmentBox::updateAndNotify()
+{
+    osg::Box *box;
+    box=dynamic_cast<osg::Box *>(m_shape.get());
+    if(box) {
+        box->setHalfLengths(osg::Vec3d(m_segmentSize.x()/2,m_segmentSize.y()/2,m_segmentSize.z()/2));
+    }
+    SegmentShape::updateAndNotify();
+}

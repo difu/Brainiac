@@ -42,25 +42,25 @@ SegmentShape::SegmentShape(const Segment &other ):Segment(other)
 void SegmentShape::updateAndNotify()
 {
     osg::Sphere *sp;
-    osg::Capsule *cap;
-    osg::Box *box;
+//    osg::Capsule *cap;
+//    osg::Box *box;
     switch(m_segmentType) {
     case BrainiacGlobals::SPHERESEGMENT:
         sp=dynamic_cast<osg::Sphere *>(m_shape.release());
         break;
 
     case BrainiacGlobals::TUBESEGMENT:
-        cap=dynamic_cast<osg::Capsule *>(m_shape.get());
-        if(cap) {
-            cap->setHeight(getLength());
-            cap->setRadius(getDiameter()/2);
-        }
+//        cap=dynamic_cast<osg::Capsule *>(m_shape.get());
+//        if(cap) {
+//            cap->setHeight(getLength());
+//            cap->setRadius(getDiameter()/2);
+//        }
         break;
     case BrainiacGlobals::BOXSEGMENT:
-        box=dynamic_cast<osg::Box *>(m_shape.get());
-        if(box) {
-            box->setHalfLengths(osg::Vec3d(m_segmentSize.x()/2,m_segmentSize.y()/2,m_segmentSize.z()/2));
-        }
+//        box=dynamic_cast<osg::Box *>(m_shape.get());
+//        if(box) {
+//            box->setHalfLengths(osg::Vec3d(m_segmentSize.x()/2,m_segmentSize.y()/2,m_segmentSize.z()/2));
+//        }
         break;
     default:
         //box=dynamic_cast<osg::Box *>(m_shape.release());

@@ -25,6 +25,13 @@ class SegmentBox : public SegmentShape
 {
 public:
     SegmentBox(const SegmentShape &other );
+
+    /**
+     * @brief updateAndNotify Updates internal data and emit signals
+     *
+     * Whenever this is called, the transformation matrix is re-calculated
+     */
+    virtual void updateAndNotify();
 };
 
 #endif // SEGMENTBOX_H
