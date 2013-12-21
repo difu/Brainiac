@@ -24,7 +24,8 @@ void BodyDisplay_::setAgentManager(AgentManager *agentManager)
 {
     m_agentManager=agentManager;
     m_rootNode->removeChildren(0,m_rootNode->getNumChildren());
-    m_rootNode->addChild(m_agentManager->getBodyAgent()->getBody()->getBodyRoot());
+    if( m_agentManager)
+        m_rootNode->addChild(m_agentManager->getBodyAgent()->getBody()->getBodyRoot());
 }
 
 void BodyDisplay_::keyPressed(Qt::Key key)
