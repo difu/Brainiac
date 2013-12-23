@@ -35,9 +35,13 @@ Body::Body(Agent *agent)
     m_bodyRoot=new osg::PositionAttitudeTransform;
     m_bodyRoot.get()->setName("AgentBody Root Segment");
     m_showAllCoordCrosses=false;
+    m_showSkeleton=false;
     m_switchPositionMarker=new osg::Switch;
     osg::Geode *geo=new osg::Geode;
     geo->addDrawable(BrainiacGlobals::CoordCross.get());
+
+    m_switchSkeleton=new osg::Switch;
+    m_bodyRoot->addChild(m_switchSkeleton);
 
     // Switch Lightning off for position marker
     osg::StateSet *state = geo->getOrCreateStateSet();
@@ -90,6 +94,14 @@ void Body::highlightSegment(quint32 id, bool unselectOthers)
     }
 }
 
+void Body::reset()
+{
+    foreach(BodySegment *seg, m_bodySegments) {
+        seg->reset();
+    }
+    this->updatePosition();
+}
+
 void Body::setAnimations(QHash<quint32, Animation *> *animations)
 {
     m_animationPlayer->setAnimations(animations);
@@ -112,6 +124,11 @@ void Body::toggleShowPositionMarker()
 {
     m_showPositionMarker=!m_showPositionMarker;
     m_switchPositionMarker->setValue(0,m_showPositionMarker);
+}
+
+void Body::toggleShowSkeleton()
+{
+    m_showSkeleton=!m_showSkeleton;
 }
 
 void Body::updatePosition() {

@@ -58,6 +58,9 @@ public:
     void setAnimations(QHash<quint32,Animation *> *animations);
 
     void showPivotCoordCrosses(bool show);
+
+    void reset();
+
     void toggleShowCoordCrosses();
 
     /**
@@ -66,6 +69,12 @@ public:
      * the position marker shows the actual position and orientation of an agent
      */
     void toggleShowPositionMarker();
+
+    /**
+     * @brief toggles the dispaly of the skeleton
+     *
+     */
+    void toggleShowSkeleton();
 
     osg::ref_ptr<osg::PositionAttitudeTransform> getBodyRoot() { return m_bodyRoot; }
     Agent* getAgent();
@@ -80,8 +89,10 @@ protected:
 
     osg::ref_ptr<osg::PositionAttitudeTransform> m_bodyRoot;
     osg::ref_ptr<osg::Switch> m_switchPositionMarker; /**< Switch to toggle coord cross at agents position */
+    osg::ref_ptr<osg::Switch> m_switchSkeleton; /**< Switch to toggle coord cross at agents position */
     bool m_showPositionMarker; /**< property to toggle position marker */
     bool m_showAllCoordCrosses; /**< property to toggle to show all coord crosses of all segments */
+    bool m_showSkeleton; /**< property to toggle to show the skeleton */
 };
 
 #endif // BODY_H

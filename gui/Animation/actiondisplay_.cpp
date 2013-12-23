@@ -62,6 +62,8 @@ void ActionDisplay_::keyPressed(Qt::Key key)
         followUnfollowAgent();
     } else if(key==BrainiacGlobals::ToggleAgentPositionMarkerKey) {
         m_agentManager->getActionAgent()->getBody()->toggleShowPositionMarker();
+    } else if(key==BrainiacGlobals::ToggleSegmentCoordCrossesKey) {
+        m_agentManager->getActionAgent()->getBody()->toggleShowCoordCrosses();
     }
 }
 

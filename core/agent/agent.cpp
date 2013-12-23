@@ -522,7 +522,8 @@ void Agent::reset()
     m_rotation.setY(m_restRotation.y());
     m_rotation.setZ(m_restRotation.z());
 
-    m_body->updatePosition();
+    //m_body->updatePosition();
+    m_body->reset();
 }
 
 void Agent::setObjectName(const QString &name)

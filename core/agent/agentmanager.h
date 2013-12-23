@@ -244,6 +244,8 @@ public:
      * @return bool
      */
     bool loadSkeleton(const QString &filename);
+
+    void reset();
     bool saveConfig();
     void setEditorTranslation(qint32 x, qint32 y);
     void setFuzzyEditorTranslation(quint32 id, qint32 x, qint32 y);

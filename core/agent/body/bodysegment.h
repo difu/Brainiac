@@ -60,6 +60,13 @@ public:
     void setRestMatrixDirty() { m_restMatrixDirty=true; }
 
     /**
+     * @brief resets this BodySegment
+     *
+     * the rest channels are set to their defualt values
+     */
+    void reset();
+
+    /**
      * @brief shows this Segment s pivot coordinate cross
      * @param show true if the coordinate cross should be shown, false otherwise
      */

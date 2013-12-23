@@ -841,6 +841,7 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
 
 
     m_bodyManager->getBodyEdtor()->autoArrange();
+    reset();
     return true;
 }
 
@@ -1092,6 +1093,13 @@ bool AgentManager::saveConfig()
     return true;
 }
 
+void AgentManager::reset()
+{
+    foreach(Agent *agent, m_agents) {
+        agent->reset();
+    }
+}
+
 void AgentManager::setEditorTranslation(qint32 x, qint32 y)
 {
     m_editX=x;
@@ -1142,6 +1150,9 @@ void AgentManager::setSegmentRotationTranslationOrder(quint32 id, QList<Brainiac
 void AgentManager::setSegmentRestRotation(quint32 id, qreal x, qreal y, qreal z)
 {
     m_bodyManager->setSegmentRestRotation(id,x,y,z);
+
+    // the channels have to be reset
+    this->reset();
 }
 
 void AgentManager::setSegmentRestTranslation(quint32 id, qreal x, qreal y, qreal z)
@@ -1152,6 +1163,9 @@ void AgentManager::setSegmentRestTranslation(quint32 id, qreal x, qreal y, qreal
 //    }
 //        qDebug()<< __PRETTY_FUNCTION__;
     m_bodyManager->setSegmentRestTranslation(id,x,y,z);
+
+    // the channels have to be reset
+    this->reset();
 }
 
 void AgentManager::setSegmentRotation(quint32 id, qreal x, qreal y, qreal z)

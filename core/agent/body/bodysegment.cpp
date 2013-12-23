@@ -47,6 +47,7 @@ BodySegment::BodySegment(Body *body, SegmentShape *segmentShape):MatrixTransform
     m_isHiglighted=false;
     m_highlghtedStructuresCreated=false;
     m_shouldHighlight=false;
+    reset();
 }
 
 void BodySegment::computeMatrix() {
@@ -60,27 +61,27 @@ void BodySegment::computeRestMatrix() {
             switch(rotTrans) {
             case BrainiacGlobals::RX:
                 //m.rotate()
-                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_segmentShape->getRestRotation().x()+m_channelRx->getValue()),osg::Vec3d(1.0f,0.0f,0.0f));
+                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_channelRx->getValue()),osg::Vec3d(1.0,0.0,0.0));
                 break;
             case BrainiacGlobals::RY:
-                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_segmentShape->getRestRotation().y()+m_channelRy->getValue()),osg::Vec3d(0.0f,1.0f,0.0f));
+                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_channelRy->getValue()),osg::Vec3d(0.0,1.0,0.0));
                 break;
             case BrainiacGlobals::RZ:
-                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_segmentShape->getRestRotation().z()+m_channelRz->getValue()),osg::Vec3d(0.0f,0.0f,1.0f));
+                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_channelRz->getValue()),osg::Vec3d(0.0,0.0,1.0));
                 break;
             case BrainiacGlobals::TX:
-                m*=osg::Matrix::translate(m_segmentShape->getRestTranslation().x()+m_channelTx->getValue(),0.0f,0.0f);
+                m*=osg::Matrix::translate(m_channelTx->getValue(),0.0,0.0);
                 break;
             case BrainiacGlobals::TY:
-                m*=osg::Matrix::translate(0.0f,m_segmentShape->getRestTranslation().y()+m_channelTy->getValue(),0.0f);
+                m*=osg::Matrix::translate(0.0,m_channelTy->getValue(),0.0);
                 break;
             case BrainiacGlobals::TZ:
-                m*=osg::Matrix::translate(0.0f,0.0f,m_segmentShape->getRestTranslation().z()+m_channelTz->getValue());
+                m*=osg::Matrix::translate(0.0,0.0,m_channelTz->getValue());
                 break;
             }
         }
         this->setMatrix(m);
-        //this->setMatrix(osg::Matrix::translate(25.0f, 0.0f, 0.0f ));
+        //this->setMatrix(osg::Matrix::translate(25.0, 0.0, 0.0 ));
         m_restMatrixDirty=false;
     }
 }
@@ -122,7 +123,7 @@ void BodySegment::createChannels()
 void BodySegment::createHighlightStructures()
 {
     m_highlightOutline=new osgFX::Outline;
-    m_highlightOutline->setWidth(8);
+    m_highlightOutline->setWidth(2);
     m_highlightOutline->setColor(osg::Vec4(1,1,0,1));
     m_highlightOutline->addChild(m_geode);
     m_switchHighlight->addChild(m_highlightOutline,false);
@@ -146,6 +147,19 @@ void BodySegment::showPivotCoordCross(bool show)
         m_pivotCoordCrossCreated=true;
     }
     m_switchPivotCross->setValue(0,show);
+}
+
+void BodySegment::reset()
+{
+    m_channelTx->setValue(m_segmentShape->getRestTranslation().x());
+    m_channelTy->setValue(m_segmentShape->getRestTranslation().y());
+    m_channelTz->setValue(m_segmentShape->getRestTranslation().z());
+
+    m_channelRx->setValue(m_segmentShape->getRestRotation().x());
+    m_channelRy->setValue(m_segmentShape->getRestRotation().y());
+    m_channelRz->setValue(m_segmentShape->getRestRotation().z());
+    m_restMatrixDirty=true;
+
 }
 
 void BodySegment::toggleHighlight()
