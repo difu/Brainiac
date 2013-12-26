@@ -39,6 +39,11 @@ class Scene;
 class Group
 {
 public:
+    /**
+     * @brief Creates a new Group
+     * The group is added to the scene
+     * @param scene the pointer to the scene
+     */
     Group(Scene *scene);
 
     /**
@@ -87,14 +92,14 @@ public:
     ~Group();
 
 protected:
-    QString m_name;
-    QString m_agentFileName;
-    QString m_agentFileNameAbsolute;
-    quint32 m_id;
+    QString m_name; /**< name of this group */
+    QString m_agentFileName; /**< name of the agent filename */
+    QString m_agentFileNameAbsolute; /**< absolute path og the agent file */
+    quint32 m_id; /**< unique id of this group */
     quint32 m_editX, /**< x position of group item in SceneEditor */
             m_editY; /**< y position of group item in SceneEditor */
-    AgentManager *m_agentManager;
-    Scene *m_scene;
+    AgentManager *m_agentManager; /**< pointer to the AgentManager of this Group */
+    Scene *m_scene; /**< the Scene */
     QList <Agent *> m_agents; /**< all agents of this group */
 };
 
