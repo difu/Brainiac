@@ -42,10 +42,38 @@ public:
      * @param segmentShape the SegmentShape this BodySegment is based on
      */
     BodySegment(Body *body,SegmentShape *segmentShape);
+
+    /**
+     * @brief Computes the rest matrix of this BodySegment
+     * It is only calculated if any parameters has changed
+     * @sa m_restMatrixDirty
+     * @sa setRestMatrixDirty()
+     */
     void computeRestMatrix();
+
+    /**
+     * @brief Computes the matrix that offsets the geometry of this BodySegment
+     * called e.g. from @sa m_signalHandler
+     * @sa m_restMatrixDirty
+     */
     void computeMatrix();
+
+    /**
+     * @brief returns the unique id of this BodySegment
+     * @return quint32 the id
+     */
     quint32 getId() const { return m_segmentShape->getId(); }
+
+    /**
+     * @brief returns the parent id for this BodySegment
+     * @return quint32 the id
+     */
     quint32 getParentId() const { return m_segmentShape->getParentId(); }
+
+    /**
+     * @brief returns a pointer of the SegmentShape
+     * @return SegmentShape* pointer
+     */
     SegmentShape *getSegmentShape() const { return m_segmentShape; }
 
     /**
@@ -88,7 +116,7 @@ protected:
      */
     void createHighlightStructures();
     virtual void traverse(osg::NodeVisitor &nv);
-    BodySegmentSignalHandler *m_channelHandler;
+    BodySegmentSignalHandler *m_signalHandler; /**< receives and emits signals for this BodySegment */
     Body *m_body; //!< The Body this BodySegment belongs to
     bool m_showPivotCoordCross;
     bool m_pivotCoordCrossCreated;
@@ -99,17 +127,17 @@ protected:
     bool m_shouldHighlight;
     bool m_highlghtedStructuresCreated;
     osg::ref_ptr<osg::Geode> m_geode; /**< the geometry node that holds the ShapeDrawable */
-    osg::ref_ptr<osg::MatrixTransform> m_transformNode;
+    osg::ref_ptr<osg::MatrixTransform> m_transformNode; /**< transformation node rthat offsets the Segmet´s geometry */
     osg::ref_ptr<osg::Switch> m_switchPivotCross; /**< toogles the coordinate cross */
     osg::ref_ptr<osg::Switch> m_switchHighlight; /**< toogles the highlighting */
     osg::ref_ptr<osgFX::Outline> m_highlightOutline; /**< Outline effect for highlighting this BodySegment */
-    Channel *m_color; //!< segement´s color Channel
-    Channel *m_channelTx; //!< x translation (input and output)
-    Channel *m_channelTy; //!< y translation (input and output)
-    Channel *m_channelTz; //!< z translation (input and output)
-    Channel *m_channelRx; //!< x rotation (input and output)
-    Channel *m_channelRy; //!< y rotation (input and output)
-    Channel *m_channelRz; //!< z rotation (input and output)
+    Channel *m_oColor; //!< segement´s color Channel
+    Channel *m_oTx; //!< x translation channel (output)
+    Channel *m_oTy; //!< y translation channel (output)
+    Channel *m_oTz; //!< z translation channel (output)
+    Channel *m_oRx; //!< x rotation channel (output)
+    Channel *m_oRy; //!< y rotation channel (output)
+    Channel *m_oRz; //!< z rotation channel (output)
 };
 
 #endif // BODYSEGMENT_H

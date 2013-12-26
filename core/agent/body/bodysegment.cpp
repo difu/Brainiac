@@ -27,7 +27,7 @@
 
 BodySegment::BodySegment(Body *body, SegmentShape *segmentShape):MatrixTransform(),m_body(body),m_segmentShape(segmentShape)
 {
-    m_channelHandler=new BodySegmentSignalHandler(this);
+    m_signalHandler=new BodySegmentSignalHandler(this);
     m_geode=new osg::Geode;
     m_switchHighlight=new osg::Switch;
     m_transformNode=new osg::MatrixTransform();
@@ -61,22 +61,22 @@ void BodySegment::computeRestMatrix() {
             switch(rotTrans) {
             case BrainiacGlobals::RX:
                 //m.rotate()
-                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_channelRx->getValue()),osg::Vec3d(1.0,0.0,0.0));
+                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_oRx->getValue()),osg::Vec3d(1.0,0.0,0.0));
                 break;
             case BrainiacGlobals::RY:
-                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_channelRy->getValue()),osg::Vec3d(0.0,1.0,0.0));
+                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_oRy->getValue()),osg::Vec3d(0.0,1.0,0.0));
                 break;
             case BrainiacGlobals::RZ:
-                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_channelRz->getValue()),osg::Vec3d(0.0,0.0,1.0));
+                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_oRz->getValue()),osg::Vec3d(0.0,0.0,1.0));
                 break;
             case BrainiacGlobals::TX:
-                m*=osg::Matrix::translate(m_channelTx->getValue(),0.0,0.0);
+                m*=osg::Matrix::translate(m_oTx->getValue(),0.0,0.0);
                 break;
             case BrainiacGlobals::TY:
-                m*=osg::Matrix::translate(0.0,m_channelTy->getValue(),0.0);
+                m*=osg::Matrix::translate(0.0,m_oTy->getValue(),0.0);
                 break;
             case BrainiacGlobals::TZ:
-                m*=osg::Matrix::translate(0.0,0.0,m_channelTz->getValue());
+                m*=osg::Matrix::translate(0.0,0.0,m_oTz->getValue());
                 break;
             }
         }
@@ -90,33 +90,33 @@ void BodySegment::createChannels()
 {
     QString segName(getName().c_str());
     //qDebug() << __PRETTY_FUNCTION__ << "creating channels for Segment" << segName;
-    m_channelRx=new Channel();
-    QObject::connect(m_channelRx,SIGNAL(valueChanged(qreal)),m_channelHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
-    m_body->getAgent()->addOutputChannel(m_channelRx,segName % ":rx");
+    m_oRx=new Channel();
+    QObject::connect(m_oRx,SIGNAL(valueChanged(qreal)),m_signalHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
+    m_body->getAgent()->addOutputChannel(m_oRx,segName % ":rx");
 
-    m_channelRy=new Channel();
-    QObject::connect(m_channelRy,SIGNAL(valueChanged(qreal)),m_channelHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
-    m_body->getAgent()->addOutputChannel(m_channelRy,segName % ":ry");
+    m_oRy=new Channel();
+    QObject::connect(m_oRy,SIGNAL(valueChanged(qreal)),m_signalHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
+    m_body->getAgent()->addOutputChannel(m_oRy,segName % ":ry");
 
-    m_channelRz=new Channel();
-    QObject::connect(m_channelRz,SIGNAL(valueChanged(qreal)),m_channelHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
-    m_body->getAgent()->addOutputChannel(m_channelRz,segName % ":rz");
+    m_oRz=new Channel();
+    QObject::connect(m_oRz,SIGNAL(valueChanged(qreal)),m_signalHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
+    m_body->getAgent()->addOutputChannel(m_oRz,segName % ":rz");
 
-    m_channelTx=new Channel();
-    QObject::connect(m_channelTx,SIGNAL(valueChanged(qreal)),m_channelHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
-    m_body->getAgent()->addOutputChannel(m_channelTx,segName % ":tx");
+    m_oTx=new Channel();
+    QObject::connect(m_oTx,SIGNAL(valueChanged(qreal)),m_signalHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
+    m_body->getAgent()->addOutputChannel(m_oTx,segName % ":tx");
 
-    m_channelTy=new Channel();
-    QObject::connect(m_channelTy,SIGNAL(valueChanged(qreal)),m_channelHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
-    m_body->getAgent()->addOutputChannel(m_channelTy,segName % ":ty");
+    m_oTy=new Channel();
+    QObject::connect(m_oTy,SIGNAL(valueChanged(qreal)),m_signalHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
+    m_body->getAgent()->addOutputChannel(m_oTy,segName % ":ty");
 
-    m_channelTz=new Channel();
-    QObject::connect(m_channelTz,SIGNAL(valueChanged(qreal)),m_channelHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
-    m_body->getAgent()->addOutputChannel(m_channelTz,segName % ":tz");
+    m_oTz=new Channel();
+    QObject::connect(m_oTz,SIGNAL(valueChanged(qreal)),m_signalHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
+    m_body->getAgent()->addOutputChannel(m_oTz,segName % ":tz");
 
-    m_color=new Channel();
-    m_color->init(0); //!< @todo color connect
-    m_body->getAgent()->addOutputChannel(m_color,segName % ":color");
+    m_oColor=new Channel();
+    m_oColor->init(0); //!< @todo color connect
+    m_body->getAgent()->addOutputChannel(m_oColor,segName % ":color");
 
 }
 
@@ -151,13 +151,13 @@ void BodySegment::showPivotCoordCross(bool show)
 
 void BodySegment::reset()
 {
-    m_channelTx->setValue(m_segmentShape->getRestTranslation().x());
-    m_channelTy->setValue(m_segmentShape->getRestTranslation().y());
-    m_channelTz->setValue(m_segmentShape->getRestTranslation().z());
+    m_oTx->setValue(m_segmentShape->getRestTranslation().x());
+    m_oTy->setValue(m_segmentShape->getRestTranslation().y());
+    m_oTz->setValue(m_segmentShape->getRestTranslation().z());
 
-    m_channelRx->setValue(m_segmentShape->getRestRotation().x());
-    m_channelRy->setValue(m_segmentShape->getRestRotation().y());
-    m_channelRz->setValue(m_segmentShape->getRestRotation().z());
+    m_oRx->setValue(m_segmentShape->getRestRotation().x());
+    m_oRy->setValue(m_segmentShape->getRestRotation().y());
+    m_oRz->setValue(m_segmentShape->getRestRotation().z());
     m_restMatrixDirty=true;
 
 }
@@ -188,12 +188,12 @@ void BodySegment::traverse(osg::NodeVisitor &nv)
 
 BodySegment::~BodySegment()
 {
-    m_channelHandler->deleteLater();
-    m_body->getAgent()->deleteChannel(m_channelRx);
-    m_body->getAgent()->deleteChannel(m_channelRy);
-    m_body->getAgent()->deleteChannel(m_channelRz);
-    m_body->getAgent()->deleteChannel(m_channelTx);
-    m_body->getAgent()->deleteChannel(m_channelTy);
-    m_body->getAgent()->deleteChannel(m_channelTz);
-    m_body->getAgent()->deleteChannel(m_color);
+    m_signalHandler->deleteLater();
+    m_body->getAgent()->deleteChannel(m_oRx);
+    m_body->getAgent()->deleteChannel(m_oRy);
+    m_body->getAgent()->deleteChannel(m_oRz);
+    m_body->getAgent()->deleteChannel(m_oTx);
+    m_body->getAgent()->deleteChannel(m_oTy);
+    m_body->getAgent()->deleteChannel(m_oTz);
+    m_body->getAgent()->deleteChannel(m_oColor);
 }
