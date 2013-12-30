@@ -1,6 +1,6 @@
 // Brainiac is a free and open source tool for the creation of crowd simulation
 
-// Copyright (C) 2012  Dirk Fuchs dirkfux@googlemail.com
+// Copyright (C) 2013  Dirk Fuchs dirkfux@googlemail.com
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,21 +19,26 @@
 #define MOTIONTREEMANAGER_H
 
 #include <QObject>
+#include <QHash>
 
 class AgentManager;
+class MotionTree;
 
 class MotionTreeManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit MotionTreeManager(AgentManager *agentManager);
-
+    explicit MotionTreeManager(AgentManager *agentManager, QObject *parent = 0);
+    AgentManager* getAgentManager() const { return m_agentManager; }
+    QHash<quint32,MotionTree *> getMotionTrees() const { return m_motionTrees; }
+    static quint32 NUM_OF_TRACKS;
+    virtual ~MotionTreeManager();
+protected:
+    AgentManager *m_agentManager;
+    QHash<quint32,MotionTree *> m_motionTrees;
 signals:
 
 public slots:
-
-protected:
-    AgentManager *m_agentManager;
 
 };
 

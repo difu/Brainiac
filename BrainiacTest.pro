@@ -72,7 +72,12 @@ SOURCES += gui/mainwindow.cpp \
     core/brainiacerror.cpp \
     gui/coordcrossdrawable.cpp \
     core/agent/body/segmentbox.cpp \
-    core/agent/body/segmenttube.cpp
+    core/agent/body/segmenttube.cpp \
+    core/agent/body/animation/motiontree.cpp \
+    gui/Animation/motiontreeeditor.cpp \
+    gui/Animation/motiontreeeditoritem.cpp \
+    core/agent/body/animation/motiontreeaction.cpp \
+    core/agent/body/animation/motiontreetransition.cpp
 
 HEADERS  += gui/mainwindow.h \
     core/scene.h \
@@ -145,7 +150,12 @@ HEADERS  += gui/mainwindow.h \
     core/brainiacerror.h \
     gui/coordcrossdrawable.h \
     core/agent/body/segmentbox.h \
-    core/agent/body/segmenttube.h
+    core/agent/body/segmenttube.h \
+    core/agent/body/animation/motiontree.h \
+    gui/Animation/motiontreeeditor.h \
+    gui/Animation/motiontreeeditoritem.h \
+    core/agent/body/animation/motiontreeaction.h \
+    core/agent/body/animation/motiontreetransition.h
 
 FORMS    += gui/mainwindow.ui \
     gui/sceneeditor/groupeditor.ui \

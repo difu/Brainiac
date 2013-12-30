@@ -31,6 +31,7 @@ class Scene;
 class Animation;
 class BodyManager;
 class BrainEditor;
+class MotionTreeManager;
 
 class AgentManager
 {
@@ -208,6 +209,7 @@ public:
     QString getName() const { return m_name;}
 
     BodyManager *getBodyManager() { return m_bodyManager; }
+    MotionTreeManager *getMotionTreeManager() const { return m_motionTreeManager; }
 
     Scene* getScene() { return m_scene; }
 
@@ -416,6 +418,7 @@ protected:
     Agent *m_spBodyAgent; /**< special purpose agent. This agent will be used within the BodyEditor */
     Agent *m_spActionAgent; /**< special purpose agent. This agent will be used within the ActionEditor */
     BodyManager *m_bodyManager;
+    MotionTreeManager *m_motionTreeManager;
     QString m_name;
     QString m_fileName;
     quint32 m_id;

@@ -36,6 +36,7 @@
 #include "core/agent/body/animation/animation.h"
 #include "core/agent/body/bodymanager.h"
 #include "core/agent/body/segment.h"
+#include "core/agent/body/animation/motiontreemanager.h"
 #include "core/brainiacerror.h"
 #include "gui/braineditor/braineditor.h"
 #include "gui/bodyeditor/bodyeditor.h"
@@ -59,6 +60,7 @@ AgentManager::AgentManager(Group *group)
     m_agents.append(m_spBodyAgent);
     m_agents.append(m_spActionAgent);
     m_brainEditor=new BrainEditor(m_scene,this);
+    m_motionTreeManager=new MotionTreeManager(this);
 }
 
 void AgentManager::addSegmentFromConfig(QXmlStreamReader *reader, quint32 id, QString name, quint32 parent, quint32 editorX, quint32 editorY)
@@ -809,7 +811,7 @@ bool AgentManager::loadSkeletonBVH( QFile &file)
             offset/=m_bodyManager->getSegmentChildIds(seg->getId()).count()+1;
             m_bodyManager->setSegmentTranslation(seg->getId(),offset.x()/2,offset.y()/2,offset.z()/2);
             QVector3D diff=seg->getRestRotation()- offset;
-            qreal length=diff.length();
+            qreal length=diff.length(); //!< @bug @todo Does not work, rewrite
             qreal xrot=acos(diff.x()/length);
             qreal yrot=acos(diff.y()/length);
             qreal zrot=acos(diff.z()/length);
@@ -1415,4 +1417,5 @@ AgentManager::~AgentManager() {
         agent->deleteLater();
     }
     m_brainEditor->deleteLater();
+    m_motionTreeManager->deleteLater();
 }

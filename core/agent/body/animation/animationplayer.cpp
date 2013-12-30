@@ -45,7 +45,7 @@ AnimationPlayer::AnimationPlayer(Body *body)
 
 void AnimationPlayer::apply2(const Animation &animation, qreal val)
 {
-    qreal boundVal=qBound((qreal)0.0f,val,(qreal)1.0f);
+    qreal boundVal=qBound(0.0,val,1.0);
     qreal length=animation.getLength();
     apply(animation,length*boundVal);
 }

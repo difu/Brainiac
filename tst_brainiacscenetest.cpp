@@ -8,6 +8,7 @@
 #include "core/generator/pointgenerator.h"
 #include "core/agent/agentmanager.h"
 #include "core/agent/agent.h"
+#include "core/agent/body/body.h"
 
 #include "core/agent/brain/brain.h"
 #include "core/agent/channel.h"
@@ -17,6 +18,8 @@
 #include "core/agent/body/animation/animation.h"
 #include "core/agent/body/animation/animationcurve.h"
 #include "core/agent/body/animation/latchcurve.h"
+#include "core/agent/body/animation/motiontree.h"
+#include "core/agent/body/animation/motiontreemanager.h"
 
 #include "core/group/group.h"
 
@@ -52,6 +55,11 @@ private Q_SLOTS:
     void sceneCreateLoadSave();
 
     void parseBVH();
+
+    void agentManager_data();
+    void agentManager();
+
+    void motionTree();
 
     void animation_data();
     void animation();
@@ -124,6 +132,95 @@ void BrainiacSceneTest::parseBVH()
     QVERIFY2(foundNonZeroTranslation==true,"BVH only has zero length segments!");
     testScene1->deleteLater();
 }
+
+void BrainiacSceneTest::agentManager_data()
+{
+    QTest::addColumn<QString>("agentName");
+
+    QTest::addColumn<QString>("segment1Name");
+
+    QTest::addColumn<QString>("segment2Name");
+
+    QTest::addColumn<QString>("segment3Name");
+
+    QTest::addColumn<QString>("segment4Name");
+
+    QTest::newRow("Case1") << "agent1" \
+                           << "root" \
+                           << "rootChild1" \
+                           << "rootChild2" \
+                           << "child1Child";
+
+}
+
+void BrainiacSceneTest::agentManager()
+{
+    Scene testScene1;
+    Group *grp=new Group(&testScene1);
+    grp->setId(1);
+    AgentManager *am1=grp->getAgentManager();
+    BodyManager *bm1=am1->getBodyManager();
+//    osgViewer::Viewer m_viewer;
+//    m_viewer.setSceneData(am1->getActionAgent()->getBody()->getBodyRoot());
+//    m_viewer.updateTraversal();
+
+}
+
+void BrainiacSceneTest::motionTree()
+{
+    QString action1Name="action 1";
+    QString transition1Name="trans 1";
+
+    Scene testScene1;
+    Group *grp=new Group(&testScene1);
+    grp->setId(1);
+    AgentManager *am1=grp->getAgentManager();
+    MotionTreeManager *mtm=am1->getMotionTreeManager();
+    MotionTree *tree1=mtm->getMotionTrees().value(1);
+    tree1->addAction();
+    tree1->addAction();
+    tree1->addTransition();
+    tree1->addTransition();
+    QVERIFY2(tree1->getActions().count()==2,  "Wrong number of unnamed actions");
+    QVERIFY2(tree1->getTransitions().count()==2,  "Wrong number of unnamed transitions");
+
+    tree1->addAction(action1Name);
+    tree1->addTransition(transition1Name);
+
+    //Connect Action with Transition
+    bool connSuccess=tree1->connectActionWithTransition(action1Name,transition1Name);
+    QVERIFY2(connSuccess,"Could not connect action with transition");
+
+    connSuccess=tree1->connectActionWithTransition(action1Name,transition1Name);
+    QVERIFY2(connSuccess==false,"Could connect action with transition, although connection already exists");
+
+    connSuccess=tree1->connectActionWithTransition("Does not exist","Does not exists too");
+    QVERIFY2(connSuccess==false,"Could connect action where action and transition do not exist");
+
+    connSuccess=tree1->connectActionWithTransition(action1Name,"Dummy");
+    QVERIFY2(connSuccess==false,"Could connect action with transition, although transition does not exist");
+
+    connSuccess=tree1->connectActionWithTransition("Dummy",transition1Name);
+    QVERIFY2(connSuccess==false,"Could connect action with transition, although action does not exist");
+
+    // Connect Transition with Action
+    connSuccess=tree1->connectTransitionWithAction(transition1Name,action1Name);
+    QVERIFY2(connSuccess,"Could not connect transition with action");
+
+    connSuccess=tree1->connectTransitionWithAction(transition1Name,action1Name);
+    QVERIFY2(connSuccess==false,"Could connect transition with action, although connection already exists");
+
+    connSuccess=tree1->connectTransitionWithAction("Does not exist","Does not exist");
+    QVERIFY2(connSuccess==false,"Could connect transition with action, although transition and action do not exist");
+
+    connSuccess=tree1->connectTransitionWithAction(transition1Name,"Dummy");
+    QVERIFY2(connSuccess==false,"Could connect transition with action, although action not exists");
+
+    connSuccess=tree1->connectTransitionWithAction("Dummy",action1Name);
+    QVERIFY2(connSuccess==false,"Could connect transition with action, although action not exists");
+
+}
+
 
 void BrainiacSceneTest::animation_data()
 {
@@ -312,14 +409,14 @@ void BrainiacSceneTest::fuzzyAnd_data()
 
 void BrainiacSceneTest::fuzzyAnd()
 {
-    Scene *testScene1=new Scene();
-    Group *grp=new Group(testScene1);
+    Scene testScene1;
+    Group *grp=new Group(&testScene1);
     grp->setId(1);
     createBody(grp->getAgentManager(),1);
     createBrain(grp->getAgentManager());
 
-    QVERIFY(testScene1->getAgents().count()==0);
-    QVERIFY2(testScene1->getGroups().count()>0,"No group in scene!");
+    QVERIFY(testScene1.getAgents().count()==0);
+    QVERIFY2(testScene1.getGroups().count()>0,"No group in scene!");
 //    Group *grp=m_scene2Groups.begin().value();
     AgentManager *am=grp->getAgentManager();
     FuzzyBase *fuzz=am->getMasterAgent()->getBrain()->getFuzzyByName(testAndName);
@@ -354,7 +451,6 @@ void BrainiacSceneTest::fuzzyAnd()
     input3->setResult(in3);
 
     QCOMPARE(testAnd->getResult(), result);
-    testScene1->deleteLater();
 }
 
 void BrainiacSceneTest::fuzzyOr_data()
@@ -386,14 +482,14 @@ void BrainiacSceneTest::fuzzyOr_data()
 
 void BrainiacSceneTest::fuzzyOr()
 {
-    Scene *testScene1=new Scene();
-    Group *grp=new Group(testScene1);
+    Scene testScene1;
+    Group *grp=new Group(&testScene1);
     grp->setId(1);
     createBody(grp->getAgentManager(),1);
     createBrain(grp->getAgentManager());
 
-    QVERIFY(testScene1->getAgents().count()==0);
-    QVERIFY2(testScene1->getGroups().count()>0,"No group in scene!");
+    QVERIFY(testScene1.getAgents().count()==0);
+    QVERIFY2(testScene1.getGroups().count()>0,"No group in scene!");
 //    Group *grp=m_scene2Groups.begin().value();
     AgentManager *am=grp->getAgentManager();
     FuzzyBase *fuzz=am->getMasterAgent()->getBrain()->getFuzzyByName(testOrName);
@@ -427,7 +523,7 @@ void BrainiacSceneTest::fuzzyOr()
     input3->setResult(in3);
 
     QCOMPARE(testOr->getResult(), result);
-    testScene1->deleteLater();
+    //testScene1->deleteLater();
 }
 
 void BrainiacSceneTest::cleanupTestCase()
@@ -633,6 +729,7 @@ void BrainiacSceneTest::simulation1()
 
 void BrainiacSceneTest::createBody(AgentManager *am, int var)
 {
+        //!< @bug @todo rewrite with statical data
     QVector3D testVec=QVector3D(1,2,3);
     QVector3D vec;
     QString segName="Seg1";
