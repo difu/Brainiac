@@ -46,7 +46,7 @@ ActionEditor::ActionEditor(Scene *scene, QWidget *parent) :
     ui->setupUi(this);
     setWindowFlags(Qt::Tool);
     m_activeAnimation=0;
-    m_activeAnimationId=0;
+    //m_activeAnimationName="";
     //setWindowModality(Qt::Tool);
     connect(ui->listAnimation,SIGNAL(currentRowChanged(int)),this,SLOT(animationSelectionChanged(int)));
     //m_actionDisplay=new ActionDisplay(this);
@@ -151,7 +151,7 @@ void ActionEditor::animationNameChanged()
 void ActionEditor::animationSelectionChanged(int rowId)
 {
     if(rowId >=0) {
-        setActiveAnimation(ui->listAnimation->item(rowId)->data(Qt::UserRole).toUInt());
+        setActiveAnimation(ui->listAnimation->item(rowId)->data(Qt::UserRole).toString());
     }
 }
 
@@ -181,7 +181,7 @@ void ActionEditor::refreshCurveList()
     addCurvesToList(m_agentManager->getBodyManager()->getRootSegment(),0);
 }
 
-void ActionEditor::setActiveAnimation(quint32 animId)
+void ActionEditor::setActiveAnimation(QString animName)
 {
     QMutexLocker locker(&m_animationChangeMutex);
     Q_UNUSED(locker);
@@ -195,8 +195,8 @@ void ActionEditor::setActiveAnimation(quint32 animId)
     m_agent->getOutputChannel("ty")->setValue(0);
     m_agent->getOutputChannel("tz")->setValue(0);
 
-    m_activeAnimation=new ModifiableAnimation(m_agentManager->getAnimations()->value(animId),m_agentManager);
-    m_activeAnimationId=animId;
+    m_activeAnimation=new ModifiableAnimation(m_agentManager->getAnimations()->value(animName),m_agentManager);
+    m_activeAnimationName=animName;
     ui->lineEditAnimationName->setText(m_activeAnimation->name());
     //m_activeAnimation=m_agentManager->getAnimations()->value(animId);
     refreshCurveList();
@@ -211,7 +211,7 @@ void ActionEditor::setAgentManager(AgentManager *manager)
 //    if(m_agent) {
 //        delete m_agent;
 //    }
-    m_activeAnimationId=0;
+    m_activeAnimationName="";
 //    m_agent=m_agentManager->getBodyAgent();
     //Agent *bodyAgent=m_agentManager->getActionAgent();
     //m_agent=m_agentManager->cloneAgent(0);
@@ -224,7 +224,7 @@ void ActionEditor::setAgentManager(AgentManager *manager)
     ui->listCurves->clear();
     ui->tabWidgetMain->setTabEnabled(ACTIONS,true);
         //m_agentManager->loadAnimation("/Users/dirkfuchs/Programming/BrainiacNG/tmpTestData/newBodyFormatAction/Male1_B3_Walk.bvh");
-    QHashIterator<quint32,Animation *> i(*m_agentManager->getAnimations()) ;
+    QHashIterator<QString,Animation *> i(*m_agentManager->getAnimations()) ;
 
     while(i.hasNext()) {
         i.next();

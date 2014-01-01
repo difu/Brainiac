@@ -42,7 +42,7 @@ public:
      * @fn getAnimations
      * @return QHash<quint32, Animation *>
      */
-    QHash<quint32,Animation *> * getAnimations() {return m_animations;}
+    QHash<QString,Animation *> * getAnimations() {return m_animations;}
     /**
      * @brief sets the current set of animations
      *
@@ -51,7 +51,7 @@ public:
      * @param QHash<quint32
      * @param animations
      */
-    void setAnimations(QHash<quint32,Animation *> *animations);
+    void setAnimations(QHash<QString, Animation *> *animations);
 protected:
     quint32 m_currentAnimationId;
     quint32 m_nextAnimationId;
@@ -62,7 +62,7 @@ protected:
     QState m_animDefault;
     QState m_animCanTrans;
     QState m_animInTransition;
-    QHash<quint32,Animation *> *m_animations; /**< Pointer to Animation array */
+    QHash<QString,Animation *> *m_animations; /**< Pointer to Animation array */
 
 signals:
     void animCanTransit();

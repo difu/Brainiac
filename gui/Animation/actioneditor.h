@@ -50,8 +50,8 @@ class ActionEditor : public QDialog
 public:
     explicit ActionEditor(Scene *scene, QWidget *parent = 0);
     void setAgentManager(AgentManager *manager);
+    //QString getActiveAnimationName() const;
     QString getActiveAnimationName() const;
-    quint32 getActiveAnimationId() const {return m_activeAnimationId;}
     ~ActionEditor();
 
 public slots:
@@ -64,7 +64,7 @@ public slots:
     void animationOneFrameBackward();
 protected:
     void applyAnimation();
-    void setActiveAnimation(quint32 animId);
+    void setActiveAnimation(QString animName);
     void addCurvesToList(const Segment &seg, quint32 level);
     void refreshCurveList();
     void updateLoopUI();
@@ -72,7 +72,7 @@ protected:
     AgentManager *m_agentManager;
     Agent *m_agent;
     ModifiableAnimation *m_activeAnimation;
-    quint32 m_activeAnimationId;
+    QString m_activeAnimationName;
 //    ActionDisplay *m_actionDisplay; /**< TODO */
     ActionDisplay_ *m_actionDisplay_; /**< The OSGWindow that displays the agent */
     Scene *m_scene;

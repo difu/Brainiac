@@ -441,9 +441,9 @@ void MainWindow::loadAnimation()
 void MainWindow::saveAnimation()
 {
     if(m_actionEditor->isVisible()) {
-        qDebug() << __PRETTY_FUNCTION__ << "Saving " << m_actionEditor->getActiveAnimationId();
+        qDebug() << __PRETTY_FUNCTION__ << "Saving " << m_actionEditor->getActiveAnimationName();
         if(m_activeAgentManager) {
-            Animation *anim=m_activeAgentManager->getAnimations()->value(m_actionEditor->getActiveAnimationId());
+            Animation *anim=m_activeAgentManager->getAnimations()->value(m_actionEditor->getActiveAnimationName());
             if(anim) {
                 if(!anim->fileName().length()) {
                     QFileDialog::Options options;

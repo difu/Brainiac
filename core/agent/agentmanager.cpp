@@ -566,12 +566,12 @@ bool AgentManager::loadConfig()
                                         QString animFileName=attribs.value(BrainiacGlobals::XmlFileNameAttrib).toString();
                                         QString animAbsoluteFileName=m_scene->getAbsoluteFileDir()%"/"%animFileName;
                                         Animation *anim=Animation::loadAnimation(animAbsoluteFileName);
-                                        quint32 id=attribs.value(BrainiacGlobals::XmlIdAttrib).toString().toUInt();
-                                        if(id<=0) {
-                                            qWarning() <<__PRETTY_FUNCTION__ << "Wrong animation id";
-                                        }
-                                        m_animations.insert(id,anim);
-                                        m_animationIdGenerator.registerId(id);
+                                        //QString name=attribs.value(BrainiacGlobals::XmlNameAttrib).toString();
+//                                        if(id<=0) {
+//                                            qWarning() <<__PRETTY_FUNCTION__ << "Wrong animation id";
+//                                        }
+                                        m_animations.insert(anim->name(),anim);
+                                        //m_animationIdGenerator.registerId(id);
                                         reader.skipCurrentElement();
                                     }else {
                                         reader.skipCurrentElement();
@@ -607,7 +607,7 @@ bool AgentManager::loadAnimation(const QString &filename)
     } else if(filename.endsWith(".baf")) {
         Animation *anim=Animation::loadAnimation(filename);
         if(anim) {
-            m_animations.insert(m_animationIdGenerator.getNewId(),anim);
+            m_animations.insert(anim->name(),anim);
         } else {
             qWarning() << __PRETTY_FUNCTION__ << "Could not load "<< filename;
         }
@@ -685,7 +685,7 @@ bool AgentManager::loadAnmationBVH(QFile &file)
     }
     QFileInfo fInfo(file);
     Animation *anim=new Animation(animCurves,fInfo.fileName().split('.').first());
-    m_animations.insert(m_animationIdGenerator.getNewId(),anim);
+    m_animations.insert(anim->name(),anim);
 //    foreach(Animation *anim,m_animations) {
 //        qDebug() << anim->name();
 //        QHashIterator<QString, AnimationCurve *> i(anim->curves()) ;
@@ -976,14 +976,14 @@ bool AgentManager::saveConfig()
 
     stream.writeEndElement(); // Body
     stream.writeStartElement("Animations");
-    QHashIterator<quint32, Animation *> i(m_animations) ;
+    QHashIterator<QString, Animation *> i(m_animations) ;
 
     while(i.hasNext()) {
         i.next();
         Animation *anim=i.value();
         if(anim->fileName().length()>0) {
             stream.writeStartElement("Animation");
-            stream.writeAttribute(BrainiacGlobals::XmlIdAttrib,QString::number(i.key()));
+            //stream.writeAttribute(BrainiacGlobals::XmlNameAttrib,i.key());
             QString relFileName=m_scene->getRelativeFileDir(anim->fileName());
             stream.writeAttribute(BrainiacGlobals::XmlFileNameAttrib,relFileName);
             stream.writeEndElement(); // Animation

@@ -183,7 +183,7 @@ public:
     **/
     void deleteOutputChannel( const QString &name );
 
-    QHash<quint32,Animation *>* getAnimations() {return &m_animations;}
+    QHash<QString,Animation *>* getAnimations() {return &m_animations;}
     quint32 getId() { return m_id; }
     qint32 getEditorTranslationX() { return m_editX; }
     qint32 getEditorTranslationY() { return m_editY; }
@@ -450,7 +450,7 @@ protected:
     IdGenerator m_brainIdGenerator;
     IdGenerator m_animationIdGenerator;
     IdGenerator m_segmentIdGenerator;
-    QHash<quint32,Animation *> m_animations;
+    QHash<QString,Animation *> m_animations;
     QList<Agent *> m_agents; /**< contains all agents, including special purpose agents like @sa m_masterAgent */
     BrainEditor *m_brainEditor; /**< contains the editor widgets of the brain */
 

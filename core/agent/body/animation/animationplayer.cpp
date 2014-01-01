@@ -63,7 +63,7 @@ void AnimationPlayer::apply(const Animation &animation, qreal time)
     //animation.curves().value("ToSpine:ry")->dPrintKeyFrames(0,10);
 }
 
-void AnimationPlayer::setAnimations(QHash<quint32, Animation *> *animations)
+void AnimationPlayer::setAnimations(QHash<QString, Animation *> *animations)
 {
     m_animations=animations;
 }

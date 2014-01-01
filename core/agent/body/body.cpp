@@ -76,7 +76,7 @@ Agent* Body::getAgent()
     return m_agent;
 }
 
-QHash<quint32,Animation *> * Body::getAnimations()
+QHash<QString,Animation *> * Body::getAnimations()
 {
     return m_animationPlayer->getAnimations();
 }
@@ -102,7 +102,7 @@ void Body::reset()
     this->updatePosition();
 }
 
-void Body::setAnimations(QHash<quint32, Animation *> *animations)
+void Body::setAnimations(QHash<QString, Animation *> *animations)
 {
     m_animationPlayer->setAnimations(animations);
 }
