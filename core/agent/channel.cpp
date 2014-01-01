@@ -35,7 +35,7 @@ void Channel::advance()
     m_oldValue=m_value;
 }
 
-/** \brief inits channel
+/** \brief changes the value of this channel
         This slot is invoked if this channel has a parent
         @sa Channel::setInherited()
 **/
@@ -48,7 +48,7 @@ void Channel::changeValue(qreal value)
           note that this value may change from the min value of a fuzzy node!
           @sa FuzzyBase::getMaxValue()
 **/
-qreal Channel::getMaxValue()
+qreal Channel::getMaxValue() const
 {
     return m_max;
 }
@@ -57,33 +57,33 @@ qreal Channel::getMaxValue()
         note that this value may change from the min value of a fuzzy node!
         @sa FuzzyBase::getMinValue()
 **/
-qreal Channel::getMinValue()
+qreal Channel::getMinValue() const
 {
     return m_min;
 }
 
 /** \brief @returns the range between min and max
 **/
-qreal Channel::getRange()
+qreal Channel::getRange() const
 {
     return qAbs(m_max-m_min);
 }
 
 /** \brief @returns the current value of this channel
 **/
-qreal Channel::getValue() {
+qreal Channel::getValue() const {
     return m_value;
 }
 
 /** \brief @returns the old value of this channel
 **/
-qreal Channel::getOldValue() {
+qreal Channel::getOldValue() const {
     return m_oldValue;
 }
 
 /** \brief @returns true, if this channel´s value is inherited
 **/
-bool Channel::isInherited() {
+bool Channel::isInherited() const {
     return m_inherited;
 }
 

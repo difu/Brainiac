@@ -36,13 +36,15 @@ class Channel: public QObject
 public:
     Channel(qreal min=BrainiacGlobals::MINQREAL, qreal max=BrainiacGlobals::MAXQREAL, qreal value=0);
     void advance();
-    qreal getMaxValue();
-    qreal getMinValue();
-    qreal getRange();
+    qreal getMaxValue() const;
+    qreal getMinValue() const;
+    qreal getRange() const;
     void init(qreal value);
-    bool isInherited();
-    qreal getValue();
-    qreal getOldValue();
+    bool isInherited() const;
+    qreal getValue() const;
+    qreal getOldValue() const;
+    void setMinValue( qreal min ) { m_min=min; }
+    void setMaxValue( qreal max ) { m_max=max; }
     void setValue(qreal value, bool isSpeed=false);
     void setInherited(Channel *parent, bool inherited);
 

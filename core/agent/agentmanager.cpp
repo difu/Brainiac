@@ -412,6 +412,22 @@ void AgentManager::addConnector(quint32 childId, quint32 parentId, bool inverted
     m_brainEditor->addConnector(parentId,childId);
 }
 
+void AgentManager::addInputChannel(const QString &name, qreal min, qreal max)
+{
+    foreach(Agent* agent,m_agents) {
+        Channel *c=new Channel(min,max);
+        agent->addInputChannel(c,name);
+    }
+}
+
+void AgentManager::addOutputChannel(const QString &name, qreal min, qreal max)
+{
+    foreach(Agent* agent,m_agents) {
+        Channel *c=new Channel(min,max);
+        agent->addOutputChannel(c,name);
+    }
+}
+
 Agent* AgentManager::cloneAgent(quint32 id)
 {
     Agent *agent=new Agent(m_masterAgent,id);
@@ -425,6 +441,13 @@ Agent* AgentManager::createNewAgentInstance(quint32 id)
     m_bodyManager->applyBodyOnAgent(agent);
     m_agents.append(agent);
     return agent;
+}
+
+void AgentManager::deleteOutputChannel(const QString &name)
+{
+    foreach(Agent* agent,m_agents) {
+        //agent->deleteChannel();
+    }
 }
 
 void AgentManager::deleteConnector(quint32 childId, quint32 parentId)

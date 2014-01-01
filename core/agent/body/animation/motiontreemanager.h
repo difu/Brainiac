@@ -31,9 +31,10 @@ public:
     explicit MotionTreeManager(AgentManager *agentManager, QObject *parent = 0);
     AgentManager* getAgentManager() const { return m_agentManager; }
     QHash<quint32,MotionTree *> getMotionTrees() const { return m_motionTrees; }
-    static quint32 NUM_OF_TRACKS;
+    static quint32 NUM_OF_TREE_TRACKS;
     virtual ~MotionTreeManager();
 protected:
+    void createChannels();
     AgentManager *m_agentManager;
     QHash<quint32,MotionTree *> m_motionTrees;
 signals:

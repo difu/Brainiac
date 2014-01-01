@@ -73,10 +73,10 @@ public:
     /** \brief Constructs new Agent instance as a copy of an existing agent
 
                     This constructor is used to create a new agent which is an exact copy of given agent except the id.
-                    @param agent a pointer to the original agent
+                    @param otherAgent a pointer to the original agent
                     @param id the id of the agent
     **/
-    Agent(Agent *agent, quint32 id=0);
+    Agent(Agent *otherAgent, quint32 id=0);
 
     /** \brief adds an input channel
 

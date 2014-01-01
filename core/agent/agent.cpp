@@ -25,6 +25,7 @@
 #include "core/brainiacglobals.h"
 #include "channel.h"
 #include "core/scene.h"
+#include "core/agent/body/animation/motiontreemanager.h"
 //#include <QtOpenGL>
 #include <QDebug>
 #include <QtGlobal>
@@ -40,14 +41,14 @@ Agent::Agent(Scene *scene, quint32 id) :
     m_renderSoundEmission=true;
 }
 
-Agent::Agent(Agent *agent, quint32 id)  :
+Agent::Agent(Agent *otherAgent, quint32 id)  :
     QObject()
 {
     m_id=id;
     createChannels();
-    m_scene=agent->getScene();
+    m_scene=otherAgent->getScene();
     m_body=new Body(this);
-    m_brain=new Brain(this,agent->getBrain());
+    m_brain=new Brain(this,otherAgent->getBrain());
     m_renderSoundEmission=true;
 }
 
@@ -271,6 +272,18 @@ void Agent::createChannels()
     m_iSoundD=new Channel(0.0f,1.0f,0.0f);
     addInputChannel(m_iSoundD,BrainiacGlobals::ChannelName_Sound_d);
 
+    for(quint32 i=0;i<MotionTreeManager::NUM_OF_TREE_TRACKS;i++) {
+        QString phaseChannelName="phase";
+        QString latchChannelName="latch";
+        if(i>0) {
+            phaseChannelName.append(QString::number(i+1));
+            latchChannelName.append(QString::number(i+1));
+        }
+        Channel *phaseChannel=new Channel(0,1);
+        addInputChannel(phaseChannel,phaseChannelName);
+        Channel *latchChannel=new Channel(0,1);
+        addInputChannel(latchChannel,latchChannelName);
+    }
 }
 
 void Agent::deleteConnection(quint32 parentId, quint32 childId)

@@ -40,6 +40,7 @@ public:
     QString addTransition(QString name="Transition");
     bool connectActionWithTransition( QString action, QString transition);
     bool connectTransitionWithAction( QString transition, QString action);
+    void setTreeDefaultAction( const QString name ) { m_defaultAction=name; }
 
 protected:
     AgentManager *m_agentManager;
@@ -49,6 +50,7 @@ protected:
     QHash<QString, MotionTreeTransition *> m_transitions;
     QHash<MotionTreeAction *, MotionTreeTransition *> m_actionTransitionConnections;
     QHash<MotionTreeTransition *, MotionTreeAction *> m_transitionActionConnections;
+    QString m_defaultAction;
 signals:
 
 public slots:

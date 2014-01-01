@@ -123,6 +123,20 @@ public:
     quint32 addTimerFuzz(QString name, qreal rate, QString mode, quint32 editorX, quint32 editorY);
     void addConnector(quint32 childId, quint32 parentId, bool inverted);
 
+    /** \brief adds an input channel
+
+            \param  name the name of the channel
+            \param  min minimum value of the channel
+            \param  max maximum value of the channel
+    **/
+    void addInputChannel( const QString &name, qreal min, qreal max );
+
+    /** \brief adds an output channel
+
+            \param  name the name of the channel
+    **/
+    void addOutputChannel( const QString &name, qreal min, qreal max );
+
     /** \brief clones an agent
 
                     this function clones an agent from this manager´s master agent
@@ -155,13 +169,19 @@ public:
      */
     QList<Agent *> getAllManagedAgents() {return m_agents;}
 
-    /** \brief deletes a fuzz from all agent´s brains belonging to this group
+    /** \brief deletes a fuzz from all agent´s brains managed
 
                     all connecttions from/to this fuzz´ brain are also deleted
 
             \param  fuzzId the id of the fuzz to be deleted
     **/
     void deleteFuzz(quint32 fuzzId);
+
+    /** \brief deletes an output channel
+
+            \param  name the channels name
+    **/
+    void deleteOutputChannel( const QString &name );
 
     QHash<quint32,Animation *>* getAnimations() {return &m_animations;}
     quint32 getId() { return m_id; }

@@ -18,17 +18,23 @@
 #include "motiontreemanager.h"
 
 #include "core/agent/body/animation/motiontree.h"
+#include "core/agent/agentmanager.h"
 
 MotionTreeManager::MotionTreeManager(AgentManager *agentManager, QObject *parent) :
     QObject(parent),m_agentManager(agentManager)
 {
-    for(quint32 i=0;i<NUM_OF_TRACKS;i++) {
+    createChannels();
+}
+
+void MotionTreeManager::createChannels()
+{
+    for(quint32 i=0;i<NUM_OF_TREE_TRACKS;i++) {
         MotionTree *mt=new MotionTree(this);
         m_motionTrees.insert(i,mt);
     }
 }
 
-quint32 MotionTreeManager::NUM_OF_TRACKS=8;
+quint32 MotionTreeManager::NUM_OF_TREE_TRACKS=8;
 
 MotionTreeManager::~MotionTreeManager()
 {
