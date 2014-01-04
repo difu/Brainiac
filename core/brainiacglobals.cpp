@@ -90,6 +90,9 @@ const char* const BrainiacGlobals::XmlIdAttrib="id\0";
 const char* const BrainiacGlobals::XmlRadiusAttrib="radius\0";
 const char* const BrainiacGlobals::XmlEditorXPosAttrib="editorX\0";
 const char* const BrainiacGlobals::XmlEditorYPosAttrib="editorY\0";
+const char* const BrainiacGlobals::XmlTreeDefaultActionAttrib="defaultaction\0";
+const char* const BrainiacGlobals::XmlTreeActionAttrib="action\0";
+const char* const BrainiacGlobals::XmlTreeTransitionAttrib="transition\0";
 
 const char* const BrainiacGlobals::XmlSizeTag="Size\0";
 const char* const BrainiacGlobals::XmlTranslationTag="Translation\0";
@@ -99,7 +102,13 @@ const char* const BrainiacGlobals::XmlRestTranslationTag="RestTranslation\0";
 const char* const BrainiacGlobals::XmlSphereTag="Sphere\0";
 const char* const BrainiacGlobals::XmlBoxTag="Box\0";
 const char* const BrainiacGlobals::XmlTubeTag="Tube\0";
-const char* const BrainiacGlobals::XmlRotTransOrderTag="RotTransOrder\0;";
+const char* const BrainiacGlobals::XmlRotTransOrderTag="RotTransOrder\0";
+const char* const BrainiacGlobals::XmlMotionTreesTag="MotionTrees\0";
+const char* const BrainiacGlobals::XmlMotionTreeTag="MotionTree\0";
+const char* const BrainiacGlobals::XmlTreeActionTransitionConnectionTag="ActionTransitionConnection\0";
+const char* const BrainiacGlobals::XmlTreeTransitionActionConnectionTag="TransitionActionConnection\0";
+const char* const BrainiacGlobals::XmlTreeActionTag="Action\0";
+const char* const BrainiacGlobals::XmlTreeTransitionTag="Transition\0";
 
 const char* const BrainiacGlobals::FuzzAndModeMin="min\0";
 const char* const BrainiacGlobals::FuzzAndModeProduct="prod\0";
@@ -118,6 +127,8 @@ const char* const BrainiacGlobals::ChannelName_Sound_ox="sound.ox\0";
 const char* const BrainiacGlobals::ChannelName_Sound_d="sound.d\0";
 const char* const BrainiacGlobals::ChannelName_Sound_a="sound.a\0";
 const char* const BrainiacGlobals::ChannelName_Sound_f="sound.f\0";
+const char* const BrainiacGlobals::ChannelName_Phase="phase\0";
+const char* const BrainiacGlobals::ChannelName_Latch="latch\0";
 
 Qt::Key BrainiacGlobals::ToggleSegmentCoordCrossesKey=Qt::Key_C;
 Qt::Key BrainiacGlobals::ToggleAgentPositionMarkerKey=Qt::Key_P;

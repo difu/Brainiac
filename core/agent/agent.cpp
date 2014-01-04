@@ -273,8 +273,8 @@ void Agent::createChannels()
     addInputChannel(m_iSoundD,BrainiacGlobals::ChannelName_Sound_d);
 
     for(quint32 i=0;i<MotionTreeManager::NUM_OF_TREE_TRACKS;i++) {
-        QString phaseChannelName="phase";
-        QString latchChannelName="latch";
+        QString phaseChannelName=QString(BrainiacGlobals::ChannelName_Phase);
+        QString latchChannelName=QString(BrainiacGlobals::ChannelName_Latch);
         if(i>0) {
             phaseChannelName.append(QString::number(i+1));
             latchChannelName.append(QString::number(i+1));

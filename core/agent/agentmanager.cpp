@@ -37,6 +37,8 @@
 #include "core/agent/body/bodymanager.h"
 #include "core/agent/body/segment.h"
 #include "core/agent/body/animation/motiontreemanager.h"
+#include "core/agent/body/animation/motiontree.h"
+#include "core/agent/body/animation/motiontreeaction.h"
 #include "core/brainiacerror.h"
 #include "gui/braineditor/braineditor.h"
 #include "gui/bodyeditor/bodyeditor.h"
@@ -517,6 +519,8 @@ bool AgentManager::loadConfig()
                                         reader.skipCurrentElement();
                                     }
                                 }
+                            } else if(reader.name()==BrainiacGlobals::XmlMotionTreesTag) {
+                                m_motionTreeManager->loadConfig(&reader);
                             } else if(reader.name()=="Brain") {
                                 while(reader.readNextStartElement()) {
                                     if(reader.name()=="Output") {
@@ -973,8 +977,12 @@ bool AgentManager::saveConfig()
         //}
     }
 
-
     stream.writeEndElement(); // Body
+
+
+    // MotionTree;
+    m_motionTreeManager->saveConfig(&stream);
+
     stream.writeStartElement("Animations");
     QHashIterator<QString, Animation *> i(m_animations) ;
 

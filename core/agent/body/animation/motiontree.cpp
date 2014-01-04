@@ -119,7 +119,15 @@ bool MotionTree::connectTransitionWithAction(QString transition, QString action)
     return false;
 }
 
+QString MotionTree::getActionName( MotionTreeAction *action ) const
+{
+    return m_actions.key(action,QString());
+}
 
+QString MotionTree::getTransitionName(MotionTreeTransition *transition) const
+{
+    return m_transitions.key(transition,QString());
+}
 MotionTree::~MotionTree()
 {
     foreach(MotionTreeAction *act, m_actions) {

@@ -170,6 +170,7 @@ void BrainiacSceneTest::motionTree()
 {
     QString action1Name="action 1";
     QString transition1Name="trans 1";
+    QTemporaryFile tmpFile;
 
     Scene testScene1;
     Group *grp=new Group(&testScene1);
@@ -218,6 +219,61 @@ void BrainiacSceneTest::motionTree()
 
     connSuccess=tree1->connectTransitionWithAction("Dummy",action1Name);
     QVERIFY2(connSuccess==false,"Could connect transition with action, although action not exists");
+
+    QVERIFY2(tree1->getActions().count()==3,  "Wrong number of unnamed actions");
+    QVERIFY2(tree1->getTransitions().count()==3,  "Wrong number of unnamed transitions");
+
+    // saving/loading tests
+
+    QString standActionName="stand";
+    QString standTransName="standTrans";
+    QString defaultActionName=standActionName;
+
+    Scene saveScene2;
+    Group *saveGroup=new Group(&saveScene2);
+    saveGroup->setId(1);
+    AgentManager *saveAgentManager=saveGroup->getAgentManager();
+    MotionTreeManager *saveMotionTreeManager=saveAgentManager->getMotionTreeManager();
+    MotionTree *saveTree1=saveMotionTreeManager->getMotionTrees().value(1);
+
+    saveTree1->addAction(standActionName);
+    saveTree1->addTransition(standTransName);
+    saveTree1->setTreeDefaultAction(defaultActionName);
+
+    saveTree1->connectActionWithTransition(standActionName,standTransName);
+    saveTree1->connectTransitionWithAction(standTransName,standActionName);
+
+    saveTree1->setTreeDefaultAction(standActionName);
+    QVERIFY2(tmpFile.open(),"Temp file could not be opened");
+    saveAgentManager->setFileName(tmpFile.fileName());
+    saveAgentManager->saveConfig();
+
+    Scene LoadScene;
+    Group *loadGroup=new Group(&LoadScene);
+    AgentManager *loadAgentManager=loadGroup->getAgentManager();
+    loadAgentManager->setFileName(tmpFile.fileName());
+    loadAgentManager->loadConfig();
+
+    //Check, if tree 1 is as defined
+    MotionTree *loadTree1=loadAgentManager->getMotionTreeManager()->getMotionTrees().value(1);
+    QVERIFY2(loadTree1->getDefaultActionName()==defaultActionName,"Default action name of loaded tree differs!");
+    MotionTreeAction *action=loadTree1->getActions().value(standActionName,0);
+    QVERIFY2(action,"No stand action loaded");
+    MotionTreeTransition *trans=loadTree1->getTransitions().value(standTransName,0);
+    QVERIFY2(trans,"No stand transition loaded");
+
+    QVERIFY2(loadTree1->getActionTransitionConnections().count()==1,"Wrong number of loaded Action Trans connections!");
+    QVERIFY2(loadTree1->getTransitionActionConnections().count()==1,"Wrong number of loaded Trans Action connections!");
+
+    // Check all trees have the same contents as the originals
+    for(unsigned int i=0; i<MotionTreeManager::NUM_OF_TREE_TRACKS;i++) {
+        MotionTree *loadTree=loadAgentManager->getMotionTreeManager()->getMotionTrees().value(i);
+        MotionTree *saveTree=saveAgentManager->getMotionTreeManager()->getMotionTrees().value(i);
+        QVERIFY2(loadTree->getActions().count()==saveTree->getActions().count(),"number of loaded tree actions differs");
+        QVERIFY2(loadTree->getTransitions().count()==saveTree->getTransitions().count(),"number of loaded tree transitions differs");
+//        QVERIFY2(loadTree->getTransitionActionConnections().count()==saveTree->getTransitionActionConnections().count(),"number of loaded trans action connections differs");
+//        QVERIFY2(loadTree->getActionTransitionConnections().count()==saveTree->getActionTransitionConnections().count(),"number of loaded action trans connections differs");
+    }
 
 }
 

@@ -31,16 +31,44 @@ class MotionTree : public QObject
 {
     Q_OBJECT
 public:
+    typedef QHash<MotionTreeAction *, MotionTreeTransition *> ActionTransitionConnectionType;
+    typedef QHash<MotionTreeTransition *, MotionTreeAction *> TransitionActionConnectionType;
     explicit MotionTree(QObject *parent = 0);
     virtual ~MotionTree();
-    QHash<QString, MotionTreeAction *> getActions() const { return m_actions; }
-    QHash<QString, MotionTreeTransition *> getTransitions() const { return m_transitions; }
-    MotionTreeEditor* getMotionTreeEditor() const { return m_motionTreeEditor; }
+
+
+    /**
+     * @brief adds an action to this MotionTree
+     *
+     * @param QString name the name of this action
+     * @returns QString the name this action was finally given
+     *
+     * if the name is already in use "_" are appended until the name is unique
+     */
     QString addAction(QString name="Action");
+
+    /**
+     * @brief adds a transition to this MotionTree
+     *
+     * @param QString name the name of this transition
+     * @returns QString the name this transition was finally given
+     *
+     * if the name is already in use "_" are appended until the name is unique
+     */
     QString addTransition(QString name="Transition");
     bool connectActionWithTransition( QString action, QString transition);
     bool connectTransitionWithAction( QString transition, QString action);
-    void setTreeDefaultAction( const QString name ) { m_defaultAction=name; }
+    QHash<QString, MotionTreeAction *> getActions() const { return m_actions; }
+    QHash<QString, MotionTreeTransition *> getTransitions() const { return m_transitions; }
+    MotionTreeEditor* getMotionTreeEditor() const { return m_motionTreeEditor; }
+    QString getActionName(MotionTreeAction *action) const;
+    ActionTransitionConnectionType getActionTransitionConnections() const { return m_actionTransitionConnections; }
+    TransitionActionConnectionType getTransitionActionConnections() const { return m_transitionActionConnections; }
+
+    MotionTreeAction *getDefaultAction() const { return m_actions.value(m_defaultActionName,0); }
+    QString getDefaultActionName() const { return m_defaultActionName; }
+    QString getTransitionName(MotionTreeTransition *transition) const;
+    void setTreeDefaultAction( const QString &name ) { m_defaultActionName=name; }
 
 protected:
     AgentManager *m_agentManager;
@@ -48,9 +76,9 @@ protected:
     MotionTreeEditor *m_motionTreeEditor;
     QHash<QString, MotionTreeAction *> m_actions;
     QHash<QString, MotionTreeTransition *> m_transitions;
-    QHash<MotionTreeAction *, MotionTreeTransition *> m_actionTransitionConnections;
-    QHash<MotionTreeTransition *, MotionTreeAction *> m_transitionActionConnections;
-    QString m_defaultAction;
+    ActionTransitionConnectionType m_actionTransitionConnections;
+    TransitionActionConnectionType m_transitionActionConnections;
+    QString m_defaultActionName;
 signals:
 
 public slots:

@@ -2,6 +2,7 @@
 #define MOTIONTREEACTION_H
 
 class MotionTree;
+class MotionTreeEditorItem;
 
 class MotionTreeAction
 {
@@ -11,6 +12,7 @@ public:
 
 protected:
     MotionTree *m_motionTree;
+    MotionTreeEditorItem *m_editorItem;
 };
 
 #endif // MOTIONTREEACTION_H

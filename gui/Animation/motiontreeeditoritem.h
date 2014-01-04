@@ -8,7 +8,7 @@
 class MotionTreeEditorItem : public EditorItem
 {
 public:
-    MotionTreeEditorItem(BrainiacGlobals::ItemType type, void *object,quint32 id);
+    MotionTreeEditorItem(BrainiacGlobals::ItemType type, void *object);
 };
 
 #endif // MOTIONTREEEDITORITEM_H

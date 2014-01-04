@@ -32,7 +32,7 @@ class BrainiacGlobals
 public:
     static const qreal PI;
     enum Direction {NORTH, SOUTH, EAST, WEST};
-    enum ItemType {AND, OR, FUZZ, DEFUZZ, OUTPUT, INPUT, NOISE, TIMER, SPHERE, CUBE, TUBE, GROUP, AGENT};
+    enum ItemType {AND, OR, FUZZ, DEFUZZ, OUTPUT, INPUT, NOISE, TIMER, SPHERE, CUBE, TUBE, GROUP, AGENT, ACTION, TRANSITION};
     enum SegmentType {SPHERESEGMENT=BrainiacGlobals::SPHERE, BOXSEGMENT=BrainiacGlobals::CUBE, TUBESEGMENT=BrainiacGlobals::TUBE, NOPRIMITIVE};
     enum RotTrans {RX, RY, RZ, TX, TY, TZ };
     enum AnimationType{ STATIC, LOCOMOTION, RAMP, TURNING, NOTYPE };
@@ -89,6 +89,9 @@ public:
     static const char* const XmlRadiusAttrib;
     static const char* const XmlEditorXPosAttrib; /**< X Position in an editor */
     static const char* const XmlEditorYPosAttrib; /**< Y Position in an editor */
+    static const char* const XmlTreeDefaultActionAttrib; /**< contains the name of the tree default action */
+    static const char* const XmlTreeActionAttrib;
+    static const char* const XmlTreeTransitionAttrib;
 
     static const char* const XmlSizeTag;
     static const char* const XmlRotationTag;
@@ -99,6 +102,12 @@ public:
     static const char* const XmlBoxTag;
     static const char* const XmlTubeTag;
     static const char* const XmlRotTransOrderTag;
+    static const char* const XmlMotionTreesTag;
+    static const char* const XmlMotionTreeTag;
+    static const char* const XmlTreeTransitionActionConnectionTag;
+    static const char* const XmlTreeActionTransitionConnectionTag;
+    static const char* const XmlTreeActionTag;
+    static const char* const XmlTreeTransitionTag;
 
     static const char* const FuzzAndModeMin;
     static const char* const FuzzAndModeProduct;
@@ -117,6 +126,8 @@ public:
     static const char* const  ChannelName_Sound_d;
     static const char* const  ChannelName_Sound_a;
     static const char* const  ChannelName_Sound_f;
+    static const char* const  ChannelName_Phase;
+    static const char* const  ChannelName_Latch;
 
     static QColor defaultXColor;
     static QColor defaultYColor;

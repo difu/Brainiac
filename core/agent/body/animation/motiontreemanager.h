@@ -23,20 +23,28 @@
 
 class AgentManager;
 class MotionTree;
+class QXmlStreamWriter;
+class QXmlStreamReader;
 
 class MotionTreeManager : public QObject
 {
     Q_OBJECT
 public:
     explicit MotionTreeManager(AgentManager *agentManager, QObject *parent = 0);
+    void addDefaultMotionVariable( QString variable );
+    void deleteDefaultMotionVariable( QString variable );
     AgentManager* getAgentManager() const { return m_agentManager; }
+    QList<QString> getDefaultMotionVariableNames() const { return m_defaultMotionVariableNames; }
     QHash<quint32,MotionTree *> getMotionTrees() const { return m_motionTrees; }
+    void loadConfig(QXmlStreamReader *stream);
+    void saveConfig(QXmlStreamWriter *stream);
     static quint32 NUM_OF_TREE_TRACKS;
     virtual ~MotionTreeManager();
 protected:
-    void createChannels();
-    AgentManager *m_agentManager;
-    QHash<quint32,MotionTree *> m_motionTrees;
+    void createTrees();
+    AgentManager *m_agentManager; /**< the AgentManager this MotionTreeManager belongs to */
+    QHash<quint32,MotionTree *> m_motionTrees; /**< Hash of all MotionTrees */
+    QList<QString> m_defaultMotionVariableNames; /**< default motion variables names of all trees */
 signals:
 
 public slots:
