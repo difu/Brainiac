@@ -101,6 +101,7 @@ void Body::reset()
         seg->reset();
     }
     this->updatePosition();
+    m_animationPlayer->reset();
 }
 
 void Body::setAnimations(QHash<QString, Animation *> *animations)

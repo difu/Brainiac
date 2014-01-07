@@ -44,6 +44,9 @@ public:
      * @return QHash<quint32, Animation *>
      */
     QHash<QString,Animation *> * getAnimations() {return m_animations;}
+
+    void reset();
+
     /**
      * @brief sets the current set of animations
      *
@@ -54,8 +57,9 @@ public:
      */
     void setAnimations(QHash<QString, Animation *> *animations);
 protected:
-    quint32 m_currentAnimationId;
-    quint32 m_nextAnimationId;
+    Animation *m_currentAnimation;
+    qreal m_currentAnimationStartTime;
+    Animation *m_nextAnimation;
     quint32 m_time;
     Simulation *m_simulation;
     Body *m_body;

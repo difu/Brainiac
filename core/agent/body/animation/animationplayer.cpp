@@ -23,6 +23,7 @@
 #include "core/agent/agent.h"
 #include "core/agent/channel.h"
 #include "core/scene.h"
+#include "core/simulation.h"
 #include "core/agent/body/animation/animation.h"
 #include "core/agent/body/animation/animationcurve.h"
 
@@ -40,14 +41,30 @@ AnimationPlayer::AnimationPlayer(Body *body)
     m_stateMachine.addState(&m_animInTransition);
     m_stateMachine.setInitialState(&m_animDefault);
     m_stateMachine.start();
-    m_time=0;
+    reset();
 }
 
 void AnimationPlayer::apply()
 {
+    // first apply highest triggered action, will be possibly overwritten by motiontree
+    qreal highestValue=0;
+    QString highestAnimationChannel;
+    Animation *highestAnimation=0;
     foreach(Animation *anim,*m_animations) {
-
+        qreal tmpHv=Channel::getValue(m_body->getAgent(),anim->name())>highestValue;
+        if(tmpHv>highestValue) {
+            highestValue=tmpHv;
+            highestAnimationChannel=anim->name();
+            highestAnimation=anim;
+        }
     }
+
+    // if no animation is running, just trigger the highest
+    if(m_currentAnimation==0 && highestAnimation) {
+        m_currentAnimation=highestAnimation;
+        m_currentAnimationStartTime=m_simulation->getCurrentFrame()/(qreal)m_simulation->getFps();
+    }
+
 
 }
 
@@ -69,6 +86,14 @@ void AnimationPlayer::apply(const Animation &animation, qreal time)
     }
 
     //animation.curves().value("ToSpine:ry")->dPrintKeyFrames(0,10);
+}
+
+void AnimationPlayer::reset()
+{
+    m_time=0;
+    m_currentAnimation=0;
+    m_currentAnimationStartTime=0;
+    m_nextAnimation=0;
 }
 
 void AnimationPlayer::setAnimations(QHash<QString, Animation *> *animations)

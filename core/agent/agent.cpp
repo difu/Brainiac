@@ -134,7 +134,7 @@ void Agent::addTimerFuzz(quint32 id, const QString &name, qreal rate, Timer::Tim
     m_brain->addTimerFuzz(id, name, rate, mode);
 }
 
-void Agent::advance(int mode)
+void Agent::advance(AdvanceMode mode)
 {
     //qDebug() << __PRETTY_FUNCTION__<< "Agent " << m_id;
     // Process movement

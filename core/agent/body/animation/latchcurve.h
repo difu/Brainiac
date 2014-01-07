@@ -55,7 +55,9 @@ public:
     void addLatch(qreal time, qreal duration);
 
     /**
-     * @brief
+     * @brief returns true, if the animation has a latch at given time
+     *
+     * if the animation has a latch, it should not be left
      *
      * @fn isLatch
      * @param time

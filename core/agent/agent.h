@@ -58,7 +58,8 @@ public:
      */
     enum AdvanceMode {
         NONE=0, //!< Nothing is calculated
-        BRAIN=1 //!< Brain calculation
+        BRAIN=1, //!< Brain calculation
+        ALL=BRAIN //!< everything is calculated
     };
 
     /** \brief Constructs new Agent instance
@@ -130,7 +131,7 @@ public:
                     @sa Agent::advanceCommit()
 
     **/
-    void advance(int mode=Agent::BRAIN);
+    void advance(AdvanceMode mode=Agent::ALL);
     /** \brief commits all changes calculated by advance
 
                     all calculated channels etc are written down and are "baked", the new values becoming the actual values
