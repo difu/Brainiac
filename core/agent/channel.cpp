@@ -17,6 +17,8 @@
 
 
 #include "channel.h"
+#include "core/agent/agent.h"
+
 
 /** \brief Constructor
         Init the channel with a max, min and a initial value
@@ -32,7 +34,10 @@ Channel::Channel(qreal min, qreal max, qreal value)
 **/
 void Channel::advance()
 {
-    m_oldValue=m_value;
+    if(m_oldValue!=m_value) {
+        m_oldValue=m_value;
+        emit oldValueChanged(m_oldValue);
+    }
 }
 
 /** \brief changes the value of this channel
@@ -73,6 +78,13 @@ qreal Channel::getRange() const
 **/
 qreal Channel::getValue() const {
     return m_value;
+}
+
+qreal Channel::getValue(Agent *agent, const QString &channelName)
+{
+    Channel *c=agent->getOutputChannel(channelName);
+    if(c)
+        return c->getValue();
 }
 
 /** \brief @returns the old value of this channel

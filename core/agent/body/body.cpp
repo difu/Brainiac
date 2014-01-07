@@ -20,6 +20,7 @@
 #include "core/scene.h"
 #include "core/simulation.h"
 #include "core/agent/agent.h"
+#include "core/agent/body/animation/animation.h"
 #include "core/agent/body/animation/animationplayer.h"
 #include "core/agent/channel.h"
 #include "core/agent/body/bodysegment.h"
@@ -105,6 +106,10 @@ void Body::reset()
 void Body::setAnimations(QHash<QString, Animation *> *animations)
 {
     m_animationPlayer->setAnimations(animations);
+    foreach(Animation *anim, *m_animationPlayer->getAnimations()) {
+        Channel *chan=new Channel(0.0,2.0);
+        m_agent->addOutputChannel(chan,anim->name());
+    }
 }
 
 void Body::showPivotCoordCrosses(bool show)

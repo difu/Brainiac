@@ -43,6 +43,14 @@ AnimationPlayer::AnimationPlayer(Body *body)
     m_time=0;
 }
 
+void AnimationPlayer::apply()
+{
+    foreach(Animation *anim,*m_animations) {
+
+    }
+
+}
+
 void AnimationPlayer::apply2(const Animation &animation, qreal val)
 {
     qreal boundVal=qBound(0.0,val,1.0);

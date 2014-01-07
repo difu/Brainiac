@@ -23,6 +23,8 @@
 #include<QObject>
 #include"core/brainiacglobals.h"
 
+class Agent;
+
 /** \brief  An agent´s channel
 
         A channel may be an input or output source for the agent´s brain
@@ -42,6 +44,7 @@ public:
     void init(qreal value);
     bool isInherited() const;
     qreal getValue() const;
+    static qreal getValue(Agent *agent, const QString& channelName);
     qreal getOldValue() const;
     void setMinValue( qreal min ) { m_min=min; }
     void setMaxValue( qreal max ) { m_max=max; }
@@ -59,7 +62,8 @@ protected:
     qreal m_min; //!< the min value
     QString m_name; //!< this channel´s name
 signals:
-    void valueChanged(qreal value); //!< emitted when the value of this channel changes @sa Channel::setInherited()
+    void valueChanged(qreal value); //!< emitted if the value of this channel changes @sa Channel::setInherited()
+    void oldValueChanged(qreal oldValue); //!< emitted if oldValue has changed after advance()
 };
 
 #endif // CHANNEL_H

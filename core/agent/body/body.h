@@ -41,7 +41,6 @@ public:
     Body(Agent *agent);
 
     void addBodySegment( osg::ref_ptr<BodySegment> bodySegment, quint32 parentId);
-    void copyBody(Body *body);
     QHash<QString, Animation *> *getAnimations();
     BodySegment* getBodySegment(quint32 id) { return m_bodySegments.value(id,0); }
     AnimationPlayer* getAnimationPlayer() {return m_animationPlayer; }

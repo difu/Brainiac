@@ -34,6 +34,7 @@ class AnimationPlayer: public QObject
 public:
     AnimationPlayer( Body *body);
 
+    void apply();
     void apply2(const Animation &animation, qreal val);
     void apply(const Animation &animation, qreal time);
     /**

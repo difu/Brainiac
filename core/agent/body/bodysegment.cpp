@@ -61,22 +61,22 @@ void BodySegment::computeRestMatrix() {
             switch(rotTrans) {
             case BrainiacGlobals::RX:
                 //m.rotate()
-                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_oRx->getValue()),osg::Vec3d(1.0,0.0,0.0));
+                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_oRx->getOldValue()),osg::Vec3d(1.0,0.0,0.0));
                 break;
             case BrainiacGlobals::RY:
-                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_oRy->getValue()),osg::Vec3d(0.0,1.0,0.0));
+                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_oRy->getOldValue()),osg::Vec3d(0.0,1.0,0.0));
                 break;
             case BrainiacGlobals::RZ:
-                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_oRz->getValue()),osg::Vec3d(0.0,0.0,1.0));
+                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_oRz->getOldValue()),osg::Vec3d(0.0,0.0,1.0));
                 break;
             case BrainiacGlobals::TX:
-                m*=osg::Matrix::translate(m_oTx->getValue(),0.0,0.0);
+                m*=osg::Matrix::translate(m_oTx->getOldValue(),0.0,0.0);
                 break;
             case BrainiacGlobals::TY:
-                m*=osg::Matrix::translate(0.0,m_oTy->getValue(),0.0);
+                m*=osg::Matrix::translate(0.0,m_oTy->getOldValue(),0.0);
                 break;
             case BrainiacGlobals::TZ:
-                m*=osg::Matrix::translate(0.0,0.0,m_oTz->getValue());
+                m*=osg::Matrix::translate(0.0,0.0,m_oTz->getOldValue());
                 break;
             }
         }
@@ -91,27 +91,27 @@ void BodySegment::createChannels()
     QString segName(getName().c_str());
     //qDebug() << __PRETTY_FUNCTION__ << "creating channels for Segment" << segName;
     m_oRx=new Channel();
-    QObject::connect(m_oRx,SIGNAL(valueChanged(qreal)),m_signalHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
+    QObject::connect(m_oRx,SIGNAL(oldValueChanged(qreal)),m_signalHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
     m_body->getAgent()->addOutputChannel(m_oRx,segName % ":rx");
 
     m_oRy=new Channel();
-    QObject::connect(m_oRy,SIGNAL(valueChanged(qreal)),m_signalHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
+    QObject::connect(m_oRy,SIGNAL(oldValueChanged(qreal)),m_signalHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
     m_body->getAgent()->addOutputChannel(m_oRy,segName % ":ry");
 
     m_oRz=new Channel();
-    QObject::connect(m_oRz,SIGNAL(valueChanged(qreal)),m_signalHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
+    QObject::connect(m_oRz,SIGNAL(oldValueChanged(qreal)),m_signalHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
     m_body->getAgent()->addOutputChannel(m_oRz,segName % ":rz");
 
     m_oTx=new Channel();
-    QObject::connect(m_oTx,SIGNAL(valueChanged(qreal)),m_signalHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
+    QObject::connect(m_oTx,SIGNAL(oldValueChanged(qreal)),m_signalHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
     m_body->getAgent()->addOutputChannel(m_oTx,segName % ":tx");
 
     m_oTy=new Channel();
-    QObject::connect(m_oTy,SIGNAL(valueChanged(qreal)),m_signalHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
+    QObject::connect(m_oTy,SIGNAL(oldValueChanged(qreal)),m_signalHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
     m_body->getAgent()->addOutputChannel(m_oTy,segName % ":ty");
 
     m_oTz=new Channel();
-    QObject::connect(m_oTz,SIGNAL(valueChanged(qreal)),m_signalHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
+    QObject::connect(m_oTz,SIGNAL(oldValueChanged(qreal)),m_signalHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
     m_body->getAgent()->addOutputChannel(m_oTz,segName % ":tz");
 
     m_oColor=new Channel();
@@ -158,6 +158,14 @@ void BodySegment::reset()
     m_oRx->setValue(m_segmentShape->getRestRotation().x());
     m_oRy->setValue(m_segmentShape->getRestRotation().y());
     m_oRz->setValue(m_segmentShape->getRestRotation().z());
+
+    m_oRx->advance();
+    m_oRy->advance();
+    m_oRx->advance();
+    m_oTx->advance();
+    m_oTy->advance();
+    m_oTz->advance();
+
     m_restMatrixDirty=true;
 
 }

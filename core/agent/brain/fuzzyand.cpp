@@ -94,7 +94,7 @@ void FuzzyAnd::calculateSound()
                     } else if(QString::compare(input->getChannelName(),BrainiacGlobals::ChannelName_Sound_f,Qt::CaseInsensitive)==0 ) {
                        input->setResult(otherAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_f)->getValue(),false); // do not emit change, it would result in infinite loop!
                     } else if(QString::compare(input->getChannelName(),BrainiacGlobals::ChannelName_Sound_d,Qt::CaseInsensitive)==0 ) {
-                       qreal tmpReception=thisAgent->getOtherAgentSoundReception(otherAgent)/otherAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_a)->getValue();
+                       qreal tmpReception=thisAgent->getOtherAgentSoundReception(otherAgent)/otherAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_a)->getOldValue();
                        input->setResult(tmpReception,false); // do not emit change, it would result in infinite loop!
                     } else if(QString::compare(input->getChannelName(),BrainiacGlobals::ChannelName_Sound_ox,Qt::CaseInsensitive)==0 ) {
                        input->setResult(thisAgent->getOtherAgentRelativeOrientation(otherAgent),false); // do not emit change, it would result in infinite loop!

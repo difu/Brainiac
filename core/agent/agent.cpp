@@ -26,6 +26,7 @@
 #include "channel.h"
 #include "core/scene.h"
 #include "core/agent/body/animation/motiontreemanager.h"
+#include "core/agent/body/animation/animationplayer.h"
 //#include <QtOpenGL>
 #include <QDebug>
 #include <QtGlobal>
@@ -48,6 +49,7 @@ Agent::Agent(Agent *otherAgent, quint32 id)  :
     createChannels();
     m_scene=otherAgent->getScene();
     m_body=new Body(this);
+    m_body->setAnimations(otherAgent->getBody()->getAnimations());
     m_brain=new Brain(this,otherAgent->getBrain());
     m_renderSoundEmission=true;
 }
@@ -178,8 +180,8 @@ void Agent::advance(int mode)
             //        qDebug() << "Angle of LA:"<< angle << "dist" << distVect.length() << m_position << "y rotation" << yRotation;
 
             m_iSoundX->setValue(angle);
-            m_iSoundD->setValue(loudestReception/loudestAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_a)->getValue() );
-            m_iSoundF->setValue(loudestAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_f)->getValue());
+            m_iSoundD->setValue(loudestReception/loudestAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_a)->getOldValue() );
+            m_iSoundF->setValue(loudestAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_f)->getOldValue());
             m_iSoundOX->setValue(getOtherAgentRelativeOrientation(loudestAgent));
         } else { // this agent hasn´t heard any sound
             m_iSoundX->setValue(0.0f);
@@ -207,6 +209,7 @@ void Agent::advance(int mode)
             }
         }
     }
+    m_body->getAnimationPlayer()->apply();
 }
 
 void Agent::advanceCommit()
@@ -448,7 +451,7 @@ qreal Agent::getOtherAgentRelativeOrientation(const Agent *otherAgent) const
 
 qreal Agent::getOtherAgentSoundReception(const Agent *otherAgent) const
 {
-    qreal otherAgentAmplitude=otherAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_a)->getValue();
+    qreal otherAgentAmplitude=otherAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_a)->getOldValue();
     qreal distance=this->getOtherAgentRelativePosition(otherAgent).length();
     qreal reception=otherAgentAmplitude-distance;
     return qMax((qreal)0.0f,reception);
