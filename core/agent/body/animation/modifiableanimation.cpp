@@ -147,7 +147,18 @@ bool ModifiableAnimation::createAgentCurves()
         }
     }
     if(!m_transitionCurve) {
-        m_transitionCurve=new AnimationCurve();
+//        m_easingCurve.setType(QEasingCurve::InOutSine);
+//        m_transitionCurve=new AnimationCurve();
+//        qreal time_=TransitionCurveLengthMs/(qreal)TransitionCurveKeyFrames;
+//        for(quint32 i=0; i<TransitionCurveKeyFrames; i++) {
+//            QVector2D kf;
+//            kf.setX((qreal)i*time_);
+//            kf.setY(m_easingCurve.valueForProgress(time_/TransitionCurveLengthMs));
+//            m_transitionCurve->addKeyFrame(kf);
+//        }
+        AnimationCurve tr=createTransitionCurve();
+        m_transitionCurve=new AnimationCurve(&tr);
+
     }
     if(m_latchCurves.isEmpty()) {
 
@@ -155,6 +166,22 @@ bool ModifiableAnimation::createAgentCurves()
         qDebug() << __PRETTY_FUNCTION__ << "Latches already exist! nothing is created";
     }
     return true;
+}
+
+AnimationCurve ModifiableAnimation::createTransitionCurve()
+{
+    AnimationCurve curve;
+    QEasingCurve easingCurve;
+    easingCurve.setType(QEasingCurve::InOutSine);
+    qreal time_=TransitionCurveLengthMs/(qreal)TransitionCurveKeyFrames;
+    curve.addKeyFrame(0.0,0.0);
+    for(quint32 i=1; i<=TransitionCurveKeyFrames; i++) {
+        QVector2D kf;
+        kf.setX((qreal)i*time_);
+        kf.setY(easingCurve.valueForProgress((qreal)i*time_/TransitionCurveLengthMs));
+        curve.addKeyFrame(kf);
+    }
+    return curve;
 }
 
 qreal ModifiableAnimation::getValue(const QString &curve, qreal time) const
@@ -232,7 +259,9 @@ bool ModifiableAnimation::isRootBoneCurve(const QString &curve) const
 
 }
 
-const qreal ModifiableAnimation::minDistTime=0.001f;
+const qreal ModifiableAnimation::MinDistTimeMs=0.001;
+const qreal ModifiableAnimation::TransitionCurveLengthMs=0.5;
+const quint32 ModifiableAnimation::TransitionCurveKeyFrames=20;
 
 void ModifiableAnimation::resetAgentCurves()
 {
@@ -279,12 +308,12 @@ void ModifiableAnimation::setCrossFadeRootCurves(bool rx, bool ry, bool rz, bool
 
 void ModifiableAnimation::setStartTime(qreal startTime)
 {
-    m_startTime=qBound((qreal)0.0f,startTime,m_endTime-minDistTime);
+    m_startTime=qBound((qreal)0.0f,startTime,m_endTime-MinDistTimeMs);
 }
 
 void ModifiableAnimation::setEndTime(qreal endTime)
 {
-    m_endTime=qBound(m_startTime+minDistTime,endTime,getLength(true));
+    m_endTime=qBound(m_startTime+MinDistTimeMs,endTime,getLength(true));
 }
 
 void ModifiableAnimation::setTansformRotation(qreal yAxisRot)

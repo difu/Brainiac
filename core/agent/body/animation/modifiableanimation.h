@@ -20,6 +20,7 @@
 #define MODIFIABLEANIMATION_H
 #include "core/agent/body/animation/animation.h"
 #include "core/brainiacglobals.h"
+#include <QEasingCurve>
 
 class AgentManager;
 class Body;
@@ -61,6 +62,15 @@ public:
      * @returns bool true, if AgentCurves were created
      */
     bool createAgentCurves();
+
+    /**
+     * @brief creates a default transition curve
+     *
+     * there is one more keyframe than set in TransitionCurveKeyFrames. It is added at 0,0
+     *
+     */
+    static AnimationCurve createTransitionCurve();
+
     /**
      * @brief returns if root rx curve should be cross faded
      *
@@ -170,7 +180,9 @@ public:
     qreal getEndTime() const {return m_endTime;}
     bool isRootBoneCurve( const QString &curve ) const;
 
-    static const qreal minDistTime; /**< minimum time distance between start and end in ms */
+    static const qreal TransitionCurveLengthMs; /**< default length of transition curve in ms */
+    static const quint32 TransitionCurveKeyFrames; /**< default number of to be created keyframes of transition curve */
+    static const qreal MinDistTimeMs; /**< minimum time distance between start and end in ms */
 protected:
 
     /**

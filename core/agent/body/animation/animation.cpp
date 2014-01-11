@@ -299,6 +299,18 @@ Animation* Animation::loadAnimation(QString fileName)
         }
     }
 
+    int numOfTransitionKeyFrames;
+    in >> numOfTransitionKeyFrames;
+    if(numOfTransitionKeyFrames>0) {
+        AnimationCurve transitionCurve;
+        for(int i=0; i< numOfTransitionKeyFrames; i++) {
+            qreal time,length;
+            in >> time;
+            in >> length;
+            transitionCurve.addKeyFrame(time,length);
+        }
+        anim->setTransitionCurve(transitionCurve);
+    }
 
     anim->setFileName(fileName);
     //qDebug( )  << "Magic number <<" << magicNumber << version << name <<  numOfCurves;
@@ -356,7 +368,30 @@ bool Animation::saveAnimation(QString &fileName)
         }
     }
 
+    // Transition curve
+    if(m_transitionCurve) {
+        out << m_transitionCurve->keyFrames().count();
+        for(int keyFrameNo=0; keyFrameNo < m_transitionCurve->keyFrames().count();keyFrameNo++)
+        {
+            QVector3D kf=m_transitionCurve->keyFrames().at(keyFrameNo);
+            out << kf.x() << kf.y();
+        }
+    } else {
+        out << 0;
+    }
+
+
+
     return true;
+}
+
+void Animation::setTransitionCurve(AnimationCurve transitionCurve) {
+    QWriteLocker wLocker(&m_rwLock);
+    if(m_transitionCurve) {
+        delete m_transitionCurve;
+    }
+    m_transitionCurve=new AnimationCurve(&transitionCurve);
+
 }
 
 Animation::~Animation()

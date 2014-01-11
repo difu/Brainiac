@@ -236,6 +236,8 @@ public:
      * @param name
      */
     virtual void setName(QString name) { m_name=name; }
+
+    void setTransitionCurve(AnimationCurve transitionCurve);
     virtual ~Animation();
 protected:
     mutable qreal m_length;

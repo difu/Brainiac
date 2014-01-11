@@ -80,6 +80,15 @@ public:
     void deleteAfterTime(qreal time);
 
     /**
+     * @brief returns the length of this curve
+     *
+     * the length is the time of the last keyframe
+     *
+     * @returns qreal the length
+     */
+    qreal length() const { return m_keyFrames.last().x(); }
+
+    /**
      * @brief get the maximal value of all keyframes
      *
      * if this curve does not have any keyframes 0 is returned

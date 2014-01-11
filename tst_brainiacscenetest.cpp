@@ -17,6 +17,8 @@
 
 #include "core/agent/body/animation/animation.h"
 #include "core/agent/body/animation/animationcurve.h"
+#include "core/agent/body/animation/modifiableanimation.h"
+#include "core/agent/body/animation/animationcurve.h"
 #include "core/agent/body/animation/latchcurve.h"
 #include "core/agent/body/animation/motiontree.h"
 #include "core/agent/body/animation/motiontreemanager.h"
@@ -61,6 +63,7 @@ private Q_SLOTS:
 
     void motionTree();
 
+    void curves();
     void animation_data();
     void animation();
 
@@ -271,10 +274,22 @@ void BrainiacSceneTest::motionTree()
         MotionTree *saveTree=saveAgentManager->getMotionTreeManager()->getMotionTrees().value(i);
         QVERIFY2(loadTree->getActions().count()==saveTree->getActions().count(),"number of loaded tree actions differs");
         QVERIFY2(loadTree->getTransitions().count()==saveTree->getTransitions().count(),"number of loaded tree transitions differs");
-//        QVERIFY2(loadTree->getTransitionActionConnections().count()==saveTree->getTransitionActionConnections().count(),"number of loaded trans action connections differs");
-//        QVERIFY2(loadTree->getActionTransitionConnections().count()==saveTree->getActionTransitionConnections().count(),"number of loaded action trans connections differs");
+        QVERIFY2(loadTree->getTransitionActionConnections().count()==saveTree->getTransitionActionConnections().count(),"number of loaded trans action connections differs");
+        QVERIFY2(loadTree->getActionTransitionConnections().count()==saveTree->getActionTransitionConnections().count(),"number of loaded action trans connections differs");
     }
 
+}
+
+void BrainiacSceneTest::curves()
+{
+    AnimationCurve curve=ModifiableAnimation::createTransitionCurve();
+    QVERIFY2(curve.keyFrames().count()==ModifiableAnimation::TransitionCurveKeyFrames+1,"Wrong number of keyframes");
+    qreal max=curve.getMaxValue();
+    qreal min=curve.getMinValue();
+    qreal length=curve.length();
+    QVERIFY2(qFuzzyCompare(length,ModifiableAnimation::TransitionCurveLengthMs),"wrong ength of Transitioncurve");
+    QVERIFY2(qFuzzyCompare(max,1.0),"max value too high");
+    QVERIFY2(qFuzzyCompare(min+1.0,1.0),"min value too low");
 }
 
 
@@ -391,6 +406,9 @@ void BrainiacSceneTest::animation()
     QFETCH(QVector2D,l2_3);
     testAnim.addLatch(latchCurve2,l2_3);
 
+    AnimationCurve transCurve=ModifiableAnimation::createTransitionCurve();
+    testAnim.setTransitionCurve(transCurve);
+
     if(!animFile.open()) {
         QFAIL("Failed creation of tempfile");
     }
@@ -443,6 +461,7 @@ void BrainiacSceneTest::animation()
     QCOMPARE(testAnim.latches().count(),loadedAnimation->latches().count());
     QVERIFY2(loadedAnimation->latches().value(latchCurve1)->latches().at(0)==l1_1,"Latchcurve 1 latch 1 of loaded animation differs");
     QVERIFY2(loadedAnimation->latches().value(latchCurve2)->latches().at(0)==l2_1,"Latchcurve 1 latch 1 of loaded animation differs");
+    QVERIFY2(loadedAnimation->getTransitionCurve()->keyFrames()==testAnim.getTransitionCurve()->keyFrames(),"Transititoncurve number of keyframes differ from original");
     delete(loadedAnimation);
 }
 

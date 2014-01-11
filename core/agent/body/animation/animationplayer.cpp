@@ -48,13 +48,11 @@ void AnimationPlayer::apply()
 {
     // first apply highest triggered action, will be possibly overwritten by motiontree
     qreal highestValue=0;
-    QString highestAnimationChannel;
     Animation *highestAnimation=0;
     foreach(Animation *anim,*m_animations) {
         qreal tmpHv=Channel::getValue(m_body->getAgent(),anim->name())>highestValue;
         if(tmpHv>highestValue) {
             highestValue=tmpHv;
-            highestAnimationChannel=anim->name();
             highestAnimation=anim;
         }
     }
