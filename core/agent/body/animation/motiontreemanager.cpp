@@ -80,7 +80,7 @@ void MotionTreeManager::loadConfig(QXmlStreamReader *stream)
         //stream->skipCurrentElement(); // XmlMotionTreeTag
     }
 
-    stream->skipCurrentElement(); // XmlMotionTreesTag
+    //stream->skipCurrentElement(); // XmlMotionTreesTag
 }
 
 void MotionTreeManager::saveConfig(QXmlStreamWriter *stream)
