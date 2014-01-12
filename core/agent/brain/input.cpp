@@ -29,7 +29,7 @@ Input::Input( quint32 id, Brain *brain, QString name, QString channel, qreal min
 void Input::calculate()
 {
     if(m_channel) {
-        setResult(m_channel->getValue());
+        setResult(m_channel->getOldValue());
     } else {
         //qDebug() << __PRETTY_FUNCTION__ << "channel " << m_channelName<< "does not exist!";
     }
@@ -54,6 +54,6 @@ void Input::setChannelName(QString channel)
     m_channelName=channel;
     m_channel=m_brain->getAgent()->getInputChannel(m_channelName);
     if(m_channel)
-        setResult(m_channel->getValue());
+        setResult(m_channel->getOldValue());
 }
 
