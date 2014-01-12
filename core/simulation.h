@@ -57,6 +57,20 @@ public:
     quint32 getCurrentFrame() const;
 
     /**
+     * @brief returns the current time of the Simulation in s
+     *
+     * @return quint32 the current time of the Simulation in s
+     */
+    qreal getCurrentTime() const { return (qreal)m_currentFrame*1.0/(qreal)m_fps; }
+
+    /**
+     * @brief returns the current time of the Simulation in ms
+     *
+     * @return quint32 the current time of the Simulation in ms
+     */
+    qreal getCurrentTimeMs() const { return m_currentFrame*1000.0/m_fps; }
+
+    /**
      * @brief returns the framerate of the Simulation
      *
      * @return quint32 the framerate

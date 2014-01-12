@@ -76,7 +76,6 @@ void AgentManager::addSegmentFromConfig(QXmlStreamReader *reader, quint32 id, QS
     qreal color;
     bool colorInherited;
     while(reader->readNextStartElement()) {
-        qDebug() << "Processing " << reader->name();
         if(reader->name()==BrainiacGlobals::XmlTranslationTag) {
             QXmlStreamAttributes attribs = reader->attributes();
             translation.setX(attribs.value("x").toString().toDouble());
@@ -439,8 +438,7 @@ Agent* AgentManager::cloneAgent(quint32 id)
 
 Agent* AgentManager::createNewAgentInstance(quint32 id)
 {
-    Agent *agent=new Agent(m_masterAgent,id);
-    m_bodyManager->applyBodyOnAgent(agent);
+    Agent *agent=cloneAgent(id);
     m_agents.append(agent);
     return agent;
 }

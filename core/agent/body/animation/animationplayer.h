@@ -37,6 +37,7 @@ public:
     void apply();
     void apply2(const Animation &animation, qreal val);
     void apply(const Animation &animation, qreal time);
+
     /**
      * @brief returns a hashmap of all animations
      *
@@ -57,8 +58,9 @@ public:
      */
     void setAnimations(QHash<QString, Animation *> *animations);
 protected:
-    Animation *m_currentAnimation;
-    qreal m_currentAnimationStartTime;
+    Animation *m_currentAnimation; /**< Pointer to current Animation */
+    bool m_currentAnimationStartedFirstTime; /**< true, if the Animation is running for the 1st time during this loop */
+    qreal m_currentAnimationStartTime; /**< time when the current animation was started in Simulation time */
     Animation *m_nextAnimation;
     quint32 m_time;
     Simulation *m_simulation;

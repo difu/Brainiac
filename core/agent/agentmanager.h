@@ -139,7 +139,8 @@ public:
 
     /** \brief clones an agent
 
-                    this function clones an agent from this manager´s master agent
+                    this function clones an agent from this manager´s master agent.
+                    The created Agent is NOT under control of neither this manager nor the Scene etc.
                     @warning It is up to the user to manage and destroy this agent instance
 
             \param  id the id of the new agent

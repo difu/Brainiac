@@ -208,8 +208,8 @@ void Agent::advance(AdvanceMode mode)
                 }
             }
         }
+        m_body->getAnimationPlayer()->apply();
     }
-    m_body->getAnimationPlayer()->apply();
 }
 
 void Agent::advanceCommit()
@@ -584,6 +584,7 @@ void Agent::setRestTranslation(qreal x, qreal y, qreal z)
 
 void Agent::dDumpChannels()
 {
+    std::cout << "Agent:" << this->getId() << std::endl;
     std::cout << "Input Channels" << std::endl;
     QHashIterator<QString, Channel *> ii(m_inputs) ;
     while(ii.hasNext()) {

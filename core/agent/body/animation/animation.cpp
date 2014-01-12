@@ -184,6 +184,15 @@ qreal Animation::getLength(bool calculateNew) const
     return m_length;
 }
 
+qreal Animation::getNormalizedAnimationTime(qreal time) const
+{
+    qreal length=this->getLength();
+    while( (time-length)>0 ) {
+        time=time-length;
+    }
+    return time;
+}
+
 qreal Animation::getValue(const QString &curve, qreal time) const
 {
     QReadLocker rLocker(&m_rwLock);

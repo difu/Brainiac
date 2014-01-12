@@ -107,6 +107,15 @@ public:
     void deleteCurves();
 
     /**
+     * @brief returns the normalized time of this Animation
+     *
+     * the normalized time is the time an Animation ... (find an appropriate description :-) )
+     * @param time the time (e.g. Simulation time)
+     * @return qreal the normalized time of this Animation
+     */
+    qreal getNormalizedAnimationTime( qreal time ) const;
+
+    /**
      * @brief returns the length of this Animation
      *
      * the length of an Animation is always the maximum time value of all keyframes of all AnimatoinCurve s

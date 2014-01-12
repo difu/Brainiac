@@ -32,6 +32,7 @@ AnimationPlayer::AnimationPlayer(Body *body)
 {
     m_body=body;
     m_simulation=body->getAgent()->getScene()->getSimulation();
+
     m_animDefault.addTransition(this,SIGNAL(animCanTransit()),&m_animCanTrans);
     m_animCanTrans.addTransition(this,SIGNAL(animIsInTransition()),&m_animInTransition);
     m_animCanTrans.addTransition(this,SIGNAL(animCannotTransit()),&m_animDefault);
@@ -46,21 +47,33 @@ AnimationPlayer::AnimationPlayer(Body *body)
 
 void AnimationPlayer::apply()
 {
-    // first apply highest triggered action, will be possibly overwritten by motiontree
-    qreal highestValue=0;
-    Animation *highestAnimation=0;
-    foreach(Animation *anim,*m_animations) {
-        qreal tmpHv=Channel::getValue(m_body->getAgent(),anim->name())>highestValue;
-        if(tmpHv>highestValue) {
-            highestValue=tmpHv;
-            highestAnimation=anim;
+    if(true) { // Just for testing
+        // first apply highest triggered action, will be possibly overwritten by motiontree
+        qreal highestValue=0.0;
+        Animation *highestAnimation=0;
+        foreach(Animation *anim,*m_animations) {
+            qreal tmpHv=Channel::getValue(m_body->getAgent(),anim->name())>highestValue;
+            if(tmpHv>highestValue) {
+                highestValue=tmpHv;
+                highestAnimation=anim;
+            }
         }
-    }
 
-    // if no animation is running, just trigger the highest
-    if(m_currentAnimation==0 && highestAnimation) {
-        m_currentAnimation=highestAnimation;
-        m_currentAnimationStartTime=m_simulation->getCurrentFrame()/(qreal)m_simulation->getFps();
+        // if no animation is running, just trigger the highest
+        if(m_currentAnimation==0 && highestAnimation) {
+            m_currentAnimation=highestAnimation;
+            m_currentAnimationStartTime=m_simulation->getCurrentTime();
+            m_currentAnimationStartedFirstTime=true;
+        }
+
+        // Apply triggered Animation
+        if(m_currentAnimation) {
+            if(m_currentAnimation->isLoopedAnimation()) {
+                apply(*m_currentAnimation,m_currentAnimation->getNormalizedAnimationTime(m_simulation->getCurrentTime()));
+            } else {
+
+            }
+        }
     }
 
 
@@ -92,6 +105,7 @@ void AnimationPlayer::reset()
     m_currentAnimation=0;
     m_currentAnimationStartTime=0;
     m_nextAnimation=0;
+    m_currentAnimationStartedFirstTime=false;
 }
 
 void AnimationPlayer::setAnimations(QHash<QString, Animation *> *animations)
