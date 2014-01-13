@@ -27,15 +27,34 @@ class Animation;
 class Body;
 class Simulation;
 
+/** @brief  AnimationPlayer plays animations activated from an agents brain or by its MotionTree
+ * @sa MotionTree
+**/
 class AnimationPlayer: public QObject
 {
     Q_OBJECT
 
 public:
+    /** @brief  Constructor
+     * @param Body body the body this AnimationPlayer belongs to
+    **/
     AnimationPlayer( Body *body);
 
+    /** @brief  applies triggered animations
+     * This plays all animations and blends triggered directly from the brain or/and the MotionTree
+    **/
     void apply();
+
+    /** @brief  Applies an Animation
+     * @param animation the Animation to be applied
+     * @param val a value between 0.0 and 1.0 that is the progress of the animation
+    **/
     void apply2(const Animation &animation, qreal val);
+
+    /** @brief  Applies an Animation
+     * @param animation the Animation to be applied
+     * @param time the time of the animation
+    **/
     void apply(const Animation &animation, qreal time);
 
     /**
@@ -46,6 +65,11 @@ public:
      */
     QHash<QString,Animation *> * getAnimations() {return m_animations;}
 
+    /**
+     * @brief resets everything
+     *
+     * all animations and states are cleared
+     */
     void reset();
 
     /**
@@ -59,10 +83,10 @@ public:
     void setAnimations(QHash<QString, Animation *> *animations);
 protected:
     Animation *m_currentAnimation; /**< Pointer to current Animation */
-    bool m_currentAnimationStartedFirstTime; /**< true, if the Animation is running for the 1st time during this loop */
+    bool m_currentAnimationStartedForFirstTime; /**< true, if the Animation is running for the 1st time during this loop */
     qreal m_currentAnimationStartTime; /**< time when the current animation was started in Simulation time */
-    Animation *m_nextAnimation;
-    quint32 m_time;
+    Animation *m_nextAnimation; /**< the next animation that is to be started or already has started */
+    qreal m_nextAnimationStartTime; /**< time when the next animation was started in Simulation time */
     Simulation *m_simulation;
     Body *m_body;
     QStateMachine m_stateMachine;

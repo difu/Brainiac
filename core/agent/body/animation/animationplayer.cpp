@@ -63,15 +63,20 @@ void AnimationPlayer::apply()
         if(m_currentAnimation==0 && highestAnimation) {
             m_currentAnimation=highestAnimation;
             m_currentAnimationStartTime=m_simulation->getCurrentTime();
-            m_currentAnimationStartedFirstTime=true;
+            m_currentAnimationStartedForFirstTime=true;
         }
 
         // Apply triggered Animation
         if(m_currentAnimation) {
+            qreal animLength=m_currentAnimation->getLength();
+            qreal diffTime=m_simulation->getCurrentTime()-m_currentAnimationStartTime;
             if(m_currentAnimation->isLoopedAnimation()) {
-                apply(*m_currentAnimation,m_currentAnimation->getNormalizedAnimationTime(m_simulation->getCurrentTime()));
+                qreal loopTime=m_currentAnimation->getLoopAnimationTime(diffTime);
+                apply(*m_currentAnimation,loopTime);
+                m_body->getAgent()->getInputChannel(BrainiacGlobals::ChannelName_Phase)->setValue(loopTime/animLength);
             } else {
-
+                apply(*m_currentAnimation,diffTime);
+                m_body->getAgent()->getInputChannel(BrainiacGlobals::ChannelName_Phase)->setValue(diffTime/animLength);
             }
         }
     }
@@ -101,11 +106,10 @@ void AnimationPlayer::apply(const Animation &animation, qreal time)
 
 void AnimationPlayer::reset()
 {
-    m_time=0;
     m_currentAnimation=0;
     m_currentAnimationStartTime=0;
     m_nextAnimation=0;
-    m_currentAnimationStartedFirstTime=false;
+    m_currentAnimationStartedForFirstTime=false;
 }
 
 void AnimationPlayer::setAnimations(QHash<QString, Animation *> *animations)

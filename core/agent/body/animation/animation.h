@@ -107,13 +107,12 @@ public:
     void deleteCurves();
 
     /**
-     * @brief returns the normalized time of this Animation
+     * @brief returns the loop time of this Animation
      *
-     * the normalized time is the time an Animation ... (find an appropriate description :-) )
      * @param time the time (e.g. Simulation time)
      * @return qreal the normalized time of this Animation
      */
-    qreal getNormalizedAnimationTime( qreal time ) const;
+    qreal getLoopAnimationTime( qreal time ) const;
 
     /**
      * @brief returns the length of this Animation

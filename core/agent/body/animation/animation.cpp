@@ -184,7 +184,7 @@ qreal Animation::getLength(bool calculateNew) const
     return m_length;
 }
 
-qreal Animation::getNormalizedAnimationTime(qreal time) const
+qreal Animation::getLoopAnimationTime(qreal time) const
 {
     qreal length=this->getLength();
     while( (time-length)>0 ) {
