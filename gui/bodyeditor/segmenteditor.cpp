@@ -222,7 +222,7 @@ quint32 SegmentEditor::getSymetricSegmentId() const
         otherName=otherName%name.mid(1);
 
         foreach(Segment *otherSeg, m_agentManager->getBodyManager()->getSegments()) {
-            if(QString::compare(name,otherName,Qt::CaseSensitive)==0) {
+            if(QString::compare(otherSeg->getName(),otherName,Qt::CaseSensitive)==0) {
                 return otherSeg->getId();
             }
         }
@@ -256,7 +256,8 @@ void SegmentEditor::manualDimensionsChanged(qreal value) {
         //m_agentManager->setSegmentDimensions(m_id,m_SliderTubeDiameter->getValue(),m_SliderTubeDiameter->getValue(),m_SliderTubeLength->getValue());
         if(m_editSymetric) {
             quint32 otherId=getSymetricSegmentId();
-            //m_agentManager->setSegmentDimensions(otherId,m_SliderTubeDiameter->getValue(),m_SliderTubeLength->getValue(),m_SliderTubeDiameter->getValue());
+            m_agentManager->getBodyManager()->setSegmentDiameter(otherId,m_SliderTubeDiameter->getValue());
+            m_agentManager->getBodyManager()->setSegmentLength(otherId,m_SliderTubeLength->getValue());
         }
         break;
     default:
