@@ -39,6 +39,7 @@ BodySegment::BodySegment(Body *body, SegmentShape *segmentShape):MatrixTransform
     //m_transformNode->addChild(m_geode);
     m_geode->addDrawable(m_segmentShape->getShapeDrawable().get());
     m_restMatrixDirty=true;
+    m_restMatrixApplied=false;
     setName(m_segmentShape->getName().toStdString());
     createChannels();
     computeRestMatrix();
@@ -57,30 +58,32 @@ void BodySegment::computeMatrix() {
 void BodySegment::computeRestMatrix() {
     if(m_restMatrixDirty) {
         osg::Matrix m;
+        m_restMatrix=m;
         foreach(BrainiacGlobals::RotTrans rotTrans,m_segmentShape->getRotationTranslationOrder()) {
             switch(rotTrans) {
             case BrainiacGlobals::RX:
                 //m.rotate()
-                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_oRx->getOldValue()),osg::Vec3d(1.0,0.0,0.0));
+                m_restMatrix*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_oRx->getOldValue()),osg::Vec3d(1.0,0.0,0.0));
                 break;
             case BrainiacGlobals::RY:
-                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_oRy->getOldValue()),osg::Vec3d(0.0,1.0,0.0));
+                m_restMatrix*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_oRy->getOldValue()),osg::Vec3d(0.0,1.0,0.0));
                 break;
             case BrainiacGlobals::RZ:
-                m*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_oRz->getOldValue()),osg::Vec3d(0.0,0.0,1.0));
+                m_restMatrix*=osg::Matrix::rotate(BrainiacGlobals::grad2rad(m_oRz->getOldValue()),osg::Vec3d(0.0,0.0,1.0));
                 break;
             case BrainiacGlobals::TX:
-                m*=osg::Matrix::translate(m_oTx->getOldValue(),0.0,0.0);
+                m_restMatrix*=osg::Matrix::translate(m_oTx->getOldValue(),0.0,0.0);
                 break;
             case BrainiacGlobals::TY:
-                m*=osg::Matrix::translate(0.0,m_oTy->getOldValue(),0.0);
+                m_restMatrix*=osg::Matrix::translate(0.0,m_oTy->getOldValue(),0.0);
                 break;
             case BrainiacGlobals::TZ:
-                m*=osg::Matrix::translate(0.0,0.0,m_oTz->getOldValue());
+                m_restMatrix*=osg::Matrix::translate(0.0,0.0,m_oTz->getOldValue());
                 break;
             }
         }
-        this->setMatrix(m);
+        m_restMatrixApplied=false;
+        //this->setMatrix(m);
         //this->setMatrix(osg::Matrix::translate(25.0, 0.0, 0.0 ));
         m_restMatrixDirty=false;
     }
@@ -167,6 +170,8 @@ void BodySegment::reset()
     m_oTz->advance();
 
     m_restMatrixDirty=true;
+    m_restMatrixApplied=false;
+    computeRestMatrix();
 
 }
 
@@ -177,7 +182,11 @@ void BodySegment::toggleHighlight()
 
 void BodySegment::traverse(osg::NodeVisitor &nv)
 {
-    computeRestMatrix();
+    //computeRestMatrix();
+    if(!m_restMatrixApplied) {
+        this->setMatrix(m_restMatrix);
+        m_restMatrixApplied=true;
+    }
     if(m_shouldHighlight&&!m_isHiglighted) {
         if(!m_highlghtedStructuresCreated) {
             createHighlightStructures();

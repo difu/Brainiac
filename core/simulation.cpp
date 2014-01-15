@@ -60,7 +60,7 @@ void Simulation::advance()
         m_futureWatcherAdvance.setFuture(QtConcurrent::map(m_agents,&::advanceAgent));
     } else {
         m_late=true;
-        qDebug() << __PRETTY_FUNCTION__ << "sim is late";
+        qDebug() << __PRETTY_FUNCTION__ << "sim is late ";
 
     }
 }
@@ -76,6 +76,7 @@ void Simulation::advanceCommitDone()
     emit frameDone();
     m_simMutex.unlock();
     m_frameCalculationTime=m_t.elapsed();
+    qDebug() << __PRETTY_FUNCTION__ << "frame calc time " << m_frameCalculationTime;
 }
 
 

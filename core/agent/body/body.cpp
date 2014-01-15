@@ -72,6 +72,13 @@ void Body::addBodySegment(osg::ref_ptr<BodySegment> bodySegment, quint32 parentI
     }
 }
 
+void Body::advance()
+{
+    foreach(BodySegment *seg,m_bodySegments) {
+        seg->computeRestMatrix();
+    }
+}
+
 Agent* Body::getAgent()
 {
     return m_agent;

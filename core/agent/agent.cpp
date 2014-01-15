@@ -209,6 +209,7 @@ void Agent::advance(AdvanceMode mode)
             }
         }
         m_body->getAnimationPlayer()->apply();
+        m_body->advance();
     }
 }
 

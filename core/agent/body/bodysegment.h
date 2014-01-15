@@ -122,7 +122,9 @@ protected:
     bool m_pivotCoordCrossCreated;
     virtual ~BodySegment();
     SegmentShape *m_segmentShape;
-    bool m_restMatrixDirty;
+    osg::Matrix m_restMatrix; /**< the rest matrix */
+    bool m_restMatrixApplied; /**< if false, the rest matrix will be set */
+    bool m_restMatrixDirty; /**< if true, the rest matrix will be newly calculated */
     bool m_isHiglighted;
     bool m_shouldHighlight;
     bool m_highlghtedStructuresCreated;
