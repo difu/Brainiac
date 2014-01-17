@@ -8,6 +8,7 @@ class MotionTreeAction
 {
 public:
     MotionTreeAction(MotionTree *motionTree);
+    MotionTreeEditorItem *getEditorItem() const { return m_editorItem; }
     virtual ~MotionTreeAction();
 
 protected:

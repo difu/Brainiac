@@ -26,6 +26,10 @@
 #include "core/simulation.h"
 #include "core/agent/body/animation/animation.h"
 #include "core/agent/body/animation/animationcurve.h"
+#include "core/agent/agentmanager.h"
+#include "core/agent/body/animation/motiontreemanager.h"
+#include "core/agent/body/animation/motiontree.h"
+#include "core/agent/body/animation/motiontreeaction.h"
 
 
 AnimationPlayer::AnimationPlayer(Body *body)
@@ -59,6 +63,15 @@ void AnimationPlayer::apply()
             }
         }
 
+        // check if first MotionTrees have default animations
+        if(m_currentAnimation==0) {
+            MotionTree *tree=m_body->getAgent()->getAgentManager()->getMotionTreeManager()->getMotionTrees().value(0); //!< @todo currently only the first tree is handled. Maybe each tree should have its own AnimationPlayer ?
+            m_currentAnimation=m_animations->value(tree->getDefaultActionName(),0);
+            if(m_currentAnimation) {
+                m_currentAnimationStartTime=m_simulation->getCurrentTime();
+            }
+        }
+
         // if no animation is running, just trigger the highest
         if(m_currentAnimation==0 && highestAnimation) {
             m_currentAnimation=highestAnimation;
@@ -66,7 +79,7 @@ void AnimationPlayer::apply()
             m_currentAnimationStartedForFirstTime=true;
         }
 
-        // Apply triggered Animation
+        // Apply current Animation
         if(m_currentAnimation) {
             qreal animLength=m_currentAnimation->getLength();
             qreal diffTime=m_simulation->getCurrentTime()-m_currentAnimationStartTime;
@@ -78,7 +91,9 @@ void AnimationPlayer::apply()
                 apply(*m_currentAnimation,diffTime);
                 m_body->getAgent()->getInputChannel(BrainiacGlobals::ChannelName_Phase)->setValue(diffTime/animLength);
             }
+            m_body->getAgent()->getInputChannel(m_currentAnimation->name())->setValue(1.0);
         }
+
     }
 
 
@@ -109,6 +124,7 @@ void AnimationPlayer::reset()
     m_currentAnimation=0;
     m_currentAnimationStartTime=0;
     m_nextAnimation=0;
+    m_nextAnimationStartTime=0;
     m_currentAnimationStartedForFirstTime=false;
 }
 

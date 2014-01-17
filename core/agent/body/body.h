@@ -57,6 +57,7 @@ public:
      * @brief sets the current set of animations
      *
      * this allows setting of different animation sets of individual agents. Normally each agent instance of a group has a common set of animations. This allows setting of an individial set e.g. when editing in the action editor
+     * It also creates the action input and output channels
      * @fn setAnimations
      * @param QHash<quint32, Animation *>
      */

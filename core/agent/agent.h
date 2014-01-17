@@ -33,6 +33,7 @@ class Brain;
 class Channel;
 class Scene;
 class Segment;
+class AgentManager;
 
 /** \brief  Main agent class
 
@@ -69,7 +70,7 @@ public:
                     @param id the id of the agent
 
     **/
-    Agent(Scene *scene, quint32 id);
+    Agent(AgentManager *manager, quint32 id);
 
     /** \brief Constructs new Agent instance as a copy of an existing agent
 
@@ -161,6 +162,10 @@ public:
             \param  fuzzId the id of the fuzz to be deleted
     **/
     void deleteFuzz(quint32 fuzzId);
+
+    /** \brief returns the AgentManager this agent belongs to
+    **/
+    AgentManager *getAgentManager() const { return m_agentManager; }
 
     /** \brief returns the body
     **/
@@ -268,6 +273,7 @@ public:
     virtual ~Agent();
 
 protected:
+    AgentManager *m_agentManager;//!< the AgentManager this Agent belongs to
     Body *m_body; //!< the agent´s body
     Brain *m_brain; //!< the agent´s brain
     quint32 m_id; //!< the agent´s id. Unique for its group

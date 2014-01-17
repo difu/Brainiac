@@ -22,6 +22,7 @@
 #include "core/agent/body/animation/motiontree.h"
 #include "core/agent/body/animation/motiontreeaction.h"
 #include "core/agent/body/animation/motiontreetransition.h"
+#include "gui/Animation/motiontreeeditoritem.h"
 #include "core/agent/agentmanager.h"
 
 MotionTreeManager::MotionTreeManager(AgentManager *agentManager, QObject *parent) :
@@ -64,10 +65,18 @@ void MotionTreeManager::loadConfig(QXmlStreamReader *stream)
         while(stream->readNextStartElement()) {
             if(stream->name()==BrainiacGlobals::XmlTreeActionTag) {
                 QXmlStreamAttributes attribs = stream->attributes();
-                tree->addAction(attribs.value(BrainiacGlobals::XmlNameAttrib).toString());
+                QString actionName=tree->addAction(attribs.value(BrainiacGlobals::XmlNameAttrib).toString());
+                MotionTreeAction *action=tree->getActions().value(actionName,0);
+                if(action) {
+                    action->getEditorItem()->setPos(attribs.value(BrainiacGlobals::XmlEditorXPosAttrib).toString().toInt(),attribs.value(BrainiacGlobals::XmlEditorYPosAttrib).toString().toInt());
+                }
             } else if(stream->name()==BrainiacGlobals::XmlTreeTransitionTag) {
                 QXmlStreamAttributes attribs = stream->attributes();
-                tree->addTransition(attribs.value(BrainiacGlobals::XmlNameAttrib).toString());
+                QString transName=tree->addTransition(attribs.value(BrainiacGlobals::XmlNameAttrib).toString());
+                MotionTreeTransition *trans=tree->getTransitions().value(transName,0);
+                if(trans) {
+                    trans->getEditorItem()->setPos(attribs.value(BrainiacGlobals::XmlEditorXPosAttrib).toString().toInt(),attribs.value(BrainiacGlobals::XmlEditorYPosAttrib).toString().toInt());
+                }
             } else if(stream->name()==BrainiacGlobals::XmlTreeActionTransitionConnectionTag) {
                 QXmlStreamAttributes attribs = stream->attributes();
                 tree->connectActionWithTransition(attribs.value(BrainiacGlobals::XmlTreeActionAttrib).toString(),attribs.value(BrainiacGlobals::XmlTreeTransitionAttrib).toString());
@@ -96,12 +105,16 @@ void MotionTreeManager::saveConfig(QXmlStreamWriter *stream)
         foreach(MotionTreeAction *action, tree->getActions())  {
             stream->writeStartElement(BrainiacGlobals::XmlTreeActionTag);
             stream->writeAttribute(BrainiacGlobals::XmlNameAttrib,tree->getActionName(action));
+            stream->writeAttribute(BrainiacGlobals::XmlEditorXPosAttrib,QString::number(action->getEditorItem()->pos().x()));
+            stream->writeAttribute(BrainiacGlobals::XmlEditorYPosAttrib,QString::number(action->getEditorItem()->pos().y()));
             stream->writeEndElement(); // XmlTreeActionTag
         }
         // Transitions
         foreach(MotionTreeTransition *trans, tree->getTransitions())  {
             stream->writeStartElement(BrainiacGlobals::XmlTreeTransitionTag);
             stream->writeAttribute(BrainiacGlobals::XmlNameAttrib,tree->getTransitionName(trans));
+            stream->writeAttribute(BrainiacGlobals::XmlEditorXPosAttrib,QString::number(trans->getEditorItem()->pos().x()));
+            stream->writeAttribute(BrainiacGlobals::XmlEditorYPosAttrib,QString::number(trans->getEditorItem()->pos().y()));
             stream->writeEndElement(); // XmlTreeTransitionTag
         }
 

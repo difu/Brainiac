@@ -7,12 +7,18 @@ TODO:
   - xz rot
   - curve editing
   - sequencer
+  - Latch editor (s.a. MotionTree)
+  - save action as xml
+ - Sequencer
+ - Body
+  - Constraints
  - Generators
   - more generators
   - generator gui
  - MotionTree
   - GUI
-  - all of it
+  - integration with/in AnimationPlayer
+  - Latch editor (s.a. ActionEditor)
  - skinning
   - attaching mesh(es) to segments
   - integration in BodyEditor
@@ -24,6 +30,7 @@ TODO:
   - highlightning segment
   - silhouette shader
   - skeleton
+  - symmetric edit
  - terrain
  - camera
  - IK

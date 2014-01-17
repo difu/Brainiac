@@ -115,8 +115,11 @@ void Body::setAnimations(QHash<QString, Animation *> *animations)
 {
     m_animationPlayer->setAnimations(animations);
     foreach(Animation *anim, *m_animationPlayer->getAnimations()) {
-        Channel *chan=new Channel(0.0,2.0);
-        m_agent->addOutputChannel(chan,anim->name());
+        Channel *oChan=new Channel(0.0,2.0);
+        m_agent->addOutputChannel(oChan,anim->name());
+
+        Channel *iChan=new Channel(0.0,1.0);
+        m_agent->addInputChannel(iChan,anim->name());
     }
 }
 

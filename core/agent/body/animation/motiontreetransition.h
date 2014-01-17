@@ -8,6 +8,7 @@ class MotionTreeTransition
 {
 public:
     MotionTreeTransition(MotionTree *tree);
+    MotionTreeEditorItem *getEditorItem() const { return m_editorItem; }
     virtual ~MotionTreeTransition();
 
 protected:

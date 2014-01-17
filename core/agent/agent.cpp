@@ -25,17 +25,19 @@
 #include "core/brainiacglobals.h"
 #include "channel.h"
 #include "core/scene.h"
+#include "core/agent/agentmanager.h"
 #include "core/agent/body/animation/motiontreemanager.h"
 #include "core/agent/body/animation/animationplayer.h"
 //#include <QtOpenGL>
 #include <QDebug>
 #include <QtGlobal>
 
-Agent::Agent(Scene *scene, quint32 id) :
+Agent::Agent(AgentManager *manager, quint32 id) :
     QObject()
 {
     m_id=id;
-    m_scene=scene;
+    m_agentManager=manager;
+    m_scene=manager->getScene();
     createChannels();
     m_body=new Body(this);
     m_brain=new Brain(this,0);
@@ -47,6 +49,7 @@ Agent::Agent(Agent *otherAgent, quint32 id)  :
 {
     m_id=id;
     createChannels();
+    m_agentManager=otherAgent->getAgentManager();
     m_scene=otherAgent->getScene();
     m_body=new Body(this);
     m_body->setAnimations(otherAgent->getBody()->getAnimations());
@@ -209,8 +212,9 @@ void Agent::advance(AdvanceMode mode)
             }
         }
         m_body->getAnimationPlayer()->apply();
-        m_body->advance();
+
     }
+    m_body->advance();
 }
 
 void Agent::advanceCommit()

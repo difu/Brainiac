@@ -2,6 +2,7 @@
 #include <QtTest/QtTest>
 
 #include <QTemporaryFile>
+#include <QGraphicsItem>
 
 #include "core/scene.h"
 #include "core/simulation.h"
@@ -22,6 +23,9 @@
 #include "core/agent/body/animation/latchcurve.h"
 #include "core/agent/body/animation/motiontree.h"
 #include "core/agent/body/animation/motiontreemanager.h"
+#include "core/agent/body/animation/motiontreeaction.h"
+#include "core/agent/body/animation/motiontreetransition.h"
+#include "gui/Animation/motiontreeeditoritem.h"
 
 #include "core/group/group.h"
 
@@ -229,7 +233,9 @@ void BrainiacSceneTest::motionTree()
     // saving/loading tests
 
     QString standActionName="stand";
+    QPointF standActionEditorPos=QPointF(10,20);
     QString standTransName="standTrans";
+    QPointF standTransEditorPos=QPointF(-10,20);
     QString defaultActionName=standActionName;
 
     Scene saveScene2;
@@ -240,7 +246,9 @@ void BrainiacSceneTest::motionTree()
     MotionTree *saveTree1=saveMotionTreeManager->getMotionTrees().value(1);
 
     saveTree1->addAction(standActionName);
+    saveTree1->getActions().value(standActionName)->getEditorItem()->setPos(standActionEditorPos);
     saveTree1->addTransition(standTransName);
+    saveTree1->getTransitions().value(standTransName)->getEditorItem()->setPos(standTransEditorPos);
     saveTree1->setTreeDefaultAction(defaultActionName);
 
     saveTree1->connectActionWithTransition(standActionName,standTransName);
@@ -264,6 +272,9 @@ void BrainiacSceneTest::motionTree()
     QVERIFY2(action,"No stand action loaded");
     MotionTreeTransition *trans=loadTree1->getTransitions().value(standTransName,0);
     QVERIFY2(trans,"No stand transition loaded");
+
+    QVERIFY2(trans->getEditorItem()->pos()==standTransEditorPos,"Transition EditorPos differs");
+    QVERIFY2(action->getEditorItem()->pos()==standActionEditorPos,"Action EditorPos differs");
 
     QVERIFY2(loadTree1->getActionTransitionConnections().count()==1,"Wrong number of loaded Action Trans connections!");
     QVERIFY2(loadTree1->getTransitionActionConnections().count()==1,"Wrong number of loaded Trans Action connections!");
