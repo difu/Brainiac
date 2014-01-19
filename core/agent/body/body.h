@@ -29,6 +29,7 @@ class Agent;
 class AnimationPlayer;
 class Animation;
 class BodySegment;
+class MotionTreeAnimationPlayer;
 
 /**
  * @brief The Agents Body
@@ -47,6 +48,8 @@ public:
      * the matrice(s) of the segments will be calculated if necessary
      */
     void advance();
+
+    void applyPlayers();
     QHash<QString, Animation *> *getAnimations();
     BodySegment* getBodySegment(quint32 id) { return m_bodySegments.value(id,0); }
     AnimationPlayer* getAnimationPlayer() {return m_animationPlayer; }
@@ -90,6 +93,7 @@ protected:
     Agent *m_agent;
 
     AnimationPlayer *m_animationPlayer;
+    QList<MotionTreeAnimationPlayer *> m_treeAnimationPlayers;
 
     QHash<quint32, BodySegment* > m_bodySegments;
 

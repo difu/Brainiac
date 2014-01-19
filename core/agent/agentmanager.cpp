@@ -53,6 +53,7 @@ AgentManager::AgentManager(Group *group)
     m_group=group;
     m_scene=m_group->getScene();
     m_id=0;
+    m_motionTreeManager=new MotionTreeManager(this);
     m_bodyManager=new BodyManager(this);
     m_masterAgent=new Agent(this,0); // Id 0 is ok, its just a master agent
     m_masterAgent->getBody()->setAnimations(&m_animations);
@@ -62,7 +63,6 @@ AgentManager::AgentManager(Group *group)
     m_agents.append(m_spBodyAgent);
     m_agents.append(m_spActionAgent);
     m_brainEditor=new BrainEditor(m_scene,this);
-    m_motionTreeManager=new MotionTreeManager(this);
 }
 
 void AgentManager::addSegmentFromConfig(QXmlStreamReader *reader, quint32 id, QString name, quint32 parent, quint32 editorX, quint32 editorY)

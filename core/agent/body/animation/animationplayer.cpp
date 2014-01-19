@@ -37,22 +37,22 @@ AnimationPlayer::AnimationPlayer(Body *body)
     m_body=body;
     m_simulation=body->getAgent()->getScene()->getSimulation();
 
-    m_animDefault.addTransition(this,SIGNAL(animCanTransit()),&m_animCanTrans);
-    m_animCanTrans.addTransition(this,SIGNAL(animIsInTransition()),&m_animInTransition);
-    m_animCanTrans.addTransition(this,SIGNAL(animCannotTransit()),&m_animDefault);
-    m_animInTransition.addTransition(this,SIGNAL(aninHasTransitioned()),&m_animDefault);
-    m_stateMachine.addState(&m_animDefault);
-    m_stateMachine.addState(&m_animCanTrans);
-    m_stateMachine.addState(&m_animInTransition);
-    m_stateMachine.setInitialState(&m_animDefault);
-    m_stateMachine.start();
+//    m_animDefault.addTransition(this,SIGNAL(animCanTransit()),&m_animCanTrans);
+//    m_animCanTrans.addTransition(this,SIGNAL(animIsInTransition()),&m_animInTransition);
+//    m_animCanTrans.addTransition(this,SIGNAL(animCannotTransit()),&m_animDefault);
+//    m_animInTransition.addTransition(this,SIGNAL(aninHasTransitioned()),&m_animDefault);
+//    m_stateMachine.addState(&m_animDefault);
+//    m_stateMachine.addState(&m_animCanTrans);
+//    m_stateMachine.addState(&m_animInTransition);
+//    m_stateMachine.setInitialState(&m_animDefault);
+//    m_stateMachine.start();
     reset();
 }
 
 void AnimationPlayer::apply()
 {
     if(true) { // Just for testing
-        // first apply highest triggered action, will be possibly overwritten by motiontree
+        // first apply highest triggered action, will be possibly overwritten by motiontrees
         qreal highestValue=0.0;
         Animation *highestAnimation=0;
         foreach(Animation *anim,*m_animations) {
@@ -60,15 +60,6 @@ void AnimationPlayer::apply()
             if(tmpHv>highestValue) {
                 highestValue=tmpHv;
                 highestAnimation=anim;
-            }
-        }
-
-        // check if first MotionTrees have default animations
-        if(m_currentAnimation==0) {
-            MotionTree *tree=m_body->getAgent()->getAgentManager()->getMotionTreeManager()->getMotionTrees().value(0); //!< @todo currently only the first tree is handled. Maybe each tree should have its own AnimationPlayer ?
-            m_currentAnimation=m_animations->value(tree->getDefaultActionName(),0);
-            if(m_currentAnimation) {
-                m_currentAnimationStartTime=m_simulation->getCurrentTime();
             }
         }
 
@@ -86,10 +77,10 @@ void AnimationPlayer::apply()
             if(m_currentAnimation->isLoopedAnimation()) {
                 qreal loopTime=m_currentAnimation->getLoopAnimationTime(diffTime);
                 apply(*m_currentAnimation,loopTime);
-                m_body->getAgent()->getInputChannel(BrainiacGlobals::ChannelName_Phase)->setValue(loopTime/animLength);
+                //m_body->getAgent()->getInputChannel(BrainiacGlobals::ChannelName_Phase)->setValue(loopTime/animLength);
             } else {
                 apply(*m_currentAnimation,diffTime);
-                m_body->getAgent()->getInputChannel(BrainiacGlobals::ChannelName_Phase)->setValue(diffTime/animLength);
+                //m_body->getAgent()->getInputChannel(BrainiacGlobals::ChannelName_Phase)->setValue(diffTime/animLength);
             }
             m_body->getAgent()->getInputChannel(m_currentAnimation->name())->setValue(1.0);
         }

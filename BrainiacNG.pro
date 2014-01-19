@@ -89,7 +89,8 @@ SOURCES += main.cpp\
     gui/Animation/motiontreeeditor.cpp \
     gui/Animation/motiontreeeditoritem.cpp \
     core/agent/body/animation/motiontreeaction.cpp \
-    core/agent/body/animation/motiontreetransition.cpp
+    core/agent/body/animation/motiontreetransition.cpp \
+    core/agent/body/animation/motiontreeanimationplayer.cpp
 
 HEADERS  += gui/mainwindow.h \
     core/scene.h \
@@ -167,7 +168,8 @@ HEADERS  += gui/mainwindow.h \
     gui/Animation/motiontreeeditor.h \
     gui/Animation/motiontreeeditoritem.h \
     core/agent/body/animation/motiontreeaction.h \
-    core/agent/body/animation/motiontreetransition.h
+    core/agent/body/animation/motiontreetransition.h \
+    core/agent/body/animation/motiontreeanimationplayer.h
 
 FORMS    += gui/mainwindow.ui \
     gui/sceneeditor/groupeditor.ui \

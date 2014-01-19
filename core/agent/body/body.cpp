@@ -20,8 +20,12 @@
 #include "core/scene.h"
 #include "core/simulation.h"
 #include "core/agent/agent.h"
+#include "core/agent/agentmanager.h"
 #include "core/agent/body/animation/animation.h"
 #include "core/agent/body/animation/animationplayer.h"
+#include "core/agent/body/animation/motiontreemanager.h"
+#include "core/agent/body/animation/motiontree.h"
+#include "core/agent/body/animation/motiontreeanimationplayer.h"
 #include "core/agent/channel.h"
 #include "core/agent/body/bodysegment.h"
 
@@ -33,6 +37,10 @@ Body::Body(Agent *agent)
 {
     m_agent=agent;
     m_animationPlayer=new AnimationPlayer(this);
+    for(quint32 i=0; i<MotionTreeManager::NUM_OF_TREE_TRACKS;i++) {
+        MotionTreeAnimationPlayer *player=new MotionTreeAnimationPlayer(this,m_agent->getAgentManager()->getMotionTreeManager()->getMotionTrees().value(i));
+        m_treeAnimationPlayers.append(player);
+    }
     m_bodyRoot=new osg::PositionAttitudeTransform;
     m_bodyRoot.get()->setName("AgentBody Root Segment");
     m_showAllCoordCrosses=false;
@@ -79,6 +87,14 @@ void Body::advance()
     }
 }
 
+void Body::applyPlayers()
+{
+    m_animationPlayer->apply();
+    for(quint32 i=0; i<MotionTreeManager::NUM_OF_TREE_TRACKS;i++) {
+       m_treeAnimationPlayers.at(i)->apply();
+    }
+}
+
 Agent* Body::getAgent()
 {
     return m_agent;
@@ -109,11 +125,17 @@ void Body::reset()
     }
     this->updatePosition();
     m_animationPlayer->reset();
+    for(quint32 i=0; i<MotionTreeManager::NUM_OF_TREE_TRACKS;i++) {
+       m_treeAnimationPlayers.at(i)->reset();
+    }
 }
 
 void Body::setAnimations(QHash<QString, Animation *> *animations)
 {
     m_animationPlayer->setAnimations(animations);
+    for(quint32 i=0; i<MotionTreeManager::NUM_OF_TREE_TRACKS;i++) {
+       m_treeAnimationPlayers.at(i)->setAnimations(animations);
+    }
     foreach(Animation *anim, *m_animationPlayer->getAnimations()) {
         Channel *oChan=new Channel(0.0,2.0);
         m_agent->addOutputChannel(oChan,anim->name());
