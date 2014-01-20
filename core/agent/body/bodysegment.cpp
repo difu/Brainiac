@@ -118,7 +118,7 @@ void BodySegment::createChannels()
     m_body->getAgent()->addOutputChannel(m_oTz,segName % ":tz");
 
     m_oColor=new Channel();
-    m_oColor->init(0); //!< @todo color connect
+    m_oColor->setDefault(0); //!< @todo color connect
     m_body->getAgent()->addOutputChannel(m_oColor,segName % ":color");
 
 }

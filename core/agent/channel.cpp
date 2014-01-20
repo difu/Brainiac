@@ -20,18 +20,14 @@
 #include "core/agent/agent.h"
 
 
-/** \brief Constructor
-        Init the channel with a max, min and a initial value
-**/
 Channel::Channel(qreal min, qreal max, qreal value)
 {
     m_max=max;
     m_min=min;
     m_oldValue=m_value=qBound(m_min,value,m_max);
+    m_defaultValue=m_value;
 }
 
-/** \brief set channels old value to actual value
-**/
 void Channel::advance()
 {
     if(m_oldValue!=m_value) {
@@ -40,86 +36,67 @@ void Channel::advance()
     }
 }
 
-/** \brief changes the value of this channel
-        This slot is invoked if this channel has a parent
-        @sa Channel::setInherited()
-**/
 void Channel::changeValue(qreal value)
 {
     setValue(value);
 }
 
-/** \brief returns the max value of this channel
-          note that this value may change from the min value of a fuzzy node!
-          @sa FuzzyBase::getMaxValue()
-**/
+qreal Channel::getInputValue(Agent *agent, const QString &channelName)
+{
+    Channel *c=agent->getInputChannel(channelName);
+    if(c)
+        return c->getValue();
+    return 0.0;
+}
+
 qreal Channel::getMaxValue() const
 {
     return m_max;
 }
 
-/** \brief returns the min value of this channel
-        note that this value may change from the min value of a fuzzy node!
-        @sa FuzzyBase::getMinValue()
-**/
 qreal Channel::getMinValue() const
 {
     return m_min;
 }
 
-/** \brief @returns the range between min and max
-**/
 qreal Channel::getRange() const
 {
     return qAbs(m_max-m_min);
 }
 
-/** \brief @returns the current value of this channel
-**/
 qreal Channel::getValue() const {
     return m_value;
 }
 
-qreal Channel::getValue(Agent *agent, const QString &channelName)
+qreal Channel::getOutputValue(Agent *agent, const QString &channelName)
 {
     Channel *c=agent->getOutputChannel(channelName);
     if(c)
         return c->getValue();
+    return 0.0;
 }
 
-/** \brief @returns the old value of this channel
-**/
 qreal Channel::getOldValue() const {
     return m_oldValue;
 }
 
-/** \brief @returns true, if this channel´s value is inherited
-**/
 bool Channel::isInherited() const {
     return m_inherited;
 }
 
-/** \brief inits channel
-
-                the channel is initialized with given value.
-                Bounds are not changed!
-
-**/
-void Channel::init(qreal value)
+void Channel::reset()
 {
+    m_oldValue=m_value=m_defaultValue;
+    emit valueChanged(m_defaultValue);
+}
+
+void Channel::setDefault(qreal value)
+{
+    value=qBound(m_min,value,m_max);
     m_oldValue=m_value=value;
     emit valueChanged(value);
 }
 
-/** \brief makes this channel inherit its parent´s value
-
-                a channel´s value is automatically changing its value when the parent´s value changes
-
-                @param parent this channel´s parent
-                @param inherited true, if this channel should inherit
-                @todo rewrite that inherited is no more needed, to prevent unexpected behavior when parent changes and signal to previous parent is not disconnected
-
-**/
 void Channel::setInherited(Channel *parent, bool inherited)
 {
     m_inherited=inherited;
@@ -129,12 +106,7 @@ void Channel::setInherited(Channel *parent, bool inherited)
         disconnect(parent,SIGNAL(valueChanged(qreal)),this,SLOT(changeValue(qreal)));
 }
 
-/** \brief sets channel´s value
 
-                set the channels value.
-                the value is cropped to the channels limits
-
-**/
 void Channel::setValue(qreal value, bool isSpeed)
 {
     qreal origValue=m_value;

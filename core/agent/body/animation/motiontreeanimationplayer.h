@@ -21,18 +21,22 @@
 #include "core/agent/body/animation/animationplayer.h"
 #include <QObject>
 
+class Channel;
 class MotionTree;
 
 class MotionTreeAnimationPlayer : public AnimationPlayer
 {
     Q_OBJECT
 public:
-    MotionTreeAnimationPlayer(Body *body, MotionTree *tree);
+    MotionTreeAnimationPlayer(Body *body, MotionTree *tree, quint32 id);
     void apply();
     virtual void reset();
 
 protected:
     MotionTree *m_motionTree;
+    quint32 m_id;
+    Channel *m_phaseChannel;
+    Channel *m_latchChannel;
 };
 
 #endif // MOTIONTREEANIMATIONPLAYER_H

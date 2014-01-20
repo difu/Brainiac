@@ -56,7 +56,7 @@ void AnimationPlayer::apply()
         qreal highestValue=0.0;
         Animation *highestAnimation=0;
         foreach(Animation *anim,*m_animations) {
-            qreal tmpHv=Channel::getValue(m_body->getAgent(),anim->name())>highestValue;
+            qreal tmpHv=Channel::getOutputValue(m_body->getAgent(),anim->name())>highestValue;
             if(tmpHv>highestValue) {
                 highestValue=tmpHv;
                 highestAnimation=anim;

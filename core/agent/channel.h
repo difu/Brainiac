@@ -36,25 +36,88 @@ class Channel: public QObject
 {
     Q_OBJECT
 public:
+
+    /** \brief Constructor
+            Init the channel with a max, min and a default value, that is also set as current and old value
+    **/
     Channel(qreal min=BrainiacGlobals::MINQREAL, qreal max=BrainiacGlobals::MAXQREAL, qreal value=0);
+
+    /** \brief set channels old value to actual value
+    **/
     void advance();
+
+    static qreal getInputValue(Agent *agent, const QString& channelName);
+
+    /** \brief returns the max value of this channel
+              note that this value may change from the min value of a fuzzy node!
+              @sa FuzzyBase::getMaxValue()
+    **/
     qreal getMaxValue() const;
+
+    /** \brief returns the min value of this channel
+            note that this value may change from the min value of a fuzzy node!
+            @sa FuzzyBase::getMinValue()
+    **/
     qreal getMinValue() const;
+    static qreal getOutputValue(Agent *agent, const QString& channelName);
+
+    /** \brief @returns the range between min and max
+    **/
     qreal getRange() const;
-    void init(qreal value);
+
+    /** \brief sets the default value of this channel channel
+
+                    the channel is initialized with given value.
+                    Bounds are not changed!
+
+    **/
+    void setDefault(qreal value);
     bool isInherited() const;
+
+    /** \brief @returns the current value of this channel
+    **/
     qreal getValue() const;
-    static qreal getValue(Agent *agent, const QString& channelName);
+
+    /** \brief @returns the old value of this channel
+    **/
     qreal getOldValue() const;
+
+    /** \brief resets the channel
+     * the default value is applied both for value and old value
+     * @emits valueChanged
+    **/
+    void reset();
     void setMinValue( qreal min ) { m_min=min; }
     void setMaxValue( qreal max ) { m_max=max; }
+
+    /** \brief sets channel´s value
+
+                    set the channels value.
+                    the value is cropped to the channels limits
+
+    **/
     void setValue(qreal value, bool isSpeed=false);
+
+    /** \brief makes this channel inherit its parent´s value
+
+                    a channel´s value is automatically changing its value when the parent´s value changes
+
+                    @param parent this channel´s parent
+                    @param inherited true, if this channel should inherit
+                    @todo rewrite that inherited is no more needed, to prevent unexpected behavior when parent changes and signal to previous parent is not disconnected
+
+    **/
     void setInherited(Channel *parent, bool inherited);
 
 public slots:
+    /** \brief changes the value of this channel
+            This slot is invoked if this channel has a parent
+            @sa Channel::setInherited()
+    **/
     void changeValue(qreal value); //!< Slot to connect for channel inheritance  @sa Channel::setInherited()
 
 protected:
+    qreal m_defaultValue; //!< the default value of this channel
     qreal m_value; //!< Current value of this channel
     bool m_inherited; //!< true, if this channel is inherited
     qreal m_oldValue; //!< the old value of the channel

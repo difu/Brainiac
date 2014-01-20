@@ -29,8 +29,20 @@
 #include "core/agent/body/animation/motiontree.h"
 #include "core/agent/body/animation/motiontreeaction.h"
 
-MotionTreeAnimationPlayer::MotionTreeAnimationPlayer(Body *body, MotionTree *tree) : AnimationPlayer(body), m_motionTree(tree)
+MotionTreeAnimationPlayer::MotionTreeAnimationPlayer(Body *body, MotionTree *tree, quint32 id) : AnimationPlayer(body), m_motionTree(tree), m_id(id)
 {
+
+    QString phaseChannelName=QString(BrainiacGlobals::ChannelName_Phase);
+    QString latchChannelName=QString(BrainiacGlobals::ChannelName_Latch);
+    if(m_id>0) {
+        phaseChannelName.append(QString::number(m_id+1));
+        latchChannelName.append(QString::number(m_id+1));
+    }
+    m_phaseChannel=new Channel(0,1);
+    m_body->getAgent()->addInputChannel(m_phaseChannel,phaseChannelName);
+    m_latchChannel=new Channel(0,1);
+    m_body->getAgent()->addInputChannel(m_latchChannel,latchChannelName);
+
     reset();
 }
 
@@ -50,10 +62,10 @@ void MotionTreeAnimationPlayer::apply()
         if(m_currentAnimation->isLoopedAnimation()) {
             qreal loopTime=m_currentAnimation->getLoopAnimationTime(diffTime);
             AnimationPlayer::apply(*m_currentAnimation,loopTime);
-            m_body->getAgent()->getInputChannel(BrainiacGlobals::ChannelName_Phase)->setValue(loopTime/animLength);
+            m_phaseChannel->setValue(loopTime/animLength);
         } else {
             AnimationPlayer::apply(*m_currentAnimation,diffTime);
-            m_body->getAgent()->getInputChannel(BrainiacGlobals::ChannelName_Phase)->setValue(diffTime/animLength);
+            m_phaseChannel->setValue(diffTime/animLength);
         }
         m_body->getAgent()->getInputChannel(m_currentAnimation->name())->setValue(1.0);
     }
@@ -62,5 +74,6 @@ void MotionTreeAnimationPlayer::apply()
 
 void MotionTreeAnimationPlayer::reset()
 {
+    //qDebug() << __PRETTY_FUNCTION__;
     AnimationPlayer::reset();
 }
