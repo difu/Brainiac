@@ -142,6 +142,10 @@ void Body::setAnimations(QHash<QString, Animation *> *animations)
 
         Channel *iChan=new Channel(0.0,1.0);
         m_agent->addInputChannel(iChan,anim->name());
+
+        QString phaseOffsetChannelName=anim->name().append(BrainiacGlobals::ChannelPhaseOffsetSuffix);
+        Channel *phaseOffset=new Channel(0.0,1.0);
+        m_agent->addOutputChannel(phaseOffset,phaseOffsetChannelName);
     }
 }
 

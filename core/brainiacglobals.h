@@ -130,6 +130,8 @@ public:
     static const char* const  ChannelName_Phase;
     static const char* const  ChannelName_Latch;
 
+    static const char* const ChannelPhaseOffsetSuffix;
+
     static QColor defaultXColor;
     static QColor defaultYColor;
     static QColor defaultZColor;

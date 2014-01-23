@@ -73,7 +73,9 @@ void AnimationPlayer::apply()
         // Apply current Animation
         if(m_currentAnimation) {
             qreal animLength=m_currentAnimation->getLength();
-            qreal diffTime=m_simulation->getCurrentTime()-m_currentAnimationStartTime;
+            qreal offset=Channel::getOutputValue(m_body->getAgent(),m_currentAnimation->name().append(BrainiacGlobals::ChannelPhaseOffsetSuffix))*animLength;
+            qreal diffTime=m_simulation->getCurrentTime()-m_currentAnimationStartTime+offset;
+
             if(m_currentAnimation->isLoopedAnimation()) {
                 qreal loopTime=m_currentAnimation->getLoopAnimationTime(diffTime);
                 apply(*m_currentAnimation,loopTime);
