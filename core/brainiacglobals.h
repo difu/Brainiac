@@ -65,6 +65,7 @@ public:
 
     static const qreal MAXQREAL;
     static const qreal MINQREAL;
+    static float SegmentTesselationDetailRatio;
 
     static const quint32 NUMBER_OF_RANDOMS=300;
     static const qreal randoms[NUMBER_OF_RANDOMS];

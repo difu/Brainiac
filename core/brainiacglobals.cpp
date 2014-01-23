@@ -70,6 +70,8 @@ const qreal BrainiacGlobals::PI=3.14159265;
 const qreal BrainiacGlobals::MAXQREAL=std::numeric_limits<qreal>::max();
 const qreal BrainiacGlobals::MINQREAL=-std::numeric_limits<qreal>::max();
 
+float BrainiacGlobals::SegmentTesselationDetailRatio=0.25f;
+
 const char* const BrainiacGlobals::XmlModeAttrib="mode\0";
 const char* const BrainiacGlobals::XmlNameAttrib="name\0";
 const char* const BrainiacGlobals::XmlXAttrib="x\0";

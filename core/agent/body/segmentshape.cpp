@@ -19,7 +19,9 @@
 
 SegmentShape::SegmentShape(const Segment &other ):Segment(other)
 {
-    m_shapeDrawable=new osg::ShapeDrawable;
+    m_shapeDrawable=new osg::ShapeDrawable();
+    osg::TessellationHints *hints=new osg::TessellationHints();
+    hints->setDetailRatio(BrainiacGlobals::SegmentTesselationDetailRatio);
     m_transformNode.get()->setName(getName().toStdString());
     switch(m_segmentType) {
     case BrainiacGlobals::SPHERESEGMENT:
@@ -36,6 +38,7 @@ SegmentShape::SegmentShape(const Segment &other ):Segment(other)
     //m_shapeDrawable->setShape( m_shape );
     m_shapeDrawable->setColor( osg::Vec4(1.0f, 1.0f, 1.0f, 1.0f) );
     m_shapeDrawable->setName("ShapeDrawable");
+    m_shapeDrawable->setTessellationHints(hints);
     //qDebug() << __PRETTY_FUNCTION__ << "Shape created" << other.getName();
 }
 
