@@ -30,7 +30,7 @@ Noise::Noise(quint32 id, Brain *brain, QString name, qreal rate):FuzzyBase(Fuzzy
 
 void Noise::calculate()
 {
-    if(m_rate) {
+    if(m_rate!=0.0) {
         quint32 currentFrame=m_brain->getAgent()->getScene()->getSimulation()->getCurrentFrame();
         quint32 fps=m_brain->getAgent()->getScene()->getSimulation()->getFps();
         quint32 i=1;
@@ -54,6 +54,6 @@ qreal Noise::getRate()
 
 void Noise::setRate(qreal rate)
 {
-    m_rate=qBound((double)0.0f,rate,(double)this->getMaxRate());
+    m_rate=qBound((double)0.0,rate,(double)this->getMaxRate());
 }
 

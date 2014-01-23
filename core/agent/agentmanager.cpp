@@ -56,10 +56,13 @@ AgentManager::AgentManager(Group *group)
     m_motionTreeManager=new MotionTreeManager(this);
     m_bodyManager=new BodyManager(this);
     m_masterAgent=new Agent(this,0); // Id 0 is ok, its just a master agent
+    m_masterAgent->setObjectName("masterAgent");
     m_masterAgent->getBody()->setAnimations(&m_animations);
     m_agents.append(m_masterAgent);
     m_spBodyAgent=cloneAgent(0);
+    m_spBodyAgent->setObjectName("bodyAgent");
     m_spActionAgent=cloneAgent(0);
+    m_spActionAgent->setObjectName("actionAgent");
     m_agents.append(m_spBodyAgent);
     m_agents.append(m_spActionAgent);
     m_brainEditor=new BrainEditor(m_scene,this);
@@ -366,9 +369,7 @@ quint32 AgentManager::addNoiseFuzz(QString name, qreal rate, quint32 editorX, qu
 
 void AgentManager::addNoiseFuzz(quint32 id, QString name, qreal rate, quint32 editorX, quint32 editorY)
 {
-    m_masterAgent->addNoiseFuzz(id, name, rate);
-    //Noise *noise=(Noise*) m_masterAgent->getBrain()->getFuzzy(id);
-    foreach(Agent* agent,m_group->getAgents()) {
+    foreach(Agent* agent,m_agents) {
         agent->addNoiseFuzz(id, name, rate);
     }
     m_brainIdGenerator.registerId(id);
