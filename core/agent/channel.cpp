@@ -88,6 +88,7 @@ void Channel::reset()
 {
     m_oldValue=m_value=m_defaultValue;
     emit valueChanged(m_defaultValue);
+    emit oldValueChanged(m_defaultValue);
 }
 
 void Channel::setDefault(qreal value)
