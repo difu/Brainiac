@@ -6,6 +6,7 @@
 #include "core/brainiacglobals.h"
 
 class MotionTree;
+class AgentManager;
 
 class MotionTreeEditor : public EditorBase
 {

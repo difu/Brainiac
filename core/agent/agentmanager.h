@@ -161,6 +161,13 @@ public:
     void deleteConnector(quint32 childId, quint32 parentId);
 
     /**
+    * @brief returns the id of the currently edited MotionTree in the MainWindow
+    * @sa setActiveMotionTreeEditor()
+    * @return quint32 the id of the MotionTree
+    */
+    quint32 getActiveMotionTreeEditor() const { return m_activeMotionTreeEditor; }
+
+    /**
      * @brief returns a list of all agents managed by this AgentManager
      *
      * This list includes also the special purpose agents like master agent and
@@ -270,6 +277,14 @@ public:
 
     void reset();
     bool saveConfig();
+
+    /**
+     * @brief sets the id of the motiontree
+     * @param quint32 id the id of the MotionTree
+     * @sa getActiveMotionTreeEditor()
+
+     */
+    void setActiveMotionTreeEditor(quint32 id) { m_activeMotionTreeEditor=id; }
     void setEditorTranslation(qint32 x, qint32 y);
     void setFuzzyEditorTranslation(quint32 id, qint32 x, qint32 y);
     void setBodyEditorTranslation(quint32 id, qint32 x, qint32 y);
@@ -454,6 +469,7 @@ protected:
     QHash<QString,Animation *> m_animations;
     QList<Agent *> m_agents; /**< contains all agents, including special purpose agents like @sa m_masterAgent */
     BrainEditor *m_brainEditor; /**< contains the editor widgets of the brain */
+    quint32 m_activeMotionTreeEditor; /**< id of the currently edited tree in @sa MainWindow */
 
     // Brain stuff
     void addAndFuzz(quint32 id, QString name, QString mode, quint32 editorX, quint32 editorY);

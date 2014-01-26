@@ -56,6 +56,9 @@ EditorLabel::EditorLabel(BrainiacGlobals::ItemType labelType) :
     case BrainiacGlobals::GROUP:
         setPixmap(QPixmap(":/gui/pics/editor_logo_group.png"));
         break;
+    case BrainiacGlobals::ACTION:
+        setPixmap(QPixmap(":/gui/pics/editor_logo_action.png"));
+        break;
     default:
         qWarning() << __PRETTY_FUNCTION__ << "Wrong label parameter or label not yet implemented!";
     }
@@ -97,6 +100,9 @@ void EditorLabel::mousePressEvent(QMouseEvent *ev)
         break;
     case BrainiacGlobals::GROUP:
         pixmap.load(":/gui/pics/editor_logo_group.png");
+        break;
+    case BrainiacGlobals::ACTION:
+        pixmap.load(":/gui/pics/editor_logo_action.png");
         break;
     default:
         qDebug() << __PRETTY_FUNCTION__ << "Wrong label parameter or label not yet implemented!";

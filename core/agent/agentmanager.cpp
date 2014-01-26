@@ -66,6 +66,7 @@ AgentManager::AgentManager(Group *group)
     m_agents.append(m_spBodyAgent);
     m_agents.append(m_spActionAgent);
     m_brainEditor=new BrainEditor(m_scene,this);
+    m_activeMotionTreeEditor=0;
 }
 
 void AgentManager::addSegmentFromConfig(QXmlStreamReader *reader, quint32 id, QString name, quint32 parent, quint32 editorX, quint32 editorY)

@@ -52,6 +52,7 @@ class SceneDisplay_;
 class AgentManager;
 class BrainEditor;
 class BodyEditor;
+class MotionTreeEditorGui;
 
 /** \brief  Main User Interface
 
@@ -110,6 +111,7 @@ protected:
     QWidget *m_brainEditorItems;
     QWidget *m_bodyEditorItems;
     QWidget *m_sceneEditorItems;
+    QWidget *m_motionTreeEditorItems;
 
     QWidget *m_logicElementEditWidget;
 
@@ -120,6 +122,7 @@ protected:
     FuzzyEditor *m_fuzzyEditor;
     NoiseEditor *m_noiseEditor;
     SegmentEditor *m_segmentEditor;
+    MotionTreeEditorGui *m_motionTreeEditorGui;
 
 
     QHash<AgentManager*, BrainEditor*> m_brainEditors;  //!< all BrainEditors.
@@ -174,6 +177,8 @@ protected slots:
      * @fn sceneEditorItemClicked
      */
     void sceneEditorItemClicked();
+
+    void motionTreeChanged(quint32 id);
     void refreshBrainEditor();
     void loadAnimation();
     void saveAnimation();

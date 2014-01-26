@@ -32,6 +32,7 @@
 #include "gui/sceneeditor/groupeditor.h"
 #include "gui/editoritem.h"
 #include "gui/Animation/actioneditor.h"
+#include "gui/Animation/motiontreeeditorgui.h"
 #include "gui/bodyeditor/bodydisplay_.h"
 #include "gui/scenedisplay_.h"
 #include "editorlabel.h"
@@ -42,6 +43,9 @@
 #include "core/simulation.h"
 #include "core/group/group.h"
 #include "core/agent/body/animation/animation.h"
+#include "core/agent/body/animation/motiontreemanager.h"
+#include "core/agent/body/animation/motiontree.h"
+#include "gui/Animation/motiontreeeditor.h"
 #include <QDebug>
 #include <QComboBox>
 #include <QDialog>
@@ -117,7 +121,6 @@ void MainWindow::addAgentManager(AgentManager *agentManager)
     //BodyEditor *bodyEditor=new BodyEditor(m_scene,agentManager);
     m_bodyEditors.insert(agentManager,agentManager->getBodyManager()->getBodyEdtor());
     connect(agentManager->getBodyManager()->getBodyEdtor(),SIGNAL(itemClicked(ItemEditorWidgetsBase::editMessage)),this,SLOT(editorNodeClick(ItemEditorWidgetsBase::editMessage)));
-
 }
 
 void MainWindow::closeEvent(QCloseEvent *ev)
@@ -264,6 +267,14 @@ void MainWindow::createEditorItemBars()
     myVBoxlayout->addStretch();
     m_sceneEditorItems->setLayout(myVBoxlayout);
 
+    myVBoxlayout=new QVBoxLayout();
+    m_motionTreeEditorItems=new QWidget(m_editorItems);
+    editLabel=new EditorLabel(BrainiacGlobals::ACTION);
+    myVBoxlayout->addWidget(editLabel);
+    myVBoxlayout->addWidget(new QLabel("Action"));
+    myVBoxlayout->addStretch();
+    m_motionTreeEditorItems->setLayout(myVBoxlayout);
+
     m_layout->addWidget(m_editorItems,MainWindowLayout::West);
 
 }
@@ -295,6 +306,9 @@ void MainWindow::createEditorWidgets()
     m_segmentEditor=new SegmentEditor(m_scene,m_logicElementEditWidget);
     m_segmentEditor->setVisible(false);
 
+    m_motionTreeEditorGui=new MotionTreeEditorGui(m_scene,m_logicElementEditWidget);
+    m_motionTreeEditorGui->setVisible(false);
+
 //    foreach(BrainEditor *brainEditor,m_brainEditors) {
 //        // This signal activates editor in South region
 //        connect(brainEditor, SIGNAL(itemClicked(ItemEditorWidgetsBase::editMessage)),this,SLOT(editorNodeClick(ItemEditorWidgetsBase::editMessage)));
@@ -310,7 +324,7 @@ void MainWindow::createEditorWidgets()
     connect(m_fuzzyEditor,SIGNAL(updateBrainEditor()),this,SLOT(refreshBrainEditor()));
     connect(m_noiseEditor,SIGNAL(updateBrainEditor()),this,SLOT(refreshBrainEditor()));
     //connect(m_outputEditor,SIGNAL(updateGLContent()),m_sceneDisplay,SLOT(updateGL()));
-
+    connect(m_motionTreeEditorGui,SIGNAL(motionTreeChange(quint32)),this,SLOT(motionTreeChanged(quint32)));
 
 
     m_layout->addWidget(m_logicElementEditWidget,MainWindowLayout::South);
@@ -404,6 +418,14 @@ void MainWindow::editorNodeClick(ItemEditorWidgetsBase::editMessage msg)
     m_fuzzyEditor->setVisible(msg.type==BrainiacGlobals::FUZZ);
     m_noiseEditor->setVisible(msg.type==BrainiacGlobals::NOISE);
     m_segmentEditor->setVisible(msg.type==BrainiacGlobals::CUBE || msg.type==BrainiacGlobals::SPHERE || msg.type==BrainiacGlobals::TUBE);
+}
+
+void MainWindow::motionTreeChanged(quint32 id)
+{
+    if(m_activeAgentManager) {
+        //m_activeAgentManager->setActiveMotionTreeEditor(id);
+        m_editorView->setScene(m_activeAgentManager->getMotionTreeManager()->getMotionTrees().value(id)->getMotionTreeEditor());
+    }
 }
 
 void MainWindow::readSettings()
@@ -544,6 +566,8 @@ void MainWindow::setEditMode(EditMode em)
     m_brainEditorItems->setVisible(em==MainWindow::BRAIN);
     m_bodyEditorItems->setVisible(em==MainWindow::BODY);
     m_sceneEditorItems->setVisible(em==MainWindow::SCENE);
+    m_motionTreeEditorItems->setVisible(em==MainWindow::MOTION);
+    m_motionTreeEditorGui->setVisible(em==MainWindow::MOTION);
 
     m_groupEditor->setVisible(false);
     m_outputEditor->setVisible(false);
@@ -574,6 +598,12 @@ void MainWindow::setEditMode(EditMode em)
         }
         break;
     case MainWindow::MOTION:
+        if(m_activeAgentManager) {
+            quint32 mtId=m_activeAgentManager->getActiveMotionTreeEditor();
+            //m_motionTreeEditorGui->setActiveTree(mtId);
+            m_motionTreeEditorGui->setAgentManager(m_activeAgentManager);
+            m_editorView->setScene(m_activeAgentManager->getMotionTreeManager()->getMotionTrees().value(mtId)->getMotionTreeEditor());
+        }
         break;
     }
 
