@@ -78,7 +78,8 @@ SOURCES += gui/mainwindow.cpp \
     gui/Animation/motiontreeeditoritem.cpp \
     core/agent/body/animation/motiontreeaction.cpp \
     core/agent/body/animation/motiontreetransition.cpp \
-    core/agent/body/animation/motiontreeanimationplayer.cpp
+    core/agent/body/animation/motiontreeanimationplayer.cpp \
+    gui/Animation/motiontreeeditorgui.cpp
 
 HEADERS  += gui/mainwindow.h \
     core/scene.h \
@@ -157,7 +158,8 @@ HEADERS  += gui/mainwindow.h \
     gui/Animation/motiontreeeditoritem.h \
     core/agent/body/animation/motiontreeaction.h \
     core/agent/body/animation/motiontreetransition.h \
-    core/agent/body/animation/motiontreeanimationplayer.h
+    core/agent/body/animation/motiontreeanimationplayer.h \
+    gui/Animation/motiontreeeditorgui.h
 
 FORMS    += gui/mainwindow.ui \
     gui/sceneeditor/groupeditor.ui \
@@ -169,7 +171,8 @@ FORMS    += gui/mainwindow.ui \
     gui/placeeditor.ui \
     gui/bodyeditor/segmenteditor.ui \
     gui/Animation/actioneditor.ui \
-    gui/braineditor/andeditor.ui
+    gui/braineditor/andeditor.ui \
+    gui/Animation/motiontreeeditorgui.ui
 
 RESOURCES +=  \
     testData.qrc\
