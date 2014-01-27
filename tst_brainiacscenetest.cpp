@@ -462,8 +462,8 @@ void BrainiacSceneTest::animation()
         if(origCurve->keyFrames().count()!=loadedCurve->keyFrames().count()) {
             QFAIL("Number of keyframes differ!");
         }
-        foreach(QVector2D kf,origCurve->keyFrames()) {
-            QVERIFY2(loadedCurve->getValue(kf.x())==kf.y(),"Keyframes differ");
+        foreach(QVector2D *kf,origCurve->keyFrames()) {
+            QVERIFY2(loadedCurve->getValue(kf->x())==kf->y(),"Keyframes differ");
         }
     }
     //Latches
@@ -472,7 +472,7 @@ void BrainiacSceneTest::animation()
     QCOMPARE(testAnim.latches().count(),loadedAnimation->latches().count());
     QVERIFY2(loadedAnimation->latches().value(latchCurve1)->latches().at(0)==l1_1,"Latchcurve 1 latch 1 of loaded animation differs");
     QVERIFY2(loadedAnimation->latches().value(latchCurve2)->latches().at(0)==l2_1,"Latchcurve 1 latch 1 of loaded animation differs");
-    QVERIFY2(loadedAnimation->getTransitionCurve()->keyFrames()==testAnim.getTransitionCurve()->keyFrames(),"Transititoncurve number of keyframes differ from original");
+    QVERIFY2(loadedAnimation->getTransitionCurve()->keyFrames().count()==testAnim.getTransitionCurve()->keyFrames().count(),"Transititoncurve number of keyframes differ from original");
     delete(loadedAnimation);
 }
 

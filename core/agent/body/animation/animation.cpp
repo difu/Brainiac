@@ -131,7 +131,7 @@ void Animation::calculateLength() const
     foreach(AnimationCurve *c,m_curves) {
         if(c->keyFrames().isEmpty())
             continue;
-        qreal time=c->keyFrames().last().x();
+        qreal time=c->keyFrames().last()->x();
         if( time > m_length) {
             m_length=time;
         }
@@ -357,8 +357,8 @@ bool Animation::saveAnimation(QString &fileName)
         out << curve->keyFrames().count();
         for(int keyFrameNo=0; keyFrameNo < curve->keyFrames().count();keyFrameNo++)
         {
-            QVector3D kf=curve->keyFrames().at(keyFrameNo);
-            out << kf.x() << kf.y();
+            QVector2D *kf=curve->keyFrames().at(keyFrameNo);
+            out << kf->x() << kf->y();
         }
     }
     m_fileName=fileName;
@@ -382,8 +382,8 @@ bool Animation::saveAnimation(QString &fileName)
         out << m_transitionCurve->keyFrames().count();
         for(int keyFrameNo=0; keyFrameNo < m_transitionCurve->keyFrames().count();keyFrameNo++)
         {
-            QVector3D kf=m_transitionCurve->keyFrames().at(keyFrameNo);
-            out << kf.x() << kf.y();
+            QVector2D *kf=m_transitionCurve->keyFrames().at(keyFrameNo);
+            out << kf->x() << kf->y();
         }
     } else {
         out << 0;

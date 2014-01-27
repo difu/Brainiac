@@ -86,7 +86,7 @@ public:
      *
      * @returns qreal the length
      */
-    qreal length() const { return m_keyFrames.last().x(); }
+    qreal length() const { return m_keyFrames.last()->x(); }
 
     /**
      * @brief get the maximal value of all keyframes
@@ -121,8 +121,8 @@ public:
      * @fn keyFrames
      * @return QList<QVector2D>
      */
-    QList<QVector2D> keyFrames() const {return m_keyFrames;}
-    QList<QVector2D>& keyFrames()  {return m_keyFrames;}
+    QList<QVector2D *> keyFrames() const {return m_keyFrames;}
+    QList<QVector2D *>& keyFrames()  {return m_keyFrames;}
 
     /**
      * @brief prints out all key frames
@@ -133,10 +133,15 @@ public:
      * @param end
      */
     void dPrintKeyFrames(quint32 start, quint32 end) const;
+
+    /**
+     * @brief destructor
+     * @bug Does not work!
+     */
     virtual ~AnimationCurve();
 
 protected:
-    QList<QVector2D> m_keyFrames; /**< all keyframes */
+    QList<QVector2D *> m_keyFrames; /**< all keyframes */
 };
 
 #endif // ANIMATIONCURVE_H
