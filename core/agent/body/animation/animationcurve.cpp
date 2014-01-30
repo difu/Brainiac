@@ -122,22 +122,25 @@ qreal AnimationCurve::getMinValue() const
 qreal AnimationCurve::getValue(qreal time) const
 {
     qreal retVal=0;
-    if(m_keyFrames.isEmpty())
+    int numKeyFrames=m_keyFrames.size();
+    if(numKeyFrames==0)
         return retVal;
     else {
-        if(m_keyFrames.count()==1 || m_keyFrames.at(0).x()>=time) {
+        if(numKeyFrames==1 || m_keyFrames.at(0).x()>=time) {
             return m_keyFrames.first().y();
         } else {
-            for(int i=1;i<m_keyFrames.size();++i) {
-                if(qFuzzyCompare(time,(qreal)m_keyFrames.at(i-1).x())) {
-                    return m_keyFrames.at(i-1).y();
-                }
-                qreal lower=m_keyFrames.at(i-1).x();
-                qreal upper=m_keyFrames.at(i).x();
-                if(time>lower && time<upper) {
+            for(int i=1;i<numKeyFrames;++i) {
+//                if(qFuzzyCompare(time,(qreal)m_keyFrames.at(i-1).x())) {
+//                    return m_keyFrames.at(i-1).y();
+//                }
+                QVector2D lowerKf=m_keyFrames.at(i-1);
+                QVector2D upperKf=m_keyFrames.at(i);
+                qreal lower=lowerKf.x();
+                qreal upper=upperKf.x();
+                if(time>=lower && time<upper) {
                     qreal dist=upper-lower;
                     qreal factor=(time-lower)/dist;
-                    return m_keyFrames.at(i-1).y()+(m_keyFrames.at(i).y()-m_keyFrames.at(i-1).y())*factor;
+                    return lowerKf.y()+(upperKf.y()-lowerKf.y())*factor;
                 }
             }
             return m_keyFrames.last().y();

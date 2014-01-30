@@ -142,9 +142,9 @@ void LoopEditorScene::updateCurves()
             qreal maxValue=curve->getMaxValue();
             QList< QGraphicsItem *> gItems;
             QBrush brush(BrainiacGlobals::getColorFromBrainiacColorValue((qreal)curveNo/(qreal)(numberOfCurves)));
-            foreach(QVector2D *kf,curve->keyFrames()) {
+            foreach(QVector2D kf,curve->keyFrames()) {
                 QGraphicsRectItem *item=new QGraphicsRectItem(-1,-1,1,1);
-                item->setPos(mapTimeToWidth(kf->x()),mapCurveRangeToHeight(maxValue,minValue,kf->y()));
+                item->setPos(mapTimeToWidth(kf.x()),mapCurveRangeToHeight(maxValue,minValue,kf.y()));
                 item->setBrush(brush);
                 this->addItem(item);
                 gItems.append(item);
