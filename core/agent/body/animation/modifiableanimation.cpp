@@ -54,10 +54,10 @@ void ModifiableAnimation::bake()
         AnimationCurve *origCuve=m_curves.value(curveName,0);
         newCurve->addKeyFrame(0.0f,getValue(curveName,m_startTime));
         newCurve->addKeyFrame(m_endTime-m_startTime,this->getValue(curveName,m_endTime));
-        foreach(QVector2D *kf, origCuve->keyFrames()) {
-            if(kf->x()>m_startTime && kf->x() < m_endTime) {
-                newCurve->addKeyFrame(kf->x()-m_startTime,this->getValue(curveName,kf->x()));
-                //qDebug() << __PRETTY_FUNCTION__ << curveName << kf->x() << kf->y() << this->getValue(curveName,kf->x()) << Animation::getValue(curveName,kf->x());
+        foreach(QVector2D kf, origCuve->keyFrames()) {
+            if(kf.x()>m_startTime && kf.x() < m_endTime) {
+                newCurve->addKeyFrame(kf.x()-m_startTime,this->getValue(curveName,kf.x()));
+                //qDebug() << __PRETTY_FUNCTION__ << curveName << kf.x() << kf.y() << this->getValue(curveName,kf.x()) << Animation::getValue(curveName,kf.x());
             }
         }
         //qDebug() << __PRETTY_FUNCTION__ << curveName <<" oldKF" << origCuve->keyFrames().count() << "NewKF" << newCurve->keyFrames().count();
@@ -86,19 +86,19 @@ void ModifiableAnimation::createAgentCurve(AnimationCurve *rootCurve, AnimationC
     if(rootCurve->keyFrames().count()==0) {
         return;
     }
-    qreal valBefore=rootCurve->keyFrames().first()->y();
+    qreal valBefore=rootCurve->keyFrames().first().y();
     int i=0;
-    foreach(QVector2D *kf,rootCurve->keyFrames()) {
-        agentCurve->addKeyFrame(kf->x(),kf->y()-valBefore);
-        valBefore=kf->y();
+    foreach(QVector2D kf,rootCurve->keyFrames()) {
+        agentCurve->addKeyFrame(kf.x(),kf.y()-valBefore);
+        valBefore=kf.y();
         //rootCurve->keyFrames()[i].setY(0.0f);
         i++;
     }
     // The first kf does is zero. Interpolate its value
     if(rootCurve->keyFrames().count()==2) {
-        agentCurve->keyFrames()[0]->setY(agentCurve->keyFrames().last()->y());
+        agentCurve->keyFrames()[0].setY(agentCurve->keyFrames().last().y());
     } else if( rootCurve->keyFrames().count()>2) {
-        agentCurve->keyFrames()[0]->setY(0.5f*agentCurve->keyFrames()[1]->y()+0.5f*agentCurve->keyFrames().last()->y());
+        agentCurve->keyFrames()[0].setY(0.5f*agentCurve->keyFrames()[1].y()+0.5f*agentCurve->keyFrames().last().y());
     }
     rootCurve->keyFrames().clear();
 }
@@ -408,14 +408,14 @@ void ModifiableAnimation::setTansformRotation(qreal yAxisRot)
     origin.setZ(origRootBoneTzCurve->getValue(0.0f));
 
     for(int i=1;i<rootBoneTzCurve->keyFrames().count();i++) {
-        QVector3D originalPoint(origRootBoneTxCurve->getValue(rootBoneTxCurve->keyFrames().at(i)->x()),
-                                origRootBoneTyCurve->getValue(rootBoneTyCurve->keyFrames().at(i)->x()),
-                                origRootBoneTzCurve->getValue(rootBoneTzCurve->keyFrames().at(i)->x()));
+        QVector3D originalPoint(origRootBoneTxCurve->getValue(rootBoneTxCurve->keyFrames().at(i).x()),
+                                origRootBoneTyCurve->getValue(rootBoneTyCurve->keyFrames().at(i).x()),
+                                origRootBoneTzCurve->getValue(rootBoneTzCurve->keyFrames().at(i).x()));
         QVector3D point=origin-originalPoint;
         QVector3D rotated=rotQuatY.rotatedVector(point);
-        rootBoneTxCurve->keyFrames()[i]->setY((rotated.x()+origin.x()));
+        rootBoneTxCurve->keyFrames()[i].setY((rotated.x()+origin.x()));
         //rootBoneTyCurve->keyFrames()[i].setY((rotated.y()+origin.y()));
-        rootBoneTzCurve->keyFrames()[i]->setY((rotated.z()+origin.z()));
+        rootBoneTzCurve->keyFrames()[i].setY((rotated.z()+origin.z()));
         //qDebug() << __PRETTY_FUNCTION__ << yAxisRot << rotated+origin << originalPoint;
     }
 
@@ -447,9 +447,9 @@ void ModifiableAnimation::setTansformRotation(qreal yAxisRot)
         cml::matrix33d_r cmlRotMatrix;
         cmlRotMatrix.identity();
 
-        QVector3D originalRot  (origRootBoneRxCurve->getValue(rootBoneRxCurve->keyFrames().at(i)->x()),
-                                origRootBoneRyCurve->getValue(rootBoneRyCurve->keyFrames().at(i)->x()),
-                                origRootBoneRzCurve->getValue(rootBoneRzCurve->keyFrames().at(i)->x()));
+        QVector3D originalRot  (origRootBoneRxCurve->getValue(rootBoneRxCurve->keyFrames().at(i).x()),
+                                origRootBoneRyCurve->getValue(rootBoneRyCurve->keyFrames().at(i).x()),
+                                origRootBoneRzCurve->getValue(rootBoneRzCurve->keyFrames().at(i).x()));
 
         qDebug() << __PRETTY_FUNCTION__ << "KF: "<< i << " Original Rotation Vector: " << originalRot << yAxisRot;
         cml::EulerOrder cmlEulerOrder;
@@ -483,9 +483,9 @@ void ModifiableAnimation::setTansformRotation(qreal yAxisRot)
         cml::matrix_to_euler(cmlRotMatrix,xRot,yRot,zRot,cml::euler_order_xyz);
         qDebug() << __PRETTY_FUNCTION__ << "KF: "<< i << " Rotation CML:                       " << BrainiacGlobals::rad2grad(xRot) << BrainiacGlobals::rad2grad(yRot) << BrainiacGlobals::rad2grad(zRot);
 
-        rootBoneRxCurve->keyFrames()[i]->setY(BrainiacGlobals::rad2grad(xRot));
-        rootBoneRyCurve->keyFrames()[i]->setY(BrainiacGlobals::rad2grad(yRot));
-        rootBoneRzCurve->keyFrames()[i]->setY(BrainiacGlobals::rad2grad(zRot));
+        rootBoneRxCurve->keyFrames()[i].setY(BrainiacGlobals::rad2grad(xRot));
+        rootBoneRyCurve->keyFrames()[i].setY(BrainiacGlobals::rad2grad(yRot));
+        rootBoneRzCurve->keyFrames()[i].setY(BrainiacGlobals::rad2grad(zRot));
 
 //        qDebug() << "DIFFS:" << originalRot-lastOrigVec << QVector3D(BrainiacGlobals::rad2grad(xRot-lastCMLVec.x()),BrainiacGlobals::rad2grad(yRot-lastCMLVec.y()),BrainiacGlobals::rad2grad(zRot-lastCMLVec.z()));
 //        lastOrigVec=originalRot;
