@@ -248,7 +248,7 @@ public:
     void setTransitionCurve(AnimationCurve transitionCurve);
     virtual ~Animation();
 protected:
-    mutable qreal m_length;
+    mutable qreal m_length; /**< length of this animation. This is the maximum length of all AnimationCurves */
     QHash<QString, AnimationCurve*> m_curves; /**< all AnimationCurves, QString is the curve name, that correspondents to the agent´s BodySegement channel @sa BodySegment @sa Channel */
     QString m_name; /**< name of this Animation */
     QString m_fileName; /**< filename relative to scenefile */

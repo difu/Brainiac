@@ -22,6 +22,8 @@
 
 AnimationCurve::AnimationCurve()
 {
+
+    m_indexesDirty=true;
 }
 
 AnimationCurve::AnimationCurve(AnimationCurve *curve)
@@ -29,6 +31,7 @@ AnimationCurve::AnimationCurve(AnimationCurve *curve)
     foreach(QVector2D vec,curve->keyFrames()) {
         addKeyFrame(vec.x(),vec.y());
     }
+    m_indexesDirty=true;
 }
 
 void AnimationCurve::addKeyFrame(qreal time, qreal value)
@@ -54,6 +57,7 @@ void AnimationCurve::addKeyFrame(qreal time, qreal value)
         }
     }
     m_keyFrames.append(QVector2D(time,value));
+    m_indexesDirty=true;
 
 }
 
@@ -77,6 +81,8 @@ void AnimationCurve::deleteAfterTime(qreal time)
             }
         }
     }
+
+    m_indexesDirty=true;
 }
 
 void AnimationCurve::deleteBeforeTime(qreal time)
@@ -89,6 +95,21 @@ void AnimationCurve::deleteBeforeTime(qreal time)
                 m_keyFrames.takeFirst();
         }
     }
+
+    m_indexesDirty=true;
+}
+
+void AnimationCurve::generateIndexes() const
+{
+    m_indexes.clear();
+    if(m_keyFrames.count()>IndexKeyFrameDistance) {
+        int numOfIndexes=m_keyFrames.count()/IndexKeyFrameDistance;
+        for(int i=0;i<numOfIndexes;i++) {
+            m_indexes.append(m_keyFrames.at(i*IndexKeyFrameDistance).x());
+        }
+    }
+    m_indexesDirty=false;
+
 }
 
 qreal AnimationCurve::getMaxValue() const
@@ -121,6 +142,10 @@ qreal AnimationCurve::getMinValue() const
 
 qreal AnimationCurve::getValue(qreal time) const
 {
+    if(m_indexesDirty) {
+        qDebug() << __PRETTY_FUNCTION__  << "indexes are dirty";
+        //this->generateIndexes();
+    }
     qreal retVal=0;
     int numKeyFrames=m_keyFrames.size();
     if(numKeyFrames==0)
@@ -129,7 +154,18 @@ qreal AnimationCurve::getValue(qreal time) const
         if(numKeyFrames==1 || m_keyFrames.at(0).x()>=time) {
             return m_keyFrames.first().y();
         } else {
-            for(int i=1;i<numKeyFrames;++i) {
+            int startKf=1;
+            int numOfIndexes=m_indexes.size();
+            if(numOfIndexes>0) {
+                for( int i=0;i<numOfIndexes;i++) {
+                    if(time>m_indexes.at(i)) {
+                        startKf=(i)*IndexKeyFrameDistance+1;
+                    } else {
+                        break;
+                    }
+                }
+            }
+            for(int i=startKf;i<numKeyFrames;++i) {
 //                if(qFuzzyCompare(time,(qreal)m_keyFrames.at(i-1).x())) {
 //                    return m_keyFrames.at(i-1).y();
 //                }
@@ -161,3 +197,5 @@ AnimationCurve::~AnimationCurve()
 {
     m_keyFrames.clear();
 }
+
+const int AnimationCurve::IndexKeyFrameDistance=10;

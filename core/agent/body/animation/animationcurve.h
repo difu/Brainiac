@@ -79,6 +79,9 @@ public:
      */
     void deleteAfterTime(qreal time);
 
+    void generateIndexes() const;
+
+    bool indexesDirty() const { return m_indexesDirty; }
     /**
      * @brief returns the length of this curve
      *
@@ -134,9 +137,17 @@ public:
      */
     void dPrintKeyFrames(quint32 start, quint32 end) const;
     virtual ~AnimationCurve();
+    /**
+     * @brief the distance between indexes of keyframes
+     */
+    static const int IndexKeyFrameDistance;
+
 
 protected:
     QList<QVector2D> m_keyFrames; /**< all keyframes */
+    mutable bool m_indexesDirty; /**< if true, indexes should be newly generated */
+    mutable QList<qreal> m_indexes; /**< Array that holds the indexes */
+
 };
 
 #endif // ANIMATIONCURVE_H

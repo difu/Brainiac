@@ -229,6 +229,7 @@ void Animation::addKeyFrame(QString &curveName, qreal time, qreal value)
     }
 }
 
+
 Animation* Animation::loadAnimation(QString fileName)
 {
     QFile file(fileName);
@@ -262,6 +263,7 @@ Animation* Animation::loadAnimation(QString fileName)
             in >> time >> value;
             curve->addKeyFrame(time,value);
         }
+        curve->generateIndexes();
         animCurves.insert(curveName,curve);
     }
     if(animCurves.count()>0) {
