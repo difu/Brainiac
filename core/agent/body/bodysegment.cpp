@@ -28,6 +28,15 @@
 BodySegment::BodySegment(Body *body, SegmentShape *segmentShape):MatrixTransform(),m_body(body),m_segmentShape(segmentShape)
 {
     m_signalHandler=new BodySegmentSignalHandler(this);
+
+    osg::TessellationHints *hints=new osg::TessellationHints();
+    hints->setDetailRatio(BrainiacGlobals::SegmentTesselationDetailRatio);
+    m_shapeDrawable=new osg::ShapeDrawable();
+    m_shapeDrawable->setColor( osg::Vec4(1.0f, 1.0f, 1.0f, 1.0f) );
+    m_shapeDrawable->setName("ShapeDrawable");
+    m_shapeDrawable->setTessellationHints(hints);
+
+    m_shapeDrawable->setShape(m_segmentShape->getShape().get());
     m_geode=new osg::Geode;
     m_switchHighlight=new osg::Switch;
     m_transformNode=new osg::MatrixTransform();
@@ -37,7 +46,7 @@ BodySegment::BodySegment(Body *body, SegmentShape *segmentShape):MatrixTransform
     m_transformNode->addChild(m_switchHighlight);
     m_switchHighlight->addChild(m_geode,true);
     //m_transformNode->addChild(m_geode);
-    m_geode->addDrawable(m_segmentShape->getShapeDrawable().get());
+    m_geode->addDrawable(m_shapeDrawable);
     m_restMatrixDirty=true;
     m_restMatrixApplied=false;
     setName(m_segmentShape->getName().toStdString());
@@ -52,6 +61,7 @@ BodySegment::BodySegment(Body *body, SegmentShape *segmentShape):MatrixTransform
 }
 
 void BodySegment::computeMatrix() {
+    m_shapeDrawable->dirtyDisplayList();
     m_transformNode->setMatrix(m_segmentShape->getTransform()->getMatrix());
 }
 
@@ -118,7 +128,8 @@ void BodySegment::createChannels()
     m_body->getAgent()->addOutputChannel(m_oTz,segName % ":tz");
 
     m_oColor=new Channel();
-    m_oColor->setDefault(0); //!< @todo color connect
+    m_oColor->setDefault(1);
+    QObject::connect(m_oColor,SIGNAL(oldValueChanged(qreal)),m_signalHandler,SLOT(colorChanged()),Qt::DirectConnection);
     m_body->getAgent()->addOutputChannel(m_oColor,segName % ":color");
 
 }

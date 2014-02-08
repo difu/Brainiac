@@ -17,12 +17,19 @@
 
 #include "bodysegmentsignalhandler.h"
 #include "core/agent/body/bodysegment.h"
+#include "core/agent/channel.h"
 
 BodySegmentSignalHandler::BodySegmentSignalHandler(BodySegment *bodySegment, QObject *parent) :
     QObject(parent)
 {
     m_bodySegment=bodySegment;
     connect(m_bodySegment->getSegmentShape(),SIGNAL(updated()),this,SLOT(matricesChanged()));
+}
+
+void BodySegmentSignalHandler::colorChanged()
+{
+    QColor col=BrainiacGlobals::getColorFromBrainiacColorValue(m_bodySegment->getColorChannel()->getOldValue());
+    m_bodySegment->getShapeDrawable().get()->setColor( osg::Vec4(col.redF(), col.greenF(), col.blueF(), 1.0f) );
 }
 
 void BodySegmentSignalHandler::matricesChanged()

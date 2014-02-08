@@ -39,7 +39,7 @@ public:
  */
     SegmentShape(const Segment &other);
 
-    osg::ref_ptr<osg::ShapeDrawable> getShapeDrawable() const { return m_shapeDrawable; }
+    osg::ref_ptr<osg::Shape> getShape() const { return m_shape; }
 
     /**
      * @brief Destructor
@@ -55,8 +55,6 @@ protected:
      * Whenever this is called, the transformation matrix is re-calculated
      */
     virtual void updateAndNotify();
-    //osg::ref_ptr<osg::Geode> m_geode; /**< the geometry node that holds the ShapeDrawable */
-    osg::ref_ptr<osg::ShapeDrawable> m_shapeDrawable; /**< the node that holds the geometry */
     osg::ref_ptr<osg::Shape> m_shape; /**< the the shape/geometry */
 };
 

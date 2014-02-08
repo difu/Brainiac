@@ -58,6 +58,8 @@ public:
      */
     void computeMatrix();
 
+    Channel* getColorChannel() { return m_oColor; }
+
     /**
      * @brief returns the unique id of this BodySegment
      * @return quint32 the id
@@ -76,6 +78,11 @@ public:
      */
     SegmentShape *getSegmentShape() const { return m_segmentShape; }
 
+    /**
+     * @brief returns a shared pointer of the shape drawable
+     * @return osg::ref_ptr<osg::ShapeDrawable>
+     */
+    osg::ref_ptr<osg::ShapeDrawable> getShapeDrawable() const { return m_shapeDrawable; }
     /**
      * @brief switches the highlightning of this BodySegment
      * @param highlight true if this BodySegment should be highlighted, false otherwise
@@ -128,6 +135,7 @@ protected:
     bool m_isHiglighted;
     bool m_shouldHighlight;
     bool m_highlghtedStructuresCreated;
+    osg::ref_ptr<osg::ShapeDrawable> m_shapeDrawable; /**< the node that holds the geometry */
     osg::ref_ptr<osg::Geode> m_geode; /**< the geometry node that holds the ShapeDrawable */
     osg::ref_ptr<osg::MatrixTransform> m_transformNode; /**< transformation node rthat offsets the Segmet´s geometry */
     osg::ref_ptr<osg::Switch> m_switchPivotCross; /**< toogles the coordinate cross */

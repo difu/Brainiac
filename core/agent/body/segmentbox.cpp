@@ -20,7 +20,7 @@
 SegmentBox::SegmentBox(const SegmentShape &other ):SegmentShape(other)
 {
     m_shape= new osg::Box(osg::Vec3(0.0f, 0.0f, 0.0f),m_segmentSize.x(), m_segmentSize.y(), m_segmentSize.z());
-    m_shapeDrawable->setShape(m_shape);
+//    m_shapeDrawable->setShape(m_shape);
 }
 
 void SegmentBox::updateAndNotify()
