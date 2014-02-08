@@ -156,7 +156,7 @@ qreal AnimationCurve::getValue(qreal time) const
         } else {
             int startKf=1;
             int numOfIndexes=m_indexes.size();
-            if(numOfIndexes>0) {
+            if(numOfIndexes>0 && !m_indexesDirty) {
                 for( int i=0;i<numOfIndexes;i++) {
                     if(time>m_indexes.at(i)) {
                         startKf=(i)*IndexKeyFrameDistance+1;
