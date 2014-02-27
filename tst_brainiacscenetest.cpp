@@ -177,6 +177,7 @@ void BrainiacSceneTest::motionTree()
 {
     QString action1Name="action 1";
     QString transition1Name="trans 1";
+    quint32 transColor=2;
     QTemporaryFile tmpFile;
 
     Scene testScene1;
@@ -248,7 +249,9 @@ void BrainiacSceneTest::motionTree()
     saveTree1->addAction(standActionName);
     saveTree1->getActions().value(standActionName)->getEditorItem()->setPos(standActionEditorPos);
     saveTree1->addTransition(standTransName);
-    saveTree1->getTransitions().value(standTransName)->getEditorItem()->setPos(standTransEditorPos);
+    MotionTreeTransition *saveTrans=saveTree1->getTransitions().value(standTransName);
+    saveTrans->setColorId(transColor);
+    saveTrans->getEditorItem()->setPos(standTransEditorPos);
     saveTree1->setTreeDefaultAction(defaultActionName);
 
     saveTree1->connectActionWithTransition(standActionName,standTransName);
@@ -275,6 +278,7 @@ void BrainiacSceneTest::motionTree()
 
     QVERIFY2(trans->getEditorItem()->pos()==standTransEditorPos,"Transition EditorPos differs");
     QVERIFY2(action->getEditorItem()->pos()==standActionEditorPos,"Action EditorPos differs");
+    QVERIFY2(trans->getColorId()==transColor,"Transition loaded color differs");
 
     QVERIFY2(loadTree1->getActionTransitionConnections().count()==1,"Wrong number of loaded Action Trans connections!");
     QVERIFY2(loadTree1->getTransitionActionConnections().count()==1,"Wrong number of loaded Trans Action connections!");
