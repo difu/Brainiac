@@ -633,6 +633,7 @@ void MainWindow::writeSettings()
 
 MainWindow::~MainWindow()
 {
+    m_sceneDisplayOSG->deleteLater();
     delete ui;
 }
 

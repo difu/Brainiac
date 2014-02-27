@@ -158,6 +158,7 @@ public:
     enum Manipulator {TRACKBALL,SPHERICAL};
     OsgMultithreadedViewerWidget( osg::Camera* camera=0, osg::Node* scene=0 ) :   QWidget()
     {
+        m_osgFileName=QDir::tempPath()%"/osgOut.osg";
         m_camera=camera;
         m_rootNode=new osg::Group;
         m_rootNode->setName("Viewer rootGroupNode");
@@ -215,6 +216,7 @@ public:
         setWindowFlags(Qt::Tool);
         show();
     }
+    bool saveSceneGraph();
     virtual ~OsgMultithreadedViewerWidget() {
 //        qDebug() << __PRETTY_FUNCTION__;
 //        delete(m_gw);
@@ -266,6 +268,7 @@ protected:
     RenderThread m_thread;
     BrainiacGlWindow *m_glWindow;
     QTimer m_timer;
+    QString m_osgFileName;
     osgQt::GraphicsWindowQt *m_gw;
     osgGA::TrackballManipulator *m_trackBallManipulator;
     osgGA::SphericalManipulator *m_sphericalManipulatior;

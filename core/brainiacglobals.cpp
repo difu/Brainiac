@@ -72,6 +72,7 @@ const qreal BrainiacGlobals::MINQREAL=-std::numeric_limits<qreal>::max();
 
 float BrainiacGlobals::SegmentTesselationDetailRatio=0.25f;
 
+const char* const BrainiacGlobals::XmlColorAttrib="color\0";
 const char* const BrainiacGlobals::XmlModeAttrib="mode\0";
 const char* const BrainiacGlobals::XmlNameAttrib="name\0";
 const char* const BrainiacGlobals::XmlXAttrib="x\0";
@@ -111,6 +112,8 @@ const char* const BrainiacGlobals::XmlTreeActionTransitionConnectionTag="ActionT
 const char* const BrainiacGlobals::XmlTreeTransitionActionConnectionTag="TransitionActionConnection\0";
 const char* const BrainiacGlobals::XmlTreeActionTag="Action\0";
 const char* const BrainiacGlobals::XmlTreeTransitionTag="Transition\0";
+
+const QList<QColor> BrainiacGlobals::EditorColors=(QList<QColor>()) << QColor(Qt::darkBlue) << QColor(Qt::darkCyan) << QColor(Qt::darkGray) << QColor(Qt::darkGreen);// << QColor;// QColor(Qt::darkBlue));// << QColor(Qt::darkCyan);
 
 const char* const BrainiacGlobals::FuzzAndModeMin="min\0";
 const char* const BrainiacGlobals::FuzzAndModeProduct="prod\0";

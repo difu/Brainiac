@@ -37,6 +37,7 @@ public:
     enum RotTrans {RX, RY, RZ, TX, TY, TZ };
     enum AnimationType{ STATIC, LOCOMOTION, RAMP, TURNING, NOTYPE };
     static QColor getColorFromBrainiacColorValue(qreal colVal);
+    static const QList<QColor> EditorColors;
     static void normalizeAngle(qreal *angle)
     {
         while (*angle < -360)
@@ -70,6 +71,7 @@ public:
     static const quint32 NUMBER_OF_RANDOMS=300;
     static const qreal randoms[NUMBER_OF_RANDOMS];
 
+    static const char* const XmlColorAttrib;
     static const char* const XmlModeAttrib;
     static const char* const XmlNameAttrib;
     static const char* const XmlIdAttrib;

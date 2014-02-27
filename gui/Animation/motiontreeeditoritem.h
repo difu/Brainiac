@@ -9,6 +9,7 @@ class MotionTreeEditorItem : public EditorItem
 {
 public:
     MotionTreeEditorItem(BrainiacGlobals::ItemType type, void *object);
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 };
 
 #endif // MOTIONTREEEDITORITEM_H

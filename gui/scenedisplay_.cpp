@@ -21,16 +21,22 @@
 SceneDisplay_::SceneDisplay_(Scene *scene): OsgMultithreadedViewerWidget(0,scene->getRootSceneNode())
 {
     setWindowTitle("Scene");
+    m_osgFileName=QDir::tempPath()%"/Scene.osg";
     connect(getGlWindow()->getKeyPressedReleasedEater(),SIGNAL(keyPressed(Qt::Key)),this,SLOT(keyPressed(Qt::Key)));
 
 }
 
 void SceneDisplay_::keyPressed(Qt::Key key)
 {
-    Q_UNUSED(key);
+    if(key==Qt::Key_Comma) {
+        if( saveSceneGraph() ) {
+            qDebug() << "Saved scene to " << m_osgFileName;
+        }
+    }
+    //Q_UNUSED(key);
 }
 
 SceneDisplay_::~SceneDisplay_()
 {
-    osgDB::writeNodeFile(*m_rootNode,"/tmp/scene.osgt");
+    //osgDB::writeNodeFile(*m_rootNode,"/tmp/scene.osgt");
 }
