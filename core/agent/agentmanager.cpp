@@ -67,6 +67,7 @@ AgentManager::AgentManager(Group *group)
     m_agents.append(m_spActionAgent);
     m_brainEditor=new BrainEditor(m_scene,this);
     m_activeMotionTreeEditor=0;
+    m_selectedAgent=m_masterAgent;
 }
 
 void AgentManager::addSegmentFromConfig(QXmlStreamReader *reader, quint32 id, QString name, quint32 parent, quint32 editorX, quint32 editorY)
@@ -489,6 +490,11 @@ FuzzyBase::LogicType AgentManager::getFuzzType(quint32 fuzzId)
         return fuzz->getType();
     }
     else return (FuzzyBase::LogicType) 0;
+}
+
+Agent* AgentManager::getSelectedAgent()
+{
+    return m_selectedAgent;
 }
 
 bool AgentManager::loadConfig()
@@ -1217,6 +1223,13 @@ void AgentManager::setSegmentTranslation(quint32 id, qreal x, qreal y, qreal z)
 //        agent->getBody()->getSkeletonNodeById(id)->setTranslation(QVector3D(x,y,z));
 //    }
     m_bodyManager->setSegmentTranslation(id,x,y,z);
+}
+
+void AgentManager::setSelectedAgent(Agent *agent)
+{
+    if(m_agents.contains(agent)) {
+        m_selectedAgent=agent;
+    }
 }
 
 void AgentManager::setFuzzyAndIsSoundRule(quint32 id, bool isSoundRule)

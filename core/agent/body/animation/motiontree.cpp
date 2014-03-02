@@ -20,10 +20,17 @@
 #include "core/agent/body/animation/motiontreeaction.h"
 #include "core/agent/body/animation/motiontreetransition.h"
 #include "core/agent/agentmanager.h"
+#include "core/agent/agent.h"
+#include "core/agent/channel.h"
+#include "core/agent/body/body.h"
+#include "core/agent/body/animation/motiontreeanimationplayer.h"
+#include "core/agent/body/animation/animation.h"
 #include "gui/Animation/motiontreeeditor.h"
+#include "gui/Animation/motiontreeeditoritemconnector.h"
 
 
-MotionTree::MotionTree(QObject *parent) :
+MotionTree::MotionTree(quint32 track, QObject *parent) :
+    m_track(track),
     QObject(parent)
 {
     m_motionTreeManager=dynamic_cast<MotionTreeManager *>(parent);
@@ -35,7 +42,7 @@ MotionTree::MotionTree(QObject *parent) :
 
 QString MotionTree::addAction(QString name)
 {
-    while(true) {
+   while(true) {
         if( m_actions.contains(name)) {
             name.append("_");
         } else {
@@ -85,6 +92,8 @@ bool MotionTree::connectActionWithTransition(QString action, QString transition)
 
     if(m_actions.contains(action) && m_transitions.contains(transition)) {
         m_actionTransitionConnections.insertMulti(act,trans);
+        MotionTreeEditorItemConnector *connector=new MotionTreeEditorItemConnector((EditorItem *)act->getEditorItem(),(EditorItem *)trans->getEditorItem());
+        m_motionTreeEditor->addItem(connector);
         return true;
     }
     return false;
@@ -114,6 +123,8 @@ bool MotionTree::connectTransitionWithAction(QString transition, QString action)
 
     if(m_actions.contains(action) && m_transitions.contains(transition)) {
         m_transitionActionConnections.insertMulti(trans,act);
+        MotionTreeEditorItemConnector *connector=new MotionTreeEditorItemConnector((EditorItem *)trans->getEditorItem(),(EditorItem *)act->getEditorItem());
+        m_motionTreeEditor->addItem(connector);
         return true;
     }
     return false;
@@ -128,6 +139,27 @@ QString MotionTree::getTransitionName(MotionTreeTransition *transition) const
 {
     return m_transitions.key(transition,QString());
 }
+
+void MotionTree::updateEditor()
+{
+    Agent *selectedAgent=m_motionTreeManager->getAgentManager()->getSelectedAgent();
+    MotionTreeAnimationPlayer *player=selectedAgent->getBody()->getMotionTreeAnimationPlayers().at(m_track);
+    Animation *currentAnim=player->getCurrentAnimation();
+    if(currentAnim)
+    {
+        qreal phase=Channel::getInputValue(selectedAgent,QString(BrainiacGlobals::ChannelName_Phase));
+        MotionTreeAction *treeAction=m_actions.value(currentAnim->name(),0);
+        if(treeAction) {
+            treeAction->setPhase(phase);
+        } else {
+            qDebug() << __PRETTY_FUNCTION__ << "could not get treeAction!";
+        }
+    } else {
+         //qDebug() << __PRETTY_FUNCTION__ << "Could not get current animation!";
+    }
+
+}
+
 MotionTree::~MotionTree()
 {
     foreach(MotionTreeAction *act, m_actions) {

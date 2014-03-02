@@ -30,7 +30,6 @@
 BrainEditor::BrainEditor(Scene *scene, AgentManager *agentManager) : EditorBase(scene)
 {
     m_agentManager=agentManager;
-    m_selectedAgent=0;
     m_altPressed=false;
     m_shiftPressed=false;
     m_connectSourceItem=0;
@@ -168,16 +167,6 @@ void BrainEditor::deleteSelectedItems()
             delete(eItem);
         }
     }
-}
-
-Agent* BrainEditor::getSelectedAgent()
-{
-    return m_selectedAgent;
-}
-
-void BrainEditor::setSelectedAgent(Agent *agent)
-{
-    m_selectedAgent=agent;
 }
 
 void BrainEditor::mousePressEvent(QGraphicsSceneMouseEvent *event) {

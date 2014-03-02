@@ -53,13 +53,14 @@ public:
     void setInverted( bool inverted )
         { m_inverted = inverted; }
     bool isInverted() {return m_inverted; }
+    virtual ~EditorItemConnector();
 
 
 public slots:
     void updatePosition();
 
 protected:
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget = 0);
     bool m_inverted;
     EditorItem *m_StartItem;

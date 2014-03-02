@@ -65,6 +65,8 @@ public:
      */
     QHash<QString,Animation *> * getAnimations() {return m_animations;}
 
+    Animation* getCurrentAnimation() { return m_currentAnimation; }
+
     /**
      * @brief resets everything
      *

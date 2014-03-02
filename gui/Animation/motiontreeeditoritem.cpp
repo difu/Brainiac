@@ -59,3 +59,8 @@ void MotionTreeEditorItem::paint(QPainter *painter, const QStyleOptionGraphicsIt
         painter->drawRect( QRectF(relxPos - adjust, relyPos - adjust,WIDTH + adjust, HEIGHT + adjust) );
     }
 }
+
+MotionTreeEditorItem::~MotionTreeEditorItem()
+{
+    removeConnectors();
+}

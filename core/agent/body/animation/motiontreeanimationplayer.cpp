@@ -68,6 +68,10 @@ void MotionTreeAnimationPlayer::apply()
             AnimationPlayer::apply(*m_currentAnimation,diffTime);
             m_phaseChannel->setValue(diffTime/animLength);
         }
+//        MotionTreeAction *mtAction=m_motionTree->getActions().value(m_currentAnimation->name(),0);
+//        if(mtAction) {
+//            mtAction->setPhase(m_phaseChannel->getValue());
+//        }
         m_body->getAgent()->getInputChannel(m_currentAnimation->name())->setValue(1.0);
     }
 

@@ -36,6 +36,7 @@ public:
     enum { Type = UserType + 15 };
     void addConnector(EditorItemConnector *connector);
     QRectF boundingRect() const;
+    QList<EditorItemConnector *> getConnectors() { return m_connectors; }
     quint32 getId() { return m_id; }
     void * getObject() { return m_object; }
     BrainiacGlobals::ItemType  getType() {return m_type;}

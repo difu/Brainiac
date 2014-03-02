@@ -48,7 +48,7 @@ void MotionTreeManager::deleteDefaultMotionVariable(QString variable)
 void MotionTreeManager::createTrees()
 {
     for(quint32 i=0;i<NUM_OF_TREE_TRACKS;i++) {
-        MotionTree *mt=new MotionTree(this);
+        MotionTree *mt=new MotionTree(i,this);
         m_motionTrees.insert(i,mt);
     }
 }

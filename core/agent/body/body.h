@@ -53,6 +53,7 @@ public:
     QHash<QString, Animation *> *getAnimations();
     BodySegment* getBodySegment(quint32 id) { return m_bodySegments.value(id,0); }
     AnimationPlayer* getAnimationPlayer() {return m_animationPlayer; }
+    QList<MotionTreeAnimationPlayer *>  getMotionTreeAnimationPlayers() { return m_treeAnimationPlayers; }
 
     void highlightSegment(quint32 id, bool unselectOthers=true);
 

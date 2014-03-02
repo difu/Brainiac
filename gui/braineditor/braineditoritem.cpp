@@ -39,13 +39,9 @@ void BrainEditorItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
 {
     EditorItem::paint(painter, option,widget);
     AgentManager *myManager=(AgentManager*)m_object;
-    QGraphicsScene *scene=this->scene();
     FuzzyBase *lUnit;
-    if(!((BrainEditor*)scene)->getSelectedAgent()) {
-        lUnit=myManager->getMasterAgent()->getBrain()->getFuzzy(m_id);
-    } else {
-        lUnit=((BrainEditor*)scene)->getSelectedAgent()->getBrain()->getFuzzy(m_id);
-    }
+
+    lUnit=myManager->getSelectedAgent()->getBrain()->getFuzzy(m_id);
 
     painter->fillRect( QRectF(relxPos - adjust+5, relyPos - adjust+39,30, 7),Qt::black );
 

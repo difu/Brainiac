@@ -92,3 +92,9 @@ void EditorItemConnector::paint(QPainter *painter, const QStyleOptionGraphicsIte
     //qDebug() << "StartItem x:" << m_StartItem->pos().rx() << "StartItem y:" << m_StartItem->pos().ry() << "EndItem x:" << m_EndItem->pos().rx() << "EndItem y:" << m_EndItem->pos().ry();
 }
 
+EditorItemConnector::~EditorItemConnector()
+{
+    m_StartItem->removeConnector(this);
+    m_EndItem->removeConnector(this);
+}
+

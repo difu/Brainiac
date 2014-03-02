@@ -33,7 +33,7 @@ class MotionTree : public QObject
 public:
     typedef QHash<MotionTreeAction *, MotionTreeTransition *> ActionTransitionConnectionType;
     typedef QHash<MotionTreeTransition *, MotionTreeAction *> TransitionActionConnectionType;
-    explicit MotionTree(QObject *parent = 0);
+    explicit MotionTree(quint32 track, QObject *parent = 0);
     virtual ~MotionTree();
 
 
@@ -79,9 +79,11 @@ protected:
     ActionTransitionConnectionType m_actionTransitionConnections;
     TransitionActionConnectionType m_transitionActionConnections;
     QString m_defaultActionName;
+    quint32 m_track;
 signals:
 
 public slots:
+    void updateEditor();
 
 };
 

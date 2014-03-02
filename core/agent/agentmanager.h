@@ -240,6 +240,7 @@ public:
     MotionTreeManager *getMotionTreeManager() const { return m_motionTreeManager; }
 
     Scene* getScene() { return m_scene; }
+    Agent* getSelectedAgent();
 
     /**
      * @brief returns a modifiable reference to the segment id generator
@@ -447,12 +448,15 @@ public:
     void setName( QString name ) { m_name=name; }
     void setFileName( QString fileName ) { m_fileName=fileName; }
 
+    void setSelectedAgent(Agent *agent);
     void updateSoundConfigs();
     ~AgentManager();
 protected:
     Agent *m_masterAgent; /**< special purpose agent. The reference all other instances are created from */
     Agent *m_spBodyAgent; /**< special purpose agent. This agent will be used within the BodyEditor */
     Agent *m_spActionAgent; /**< special purpose agent. This agent will be used within the ActionEditor */
+    Agent *m_selectedAgent; //!< the currently selected agent
+
     BodyManager *m_bodyManager;
     MotionTreeManager *m_motionTreeManager;
     QString m_name;

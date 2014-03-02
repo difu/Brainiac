@@ -36,8 +36,6 @@ public:
     void addConnector(quint32 sourceId, quint32 destId);
     void deleteFuzzyItem(quint32 id);
     void deleteConnector(quint32 sourceId, quint32 destId);
-    Agent* getSelectedAgent();
-    void setSelectedAgent(Agent *agent);
     void updateItemLocations();
 
 protected:
@@ -49,7 +47,6 @@ protected:
     bool m_altPressed; //!< true, if alt key is pressed
     bool m_shiftPressed; //!< true, if shift key is pressed
     BrainEditorItem *m_connectSourceItem; //!< holds the source fuzz when in connection mode
-    Agent *m_selectedAgent; //!< the currently selected agent of this editor. This agent´s fuzz results are displayed
     AgentManager *m_agentManager; //!< the agentmanager of this braineditor
 
 signals:

@@ -96,16 +96,20 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
 
     connect(m_sceneEditor,SIGNAL(selectionChanged()),this,SLOT(sceneEditorItemClicked()));
 
-    // Assign each BrainEditor the first of its Agentmanagers Agent as the to be edited agentbrain
-    QHashIterator<AgentManager*, BrainEditor*> i(m_brainEditors);
-    while (i.hasNext()) {
-        i.next();
-        if(i.key()->getGroup()->getAgents().count()>0) {
-            i.value()->setSelectedAgent(i.key()->getGroup()->getAgents().first());
-        } else {
-            i.value()->setSelectedAgent(i.key()->getMasterAgent());
-        }
+    foreach(Group *grp, m_scene->getGroups()) {
+        grp->getAgentManager()->setSelectedAgent(grp->getAgents().first());
     }
+
+//    // Assign each BrainEditor the first of its Agentmanagers Agent as the to be edited agentbrain
+//    QHashIterator<AgentManager*, BrainEditor*> i(m_brainEditors);
+//    while (i.hasNext()) {
+//        i.next();
+//        if(i.key()->getGroup()->getAgents().count()>0) {
+//            i.value()->setSelectedAgent(i.key()->getGroup()->getAgents().first());
+//        } else {
+//            i.value()->setSelectedAgent(i.key()->getMasterAgent());
+//        }
+//    }
 }
 
 void MainWindow::addAgentManager(AgentManager *agentManager)
@@ -114,8 +118,12 @@ void MainWindow::addAgentManager(AgentManager *agentManager)
     m_brainEditors.insert(agentManager,agentManager->getBrainEditor());
     // This signal activates editor in South region
     connect(agentManager->getBrainEditor(), SIGNAL(itemClicked(ItemEditorWidgetsBase::editMessage)),this,SLOT(editorNodeClick(ItemEditorWidgetsBase::editMessage)));
-    // When a frame has been calculated update the braineditors to display the new values
+    // When a frame has been calculated update the editors to display the new values
     connect(m_scene->getSimulation(),SIGNAL(frameDone()),agentManager->getBrainEditor(),SLOT(update()),Qt::DirectConnection);
+    foreach(MotionTree *mt,agentManager->getMotionTreeManager()->getMotionTrees()) {
+        connect(m_scene->getSimulation(),SIGNAL(frameDone()),mt->getMotionTreeEditor(),SLOT(update()),Qt::DirectConnection);
+        connect(m_scene->getSimulation(),SIGNAL(frameDone()),mt,SLOT(updateEditor()),Qt::DirectConnection);
+    }
     // Display statusbar messages
     connect(agentManager->getBrainEditor(), SIGNAL(statusBarMessageChanged(QString)),this,SLOT(statusBarMessageChange(QString)));
     //BodyEditor *bodyEditor=new BodyEditor(m_scene,agentManager);
