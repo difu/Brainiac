@@ -579,6 +579,10 @@ void MainWindow::setEditMode(EditMode em)
 
     m_groupEditor->setVisible(false);
     m_outputEditor->setVisible(false);
+    m_inputEditor->setVisible(false);
+    m_fuzzyEditor->setVisible(false);
+    m_defuzzEditor->setVisible(false);
+    m_noiseEditor->setVisible(false);
 
     int index=m_editModeComboBox->findData(QVariant(em));
     m_editModeComboBox->setCurrentIndex(index);
