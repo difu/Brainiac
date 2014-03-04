@@ -14,7 +14,7 @@ void MotionTreeEditorItemConnector::paint(QPainter *painter, const QStyleOptionG
     QLineF line(mapFromItem(m_StartItem, EditorItem::relxPos/2, EditorItem::relyPos/2), mapFromItem(m_EndItem, EditorItem::relxPos/2, EditorItem::relyPos/2));
     setLine(line);
     qreal angle = line.angle();
-    angle-=20.0f;
+    angle+=20.0f;
     line.setAngle(angle);
     line.setLength(line.length()/2.0f);
     painter->drawLine(line);
