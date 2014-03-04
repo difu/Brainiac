@@ -28,13 +28,12 @@ class MotionTreeAnimationPlayer : public AnimationPlayer
 {
     Q_OBJECT
 public:
-    MotionTreeAnimationPlayer(Body *body, MotionTree *tree, quint32 id);
+    MotionTreeAnimationPlayer(Body *body, MotionTree *tree);
     void apply();
     virtual void reset();
 
 protected:
     MotionTree *m_motionTree;
-    quint32 m_id;
     Channel *m_phaseChannel;
     Channel *m_latchChannel;
 };

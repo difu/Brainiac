@@ -80,12 +80,12 @@ private Q_SLOTS:
 
 
 private:
-    QString testInput1Name;
-    QString testInput2Name;
-    QString testInput3Name;
-    QString testAndName;
-    QString testOrName;
-    int m_numOfTestSegments;
+    static const QString testInput1Name;
+    static const QString testInput2Name;
+    static const QString testInput3Name;
+    static const QString testAndName;
+    static const QString testOrName;
+    static int m_numOfTestSegments;
     void createBody(AgentManager *am, int var);
     void createBrain(AgentManager *am);
 
@@ -93,17 +93,20 @@ private:
 
 BrainiacSceneTest::BrainiacSceneTest()
 {
-    //m_numberOfTestGroups=2;
 }
+
+const QString BrainiacSceneTest::testInput1Name=QString("TESTINPUT1");
+const QString BrainiacSceneTest::testInput2Name=QString("TESTINPUT2");
+const QString BrainiacSceneTest::testInput3Name=QString("TESTINPUT3");
+const QString BrainiacSceneTest::testAndName=QString("TESTAND");
+const QString BrainiacSceneTest::testOrName=QString("TESTOR");
+int BrainiacSceneTest::m_numOfTestSegments=0;
+
 
 void BrainiacSceneTest::initTestCase()
 {
-    testInput1Name=QString("TESTINPUT1");
-    testInput2Name=QString("TESTINPUT2");
-    testInput3Name=QString("TESTINPUT3");
-    testAndName=QString("TESTAND");
-    testOrName=QString("TESTOR");
-    m_numOfTestSegments=0;
+    QVERIFY2(BrainiacGlobals::ChannelNames_Latches.count()==(int)MotionTreeManager::NUM_OF_TREE_TRACKS,"Latch channel name count mismatch!");
+    QVERIFY2(BrainiacGlobals::ChannelNames_Phases.count()==(int)MotionTreeManager::NUM_OF_TREE_TRACKS,"Phase channel name count mismatch!");
 }
 
 void BrainiacSceneTest::parseBVH()

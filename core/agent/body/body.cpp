@@ -38,7 +38,7 @@ Body::Body(Agent *agent)
     m_agent=agent;
     m_animationPlayer=new AnimationPlayer(this);
     for(quint32 i=0; i<MotionTreeManager::NUM_OF_TREE_TRACKS;i++) {
-        MotionTreeAnimationPlayer *player=new MotionTreeAnimationPlayer(this,m_agent->getAgentManager()->getMotionTreeManager()->getMotionTrees().value(i),i);
+        MotionTreeAnimationPlayer *player=new MotionTreeAnimationPlayer(this,m_agent->getAgentManager()->getMotionTreeManager()->getMotionTrees().value(i));
         m_treeAnimationPlayers.append(player);
     }
     m_bodyRoot=new osg::PositionAttitudeTransform;

@@ -113,6 +113,12 @@ const char* const BrainiacGlobals::XmlTreeTransitionActionConnectionTag="Transit
 const char* const BrainiacGlobals::XmlTreeActionTag="Action\0";
 const char* const BrainiacGlobals::XmlTreeTransitionTag="Transition\0";
 
+const QList<QString> BrainiacGlobals::ChannelNames_Phases=(QList<QString>()) << QString("phase\0") << QString("phase\0") << QString("phase2\0") << QString("phase3\0") <<
+                                                                                QString("phase4\0") << QString("phase5\0") << QString("phase6\0") << QString("phase7\0");
+
+const QList<QString> BrainiacGlobals::ChannelNames_Latches=(QList<QString>()) << QString("latch\0") << QString("latch\0") << QString("latch2\0") << QString("latch3\0") <<
+                                                                                QString("latch4\0") << QString("latch5\0") << QString("latch6\0") << QString("latch7\0");
+
 const QList<QColor> BrainiacGlobals::EditorColors=(QList<QColor>()) << QColor(Qt::darkBlue) << QColor(Qt::darkCyan) << QColor(Qt::darkGray) << QColor(Qt::darkGreen);// << QColor;// QColor(Qt::darkBlue));// << QColor(Qt::darkCyan);
 
 const char* const BrainiacGlobals::FuzzAndModeMin="min\0";
@@ -132,8 +138,6 @@ const char* const BrainiacGlobals::ChannelName_Sound_ox="sound.ox\0";
 const char* const BrainiacGlobals::ChannelName_Sound_d="sound.d\0";
 const char* const BrainiacGlobals::ChannelName_Sound_a="sound.a\0";
 const char* const BrainiacGlobals::ChannelName_Sound_f="sound.f\0";
-const char* const BrainiacGlobals::ChannelName_Phase="phase\0";
-const char* const BrainiacGlobals::ChannelName_Latch="latch\0";
 const char* const BrainiacGlobals::ChannelPhaseOffsetSuffix=":phase_offset\0";
 
 Qt::Key BrainiacGlobals::ToggleSegmentCoordCrossesKey=Qt::Key_C;

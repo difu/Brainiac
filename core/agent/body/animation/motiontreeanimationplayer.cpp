@@ -29,19 +29,12 @@
 #include "core/agent/body/animation/motiontree.h"
 #include "core/agent/body/animation/motiontreeaction.h"
 
-MotionTreeAnimationPlayer::MotionTreeAnimationPlayer(Body *body, MotionTree *tree, quint32 id) : AnimationPlayer(body), m_motionTree(tree), m_id(id)
+MotionTreeAnimationPlayer::MotionTreeAnimationPlayer(Body *body, MotionTree *tree) : AnimationPlayer(body), m_motionTree(tree)
 {
-
-    QString phaseChannelName=QString(BrainiacGlobals::ChannelName_Phase);
-    QString latchChannelName=QString(BrainiacGlobals::ChannelName_Latch);
-    if(m_id>0) {
-        phaseChannelName.append(QString::number(m_id+1));
-        latchChannelName.append(QString::number(m_id+1));
-    }
     m_phaseChannel=new Channel(0,1);
-    m_body->getAgent()->addInputChannel(m_phaseChannel,phaseChannelName);
+    m_body->getAgent()->addInputChannel(m_phaseChannel,BrainiacGlobals::ChannelNames_Phases.at(m_motionTree->getTrack()));
     m_latchChannel=new Channel(0,1);
-    m_body->getAgent()->addInputChannel(m_latchChannel,latchChannelName);
+    m_body->getAgent()->addInputChannel(m_latchChannel,BrainiacGlobals::ChannelNames_Latches.at(m_motionTree->getTrack()));
 
     reset();
 }

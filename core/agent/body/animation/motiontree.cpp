@@ -147,7 +147,7 @@ void MotionTree::updateEditor()
     Animation *currentAnim=player->getCurrentAnimation();
     if(currentAnim)
     {
-        qreal phase=Channel::getInputValue(selectedAgent,QString(BrainiacGlobals::ChannelName_Phase));
+        qreal phase=Channel::getInputValue(selectedAgent,BrainiacGlobals::ChannelNames_Phases.at(m_track));
         MotionTreeAction *treeAction=m_actions.value(currentAnim->name(),0);
         if(treeAction) {
             treeAction->setPhase(phase);

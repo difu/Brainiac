@@ -129,8 +129,8 @@ public:
     static const char* const  ChannelName_Sound_d;
     static const char* const  ChannelName_Sound_a;
     static const char* const  ChannelName_Sound_f;
-    static const char* const  ChannelName_Phase;
-    static const char* const  ChannelName_Latch;
+    static const QList<QString> ChannelNames_Latches;
+    static const QList<QString> ChannelNames_Phases;
 
     static const char* const ChannelPhaseOffsetSuffix;
 

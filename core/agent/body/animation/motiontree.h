@@ -67,6 +67,7 @@ public:
 
     MotionTreeAction *getDefaultAction() const { return m_actions.value(m_defaultActionName,0); }
     QString getDefaultActionName() const { return m_defaultActionName; }
+    quint32 getTrack() const { return m_track; }
     QString getTransitionName(MotionTreeTransition *transition) const;
     void setTreeDefaultAction( const QString &name ) { m_defaultActionName=name; }
 
