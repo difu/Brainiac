@@ -13,6 +13,7 @@ public:
     MotionTreeEditorItem *getEditorItem() const { return m_editorItem; }
     quint32 getColorId() { return m_color_id; }
     QColor getColor() { return BrainiacGlobals::EditorColors.at(m_color_id%BrainiacGlobals::EditorColors.count()) ;}
+    QString getName();
     void setColorId(quint32 colorId) { m_color_id=colorId%BrainiacGlobals::EditorColors.count(); }
     virtual ~MotionTreeTransition();
 

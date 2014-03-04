@@ -12,6 +12,19 @@ MotionTreeAction::MotionTreeAction(MotionTree *motionTree) : m_motionTree(motion
 
 }
 
+QString MotionTreeAction::getName()
+{
+    return m_motionTree->getActionName(this);
+}
+
+bool MotionTreeAction::isTreeDefaultAction() const
+{
+    if(m_motionTree->getDefaultAction()==this) {
+        return true;
+    }
+    return false;
+}
+
 void MotionTreeAction::setPhase(qreal phase)
 {
     QList<EditorItemConnector *> connectors=m_editorItem->getConnectors();

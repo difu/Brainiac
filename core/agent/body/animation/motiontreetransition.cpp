@@ -11,6 +11,11 @@ MotionTreeTransition::MotionTreeTransition(MotionTree *tree): m_motionTree(tree)
     m_color_id=0;
 }
 
+QString MotionTreeTransition::getName()
+{
+    return m_motionTree->getTransitionName(this);
+}
+
 MotionTreeTransition::~MotionTreeTransition()
 {
     delete m_editorItem;

@@ -11,6 +11,9 @@ class MotionTreeAction
 public:
     MotionTreeAction(MotionTree *motionTree);
     MotionTreeEditorItem *getEditorItem() const { return m_editorItem; }
+    MotionTree * getMotionTree() const { return m_motionTree; }
+    QString getName();
+    bool isTreeDefaultAction() const;
     void setPhase(qreal phase);
     virtual ~MotionTreeAction();
 

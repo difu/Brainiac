@@ -135,6 +135,11 @@ QString MotionTree::getActionName( MotionTreeAction *action ) const
     return m_actions.key(action,QString());
 }
 
+const QString MotionTree::getActionName( MotionTreeAction *action )
+{
+    return m_actions.key(action,QString());
+}
+
 QString MotionTree::getTransitionName(MotionTreeTransition *transition) const
 {
     return m_transitions.key(transition,QString());
