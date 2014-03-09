@@ -31,7 +31,7 @@ isEmpty(OSG_INC_DIR){
 }
 
 isEmpty(OSG_LIB_DIR){
-  OSG_INC_DIR = /usr/local/lib
+  OSG_LIB_DIR = /usr/local/lib
 }
 message(OSG Include dir $$OSG_INC_DIR)
 message(OSG Lib dir $$OSG_LIB_DIR)
