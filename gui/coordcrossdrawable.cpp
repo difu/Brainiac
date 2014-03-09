@@ -1,6 +1,10 @@
 #include "coordcrossdrawable.h"
 #include "core/brainiacglobals.h"
+#ifdef __APPLE__
 #include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
 
 CoordCrossDrawable::CoordCrossDrawable()
 {
