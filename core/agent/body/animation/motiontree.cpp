@@ -140,6 +140,24 @@ const QString MotionTree::getActionName( MotionTreeAction *action )
     return m_actions.key(action,QString());
 }
 
+QList<MotionTreeAction *> MotionTree::getNextActionsFromAction(MotionTreeAction *action) const
+{
+    QList<MotionTreeAction *> actionList;
+    if(!action) {
+        return actionList;
+    }
+    foreach(MotionTreeTransition *trans, m_actionTransitionConnections.values(action)) {
+        foreach(MotionTreeAction *possibleNextAction, m_transitionActionConnections.values(trans)) {
+            if(possibleNextAction!=action) {
+                actionList.append(possibleNextAction);
+            } else {
+                continue;
+            }
+        }
+    }
+    return actionList;
+}
+
 QString MotionTree::getTransitionName(MotionTreeTransition *transition) const
 {
     return m_transitions.key(transition,QString());

@@ -40,6 +40,11 @@ Body::Body(Agent *agent)
     for(quint32 i=0; i<MotionTreeManager::NUM_OF_TREE_TRACKS;i++) {
         MotionTreeAnimationPlayer *player=new MotionTreeAnimationPlayer(this,m_agent->getAgentManager()->getMotionTreeManager()->getMotionTrees().value(i));
         m_treeAnimationPlayers.append(player);
+        foreach(QString triggerName, m_agent->getAgentManager()->getMotionTreeManager()->getTriggers()) {
+            Channel *tc=new Channel(0.0,BrainiacGlobals::ActionForceTriggerValue);
+            m_agent->addOutputChannel(tc,triggerName);
+        }
+
     }
     m_bodyRoot=new osg::PositionAttitudeTransform;
     m_bodyRoot.get()->setName("AgentBody Root Segment");

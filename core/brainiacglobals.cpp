@@ -72,6 +72,9 @@ const qreal BrainiacGlobals::MINQREAL=-std::numeric_limits<qreal>::max();
 
 float BrainiacGlobals::SegmentTesselationDetailRatio=0.25f;
 
+const qreal BrainiacGlobals::ActionTriggerValue=1.0;
+const qreal BrainiacGlobals::ActionForceTriggerValue=2.0;
+
 const char* const BrainiacGlobals::XmlColorAttrib="color\0";
 const char* const BrainiacGlobals::XmlModeAttrib="mode\0";
 const char* const BrainiacGlobals::XmlNameAttrib="name\0";
@@ -96,6 +99,7 @@ const char* const BrainiacGlobals::XmlEditorYPosAttrib="editorY\0";
 const char* const BrainiacGlobals::XmlTreeDefaultActionAttrib="defaultaction\0";
 const char* const BrainiacGlobals::XmlTreeActionAttrib="action\0";
 const char* const BrainiacGlobals::XmlTreeTransitionAttrib="transition\0";
+const char* const BrainiacGlobals::XmlTriggersAttrib="triggers\0";
 
 const char* const BrainiacGlobals::XmlSizeTag="Size\0";
 const char* const BrainiacGlobals::XmlTranslationTag="Translation\0";
@@ -112,6 +116,7 @@ const char* const BrainiacGlobals::XmlTreeActionTransitionConnectionTag="ActionT
 const char* const BrainiacGlobals::XmlTreeTransitionActionConnectionTag="TransitionActionConnection\0";
 const char* const BrainiacGlobals::XmlTreeActionTag="Action\0";
 const char* const BrainiacGlobals::XmlTreeTransitionTag="Transition\0";
+const char* const BrainiacGlobals::XmlTriggerTag="Trigger\0";
 
 const QList<QString> BrainiacGlobals::ChannelNames_Phases=(QList<QString>()) << QString("phase") << QString("phase2") << QString("phase3") << QString("phase4") <<
                                                                                 QString("phase5") << QString("phase6") << QString("phase7") << QString("phase8");

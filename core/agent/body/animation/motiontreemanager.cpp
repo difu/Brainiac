@@ -37,6 +37,21 @@ void MotionTreeManager::addDefaultMotionVariable(QString variable)
         m_defaultMotionVariableNames.append(variable);
 }
 
+quint32 MotionTreeManager::addTrigger(QString triggerName, quint32 id)
+{
+    if(id) {
+        if(m_triggers.contains(id)) {
+            qWarning() << __PRETTY_FUNCTION__ << "id already exists";
+            id=m_latchIdGenerator.getNewId();
+        }
+        m_latchIdGenerator.registerId(id);
+    } else {
+        id=m_latchIdGenerator.getNewId();
+    }
+    m_triggers.insert(id,triggerName);
+    return id;
+}
+
 void MotionTreeManager::deleteDefaultMotionVariable(QString variable)
 {
     int index=m_defaultMotionVariableNames.indexOf(variable);
@@ -57,37 +72,55 @@ void MotionTreeManager::loadConfig(QXmlStreamReader *stream)
 {
     Q_ASSERT(stream->isStartElement() && stream->name() == BrainiacGlobals::XmlMotionTreesTag);
     while(stream->readNextStartElement()) {
-        Q_ASSERT(stream->isStartElement() && stream->name() == BrainiacGlobals::XmlMotionTreeTag);
-        QXmlStreamAttributes attribs = stream->attributes();
-        int treeId=attribs.value(BrainiacGlobals::XmlIdAttrib).toInt();
-        MotionTree *tree=getMotionTrees().value(treeId);
-        tree->setTreeDefaultAction(attribs.value(BrainiacGlobals::XmlTreeDefaultActionAttrib).toString());
-        while(stream->readNextStartElement()) {
-            if(stream->name()==BrainiacGlobals::XmlTreeActionTag) {
-                QXmlStreamAttributes attribs = stream->attributes();
-                QString actionName=tree->addAction(attribs.value(BrainiacGlobals::XmlNameAttrib).toString());
-                MotionTreeAction *action=tree->getActions().value(actionName,0);
-                if(action) {
-                    action->getEditorItem()->setPos(attribs.value(BrainiacGlobals::XmlEditorXPosAttrib).toString().toInt(),attribs.value(BrainiacGlobals::XmlEditorYPosAttrib).toString().toInt());
+        qDebug() << __PRETTY_FUNCTION__ << stream->name();
+        if(stream->name() == BrainiacGlobals::XmlMotionTreeTag) {
+            QXmlStreamAttributes attribs = stream->attributes();
+            int treeId=attribs.value(BrainiacGlobals::XmlIdAttrib).toInt();
+            MotionTree *tree=getMotionTrees().value(treeId);
+            tree->setTreeDefaultAction(attribs.value(BrainiacGlobals::XmlTreeDefaultActionAttrib).toString());
+            while(stream->readNextStartElement()) {
+                if(stream->name()==BrainiacGlobals::XmlTreeActionTag) {
+                    QXmlStreamAttributes attribs = stream->attributes();
+                    QString actionName=tree->addAction(attribs.value(BrainiacGlobals::XmlNameAttrib).toString());
+                    MotionTreeAction *action=tree->getActions().value(actionName,0);
+                    if(action) {
+                        action->getEditorItem()->setPos(attribs.value(BrainiacGlobals::XmlEditorXPosAttrib).toString().toInt(),attribs.value(BrainiacGlobals::XmlEditorYPosAttrib).toString().toInt());
+                        QString triggers=attribs.value(BrainiacGlobals::XmlTriggersAttrib).toString();
+                        foreach(QString triggerId, triggers.split(" ")) {
+                            action->addTriggerId(triggerId.toUInt());
+                        }
+                    } else {
+                        qDebug() << __PRETTY_FUNCTION__ << "unknown Action " << actionName;
+                    }
+                } else if(stream->name()==BrainiacGlobals::XmlTreeTransitionTag) {
+                    QXmlStreamAttributes attribs = stream->attributes();
+                    QString transName=tree->addTransition(attribs.value(BrainiacGlobals::XmlNameAttrib).toString());
+                    MotionTreeTransition *trans=tree->getTransitions().value(transName,0);
+                    if(trans) {
+                        trans->setColorId(attribs.value(BrainiacGlobals::XmlColorAttrib).toString().toInt());
+                        trans->getEditorItem()->setPos(attribs.value(BrainiacGlobals::XmlEditorXPosAttrib).toString().toInt(),attribs.value(BrainiacGlobals::XmlEditorYPosAttrib).toString().toInt());
+                    } else {
+                        qDebug() << __PRETTY_FUNCTION__ << "unknown Transition " << transName;
+                    }
+                } else if(stream->name()==BrainiacGlobals::XmlTreeActionTransitionConnectionTag) {
+                    QXmlStreamAttributes attribs = stream->attributes();
+                    tree->connectActionWithTransition(attribs.value(BrainiacGlobals::XmlTreeActionAttrib).toString(),attribs.value(BrainiacGlobals::XmlTreeTransitionAttrib).toString());
+                } else if(stream->name()==BrainiacGlobals::XmlTreeTransitionActionConnectionTag) {
+                    QXmlStreamAttributes attribs = stream->attributes();
+                    tree->connectTransitionWithAction(attribs.value(BrainiacGlobals::XmlTreeTransitionAttrib).toString(),attribs.value(BrainiacGlobals::XmlTreeActionAttrib).toString());
                 }
-            } else if(stream->name()==BrainiacGlobals::XmlTreeTransitionTag) {
-                QXmlStreamAttributes attribs = stream->attributes();
-                QString transName=tree->addTransition(attribs.value(BrainiacGlobals::XmlNameAttrib).toString());
-                MotionTreeTransition *trans=tree->getTransitions().value(transName,0);
-                if(trans) {
-                    trans->setColorId(attribs.value(BrainiacGlobals::XmlColorAttrib).toString().toInt());
-                    trans->getEditorItem()->setPos(attribs.value(BrainiacGlobals::XmlEditorXPosAttrib).toString().toInt(),attribs.value(BrainiacGlobals::XmlEditorYPosAttrib).toString().toInt());
-                }
-            } else if(stream->name()==BrainiacGlobals::XmlTreeActionTransitionConnectionTag) {
-                QXmlStreamAttributes attribs = stream->attributes();
-                tree->connectActionWithTransition(attribs.value(BrainiacGlobals::XmlTreeActionAttrib).toString(),attribs.value(BrainiacGlobals::XmlTreeTransitionAttrib).toString());
-            } else if(stream->name()==BrainiacGlobals::XmlTreeTransitionActionConnectionTag) {
-                QXmlStreamAttributes attribs = stream->attributes();
-                tree->connectTransitionWithAction(attribs.value(BrainiacGlobals::XmlTreeTransitionAttrib).toString(),attribs.value(BrainiacGlobals::XmlTreeActionAttrib).toString());
+                stream->skipCurrentElement();
             }
+            //stream->skipCurrentElement();
+        } else if(stream->name()==BrainiacGlobals::XmlTriggerTag) {
+            QXmlStreamAttributes attribs = stream->attributes();
+            addTrigger(attribs.value(BrainiacGlobals::XmlNameAttrib).toString(),attribs.value(BrainiacGlobals::XmlIdAttrib).toUInt());
+            stream->skipCurrentElement();
+        } else {
             stream->skipCurrentElement();
         }
-        //stream->skipCurrentElement(); // XmlMotionTreeTag
+            //stream->skipCurrentElement(); // XmlMotionTreeTag
+        //stream->skipCurrentElement();
     }
 
     //stream->skipCurrentElement(); // XmlMotionTreesTag
@@ -96,6 +129,16 @@ void MotionTreeManager::loadConfig(QXmlStreamReader *stream)
 void MotionTreeManager::saveConfig(QXmlStreamWriter *stream)
 {
     stream->writeStartElement(BrainiacGlobals::XmlMotionTreesTag); // MotionTrees
+    // Triggers
+    QHashIterator<quint32, QString> itTriggers(m_triggers);
+    while(itTriggers.hasNext()) {
+        itTriggers.next();
+        stream->writeStartElement(BrainiacGlobals::XmlTriggerTag);
+        stream->writeAttribute(BrainiacGlobals::XmlIdAttrib,QString::number(itTriggers.key()));
+        stream->writeAttribute(BrainiacGlobals::XmlNameAttrib,itTriggers.value());
+        stream->writeEndElement(); // XmlTriggerTag
+    }
+
     for(unsigned int i=0; i<MotionTreeManager::NUM_OF_TREE_TRACKS; i++) {
         MotionTree *tree=getMotionTrees().value(i);
         stream->writeStartElement(BrainiacGlobals::XmlMotionTreeTag); // MotionTree
@@ -108,6 +151,13 @@ void MotionTreeManager::saveConfig(QXmlStreamWriter *stream)
             stream->writeAttribute(BrainiacGlobals::XmlNameAttrib,tree->getActionName(action));
             stream->writeAttribute(BrainiacGlobals::XmlEditorXPosAttrib,QString::number(action->getEditorItem()->pos().x()));
             stream->writeAttribute(BrainiacGlobals::XmlEditorYPosAttrib,QString::number(action->getEditorItem()->pos().y()));
+            QString triggerIds;
+            foreach(quint32 id, action->getTriggerIds()) {
+                triggerIds.append(QString::number(id)).append(" ");
+            }
+            triggerIds=triggerIds.trimmed();
+            stream->writeAttribute(BrainiacGlobals::XmlTriggersAttrib,triggerIds);
+
             stream->writeEndElement(); // XmlTreeActionTag
         }
         // Transitions

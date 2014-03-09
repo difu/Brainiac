@@ -241,6 +241,11 @@ void BrainiacSceneTest::motionTree()
     QString standTransName="standTrans";
     QPointF standTransEditorPos=QPointF(-10,20);
     QString defaultActionName=standActionName;
+    QString triggerStandName="stand";
+    QString triggerStandName2="stand2";
+    QString triggerWalkName="walk";
+    QList<QString> triggers;
+    triggers << triggerStandName << triggerStandName2 << triggerWalkName;
 
     Scene saveScene2;
     Group *saveGroup=new Group(&saveScene2);
@@ -257,6 +262,17 @@ void BrainiacSceneTest::motionTree()
     saveTrans->getEditorItem()->setPos(standTransEditorPos);
     saveTree1->setTreeDefaultAction(defaultActionName);
 
+    foreach(QString tr, triggers) {
+        saveMotionTreeManager->addTrigger(tr);
+    }
+
+    quint32 standTriggerId=saveMotionTreeManager->getTriggers().key(triggerStandName);
+    quint32 stand2TriggerId=saveMotionTreeManager->getTriggers().key(triggerStandName2);
+
+    MotionTreeAction *standAction=saveTree1->getActions().value(standActionName);
+    standAction->addTriggerId(standTriggerId);
+    standAction->addTriggerId(stand2TriggerId);
+
     saveTree1->connectActionWithTransition(standActionName,standTransName);
     saveTree1->connectTransitionWithAction(standTransName,standActionName);
 
@@ -272,12 +288,28 @@ void BrainiacSceneTest::motionTree()
     loadAgentManager->loadConfig();
 
     //Check, if tree 1 is as defined
-    MotionTree *loadTree1=loadAgentManager->getMotionTreeManager()->getMotionTrees().value(1);
+    MotionTreeManager *loadTreeManager=loadAgentManager->getMotionTreeManager();
+    MotionTree *loadTree1=loadTreeManager->getMotionTrees().value(1);
     QVERIFY2(loadTree1->getDefaultActionName()==defaultActionName,"Default action name of loaded tree differs!");
     MotionTreeAction *action=loadTree1->getActions().value(standActionName,0);
     QVERIFY2(action,"No stand action loaded");
     MotionTreeTransition *trans=loadTree1->getTransitions().value(standTransName,0);
     QVERIFY2(trans,"No stand transition loaded");
+
+    // Check Triggers
+    QVERIFY2(loadTreeManager->getTriggers().count()==saveMotionTreeManager->getTriggers().count(),"loaded num of triggers differs");
+    QHashIterator<quint32, QString> itTriggers(saveMotionTreeManager->getTriggers());
+    while(itTriggers.hasNext()) {
+        itTriggers.next();
+        if(loadTreeManager->getTriggers().contains(itTriggers.key())) {
+            QVERIFY2(itTriggers.value()==loadTreeManager->getTriggers().value(itTriggers.key()),"loaded trigger name differ");
+        } else {
+            QFAIL("loaded trigger does not contain saved key(s)");
+        }
+    }
+    foreach(QString tr, triggers) {
+        QVERIFY2(loadTreeManager->getTriggers().key(tr)>0,"loaded triggers does not contain trigger");
+    }
 
     QVERIFY2(trans->getEditorItem()->pos()==standTransEditorPos,"Transition EditorPos differs");
     QVERIFY2(action->getEditorItem()->pos()==standActionEditorPos,"Action EditorPos differs");
@@ -295,6 +327,8 @@ void BrainiacSceneTest::motionTree()
         QVERIFY2(loadTree->getTransitionActionConnections().count()==saveTree->getTransitionActionConnections().count(),"number of loaded trans action connections differs");
         QVERIFY2(loadTree->getActionTransitionConnections().count()==saveTree->getActionTransitionConnections().count(),"number of loaded action trans connections differs");
     }
+    MotionTreeAction *loadedStandAction=loadTree1->getActions().value(standActionName);
+    QVERIFY2(loadedStandAction->getTriggerIds().count()==2,"loaded stand action trigger id count !=2");
 
 }
 

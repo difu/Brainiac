@@ -61,6 +61,7 @@ public:
     QHash<QString, MotionTreeAction *> getActions() const { return m_actions; }
     QHash<QString, MotionTreeTransition *> getTransitions() const { return m_transitions; }
     MotionTreeEditor* getMotionTreeEditor() const { return m_motionTreeEditor; }
+    QList<MotionTreeAction *> getNextActionsFromAction(MotionTreeAction *action) const;
     QString getActionName(MotionTreeAction *action) const;
     const QString getActionName(MotionTreeAction *action);
     ActionTransitionConnectionType getActionTransitionConnections() const { return m_actionTransitionConnections; }

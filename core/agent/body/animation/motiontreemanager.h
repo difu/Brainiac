@@ -20,6 +20,8 @@
 
 #include <QObject>
 #include <QHash>
+#include "core/idgenerator.h"
+
 
 class AgentManager;
 class MotionTree;
@@ -32,10 +34,23 @@ class MotionTreeManager : public QObject
 public:
     explicit MotionTreeManager(AgentManager *agentManager, QObject *parent = 0);
     void addDefaultMotionVariable( QString variable );
+
+    /**
+     * @brief adds a trigger
+     *
+     * an output channel for every agent with the name of this trigger is added (if not exists)
+     *
+     * @param QString triggerName the name of this trigger
+     * @param quint32 id the id. If no id is given an unique id will be generated
+     * @fn getAbsoluteFileDir
+     * @return quint32 the unique id
+     */
+    quint32 addTrigger(QString triggerName, quint32 id=0);
     void deleteDefaultMotionVariable( QString variable );
     AgentManager* getAgentManager() const { return m_agentManager; }
     QList<QString> getDefaultMotionVariableNames() const { return m_defaultMotionVariableNames; }
     QHash<quint32,MotionTree *> getMotionTrees() const { return m_motionTrees; }
+    QHash<quint32,QString> getTriggers() const { return m_triggers; }
     void loadConfig(QXmlStreamReader *stream);
     void saveConfig(QXmlStreamWriter *stream);
     static quint32 NUM_OF_TREE_TRACKS;
@@ -44,7 +59,9 @@ protected:
     void createTrees();
     AgentManager *m_agentManager; /**< the AgentManager this MotionTreeManager belongs to */
     QHash<quint32,MotionTree *> m_motionTrees; /**< Hash of all MotionTrees */
+    QHash<quint32, QString> m_triggers; /**< Hash of tree triggers */
     QList<QString> m_defaultMotionVariableNames; /**< default motion variables names of all trees */
+    IdGenerator m_latchIdGenerator;
 signals:
 
 public slots:
