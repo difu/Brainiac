@@ -71,6 +71,9 @@ public:
     static const quint32 NUMBER_OF_RANDOMS=300;
     static const qreal randoms[NUMBER_OF_RANDOMS];
 
+    static const qreal ActionTriggerValue; /**< value that triggers the action */
+    static const qreal ActionForceTriggerValue; /**< value that forces the action (do not check for latch etc.) */
+
     static const char* const XmlColorAttrib;
     static const char* const XmlModeAttrib;
     static const char* const XmlNameAttrib;
@@ -95,6 +98,7 @@ public:
     static const char* const XmlTreeDefaultActionAttrib; /**< contains the name of the tree default action */
     static const char* const XmlTreeActionAttrib;
     static const char* const XmlTreeTransitionAttrib;
+    static const char* const XmlTriggersAttrib;
 
     static const char* const XmlSizeTag;
     static const char* const XmlRotationTag;
@@ -111,6 +115,7 @@ public:
     static const char* const XmlTreeActionTransitionConnectionTag;
     static const char* const XmlTreeActionTag;
     static const char* const XmlTreeTransitionTag;
+    static const char* const XmlTriggerTag;
 
     static const char* const FuzzAndModeMin;
     static const char* const FuzzAndModeProduct;

@@ -12,6 +12,15 @@ MotionTreeAction::MotionTreeAction(MotionTree *motionTree) : m_motionTree(motion
 
 }
 
+void MotionTreeAction::addTriggerId(quint32 id)
+{
+    if(!m_triggerIds.contains(id)) {
+        m_triggerIds.append(id);
+    } else {
+        qDebug() << __PRETTY_FUNCTION__ << "id already exists " << id;
+    }
+}
+
 QString MotionTreeAction::getName()
 {
     return m_motionTree->getActionName(this);

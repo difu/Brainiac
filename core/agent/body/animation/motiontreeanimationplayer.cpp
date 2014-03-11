@@ -41,6 +41,7 @@ MotionTreeAnimationPlayer::MotionTreeAnimationPlayer(Body *body, MotionTree *tre
 
 void MotionTreeAnimationPlayer::apply()
 {
+    MotionTreeAction *currentAction=0;
     if(m_currentAnimation==0) {
         m_currentAnimation=m_animations->value(m_motionTree->getDefaultActionName(),0);
         if(m_currentAnimation) {
@@ -50,6 +51,7 @@ void MotionTreeAnimationPlayer::apply()
 
     // Apply current Animation
     if(m_currentAnimation) {
+        currentAction=m_motionTree->getActions().value(m_currentAnimation->name(),0);
         qreal animLength=m_currentAnimation->getLength();
         qreal offset=Channel::getOutputValue(m_body->getAgent(),m_currentAnimation->name().append(BrainiacGlobals::ChannelPhaseOffsetSuffix))*animLength;
         qreal diffTime=m_simulation->getCurrentTime()-m_currentAnimationStartTime+offset;
@@ -61,11 +63,28 @@ void MotionTreeAnimationPlayer::apply()
             AnimationPlayer::apply(*m_currentAnimation,diffTime);
             m_phaseChannel->setValue(diffTime/animLength);
         }
-//        MotionTreeAction *mtAction=m_motionTree->getActions().value(m_currentAnimation->name(),0);
-//        if(mtAction) {
-//            mtAction->setPhase(m_phaseChannel->getValue());
-//        }
         m_body->getAgent()->getInputChannel(m_currentAnimation->name())->setValue(1.0);
+    }
+    // check for triggers of next possible actions
+    // only check, if no next animation has been set
+    if(!m_nextAnimation) {
+        MotionTreeManager *manager=(MotionTreeManager *)m_motionTree->parent();
+        QString highestTriggerName;
+        qreal highestValue=0;
+        foreach(QString triggerName, manager->getTriggers()) {
+            qreal val=Channel::getOutputValue(m_body->getAgent(),triggerName);
+            if(val>=1.0 && val>highestValue) {
+                highestValue=val;
+                highestTriggerName=triggerName;
+            }
+        }
+        if(highestValue>=BrainiacGlobals::ActionTriggerValue) {
+            qDebug() << __PRETTY_FUNCTION__ << "found highest Trigger " << highestValue << highestTriggerName;
+        }
+
+        foreach(MotionTreeAction *action, m_motionTree->getNextActionsFromAction(currentAction)) {
+
+        }
     }
 
 }
