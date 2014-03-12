@@ -28,6 +28,7 @@
 #include "core/agent/body/animation/motiontreemanager.h"
 #include "core/agent/body/animation/motiontree.h"
 #include "core/agent/body/animation/motiontreeaction.h"
+#include "core/brainiaclogger.h"
 
 MotionTreeAnimationPlayer::MotionTreeAnimationPlayer(Body *body, MotionTree *tree) : AnimationPlayer(body), m_motionTree(tree)
 {
@@ -53,7 +54,7 @@ void MotionTreeAnimationPlayer::apply()
     if(m_currentAnimation) {
         currentAction=m_motionTree->getActions().value(m_currentAnimation->name(),0);
         if(!currentAction) {
-            qDebug() << __PRETTY_FUNCTION__ << "Action does not match Animation " << m_currentAnimation->name();
+            qCDebug(bAnimation) << __PRETTY_FUNCTION__ << "Action does not match Animation " << m_currentAnimation->name();
         }
         qreal animLength=m_currentAnimation->getLength();
         qreal offset=Channel::getOutputValue(m_body->getAgent(),m_currentAnimation->name().append(BrainiacGlobals::ChannelPhaseOffsetSuffix))*animLength;
@@ -86,34 +87,27 @@ void MotionTreeAnimationPlayer::apply()
             if(currentAction) {
                 MotionTreeAction *nextAction=0;
                 if( m_motionTree->getNextActionsFromAction(currentAction).isEmpty()) {
-                    qDebug() << __PRETTY_FUNCTION__ << "No next action/animation found! current action: " << currentAction->getName();
+                    qCDebug(bAnimation) << __PRETTY_FUNCTION__ << "No next action/animation found! current action: " << currentAction->getName();
                 }
                 foreach(MotionTreeAction *possibleNextaction, m_motionTree->getNextActionsFromAction(currentAction)) {
                     foreach(quint32 triggerId, possibleNextaction->getTriggerIds()) {
-//                        qDebug() << __PRETTY_FUNCTION__ << "trigger" << triggerId << manager->getTriggers().value(triggerId,QString());
                         if(manager->getTriggers().value(triggerId,QString())==highestTriggerName) {
-                            qDebug() << __PRETTY_FUNCTION__ << "Found next action";
                             nextAction=possibleNextaction;
                             break;
                         }
                     }
                     if(nextAction) {
                         m_nextAnimation=m_animations->value(nextAction->getName());
-                        qDebug() << __PRETTY_FUNCTION__ << "Next action name: "<< nextAction->getName();
+                        qCDebug(bAnimation) << __PRETTY_FUNCTION__ << "Next action name: "<< nextAction->getName();
                         break;
                     }
                 }
-
             }
         }
-
-
     }
-
 }
 
 void MotionTreeAnimationPlayer::reset()
 {
-    //qDebug() << __PRETTY_FUNCTION__;
     AnimationPlayer::reset();
 }

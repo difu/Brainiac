@@ -93,6 +93,7 @@ private:
 
 BrainiacSceneTest::BrainiacSceneTest()
 {
+    QLoggingCategory::setFilterRules("*.debug=true");
 }
 
 const QString BrainiacSceneTest::testInput1Name=QString("TESTINPUT1");

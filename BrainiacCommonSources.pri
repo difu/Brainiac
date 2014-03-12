@@ -76,5 +76,6 @@ SOURCES += gui/mainwindow.cpp \
     core/agent/body/animation/motiontreetransition.cpp \
     core/agent/body/animation/motiontreeanimationplayer.cpp \
     gui/Animation/motiontreeeditorgui.cpp \
-    gui/Animation/motiontreeeditoritemconnector.cpp
+    gui/Animation/motiontreeeditoritemconnector.cpp \
+    core/brainiaclogger.cpp
 

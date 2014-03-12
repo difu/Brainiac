@@ -28,6 +28,8 @@ int main(int argc, char *argv[])
 {
     setenv("OSG_GL_EXTENSION_DISABLE","GL_EXT_timer_query GL_ARB_timer_query",0); //!< @bug see http://forum.openscenegraph.org/viewtopic.php?t=11086
     QApplication a(argc, argv);
+    QLoggingCategory::setFilterRules("*.debug=false\n"
+                                     "brainiac.scene.simulation.debug=false");
     a.setApplicationName("Brainiac");
     a.setApplicationVersion("0.01");
     a.setOrganizationDomain("com");

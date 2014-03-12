@@ -30,8 +30,8 @@
 
 
 MotionTree::MotionTree(quint32 track, QObject *parent) :
-    m_track(track),
-    QObject(parent)
+    QObject(parent),
+    m_track(track)
 {
     m_motionTreeManager=dynamic_cast<MotionTreeManager *>(parent);
     if(!m_motionTreeManager) {

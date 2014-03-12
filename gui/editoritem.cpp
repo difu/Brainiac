@@ -28,10 +28,10 @@
 #include "core/agent/agent.h"
 #include "core/agent/brain/brain.h"
 #include "core/agent/brain/output.h"
-//#include "core/agent/body/skeletonnode.h"
 #include "core/agent/body/body.h"
 #include "core/agent/body/bodymanager.h"
 #include <qdrawutil.h>
+#include "core/brainiaclogger.h"
 
 EditorItem::EditorItem(BrainiacGlobals::ItemType type, void *object,quint32 id)
 {
@@ -74,7 +74,7 @@ EditorItem::EditorItem(BrainiacGlobals::ItemType type, void *object,quint32 id)
         m_symbolPic.load(":/gui/pics/editor_logo_timer.png");
         break;
     default:
-        qDebug() << __PRETTY_FUNCTION__ << "Wrong label parameter!";
+        qCDebug(bGui) << __PRETTY_FUNCTION__ << "Wrong label parameter!";
     }
 }
 

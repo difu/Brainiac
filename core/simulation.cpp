@@ -20,6 +20,7 @@
 #include <QtConcurrent/QtConcurrent>
 #include "core/agent/agent.h"
 #include "core/scene.h"
+#include "core/brainiaclogger.h"
 
 void advanceAgent(Agent* param_agent)
 {
@@ -60,7 +61,7 @@ void Simulation::advance()
         m_futureWatcherAdvance.setFuture(QtConcurrent::map(m_agents,&::advanceAgent));
     } else {
         m_late=true;
-        qDebug() << __PRETTY_FUNCTION__ << "sim is late ";
+        qCDebug(bSimulation) << __PRETTY_FUNCTION__ << "sim is late ";
 
     }
 }
@@ -76,7 +77,7 @@ void Simulation::advanceCommitDone()
     emit frameDone();
     m_simMutex.unlock();
     m_frameCalculationTime=m_t.elapsed();
-    qDebug() << __PRETTY_FUNCTION__ << "frame calc time " << m_frameCalculationTime;
+    qCDebug(bSimulation) << __PRETTY_FUNCTION__ << "frame calc time " << m_frameCalculationTime;
 }
 
 
