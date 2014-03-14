@@ -21,6 +21,7 @@
 #include <iostream>
 #include <QFile>
 #include <QTextStream>
+#include <QCommandLineParser>
 #include "core/scene.h"
 
 
@@ -30,54 +31,79 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     QLoggingCategory::setFilterRules("*.debug=false\n"
                                      "brainiac.scene.simulation.debug=false");
+
+    const QString gitVersion(__LASTCOMMIT__);
     a.setApplicationName("Brainiac");
-    a.setApplicationVersion("0.01");
+    a.setApplicationVersion("0.01 "%gitVersion);
     a.setOrganizationDomain("com");
     a.setOrganizationName("Braniac");
-    const QString gitVersion(__LASTCOMMIT__);
-    std::cout << std::endl << a.applicationName().toStdString() << " " << a.applicationVersion().toStdString() << std::endl << std::flush;
-    std::cout << "Build from Git commit " << gitVersion.toStdString() << std::endl << std::flush;
-    // Apply stylesheet
-    QFile file(":/gui/brainiacStyleSheet.style");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        return 1;
-    QTextStream in(&file);
-    QString styleSheet;
-    while (!in.atEnd()) {
-        styleSheet += in.readLine();
-    }
-    a.setStyleSheet(styleSheet);
 
-    // Parse parameters
-    int num = qApp->arguments().count();
-    bool batchMode=false;
-    QString sceneFileName;
+    QCommandLineParser parser;
+    parser.setApplicationDescription("Crowd simulator");
+    parser.addHelpOption();
+    parser.addVersionOption();
+    QCommandLineOption noGuiOption(QStringList() << "nogui", "Do not show gui.");
+    parser.addOption(noGuiOption);
 
-    Scene *theScene=new Scene();
+    QCommandLineOption sceneFileOption(QStringList() << "scene","Load scene <file>.","file");
+    parser.addOption(sceneFileOption);
+    QCommandLineOption windowPosOption(QStringList() << "window","Open window at <x,y,w,h>.","x,y,w,h");
+    parser.addOption(windowPosOption);
 
-    for ( int i = 0; i < num; i++ ) {
-        QString s = qApp->arguments().at(i) ;
-        if ( s.startsWith( "--batch" ) ) {
-            qDebug() << "Running in batch mode";
-            batchMode=true;
-        } else if ( s.startsWith( "--scene" ) ) {
-            if( i+1 < num )  { // do we have a next argument?
-                sceneFileName=qApp->arguments().at(i+1);
-                qDebug() << "loading scene file "<< sceneFileName;
-                if( !theScene->openConfig(sceneFileName) ) {
-                    qCritical() << "Error while opening scene file!";
-                    return 1;
-                }
-            } else {
-                qCritical() << "Error:Wrong arguments";
-                return 1;
-            }
+
+    // Process the actual command line arguments given by the user
+    parser.process(a);
+
+    QString sceneFileName=parser.value(sceneFileOption);
+
+    int x,y,width,height;
+    bool windowPosSet=parser.isSet(windowPosOption);
+    if(windowPosSet) {
+        QString winPos=parser.value(windowPosOption);
+        QStringList winPosList=winPos.split(",", QString::SkipEmptyParts);
+        if(winPosList.count()!=4) {
+            std::cerr << "wrong number or format for parameter window. " << std::endl << std::flush;
+            exit(1);
+        }
+
+        x=winPosList.at(0).toInt();
+        y=winPosList.at(1).toInt();
+        width=winPosList.at(2).toInt();
+        height=winPosList.at(3).toInt();
+        if(width<600) {
+            width=600;
+        }
+        if(height<800) {
+            height=800;
         }
     }
 
 
-    if(!batchMode) {
-        MainWindow *w = new MainWindow(theScene);
+    Scene theScene;
+    if(!sceneFileName.isEmpty()) {
+        theScene.openConfig(sceneFileName);
+    }
+
+
+    if(!parser.isSet(noGuiOption)) {
+        // Apply stylesheet
+        QFile file(":/gui/brainiacStyleSheet.style");
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+            return 1;
+        QTextStream in(&file);
+        QString styleSheet;
+        while (!in.atEnd()) {
+            styleSheet += in.readLine();
+        }
+        a.setStyleSheet(styleSheet);
+
+
+
+        MainWindow *w = new MainWindow(&theScene);
+        if(windowPosSet) {
+            w->resize(width,height);
+            w->move(x,y);
+        }
         w->show();
     }
 
