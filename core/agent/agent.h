@@ -34,6 +34,7 @@ class Channel;
 class Scene;
 class Segment;
 class AgentManager;
+class Locator;
 
 /** \brief  Main agent class
 
@@ -252,6 +253,7 @@ public:
     void renderGL();
     void renderSoundEmission(bool render);
     void reset();
+    void setLocator(Locator *locator);
 
     /**
      * @brief setObjectName sets the name of the agent
@@ -294,13 +296,14 @@ protected:
     Channel *m_iSoundOX; //!< relative angle of receiving sound source (input)
     Channel *m_iSoundD; //!< distance of received sound;
     Channel *m_iSoundF; //!< frequency of received sound;
+
+    Locator *m_locator; //!< the locator that holds the initial position and rotation
     Scene *m_scene; //!< the scene
-    QVector3D m_position; //!< Agent position in world space
-    QVector3D m_rotation; //!< Agent rotation in world space
+
+    QVector3D m_position; //!< Agent current position in world space
+    QVector3D m_rotation; //!< Agent current rotation in world space
     QVector3D m_newPosition; //!< new agent position in world space
     QVector3D m_newRotation; //!< new agent rotation in world space
-    QVector3D m_restPosition; //!< Agent rest position in world space
-    QVector3D m_restRotation; //!< Agent rest rotation in world space
 
     bool m_renderSoundEmission; //!< toogle render sound emissions
 

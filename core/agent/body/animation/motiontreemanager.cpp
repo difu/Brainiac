@@ -24,6 +24,7 @@
 #include "core/agent/body/animation/motiontreetransition.h"
 #include "gui/Animation/motiontreeeditoritem.h"
 #include "core/agent/agentmanager.h"
+#include "core/brainiaclogger.h"
 
 MotionTreeManager::MotionTreeManager(AgentManager *agentManager, QObject *parent) :
     QObject(parent),m_agentManager(agentManager)
@@ -72,7 +73,6 @@ void MotionTreeManager::loadConfig(QXmlStreamReader *stream)
 {
     Q_ASSERT(stream->isStartElement() && stream->name() == BrainiacGlobals::XmlMotionTreesTag);
     while(stream->readNextStartElement()) {
-        qDebug() << __PRETTY_FUNCTION__ << stream->name();
         if(stream->name() == BrainiacGlobals::XmlMotionTreeTag) {
             QXmlStreamAttributes attribs = stream->attributes();
             int treeId=attribs.value(BrainiacGlobals::XmlIdAttrib).toInt();
@@ -90,7 +90,7 @@ void MotionTreeManager::loadConfig(QXmlStreamReader *stream)
                             action->addTriggerId(triggerId.toUInt());
                         }
                     } else {
-                        qDebug() << __PRETTY_FUNCTION__ << "unknown Action " << actionName;
+                        qCWarning(bAnimation) << __PRETTY_FUNCTION__ << "unknown Action " << actionName;
                     }
                 } else if(stream->name()==BrainiacGlobals::XmlTreeTransitionTag) {
                     QXmlStreamAttributes attribs = stream->attributes();
@@ -100,7 +100,7 @@ void MotionTreeManager::loadConfig(QXmlStreamReader *stream)
                         trans->setColorId(attribs.value(BrainiacGlobals::XmlColorAttrib).toString().toInt());
                         trans->getEditorItem()->setPos(attribs.value(BrainiacGlobals::XmlEditorXPosAttrib).toString().toInt(),attribs.value(BrainiacGlobals::XmlEditorYPosAttrib).toString().toInt());
                     } else {
-                        qDebug() << __PRETTY_FUNCTION__ << "unknown Transition " << transName;
+                        qCWarning(bAnimation) << __PRETTY_FUNCTION__ << "unknown Transition " << transName;
                     }
                 } else if(stream->name()==BrainiacGlobals::XmlTreeActionTransitionConnectionTag) {
                     QXmlStreamAttributes attribs = stream->attributes();

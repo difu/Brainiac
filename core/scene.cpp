@@ -25,10 +25,8 @@
 #include "generator/generator.h"
 #include "generator/pointgenerator.h"
 #include "group/group.h"
-//#include "camera.h"
 #include "agent/body/body.h"
-#include <QDebug>
-#include <osgDB/WriteFile>
+#include "core/brainiaclogger.h"
 
 Scene::Scene(QObject *parent) :
     QObject(parent)
@@ -78,24 +76,28 @@ void Scene::createAgents(Generator *gen)
 {
     if(gen->getType()==Generator::POINT) {
         PointGenerator *pGen=(PointGenerator *)gen;
+        qCDebug(bScene) << __PRETTY_FUNCTION__ << "Creating agents of Generator " << pGen->getName();
         gen->generateLocators();
         foreach(Locator *loc,*pGen->getLocations()) {
-            Group *grp=loc->getGroup();
-            QVector4D trans=loc->getLocation();
-            if(grp->getAgentManager()) { // only, if we successfully loaded an agent
-                Agent *agent=grp->createAndAddNewAgent();
-                loc->setAgent(agent);
-                agent->setRestTranslation(trans.x(),trans.y(),trans.z()); //!< \todo add rest rotation
-                agent->setRestRotation(0,trans.w(),0);
-                m_agents.append(agent); // add the agent to all the other agents of the scene
-                //grp->addAgent(agent);
-                m_rootNode.get()->addChild(agent->getBody()->getBodyRoot());
-                agent->reset();
-                QString name;
-                name=grp->getName()+QString::number(agent->getId());
-                agent->setObjectName(name);
-//                QString fileName=QString("/tmp/Agent")+QString(QString::number(agent->getId()))+".osgt";
-//                osgDB::writeNodeFile(*agent->getBody()->getRootSegment(),fileName.toStdString());
+            Agent *locAgent=loc->getAgent();
+            if(locAgent) {
+                continue;
+            } else {
+                Group *grp=loc->getGroup();
+                if(grp->getAgentManager()) { // only, if we successfully loaded an agent
+                    Agent *agent=grp->createAndAddNewAgent();
+                    loc->setAgent(agent);
+                    agent->setLocator(loc);
+//                    agent->setRestTranslation(trans.x(),trans.y(),trans.z());
+//                    agent->setRestRotation(0,trans.w(),0);
+                    m_agents.append(agent); // add the agent to all the other agents of the scene
+                    //grp->addAgent(agent);
+                    m_rootNode.get()->addChild(agent->getBody()->getBodyRoot());
+                    agent->reset();
+                    QString name;
+                    name=grp->getName()+QString::number(agent->getId());
+                    agent->setObjectName(name);
+                }
             }
         }
     }

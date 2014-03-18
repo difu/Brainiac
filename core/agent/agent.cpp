@@ -28,7 +28,7 @@
 #include "core/agent/agentmanager.h"
 #include "core/agent/body/animation/motiontreemanager.h"
 #include "core/agent/body/animation/animationplayer.h"
-//#include <QtOpenGL>
+#include "core/generator/locator.h"
 #include <QDebug>
 #include <QtGlobal>
 
@@ -42,6 +42,7 @@ Agent::Agent(AgentManager *manager, quint32 id) :
     m_body=new Body(this);
     m_brain=new Brain(this,0);
     m_renderSoundEmission=true;
+    m_locator=0;
 }
 
 Agent::Agent(Agent *otherAgent, quint32 id)  :
@@ -55,6 +56,7 @@ Agent::Agent(Agent *otherAgent, quint32 id)  :
     m_body->setAnimations(otherAgent->getBody()->getAnimations());
     m_brain=new Brain(this,otherAgent->getBrain());
     m_renderSoundEmission=true;
+    m_locator=0;
 }
 
 Agent::~Agent() {
@@ -501,15 +503,15 @@ void Agent::renderGL()
         glTranslated(getPosition().x(),getPosition().y(),getPosition().z());
         glEnable(GL_DEPTH_TEST);
         glBegin(GL_LINE_LOOP);
-            glRotated(getRotation()->x(),1,0,0);
-            glRotated(getRotation()->y(),0,1,0);
-            glRotated(getRotation()->z(),0,0,1);
-            QColor col=BrainiacGlobals::getColorFromBrainiacColorValue(m_oSoundF->getValue()/m_oSoundF->getRange());
-            glColor3f(col.redF(),col.greenF(),col.blueF());
-            for ( float angle = 0; angle <= 2*BrainiacGlobals::PI; angle+=BrainiacGlobals::PI/30) {
-                glVertex3f(m_oSoundA->getValue() * sin (angle), 5 , m_oSoundA->getValue() * cos (angle));
-                glVertex3f(m_oSoundA->getValue() * sin (angle + BrainiacGlobals::PI/30) , 5 , m_oSoundA->getValue() * cos (angle + BrainiacGlobals::PI/30));
-            }
+        glRotated(getRotation()->x(),1,0,0);
+        glRotated(getRotation()->y(),0,1,0);
+        glRotated(getRotation()->z(),0,0,1);
+        QColor col=BrainiacGlobals::getColorFromBrainiacColorValue(m_oSoundF->getValue()/m_oSoundF->getRange());
+        glColor3f(col.redF(),col.greenF(),col.blueF());
+        for ( float angle = 0; angle <= 2*BrainiacGlobals::PI; angle+=BrainiacGlobals::PI/30) {
+            glVertex3f(m_oSoundA->getValue() * sin (angle), 5 , m_oSoundA->getValue() * cos (angle));
+            glVertex3f(m_oSoundA->getValue() * sin (angle + BrainiacGlobals::PI/30) , 5 , m_oSoundA->getValue() * cos (angle + BrainiacGlobals::PI/30));
+        }
         glEnd();
         glPopMatrix();
     } else {
@@ -524,13 +526,18 @@ void Agent::renderSoundEmission(bool render)
 
 void Agent::reset()
 {
-    m_position.setX(m_restPosition.x());
-    m_position.setY(m_restPosition.y());
-    m_position.setZ(m_restPosition.z());
+    if(m_locator) {
+        m_position.setX(m_locator->getLocation().x());
+        m_position.setY(m_locator->getLocation().y());
+        m_position.setZ(m_locator->getLocation().z());
 
-    m_rotation.setX(m_restRotation.x());
-    m_rotation.setY(m_restRotation.y());
-    m_rotation.setZ(m_restRotation.z());
+        m_rotation.setX(0.0);
+        m_rotation.setY(m_locator->getLocation().w());
+        m_rotation.setZ(0.0);
+    } else {
+        m_position=QVector3D();
+        m_rotation=QVector3D();
+    }
 
     //m_body->updatePosition();
     m_body->reset();
@@ -540,6 +547,11 @@ void Agent::setObjectName(const QString &name)
 {
     QObject::setObjectName(name);
     m_body->getBodyRoot().get()->setName(name.toStdString());
+}
+
+void Agent::setLocator(Locator *locator)
+{
+    m_locator=locator;
 }
 
 void Agent::setRotation(qreal x, qreal y, qreal z)
@@ -559,22 +571,6 @@ void Agent::setTranslation(qreal x, qreal y, qreal z)
     m_position.setZ(z);
 }
 
-void Agent::setRestRotation(qreal x, qreal y, qreal z)
-{
-    BrainiacGlobals::normalizeAngle(&x);
-    BrainiacGlobals::normalizeAngle(&y);
-    BrainiacGlobals::normalizeAngle(&z);
-    m_restRotation.setX(x);
-    m_restRotation.setY(y);
-    m_restRotation.setZ(z);
-}
-
-void Agent::setRestTranslation(qreal x, qreal y, qreal z)
-{
-    m_restPosition.setX(x);
-    m_restPosition.setY(y);
-    m_restPosition.setZ(z);
-}
 
 void Agent::dDumpChannels()
 {

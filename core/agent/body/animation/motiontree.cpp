@@ -68,7 +68,7 @@ QString MotionTree::addTransition(QString name) {
     return name;
 }
 
-bool MotionTree::connectActionWithTransition(QString action, QString transition)
+bool MotionTree::connectActionWithTransition(const QString &action, const QString &transition)
 {
     // Check, if action/transition pair already exists
     MotionTreeAction *act=m_actions.value(action,0);
@@ -99,7 +99,7 @@ bool MotionTree::connectActionWithTransition(QString action, QString transition)
     return false;
 }
 
-bool MotionTree::connectTransitionWithAction(QString transition, QString action)
+bool MotionTree::connectTransitionWithAction(const QString &transition, const QString &action)
 {
     // Check, if action/transition pair already exists
     MotionTreeAction *act=m_actions.value(action,0);
@@ -130,7 +130,7 @@ bool MotionTree::connectTransitionWithAction(QString transition, QString action)
     return false;
 }
 
-QString MotionTree::getActionName( MotionTreeAction *action ) const
+QString MotionTree::getActionName(MotionTreeAction *action ) const
 {
     return m_actions.key(action,QString());
 }

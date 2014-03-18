@@ -42,17 +42,28 @@ public:
  * @param z z ordinate
  * @param w rotation angle around y axis
  */
-    Locator(Group *group, qreal x, qreal y, qreal z, qreal w);
+    Locator(Group *group, qreal x=0.0, qreal y=0.0, qreal z=0.0, qreal w=0.0);
 
     Group* getGroup() {return m_group;}
+
+    /**
+     * @brief returns the agent this Locater is associated with
+     * @return Agent * pointer to the agent
+     */
     Agent* getAgent() {return m_agent;}
+
     /**
      * @brief returns the xyz position and rotation angle around y axis
      *
-     * @return QVector4D * position and y rotation
+     * @return QVector4D position and y rotation
      */
     QVector4D& getLocation();
 
+    /**
+     * @brief sets the agent to this locator
+     *
+     * @param Agent *agent pointer to the agent
+     */
     void setAgent(Agent *agent) { m_agent=agent;}
 
     /**

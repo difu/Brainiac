@@ -79,10 +79,8 @@ void AnimationPlayer::apply()
             if(m_currentAnimation->isLoopedAnimation()) {
                 qreal loopTime=m_currentAnimation->getLoopAnimationTime(diffTime);
                 apply(*m_currentAnimation,loopTime);
-                //m_body->getAgent()->getInputChannel(BrainiacGlobals::ChannelName_Phase)->setValue(loopTime/animLength);
             } else {
                 apply(*m_currentAnimation,diffTime);
-                //m_body->getAgent()->getInputChannel(BrainiacGlobals::ChannelName_Phase)->setValue(diffTime/animLength);
             }
             m_body->getAgent()->getInputChannel(m_currentAnimation->name())->setValue(1.0);
         }
@@ -108,8 +106,6 @@ void AnimationPlayer::apply(const Animation &animation, qreal time)
             c->setValue(animation.getValue(curveName,time));
         }
     }
-
-    //animation.curves().value("ToSpine:ry")->dPrintKeyFrames(0,10);
 }
 
 void AnimationPlayer::reset()

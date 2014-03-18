@@ -45,6 +45,7 @@ void Generator::readCommonXmlAttribs(const QXmlStreamAttributes &attribs)
     m_distance=attribs.value(BrainiacGlobals::XmlDistanceAttrib).toString().toDouble();
     m_angleNoise=attribs.value(BrainiacGlobals::XmlAngleVarAttrib).toString().toDouble();
     m_angle=attribs.value(BrainiacGlobals::XmlAngleAttrib).toString().toDouble();
+    m_name=attribs.value(BrainiacGlobals::XmlNameAttrib).toString();
     QStringList groups=attribs.value(BrainiacGlobals::XmlGroupsAttrib).toString().split(",");
     QStringList groupRation=attribs.value(BrainiacGlobals::XmlGroupRatioAttrib).toString().split(",");
     int i=0;
@@ -52,8 +53,6 @@ void Generator::readCommonXmlAttribs(const QXmlStreamAttributes &attribs)
         m_groupRatio.insert(grpId.toUInt(),groupRation.at(i).toFloat());
         i++;
     }
-
-    qDebug() << "GEN Id"<< m_id << m_centerPos << m_groupRatio;
 }
 
 Generator::~Generator()

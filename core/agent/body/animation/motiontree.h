@@ -56,13 +56,13 @@ public:
      * if the name is already in use "_" are appended until the name is unique
      */
     QString addTransition(QString name="Transition");
-    bool connectActionWithTransition( QString action, QString transition);
-    bool connectTransitionWithAction( QString transition, QString action);
+    bool connectActionWithTransition(const QString &action, const QString &transition);
+    bool connectTransitionWithAction(const QString &transition, const QString &action);
     QHash<QString, MotionTreeAction *> getActions() const { return m_actions; }
     QHash<QString, MotionTreeTransition *> getTransitions() const { return m_transitions; }
     MotionTreeEditor* getMotionTreeEditor() const { return m_motionTreeEditor; }
     QList<MotionTreeAction *> getNextActionsFromAction(MotionTreeAction *action) const;
-    QString getActionName(MotionTreeAction *action) const;
+    QString getActionName( MotionTreeAction *action) const;
     const QString getActionName(MotionTreeAction *action);
     ActionTransitionConnectionType getActionTransitionConnections() const { return m_actionTransitionConnections; }
     TransitionActionConnectionType getTransitionActionConnections() const { return m_transitionActionConnections; }

@@ -51,6 +51,9 @@ public:
      * @return QList<Locator> locators of this Generator
      */
     const QList <Locator *>* getLocations() const;
+
+    QString getName() const { return m_name; }
+
     /**
      * @brief returns the Scene
      *
@@ -77,6 +80,7 @@ public:
 
 protected:
     void readCommonXmlAttribs( const QXmlStreamAttributes &attribs);
+    QString m_name;
     GeneratorType m_genType; /**< the type of the generator */
     QList <Locator *> m_locations; //!< x,y,z Position in world space, w rotation angle
     Scene *m_scene; /**< the Scene */
