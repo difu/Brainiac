@@ -31,7 +31,7 @@ AnimationCurve::AnimationCurve(AnimationCurve *curve)
     foreach(QVector2D vec,curve->keyFrames()) {
         addKeyFrame(vec.x(),vec.y());
     }
-    m_indexesDirty=true;
+    generateIndexes();
 }
 
 void AnimationCurve::addKeyFrame(qreal time, qreal value)
