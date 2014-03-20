@@ -24,18 +24,45 @@
 class Channel;
 class MotionTree;
 
+/**
+ * @brief
+ *
+ * @class MotionTreeAnimationPlayer motiontreeanimationplayer.h "core/agent/body/animation/motiontreeanimationplayer.h"
+ */
 class MotionTreeAnimationPlayer : public AnimationPlayer
 {
     Q_OBJECT
 public:
+    /**
+     * @brief Constructor creates a new MotionTreeAnimationPlayer
+     *
+     * A MotionTreeAnimationPlayer reads out the MotionTree and decides what Actions and their corresponding Animations to play
+     *
+     * @fn MotionTreeAnimationPlayer
+     * @param body the Body of this MotionTreeAnimationPlayer
+     * @param tree the MotionTree of this MotionTreeAnimationPlayer
+     *
+     */
     MotionTreeAnimationPlayer(Body *body, MotionTree *tree);
+
+    /**
+     * @brief applies the Animation(s)
+     *
+     * @fn apply
+     */
     void apply();
+
+    /**
+     * @brief resets the animationplayer to its initial state
+     *
+     * @fn reset
+     */
     virtual void reset();
 
 protected:
-    MotionTree *m_motionTree;
-    Channel *m_phaseChannel;
-    Channel *m_latchChannel;
+    MotionTree *m_motionTree; /**< the MotionTree */
+    Channel *m_phaseChannel; /**< phase Channel (Input) */
+    Channel *m_latchChannel; /**< latch Channel (Input) */
 };
 
 #endif // MOTIONTREEANIMATIONPLAYER_H

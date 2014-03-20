@@ -126,6 +126,8 @@ const QList<QString> BrainiacGlobals::ChannelNames_Latches=(QList<QString>()) <<
 
 const QList<QColor> BrainiacGlobals::EditorColors=(QList<QColor>()) << QColor(Qt::darkBlue) << QColor(Qt::darkCyan) << QColor(Qt::darkGray) << QColor(Qt::darkGreen);// << QColor;// QColor(Qt::darkBlue));// << QColor(Qt::darkCyan);
 
+const char* const BrainiacGlobals::DefaultLatchName="Latch\0";
+
 const char* const BrainiacGlobals::FuzzAndModeMin="min\0";
 const char* const BrainiacGlobals::FuzzAndModeProduct="prod\0";
 
@@ -158,5 +160,6 @@ QColor BrainiacGlobals::defaultZColor=QColor(200,200,0);
 QColor BrainiacGlobals::defaultDiameterColor=QColor(50,50,200);
 QColor BrainiacGlobals::defaultLengthColor=QColor(10,10,250);
 QColor BrainiacGlobals::defaultRadiusColor=QColor(50,50,200);
+QColor BrainiacGlobals::DefaultLatchColor=QColor(150,150,250);
 
 osg::ref_ptr<CoordCrossDrawable> BrainiacGlobals::CoordCross=new CoordCrossDrawable;

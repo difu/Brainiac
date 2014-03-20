@@ -102,6 +102,7 @@ void Animation::copyFromAnimation(Animation *animation)
         AnimationCurve *c=i.value();
         AnimationCurve *newCurve= new AnimationCurve(c);
         m_curves.insert(i.key(),newCurve);
+        newCurve->generateIndexes();
     }
     QHashIterator<QString, LatchCurve *> j(animation->latches());
     while(j.hasNext()) {
@@ -214,6 +215,18 @@ bool Animation::hasAgentCurves() const
            name=="ry" || name=="ty" ||
            name=="rz" || name=="tz") {
             return true;
+        }
+    }
+    return false;
+}
+
+bool Animation::hasLatch(qreal time) const
+{
+    foreach(LatchCurve *latch, m_latchCurves) {
+        if(latch->isLatch(time)) {
+            return true;
+        } else {
+            continue;
         }
     }
     return false;

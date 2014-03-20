@@ -21,7 +21,9 @@
 #include <QColor>
 #include "core/agent/body/animation/modifiableanimation.h"
 #include "core/agent/body/animation/animationcurve.h"
+#include "core/agent/body/animation/latchcurve.h"
 #include "gui/Animation/editorlineitem.h"
+#include "core/brainiaclogger.h"
 
 LoopEditorScene::LoopEditorScene() : QGraphicsScene(0),m_animation(0)
 {
@@ -55,8 +57,8 @@ qreal LoopEditorScene::mapCurveRangeToHeight(qreal max, qreal min, qreal value) 
 {
     Q_ASSERT(max>=min);
     qreal height=this->height();
-    if(qFuzzyCompare(max+1.0f,min+1.0f)) {
-        return height/2.0f;
+    if(qFuzzyCompare(max+1.0,min+1.0)) {
+        return height/2.0;
     }
     return height*BrainiacGlobals::norm(min,max,value);
 }
@@ -96,8 +98,8 @@ void LoopEditorScene::setAnimationCurveNames(QList<QString> curveNames)
 
 void LoopEditorScene::setTimeCursor(qreal time)
 {
-//    QMutexLocker locker(&m_animChangeMutex);
-//    Q_UNUSED(locker);
+    //    QMutexLocker locker(&m_animChangeMutex);
+    //    Q_UNUSED(locker);
     time=qAbs(time);
     qreal animLength=m_animation->getLength(true);
     if(animLength>0)
@@ -107,11 +109,11 @@ void LoopEditorScene::setTimeCursor(qreal time)
 
 void LoopEditorScene::update()
 {
-//    QMutexLocker locker(&m_animChangeMutex);
-//    Q_UNUSED(locker);
+    //    QMutexLocker locker(&m_animChangeMutex);
+    //    Q_UNUSED(locker);
     m_startCurserItem->setPos(mapTimeToWidth(m_animation->getStartTime()),0);
     m_endCurserItem->setPos(mapTimeToWidth(m_animation->getEndTime()),0);
-    if(!qFuzzyCompare(m_animation->getCrossFade(),(qreal)0.0f)) {
+    if(!qFuzzyCompare(m_animation->getCrossFade(),0.0)) {
         m_crossFadeEndItem->show();
         m_crossFadeStartItem->show();
         m_crossFadeStartItem->setPos(mapTimeToWidth(m_animation->getStartTime()+m_animation->getCrossFade()),0);
@@ -125,6 +127,8 @@ void LoopEditorScene::update()
 
 void LoopEditorScene::updateCurves()
 {
+    static qreal __zValueLatchCuve=-1.0; // to prevent that the cursors will be overdrawn
+    static const qreal __height=sceneRect().height();
     foreach(QList< QGraphicsItem *> gItems,m_curveItems)
     {
         foreach(QGraphicsItem *item,gItems) {
@@ -141,16 +145,64 @@ void LoopEditorScene::updateCurves()
             qreal minValue=curve->getMinValue();
             qreal maxValue=curve->getMaxValue();
             QList< QGraphicsItem *> gItems;
-            QBrush brush(BrainiacGlobals::getColorFromBrainiacColorValue((qreal)curveNo/(qreal)(numberOfCurves)));
+            QColor col=BrainiacGlobals::getColorFromBrainiacColorValue((qreal)curveNo/(qreal)(numberOfCurves));
+
+            // connect the keyframes
+            QPointF lastPos;
+            bool first=true;
             foreach(QVector2D kf,curve->keyFrames()) {
+                QPointF pos=QPointF(mapTimeToWidth(kf.x()),mapCurveRangeToHeight(maxValue,minValue,kf.y()));
                 QGraphicsRectItem *item=new QGraphicsRectItem(-1,-1,1,1);
-                item->setPos(mapTimeToWidth(kf.x()),mapCurveRangeToHeight(maxValue,minValue,kf.y()));
-                item->setBrush(brush);
+                item->setPos(pos);
+                item->setPen(col);
                 this->addItem(item);
                 gItems.append(item);
+                if(!first) {
+                    QGraphicsLineItem *line=new QGraphicsLineItem(pos.x(),pos.y(),lastPos.x(),lastPos.y());
+                    line->setPen(col);
+                    this->addItem(line);
+                    gItems.append(line);
+                }
+                first=false;
+                lastPos=pos;
             }
             curveNo++;
             m_curveItems.insert(cn,gItems);
+        }
+    }
+
+    // Draw the latchcurve(s)
+    qCDebug(bGuiAnimation) << __PRETTY_FUNCTION__ << "creating latch curves. num of latches: "<< m_animation->latches().count();
+    if(m_animation->latches().count()>1) {
+        qCWarning(bGuiAnimation) << __PRETTY_FUNCTION__ << "No more than one latch currently supported! No latchcurve will be painted!";
+        return;
+    }
+    foreach(LatchCurve *latch, m_animation->latches()) {
+        if( m_curveItemNames.contains(BrainiacGlobals::DefaultLatchName)) {
+            foreach(QVector2D l,latch->latches()) {
+                qreal startXPos=mapTimeToWidth(l.x());
+                qreal xPosLength=mapTimeToWidth(l.y());
+                qreal endXPos=startXPos+xPosLength;
+                QPen myPen(BrainiacGlobals::DefaultLatchColor);
+                QGraphicsLineItem *horizLineItem=new QGraphicsLineItem(0.0,0.0,xPosLength,0.0);
+                horizLineItem->setPen(myPen);
+                horizLineItem->setPos(startXPos,__height/2.0);
+                horizLineItem->setZValue(__zValueLatchCuve);
+                this->addItem(horizLineItem);
+
+                QGraphicsLineItem *startLine=new QGraphicsLineItem(startXPos,__height/2.0,startXPos,__height);
+                startLine->setPen(myPen);
+                startLine->setZValue(__zValueLatchCuve);
+                this->addItem(startLine);
+
+                QGraphicsLineItem *endLine=new QGraphicsLineItem(endXPos,__height/2.0,endXPos,__height);
+                endLine->setPen(myPen);
+                endLine->setZValue(__zValueLatchCuve);
+                this->addItem(endLine);
+
+                m_curveItems.insert(BrainiacGlobals::DefaultLatchName,QList<QGraphicsItem *>() << horizLineItem << startLine << endLine);
+                qCDebug(bGuiAnimation) << __PRETTY_FUNCTION__ << "latch curve created ";
+            }
         }
     }
 }

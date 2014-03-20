@@ -24,9 +24,10 @@
 #include "core/agent/agentmanager.h"
 #include "core/agent/body/bodymanager.h"
 #include "core/agent/body/segmentshape.h"
-//#include "core/agent/body/skeletonnode.h"
 #include <QQuaternion>
 #include "core/agent/body/animation/animationcurve.h"
+#include "core/agent/body/animation/latchcurve.h"
+#include "core/brainiaclogger.h"
 #include "cml/cml.h"
 #include "cml/mathlib/matrix_rotation.h"
 
@@ -39,15 +40,12 @@ ModifiableAnimation::ModifiableAnimation( Animation *animation, AgentManager *ag
     m_agentManager=agentManager;
     m_origAnimation=(animation);
     setAnimationType(m_animType);
-    //qDebug() << __PRETTY_FUNCTION__ << "Root bone node " << m_body->getRootBone()->getName();
     qDebug() << __PRETTY_FUNCTION__ << "Root bone node_ " << agentManager->getBodyManager()->getRootSegment().getName();
     qDebug() << __PRETTY_FUNCTION__ << "Startime" << m_startTime << "End Time" << m_endTime;
 }
 
 void ModifiableAnimation::bake()
 {
-//    QWriteLocker wLocker(&m_rwLock);
-//    Q_UNUSED(wLocker);
     QHash<QString, AnimationCurve*> newCurves;
     foreach(QString curveName,curveNames()) {
         AnimationCurve *newCurve=new AnimationCurve();
@@ -60,20 +58,15 @@ void ModifiableAnimation::bake()
                 //qDebug() << __PRETTY_FUNCTION__ << curveName << kf.x() << kf.y() << this->getValue(curveName,kf.x()) << Animation::getValue(curveName,kf.x());
             }
         }
+        newCurve->generateIndexes();
         //qDebug() << __PRETTY_FUNCTION__ << curveName <<" oldKF" << origCuve->keyFrames().count() << "NewKF" << newCurve->keyFrames().count();
         newCurves.insert(curveName,newCurve);
         delete origCuve;
     }
     QWriteLocker wLocker(&m_rwLock);
     Q_UNUSED(wLocker);
-    //m_curves.clear();
     m_curves=newCurves;
-    qDebug() << __PRETTY_FUNCTION__ ;
-//    m_origAnimation->copyFromAnimationCurves(m_curves);
-//    m_origAnimation->setIsLoopedAnimation(m_isLoopedAnimation);
-//    m_origAnimation->setIsRetriggerable(m_isRetriggerable);
     m_origAnimation->copyFromAnimation(this);
-    //setAnimationType(BrainiacGlobals::NOTYPE);
     wLocker.unlock();
     m_startTime=0.0f;
     m_crossFadeTime=0.0f;
@@ -91,7 +84,6 @@ void ModifiableAnimation::createAgentCurve(AnimationCurve *rootCurve, AnimationC
     foreach(QVector2D kf,rootCurve->keyFrames()) {
         agentCurve->addKeyFrame(kf.x(),-kf.y()+valBefore); //!< @bug Since when has signum changed???
         valBefore=kf.y();
-        //rootCurve->keyFrames()[i].setY(0.0f);
         i++;
     }
     // The first kf does is zero. Interpolate its value
@@ -100,6 +92,7 @@ void ModifiableAnimation::createAgentCurve(AnimationCurve *rootCurve, AnimationC
     } else if( rootCurve->keyFrames().count()>2) {
         agentCurve->keyFrames()[0].setY(0.5f*agentCurve->keyFrames()[1].y()+0.5f*agentCurve->keyFrames().last().y());
     }
+    agentCurve->generateIndexes();
     rootCurve->keyFrames().clear();
 }
 
@@ -147,21 +140,20 @@ bool ModifiableAnimation::createAgentCurves()
         }
     }
     if(!m_transitionCurve) {
-//        m_easingCurve.setType(QEasingCurve::InOutSine);
-//        m_transitionCurve=new AnimationCurve();
-//        qreal time_=TransitionCurveLengthMs/(qreal)TransitionCurveKeyFrames;
-//        for(quint32 i=0; i<TransitionCurveKeyFrames; i++) {
-//            QVector2D kf;
-//            kf.setX((qreal)i*time_);
-//            kf.setY(m_easingCurve.valueForProgress(time_/TransitionCurveLengthMs));
-//            m_transitionCurve->addKeyFrame(kf);
-//        }
         AnimationCurve tr=createTransitionCurve();
         m_transitionCurve=new AnimationCurve(&tr);
 
     }
     if(m_latchCurves.isEmpty()) {
-
+        /////
+        qCDebug(bAnimation) << __PRETTY_FUNCTION__ << "Creating default latch curve";
+        qreal length=getLength(true);
+        if(length>1.0) {
+            addLatchCurve(QString(BrainiacGlobals::DefaultLatchName));
+            addLatch(QString(BrainiacGlobals::DefaultLatchName),0.0,length-0.5);
+            qCDebug(bAnimation) << __PRETTY_FUNCTION__ << "Latch Curve created!";
+        }
+        /////
     } else {
         qDebug() << __PRETTY_FUNCTION__ << "Latches already exist! nothing is created";
     }

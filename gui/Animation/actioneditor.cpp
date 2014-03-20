@@ -31,6 +31,8 @@
 #include "core/agent/body/animation/animationcurve.h"
 #include "core/agent/body/animation/animationplayer.h"
 #include "core/agent/body/animation/modifiableanimation.h"
+#include "core/agent/body/animation/latchcurve.h"
+#include "core/brainiaclogger.h"
 #include "gui/Animation/actiondisplay_.h"
 #include "gui/brainiacslider.h"
 #include "gui/Animation/loopeditorscene.h"
@@ -179,6 +181,16 @@ void ActionEditor::refreshCurveList()
     }
     //addCurvesToList(m_agentManager->getMasterAgent()->getBody()->getRootSkeletonNode(),0);
     addCurvesToList(m_agentManager->getBodyManager()->getRootSegment(),0);
+    if(m_activeAnimation->latches().count()>1) {
+        qCWarning(bGuiAnimation) << __PRETTY_FUNCTION__ << "No more than one latch currently supported!";
+    }
+
+    foreach(LatchCurve *latchCurve, m_activeAnimation->latches()) {
+        QListWidgetItem *latchItem=new QListWidgetItem(ui->listCurves);
+        latchItem->setText(QString(BrainiacGlobals::DefaultLatchName));
+        latchItem->setData(Qt::UserRole,QVariant(QString(BrainiacGlobals::DefaultLatchName)));
+        latchItem->setTextColor(BrainiacGlobals::DefaultLatchColor);
+    }
 }
 
 void ActionEditor::setActiveAnimation(QString animName)

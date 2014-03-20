@@ -18,6 +18,7 @@
 #include "brainiaclogger.h"
 
 Q_LOGGING_CATEGORY(bGui, "brainiac.gui")
+Q_LOGGING_CATEGORY(bGuiAnimation, "brainiac.gui.animation")
 Q_LOGGING_CATEGORY(bAnimation, "brainiac.agent.body.animation")
 Q_LOGGING_CATEGORY(bScene, "brainiac.scene")
 Q_LOGGING_CATEGORY(bSimulation, "brainiac.scene.simulation")

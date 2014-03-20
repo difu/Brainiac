@@ -51,6 +51,8 @@ void MotionTreeAnimationPlayer::apply()
     }
 
     // Apply current Animation
+
+    bool hasLatch=true;
     if(m_currentAnimation) {
         currentAction=m_motionTree->getActions().value(m_currentAnimation->name(),0);
         if(!currentAction) {
@@ -59,20 +61,24 @@ void MotionTreeAnimationPlayer::apply()
         qreal animLength=m_currentAnimation->getLength();
         qreal offset=Channel::getOutputValue(m_body->getAgent(),m_currentAnimation->name().append(BrainiacGlobals::ChannelPhaseOffsetSuffix))*animLength;
         qreal diffTime=m_simulation->getCurrentTime()-m_currentAnimationStartTime+offset;
+        qreal animTime=0.0;
         if(m_currentAnimation->isLoopedAnimation()) {
             qreal loopTime=m_currentAnimation->getLoopAnimationTime(diffTime);
-            AnimationPlayer::apply(*m_currentAnimation,loopTime);
             m_phaseChannel->setValue(loopTime/animLength);
+            animTime=loopTime;
         } else {
-            AnimationPlayer::apply(*m_currentAnimation,diffTime);
             m_phaseChannel->setValue(diffTime/animLength);
+            animTime=diffTime;
         }
+        AnimationPlayer::apply(*m_currentAnimation,animTime);
+        hasLatch=m_currentAnimation->hasLatch(animTime);
+        m_latchChannel->setValue(hasLatch?1.0:0.0);
         m_body->getAgent()->getInputChannel(m_currentAnimation->name())->setValue(1.0);
     }
 
     // check for triggers of next possible actions
     // only check, if no next animation has been set
-    if(!m_nextAnimation) {
+    if(!m_nextAnimation && !hasLatch) {
         MotionTreeManager *manager=(MotionTreeManager *)m_motionTree->parent();
         QString highestTriggerName;
         qreal highestValue=0;

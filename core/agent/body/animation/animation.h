@@ -124,6 +124,15 @@ public:
      */
     qreal getLength(bool calculateNew=false) const;
 
+    /**
+     * @brief returns true, if the animation has a latch at given time
+     *
+     * @fn hasLatch
+     * @param time the time to be checked for a latch
+     * @return bool true, if there is a latch, false otherwise
+     */
+    bool hasLatch(qreal time) const;
+
 
     virtual qreal getValue(const QString &curve, qreal time) const;
 
