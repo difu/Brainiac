@@ -27,10 +27,10 @@
 #include "brain/fuzzyor.h"
 #include "brain/fuzzyfuzz.h"
 #include "brain/timer.h"
+#include "channel.h"
 
 class Body;
 class Brain;
-class Channel;
 class Scene;
 class Segment;
 class AgentManager;
@@ -179,16 +179,18 @@ public:
             @sa Segment::setColorInherited(bool inherited)
     **/
     Channel *getColor() const;
+
     /** \brief returns input channel
         @param name the name of the input channel
+        @param options behavior, if channel does not exit
         @returns 0 if channel does not exist
     **/
-    Channel *getInputChannel(const QString &name) const;
+    Channel *getInputChannel(const QString &name, Channel::ChannelNotExistOptions options=Channel::NONE) const;
     /** \brief returns output channel
         @param name the name of the output channel
         @returns 0 if channel does not exist
     **/
-    Channel *getOutputChannel(const QString &name) const;
+    Channel *getOutputChannel(const QString &name, Channel::ChannelNotExistOptions options=Channel::NONE) const;
 
     /**
      * @brief returns the id of this agent

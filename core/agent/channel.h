@@ -37,6 +37,16 @@ class Channel: public QObject
     Q_OBJECT
 public:
 
+    /**
+     * @brief Behavior, if channel does not exist
+     *
+     * @enum ChannelNotExistOptions
+     */
+    enum ChannelNotExistOptions { NONE, /**< Ignore */
+                                  NONE_WARN, /**< Ignore but write warning to stderr*/
+                                  CREATE_IF_NOT_EXISTS /**< Create a new channel */
+                                };
+
     /** \brief Constructor
             Init the channel with a max, min and a default value, that is also set as current and old value
     **/
@@ -90,6 +100,38 @@ public:
     void setMinValue( qreal min ) { m_min=min; }
     void setMaxValue( qreal max ) { m_max=max; }
 
+
+    /**
+     * @brief sets the value of an input channel
+     *
+     * @fn setInputValue
+     * @param agent pointer to agent
+     * @param channelName the name of the input channel
+     * @param value the vakue to be set
+     * @param options Behavior, if channel does not exist
+     * @sa SetChannelOptions
+     */
+    static void setInputValue(Agent *agent, const QString& channelName, qreal value, ChannelNotExistOptions options=Channel::NONE);
+
+    /** \brief sets channel´s value
+
+                    set the channels value.
+                    the value is cropped to the channels limits
+
+    **/
+
+    /**
+     * @brief sets the value of an oupput channel
+     *
+     * @fn setOutputValue
+     * @param agent pointer to agent
+     * @param channelName the name of the output channel
+     * @param value the vakue to be set
+     * @param options Behavior, if channel does not exist
+     * @sa SetChannelOptions
+     */
+    static void setOutputValue(Agent *agent, const QString& channelName, qreal value, ChannelNotExistOptions options=Channel::NONE);
+
     /** \brief sets channel´s value
 
                     set the channels value.
@@ -108,6 +150,7 @@ public:
 
     **/
     void setInherited(Channel *parent, bool inherited);
+
 
 public slots:
     /** \brief changes the value of this channel

@@ -29,6 +29,7 @@
 #include "core/agent/body/animation/motiontreemanager.h"
 #include "core/agent/body/animation/animationplayer.h"
 #include "core/generator/locator.h"
+#include "core/brainiaclogger.h"
 #include <QDebug>
 #include <QtGlobal>
 
@@ -327,20 +328,40 @@ quint32 Agent::getId() const
     return m_id;
 }
 
-Channel* Agent::getInputChannel(const QString &name) const
+Channel* Agent::getInputChannel(const QString &name, Channel::ChannelNotExistOptions options) const
 {
     if(this->inputChannelExists(name))
         return(m_inputs.value(name));
-    else
-        return 0;
+    else {
+        switch(options) {
+        case Channel::NONE:
+            break;
+        case Channel::NONE_WARN:
+            qCWarning(bAgent) << __PRETTY_FUNCTION__ << "Input Channel "<< name << " does not exist!";
+            break;
+        case Channel::CREATE_IF_NOT_EXISTS:
+            qCWarning(bAgent)  << __PRETTY_FUNCTION__ << "Input Channel "<< name << " cannot be created here!";
+        }
+    }
+    return 0;
 }
 
-Channel* Agent::getOutputChannel(const QString &name) const
+Channel* Agent::getOutputChannel(const QString &name, Channel::ChannelNotExistOptions options) const
 {
     if(this->outputChannelExists(name))
         return(m_outputs.value(name));
-    else
-        return 0;
+    else {
+        switch(options) {
+        case Channel::NONE:
+            break;
+        case Channel::NONE_WARN:
+            qCWarning(bAgent) << __PRETTY_FUNCTION__ << "Output Channel "<< name << " does not exist!";
+            break;
+        case Channel::CREATE_IF_NOT_EXISTS:
+            qCWarning(bAgent)  << __PRETTY_FUNCTION__ << "Output Channel "<< name << " cannot be created here!";
+        }
+    }
+    return 0;
 }
 
 qreal Agent::getOtherAgentRelativeAngle(const Agent *otherAgent) const
