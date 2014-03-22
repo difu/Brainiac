@@ -501,18 +501,20 @@ Scene* Agent::getScene() const
 
 bool Agent::inputChannelExists(const QString &name) const
 {
-    if(m_inputs.count(name)>0)
+    if(m_inputs.contains(name)) {
         return true;
-    else
+    } else {
         return false;
+    }
 }
 
 bool Agent::outputChannelExists(const QString &name) const
 {
-    if(m_outputs.count(name)>0)
+    if(m_outputs.contains(name)) {
         return true;
-    else
+    } else {
         return false;
+    }
 }
 
 void Agent::renderGL()
