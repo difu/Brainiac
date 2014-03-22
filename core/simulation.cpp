@@ -140,6 +140,8 @@ void Simulation::startSimulation()
 
 void Simulation::stopSimulation()
 {
+    m_futureWatcherAdvance.cancel();
+    m_futureWatcherAdvanceCommit.cancel();
     m_running=false;
 }
 
