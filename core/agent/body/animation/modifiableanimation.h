@@ -48,6 +48,10 @@ public:
     /**
      * @brief Bakes the applied changes to the curve
      *
+     * A canceling of the simulation is forced to prevent access of changing or no longer existing curves or keyframes
+     * @fn bake
+     * @param sim pointer of the Simulation
+     * @sa Simulation
      */
     void bake(Simulation *sim);
 
@@ -75,14 +79,43 @@ public:
     /**
      * @brief returns if root rx curve should be cross faded
      *
-     * @fn crossFadeRx
-     * @return bool
+     * @return bool true, if curve should be crossfaded
      */
     bool crossFadeRx() const {return m_crossFadeRx; }
+
+    /**
+     * @brief returns if root ry curve should be cross faded
+     *
+     * @return bool true, if curve should be crossfaded
+     */
     bool crossFadeRy() const {return m_crossFadeRy; }
+
+    /**
+     * @brief returns if root rz curve should be cross faded
+     *
+     * @return bool true, if curve should be crossfaded
+     */
     bool crossFadeRz() const {return m_crossFadeRz; }
+
+    /**
+     * @brief returns if root tx curve should be cross faded
+     *
+     * @return bool true, if curve should be crossfaded
+     */
     bool crossFadeTx() const {return m_crossFadeTx; }
+
+    /**
+     * @brief returns if root ty curve should be cross faded
+     *
+     * @return bool true, if curve should be crossfaded
+     */
     bool crossFadeTy() const {return m_crossFadeTy; }
+
+    /**
+     * @brief returns if root tz curve should be cross faded
+     *
+     * @return bool true, if curve should be crossfaded
+     */
     bool crossFadeTz() const {return m_crossFadeTz; }
 
     /**
@@ -124,18 +157,26 @@ public:
      * @param type
      */
     void setAnimationType(BrainiacGlobals::AnimationType type);
+
     /**
-     * @brief
+     * @brief sets the start time
+     *
+     * will be set to 0.0 when bake is called
      *
      * @fn setStartTime
      * @param startTime
+     * @sa setEndTime()
+     * @sa bake()
      */
     void setStartTime(qreal startTime);
+
     /**
-     * @brief
+     * @brief sets the end time
      *
      * @fn setEndTime
      * @param endTime
+     * @sa setStartTime()
+     * @sa bake
      */
     void setEndTime(qreal endTime);
 
@@ -143,9 +184,10 @@ public:
      * @brief sets the crossfade in milisecs
      *
      * @fn setCrossFade
-     * @param crossFade
+     * @param crossFade the length of the crossfade
      */
     void setCrossFade(qreal crossFade);
+
     /**
      * @brief sets which root curves should be cross faded
      *
@@ -179,6 +221,15 @@ public:
     qreal getCrossFade() const {return m_crossFadeTime;}
     qreal getStartTime() const {return m_startTime;}
     qreal getEndTime() const {return m_endTime;}
+
+    /**
+     * @brief checks, if curve is a root bone curve
+     *
+     * a curve is a root if the curve is a rotation or translation curve of the root segment
+     * @fn isRootBoneCurve
+     * @param curve the curve to be checked
+     * @return bool true, if curve is a root bone curve
+     */
     bool isRootBoneCurve( const QString &curve ) const;
 
     static const qreal TransitionCurveLengthMs; /**< default length of transition curve in ms */
