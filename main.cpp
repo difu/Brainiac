@@ -23,6 +23,7 @@
 #include <QTextStream>
 #include <QCommandLineParser>
 #include "core/scene.h"
+#include "core/brainiacerror.h"
 
 
 int main(int argc, char *argv[])
@@ -81,7 +82,10 @@ int main(int argc, char *argv[])
 
     Scene theScene;
     if(!sceneFileName.isEmpty()) {
-        theScene.openConfig(sceneFileName);
+        if(!theScene.openConfig(sceneFileName)) {
+            BrainiacError::printLastError();
+            exit(1);
+        }
     }
 
 
