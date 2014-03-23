@@ -42,11 +42,19 @@ macx: LIBS += -framework QtConcurrent
 macx: INCLUDEPATH += $$OSG_INC_DIR
 #macx: DEPENDPATH += /usr/local/include
 
-
-unix: LIBS += -L $$OSG_LIB_DIR -losg -losgQt -losgViewer -losgGA -losgDB -lOpenThreads -losgFX -losgUtil
+CONFIG(debug, debug|release){
+	message(Build mode containes debug: ($$CONFIG))
+	unix: LIBS += -L $$OSG_LIB_DIR -losgd -losgQtd -losgViewerd -losgGAd -losgDBd -lOpenThreadsd -losgFXd -losgUtild
+}else{
+	unix: LIBS += -L $$OSG_LIB_DIR -losg -losgQt -losgViewer -losgGA -losgDB -lOpenThreads -losgFX -losgUtil
+}
 unix: INCLUDEPATH += $$OSG_INC_DIR
 # unix: DEPENDPATH += /usr/include
 QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
+
+CONFIG(debug, debug|release){
+	TARGET=$$join(TARGET,,,d)	
+}
 
 macx: QMAKE_CFLAGS_X86_64 += -mmacosx-version-min=10.9
 macx: QMAKE_CFLAGS_X86_64 += -Wall
