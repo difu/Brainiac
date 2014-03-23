@@ -73,7 +73,7 @@ void MotionTreeAnimationPlayer::apply()
         AnimationPlayer::apply(*m_currentAnimation,animTime);
         hasLatch=m_currentAnimation->hasLatch(animTime);
         m_latchChannel->setValue(hasLatch?1.0:0.0);
-        m_body->getAgent()->getInputChannel(m_currentAnimation->name())->setValue(1.0);
+        Channel::setInputValue(m_body->getAgent(),m_currentAnimation->name()%BrainiacGlobals::ChannelRunningSuffix,1.0,Channel::NONE_WARN);
     }
 
     // check for triggers of next possible actions

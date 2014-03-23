@@ -18,6 +18,7 @@
 
 #include "channel.h"
 #include "core/agent/agent.h"
+#include "core/brainiaclogger.h"
 
 
 Channel::Channel(qreal min, qreal max, qreal value)
@@ -119,5 +120,55 @@ void Channel::setValue(qreal value, bool isSpeed)
     m_value=qBound(m_min,m_value,m_max);
     if(m_value!=origValue) {
         emit valueChanged(m_value);
+    }
+}
+
+void Channel::setInputValue(Agent *agent, const QString &channelName, qreal value, ChannelNotExistOptions options)
+{
+    Channel *inp=agent->getInputChannel(channelName);
+    if(inp) {
+        inp->setValue(value);
+        return;
+    }
+    switch(options) {
+    case Channel::NONE:
+        return;
+        break;
+    case Channel::NONE_WARN:
+        qCWarning(bChannel) << __PRETTY_FUNCTION__ << "Input Channel "<< channelName << " does not exist!";
+        break;
+    case Channel::CREATE_IF_NOT_EXISTS:
+        Channel *newInput=new Channel();
+        newInput->setValue(value);
+        bool success=agent->addInputChannel(newInput,channelName);
+        if(!success) {
+            qCWarning(bChannel) << __PRETTY_FUNCTION__ << "Input Channel creation failed!";
+            delete newInput;
+        }
+    }
+}
+
+void Channel::setOutputValue(Agent *agent, const QString &channelName, qreal value, ChannelNotExistOptions options)
+{
+    Channel *out=agent->getOutputChannel(channelName);
+    if(out) {
+        out->setValue(value);
+        return;
+    }
+    switch(options) {
+    case Channel::NONE:
+        return;
+        break;
+    case Channel::NONE_WARN:
+        qCWarning(bChannel) << __PRETTY_FUNCTION__ << "Output Channel "<< channelName << " does not exist!";
+        break;
+    case Channel::CREATE_IF_NOT_EXISTS:
+        Channel *newOutput=new Channel();
+        newOutput->setValue(value);
+        bool success=agent->addOutputChannel(newOutput,channelName);
+        if(!success) {
+            qCWarning(bChannel) << __PRETTY_FUNCTION__ << "Output Channel creation failed!";
+            delete newOutput;
+        }
     }
 }

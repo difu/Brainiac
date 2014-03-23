@@ -27,6 +27,7 @@
 #include "group/group.h"
 #include "agent/body/body.h"
 #include "core/brainiaclogger.h"
+#include "core/brainiacerror.h"
 
 Scene::Scene(QObject *parent) :
     QObject(parent)
@@ -190,6 +191,7 @@ bool Scene::openConfig(const QString & fileName)
         createAgents();
         return true;
     }
+    BrainiacError::setLastError(BrainiacError::FILE_NOT_FOUND,__PRETTY_FUNCTION__,0,QString("Failed to open file ").append(fileName));
     return false;
 }
 

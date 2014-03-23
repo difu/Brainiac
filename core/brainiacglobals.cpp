@@ -146,6 +146,7 @@ const char* const BrainiacGlobals::ChannelName_Sound_d="sound.d\0";
 const char* const BrainiacGlobals::ChannelName_Sound_a="sound.a\0";
 const char* const BrainiacGlobals::ChannelName_Sound_f="sound.f\0";
 const char* const BrainiacGlobals::ChannelPhaseOffsetSuffix=":phase_offset\0";
+const char* const BrainiacGlobals::ChannelRunningSuffix=":running\0";
 
 Qt::Key BrainiacGlobals::ToggleSegmentCoordCrossesKey=Qt::Key_C;
 Qt::Key BrainiacGlobals::ToggleAgentPositionMarkerKey=Qt::Key_P;

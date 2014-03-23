@@ -141,6 +141,7 @@ public:
     static const QList<QString> ChannelNames_Phases;
 
     static const char* const ChannelPhaseOffsetSuffix;
+    static const char* const ChannelRunningSuffix;
 
     static QColor defaultXColor;
     static QColor defaultYColor;

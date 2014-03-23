@@ -30,6 +30,7 @@
 #include "core/brainiaclogger.h"
 #include "cml/cml.h"
 #include "cml/mathlib/matrix_rotation.h"
+#include "core/simulation.h"
 
 ModifiableAnimation::ModifiableAnimation( Animation *animation, AgentManager *agentManager) : Animation(animation)
 {
@@ -44,8 +45,10 @@ ModifiableAnimation::ModifiableAnimation( Animation *animation, AgentManager *ag
     qDebug() << __PRETTY_FUNCTION__ << "Startime" << m_startTime << "End Time" << m_endTime;
 }
 
-void ModifiableAnimation::bake()
+void ModifiableAnimation::bake(Simulation *sim)
 {
+    // cancel simulation first to prevent access to Animation::getValue
+    sim->cancelSimulation();
     QHash<QString, AnimationCurve*> newCurves;
     foreach(QString curveName,curveNames()) {
         AnimationCurve *newCurve=new AnimationCurve();
@@ -178,11 +181,11 @@ AnimationCurve ModifiableAnimation::createTransitionCurve()
 
 qreal ModifiableAnimation::getValue(const QString &curve, qreal time) const
 {
+    QReadLocker rLocker(&m_rwLock);
+    Q_UNUSED(rLocker);
     if(qFuzzyCompare(m_crossFadeTime,(qreal)0.0f)) {
         return Animation::getValue(curve,time);
     } else if(time>=0.0f) {
-        QReadLocker rLocker(&m_rwLock);
-        Q_UNUSED(rLocker);
         // Do we have a root bone curve?
         // if yes, check if it has to be crossfaded
         if( isRootBoneCurve(curve) ) {
@@ -205,7 +208,7 @@ qreal ModifiableAnimation::getValue(const QString &curve, qreal time) const
 qreal ModifiableAnimation::getCrossfadedValue(const QString &curve, qreal time) const
 {
     if(m_startTime+m_crossFadeTime<time && m_endTime+m_crossFadeTime>time) { // are we out of crossfade range?
-        //qDebug()<<__PRETTY_FUNCTION__ << "Out of cf range time" << time << "Start " << m_startTime << " End " << m_endTime << " CF " << m_crossFadeTime;
+        qCDebug(bAnimation) << __PRETTY_FUNCTION__ << "Out of crossfade range time" << time << "Start " << m_startTime << " End " << m_endTime << " CF " << m_crossFadeTime;
         return Animation::getValue(curve,time); // return non-crossfaded value
     }
     qreal diff=time-m_startTime;
@@ -214,16 +217,15 @@ qreal ModifiableAnimation::getCrossfadedValue(const QString &curve, qreal time) 
     if(m_crossFadeTime>0) {
         cfValue=Animation::getValue(curve,m_endTime+diff);
         qreal ratio=(diff/m_crossFadeTime);
-        ratio+=0.1f; // @bug workaround, to prevent first frame==last frame
-        if(ratio>1.0f) {
+        ratio+=0.001; // @bug workaround, to prevent first frame==last frame
+        if(ratio>1.0) {
             return Animation::getValue(curve,time);
         }
         qreal interpolated=((ratio)*origValue+(1.0f-ratio)*cfValue);
-        if(curve=="lLeg:rz")
-            qDebug()<<__PRETTY_FUNCTION__ << curve << "origValue" << origValue << "cfVal " << cfValue << "@time:" << m_endTime+diff << "Interpolated " << interpolated << "Ratio " << ratio;
         return interpolated;
     }
-    qDebug()<<__PRETTY_FUNCTION__ << "Not yet implementet cf <0";
+    qCWarning(bAnimation)<<__PRETTY_FUNCTION__ << "Not yet implementet cf <0, returning no crossfaded value";
+    return Animation::getValue(curve,time); // return non-crossfaded value
 }
 
 QVector3D ModifiableAnimation::getRootBoneTranslation(qreal time) const

@@ -328,13 +328,13 @@ void ActionEditor::applyAnimation()
 
 void ActionEditor::bakeAgentCurves()
 {
-    m_activeAnimation->bake();
+    m_activeAnimation->bake(m_scene->getSimulation());
     refreshCurveList();
 }
 
 void ActionEditor::bakeLoop()
 {
-    m_activeAnimation->bake();
+    m_activeAnimation->bake(m_scene->getSimulation());
     updateLoopUI();
 }
 

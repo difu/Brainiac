@@ -75,24 +75,13 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
     createActions();
     createMenues();
 
-
-    //qDebug() << __PRETTY_FUNCTION__;
-
     widget->setLayout(m_layout);
     setCentralWidget(widget);
 
-    //m_bodyDisplay=new BodyDisplay(this->m_scene);
 
     m_bodyDisplayOSG=new BodyDisplay_();
     m_sceneDisplayOSG=new SceneDisplay_(this->m_scene);
     setEditMode(m_editMode);
-
-    //m_sceneDisplay=new SceneDisplay(this->m_scene,m_scene->getCameras().first());
-    //connect(m_outputEditor,SIGNAL(updateGLContent()),m_sceneDisplay,SLOT(update()));
-    //connect(m_segmentEditor,SIGNAL(updateGLContent()),m_bodyDisplay,SLOT(update()));
-
-    // When a frame has been calculated update display
-//    connect(m_scene->getSimulation(),SIGNAL(frameDone()),m_sceneDisplay,SLOT(update()),Qt::DirectConnection);
 
     connect(m_sceneEditor,SIGNAL(selectionChanged()),this,SLOT(sceneEditorItemClicked()));
 
@@ -100,21 +89,10 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
         grp->getAgentManager()->setSelectedAgent(grp->getAgents().first());
     }
 
-//    // Assign each BrainEditor the first of its Agentmanagers Agent as the to be edited agentbrain
-//    QHashIterator<AgentManager*, BrainEditor*> i(m_brainEditors);
-//    while (i.hasNext()) {
-//        i.next();
-//        if(i.key()->getGroup()->getAgents().count()>0) {
-//            i.value()->setSelectedAgent(i.key()->getGroup()->getAgents().first());
-//        } else {
-//            i.value()->setSelectedAgent(i.key()->getMasterAgent());
-//        }
-//    }
 }
 
 void MainWindow::addAgentManager(AgentManager *agentManager)
 {
-    //BrainEditor *editor=new BrainEditor(m_scene,agentManager);
     m_brainEditors.insert(agentManager,agentManager->getBrainEditor());
     // This signal activates editor in South region
     connect(agentManager->getBrainEditor(), SIGNAL(itemClicked(ItemEditorWidgetsBase::editMessage)),this,SLOT(editorNodeClick(ItemEditorWidgetsBase::editMessage)));
@@ -149,6 +127,7 @@ void MainWindow::closeEvent(QCloseEvent *ev)
 //        m_actionEditor->deleteLater();
 //        m_actionEditor=0;
 //    }
+    m_scene->getSimulation()->cancelSimulation();
     writeSettings();
     ev->accept();
 }
@@ -317,14 +296,6 @@ void MainWindow::createEditorWidgets()
     m_motionTreeEditorGui=new MotionTreeEditorGui(m_scene,m_logicElementEditWidget);
     m_motionTreeEditorGui->setVisible(false);
 
-//    foreach(BrainEditor *brainEditor,m_brainEditors) {
-//        // This signal activates editor in South region
-//        connect(brainEditor, SIGNAL(itemClicked(ItemEditorWidgetsBase::editMessage)),this,SLOT(editorNodeClick(ItemEditorWidgetsBase::editMessage)));
-//        // When a frame has been calculated update the braineditors to display the new values
-//        connect(m_scene->getSimulation(),SIGNAL(frameDone()),brainEditor,SLOT(update()),Qt::DirectConnection);
-//        // Display statusbar messages
-//        connect(brainEditor, SIGNAL(statusBarMessageChanged(QString)),this,SLOT(statusBarMessageChange(QString)));
-//    }
     //
     connect(m_inputEditor, SIGNAL(updateBrainEditor()),this,SLOT(refreshBrainEditor()));
     connect(m_outputEditor,SIGNAL(updateBrainEditor()),this,SLOT(refreshBrainEditor()));
@@ -431,7 +402,6 @@ void MainWindow::editorNodeClick(ItemEditorWidgetsBase::editMessage msg)
 void MainWindow::motionTreeChanged(quint32 id)
 {
     if(m_activeAgentManager) {
-        //m_activeAgentManager->setActiveMotionTreeEditor(id);
         m_editorView->setScene(m_activeAgentManager->getMotionTreeManager()->getMotionTrees().value(id)->getMotionTreeEditor());
     }
 }
@@ -518,8 +488,6 @@ void MainWindow::loadSkeleton()
 void MainWindow::saveAgent()
 {
     if(m_activeAgentManager) {
-//        m_brainEditors.value(m_activeAgentManager)->updateItemLocations();
-//        m_bodyEditors.value(m_activeAgentManager)->updateItemLocations();
         if(!m_activeAgentManager->isFileNameSet()) {
             QString fileName = QFileDialog::getSaveFileName(this, tr("Save Agent as"),
                                         "",
