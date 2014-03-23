@@ -38,7 +38,7 @@ void agentReset(Agent* param_agent)
 }
 
 Simulation::Simulation(Scene *scene) :
-    QObject(), m_scene(scene)
+    QObject(scene), m_scene(scene)
 {
     m_frameCalculationTime=0;
     m_currentFrame=0;
@@ -100,6 +100,13 @@ void Simulation::advanceOneFrame()
 
 }
 
+void Simulation::cancelSimulation()
+{
+    stopSimulation();
+    m_futureWatcherAdvance.cancel();
+    m_futureWatcherAdvanceCommit.cancel();
+}
+
 quint32 Simulation::getCurrentFrame() const
 {
     return m_currentFrame;
@@ -140,8 +147,6 @@ void Simulation::startSimulation()
 
 void Simulation::stopSimulation()
 {
-    m_futureWatcherAdvance.cancel();
-    m_futureWatcherAdvanceCommit.cancel();
     m_running=false;
 }
 
@@ -150,5 +155,11 @@ void Simulation::timerEvent(QTimerEvent *)
     if(m_running) {
         this->advance();
     }
+}
+
+Simulation::~Simulation()
+{
+    cancelSimulation();
+    qDebug() << __PRETTY_FUNCTION__ << "DODJ";
 }
 

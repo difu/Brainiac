@@ -127,8 +127,7 @@ void MainWindow::closeEvent(QCloseEvent *ev)
 //        m_actionEditor->deleteLater();
 //        m_actionEditor=0;
 //    }
-    m_scene->getSimulation()->stopSimulation();
-
+    m_scene->getSimulation()->cancelSimulation();
     writeSettings();
     ev->accept();
 }

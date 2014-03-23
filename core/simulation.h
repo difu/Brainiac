@@ -50,6 +50,13 @@ public:
     void advanceOneFrame();
 
     /**
+     * @brief cancels the Simulation
+     *
+     * @fn cancelSimulation
+     */
+    void cancelSimulation();
+
+    /**
      * @brief returns the current frame of the Simulation
      *
      * @return quint32 the current frame of the Simulation
@@ -89,6 +96,13 @@ public:
     /** \brief @returns true if simulation is running
     **/
     bool isRunning() const { return m_running; }
+
+    /**
+     * @brief Destructor
+     *
+     * @fn ~Simulation
+     */
+    virtual ~Simulation();
 
 protected:
     int m_frameCalculationTime; //!< time in ms a frame calculation took
