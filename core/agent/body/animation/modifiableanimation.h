@@ -24,6 +24,7 @@
 
 class AgentManager;
 class Body;
+class Simulation;
 
 /**
  * @brief ModifiableAnimation provides functionality to manipulate and optimize an Animation
@@ -48,7 +49,7 @@ public:
      * @brief Bakes the applied changes to the curve
      *
      */
-    void bake();
+    void bake(Simulation *sim);
 
     /**
      * @brief creates AgentCurves

@@ -196,8 +196,6 @@ qreal Animation::getLoopAnimationTime(qreal time) const
 
 qreal Animation::getValue(const QString &curve, qreal time) const
 {
-    QReadLocker rLocker(&m_rwLock);
-    Q_UNUSED(rLocker);
     AnimationCurve *c=m_curves.value(curve,0);
     if(c) {
         return c->getValue(time);

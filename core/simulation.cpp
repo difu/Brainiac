@@ -103,8 +103,11 @@ void Simulation::advanceOneFrame()
 void Simulation::cancelSimulation()
 {
     stopSimulation();
+    resetSimulation();
     m_futureWatcherAdvance.cancel();
+    m_futureWatcherAdvance.waitForFinished();
     m_futureWatcherAdvanceCommit.cancel();
+    m_futureWatcherAdvanceCommit.waitForFinished();
 }
 
 quint32 Simulation::getCurrentFrame() const

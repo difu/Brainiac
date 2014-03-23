@@ -30,6 +30,7 @@
 #include "core/brainiaclogger.h"
 #include "cml/cml.h"
 #include "cml/mathlib/matrix_rotation.h"
+#include "core/simulation.h"
 
 ModifiableAnimation::ModifiableAnimation( Animation *animation, AgentManager *agentManager) : Animation(animation)
 {
@@ -44,8 +45,10 @@ ModifiableAnimation::ModifiableAnimation( Animation *animation, AgentManager *ag
     qDebug() << __PRETTY_FUNCTION__ << "Startime" << m_startTime << "End Time" << m_endTime;
 }
 
-void ModifiableAnimation::bake()
+void ModifiableAnimation::bake(Simulation *sim)
 {
+    // cancel simulation first to prevent access to Animation::getValue
+    sim->cancelSimulation();
     QHash<QString, AnimationCurve*> newCurves;
     foreach(QString curveName,curveNames()) {
         AnimationCurve *newCurve=new AnimationCurve();
@@ -178,11 +181,11 @@ AnimationCurve ModifiableAnimation::createTransitionCurve()
 
 qreal ModifiableAnimation::getValue(const QString &curve, qreal time) const
 {
+    QReadLocker rLocker(&m_rwLock);
+    Q_UNUSED(rLocker);
     if(qFuzzyCompare(m_crossFadeTime,(qreal)0.0f)) {
         return Animation::getValue(curve,time);
     } else if(time>=0.0f) {
-        QReadLocker rLocker(&m_rwLock);
-        Q_UNUSED(rLocker);
         // Do we have a root bone curve?
         // if yes, check if it has to be crossfaded
         if( isRootBoneCurve(curve) ) {
