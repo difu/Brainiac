@@ -16,8 +16,8 @@
                             <xs:complexType>
                               <xs:simpleContent>
                                 <xs:extension base="xs:string">
-                                  <xs:attribute type="xs:double" name="value" use="optional"/>
-                                  <xs:attribute type="xs:boolean" name="inherited" use="optional"/>
+                                  <xs:attribute type="xs:double" name="value" />
+                                  <xs:attribute type="xs:boolean" name="inherited" />
                                 </xs:extension>
                               </xs:simpleContent>
                             </xs:complexType>
@@ -26,9 +26,9 @@
                             <xs:complexType>
                               <xs:simpleContent>
                                 <xs:extension base="xs:string">
-                                  <xs:attribute type="xs:double" name="x" use="optional"/>
-                                  <xs:attribute type="xs:double" name="y" use="optional"/>
-                                  <xs:attribute type="xs:double" name="z" use="optional"/>
+                                  <xs:attribute type="xs:double" name="x" />
+                                  <xs:attribute type="xs:double" name="y" />
+                                  <xs:attribute type="xs:double" name="z" />
                                 </xs:extension>
                               </xs:simpleContent>
                             </xs:complexType>
@@ -37,9 +37,9 @@
                             <xs:complexType>
                               <xs:simpleContent>
                                 <xs:extension base="xs:string">
-                                  <xs:attribute type="xs:double" name="x" use="optional"/>
-                                  <xs:attribute type="xs:double" name="y" use="optional"/>
-                                  <xs:attribute type="xs:double" name="z" use="optional"/>
+                                  <xs:attribute type="xs:double" name="x" />
+                                  <xs:attribute type="xs:double" name="y" />
+                                  <xs:attribute type="xs:double" name="z" />
                                 </xs:extension>
                               </xs:simpleContent>
                             </xs:complexType>
@@ -48,9 +48,9 @@
                             <xs:complexType>
                               <xs:simpleContent>
                                 <xs:extension base="xs:string">
-                                  <xs:attribute type="xs:double" name="x" use="optional"/>
-                                  <xs:attribute type="xs:double" name="y" use="optional"/>
-                                  <xs:attribute type="xs:double" name="z" use="optional"/>
+                                  <xs:attribute type="xs:double" name="x" />
+                                  <xs:attribute type="xs:double" name="y" />
+                                  <xs:attribute type="xs:double" name="z" />
                                 </xs:extension>
                               </xs:simpleContent>
                             </xs:complexType>
@@ -59,9 +59,9 @@
                             <xs:complexType>
                               <xs:simpleContent>
                                 <xs:extension base="xs:string">
-                                  <xs:attribute type="xs:double" name="x" use="optional"/>
-                                  <xs:attribute type="xs:double" name="y" use="optional"/>
-                                  <xs:attribute type="xs:double" name="z" use="optional"/>
+                                  <xs:attribute type="xs:double" name="x" />
+                                  <xs:attribute type="xs:double" name="y" />
+                                  <xs:attribute type="xs:double" name="z" />
                                 </xs:extension>
                               </xs:simpleContent>
                             </xs:complexType>
@@ -70,9 +70,9 @@
                             <xs:complexType>
                               <xs:simpleContent>
                                 <xs:extension base="xs:string">
-                                  <xs:attribute type="xs:double" name="x" use="optional"/>
-                                  <xs:attribute type="xs:double" name="y" use="optional"/>
-                                  <xs:attribute type="xs:double" name="z" use="optional"/>
+                                  <xs:attribute type="xs:double" name="x" />
+                                  <xs:attribute type="xs:double" name="y" />
+                                  <xs:attribute type="xs:double" name="z" />
                                 </xs:extension>
                               </xs:simpleContent>
                             </xs:complexType>
@@ -81,7 +81,7 @@
                             <xs:complexType>
                               <xs:simpleContent>
                                 <xs:extension base="xs:string">
-                                  <xs:attribute type="xs:string" name="order" use="optional"/>
+                                  <xs:attribute type="xs:string" name="order" />
                                 </xs:extension>
                               </xs:simpleContent>
                             </xs:complexType>
@@ -90,11 +90,11 @@
                           <xs:element type="xs:string" name="Sphere" minOccurs="0"/>
                           <xs:element type="xs:string" name="Box" minOccurs="0"/>
                         </xs:sequence>
-                        <xs:attribute type="xs:unsignedInt" name="id" use="optional"/>
-                        <xs:attribute type="xs:unsignedInt" name="parent" use="optional"/>
-                        <xs:attribute type="xs:string" name="name" use="optional"/>
-                        <xs:attribute type="xs:integer" name="editorx" use="optional"/>
-                        <xs:attribute type="xs:integer" name="editory" use="optional"/>
+                        <xs:attribute type="xs:unsignedInt" name="id" />
+                        <xs:attribute type="xs:unsignedInt" name="parent" />
+                        <xs:attribute type="xs:string" name="name" />
+                        <xs:attribute type="xs:integer" name="editorx" />
+                        <xs:attribute type="xs:integer" name="editory" />
                       </xs:complexType>
                     </xs:element>
                   </xs:sequence>
@@ -107,8 +107,8 @@
                       <xs:complexType>
                         <xs:simpleContent>
                           <xs:extension base="xs:string">
-                            <xs:attribute type="xs:unsignedInt" name="id" use="optional"/>
-                            <xs:attribute type="xs:string" name="name" use="optional"/>
+                            <xs:attribute type="xs:unsignedInt" name="id" />
+                            <xs:attribute type="xs:string" name="name" />
                           </xs:extension>
                         </xs:simpleContent>
                       </xs:complexType>
@@ -120,10 +120,10 @@
                             <xs:complexType>
                               <xs:simpleContent>
                                 <xs:extension base="xs:string">
-                                  <xs:attribute type="xs:string" name="name" use="optional"/>
-                                  <xs:attribute type="xs:integer" name="editorX" use="optional"/>
-                                  <xs:attribute type="xs:integer" name="editorY" use="optional"/>
-                                  <xs:attribute type="xs:string" name="triggers" use="optional"/>
+                                  <xs:attribute type="xs:string" name="name" />
+                                  <xs:attribute type="xs:integer" name="editorX" />
+                                  <xs:attribute type="xs:integer" name="editorY" />
+                                  <xs:attribute type="xs:string" name="triggers" />
                                 </xs:extension>
                               </xs:simpleContent>
                             </xs:complexType>
@@ -132,10 +132,10 @@
                             <xs:complexType>
                               <xs:simpleContent>
                                 <xs:extension base="xs:string">
-                                  <xs:attribute type="xs:string" name="name" use="optional"/>
-                                  <xs:attribute type="xs:integer" name="editorX" use="optional"/>
-                                  <xs:attribute type="xs:integer" name="editorY" use="optional"/>
-                                  <xs:attribute type="xs:byte" name="color" use="optional"/>
+                                  <xs:attribute type="xs:string" name="name" />
+                                  <xs:attribute type="xs:integer" name="editorX" />
+                                  <xs:attribute type="xs:integer" name="editorY" />
+                                  <xs:attribute type="xs:byte" name="color" />
                                 </xs:extension>
                               </xs:simpleContent>
                             </xs:complexType>
@@ -144,8 +144,8 @@
                             <xs:complexType>
                               <xs:simpleContent>
                                 <xs:extension base="xs:string">
-                                  <xs:attribute type="xs:string" name="action" use="optional"/>
-                                  <xs:attribute type="xs:string" name="transition" use="optional"/>
+                                  <xs:attribute type="xs:string" name="action" />
+                                  <xs:attribute type="xs:string" name="transition" />
                                 </xs:extension>
                               </xs:simpleContent>
                             </xs:complexType>
@@ -154,15 +154,15 @@
                             <xs:complexType>
                               <xs:simpleContent>
                                 <xs:extension base="xs:string">
-                                  <xs:attribute type="xs:string" name="transition" use="optional"/>
-                                  <xs:attribute type="xs:string" name="action" use="optional"/>
+                                  <xs:attribute type="xs:string" name="transition" />
+                                  <xs:attribute type="xs:string" name="action" />
                                 </xs:extension>
                               </xs:simpleContent>
                             </xs:complexType>
                           </xs:element>
                         </xs:sequence>
-                        <xs:attribute type="xs:string" name="defaultaction" use="optional"/>
-                        <xs:attribute type="xs:unsignedInt" name="id" use="optional"/>
+                        <xs:attribute type="xs:string" name="defaultaction" />
+                        <xs:attribute type="xs:unsignedInt" name="id" />
                       </xs:complexType>
                     </xs:element>
                   </xs:sequence>
@@ -175,7 +175,7 @@
                       <xs:complexType>
                         <xs:simpleContent>
                           <xs:extension base="xs:string">
-                            <xs:attribute type="xs:string" name="fileName" use="optional"/>
+                            <xs:attribute type="xs:string" name="fileName" />
                           </xs:extension>
                         </xs:simpleContent>
                       </xs:complexType>
@@ -186,7 +186,7 @@
               <xs:element name="Brain">
                 <xs:complexType>
                   <xs:choice maxOccurs="unbounded" minOccurs="0">
-                    <xs:element name="Output">
+                    <xs:element name="Output" maxOccurs="unbounded" minOccurs="0">
                       <xs:complexType>
                         <xs:simpleContent>
                           <xs:extension base="xs:string">
@@ -201,7 +201,7 @@
                         </xs:simpleContent>
                       </xs:complexType>
                     </xs:element>
-                    <xs:element name="And">
+                    <xs:element name="And" maxOccurs="unbounded" minOccurs="0">
                       <xs:complexType>
                         <xs:simpleContent>
                           <xs:extension base="xs:string">
@@ -214,7 +214,7 @@
                         </xs:simpleContent>
                       </xs:complexType>
                     </xs:element>
-                    <xs:element name="Or">
+                    <xs:element name="Or" maxOccurs="unbounded" minOccurs="0">
                       <xs:complexType>
                         <xs:simpleContent>
                           <xs:extension base="xs:string">
@@ -231,34 +231,34 @@
                       <xs:complexType>
                         <xs:simpleContent>
                           <xs:extension base="xs:string">
-                            <xs:attribute type="xs:string" name="channel" use="optional"/>
-                            <xs:attribute type="xs:double" name="min" use="optional"/>
-                            <xs:attribute type="xs:double" name="max" use="optional"/>
-                            <xs:attribute type="xs:unsignedInt" name="id" use="optional"/>
-                            <xs:attribute type="xs:string" name="name" use="optional"/>
-                            <xs:attribute type="xs:integer" name="editorx" use="optional"/>
-                            <xs:attribute type="xs:integer" name="editory" use="optional"/>
+                            <xs:attribute type="xs:string" name="channel" />
+                            <xs:attribute type="xs:double" name="min" />
+                            <xs:attribute type="xs:double" name="max" />
+                            <xs:attribute type="xs:unsignedInt" name="id" />
+                            <xs:attribute type="xs:string" name="name" />
+                            <xs:attribute type="xs:integer" name="editorx" />
+                            <xs:attribute type="xs:integer" name="editory" />
                           </xs:extension>
                         </xs:simpleContent>
                       </xs:complexType>
                     </xs:element>
-                    <xs:element name="Noise">
+                    <xs:element name="Noise" maxOccurs="unbounded" minOccurs="0">
                       <xs:complexType>
                         <xs:simpleContent>
                           <xs:extension base="xs:string">
-                            <xs:attribute type="xs:double" name="rate" use="optional"/>
-                            <xs:attribute type="xs:unsignedInt" name="id" use="optional"/>
-                            <xs:attribute type="xs:string" name="name" use="optional"/>
-                            <xs:attribute type="xs:integer" name="editorx" use="optional"/>
-                            <xs:attribute type="xs:integer" name="editory" use="optional"/>
-                            <xs:attribute type="xs:string" name="channel" use="optional"/>
-                            <xs:attribute type="xs:double" name="min" use="optional"/>
-                            <xs:attribute type="xs:double" name="max" use="optional"/>
+                            <xs:attribute type="xs:double" name="rate" />
+                            <xs:attribute type="xs:unsignedInt" name="id" />
+                            <xs:attribute type="xs:string" name="name" />
+                            <xs:attribute type="xs:integer" name="editorx" />
+                            <xs:attribute type="xs:integer" name="editory" />
+                            <xs:attribute type="xs:string" name="channel" />
+                            <xs:attribute type="xs:double" name="min" />
+                            <xs:attribute type="xs:double" name="max" />
                           </xs:extension>
                         </xs:simpleContent>
                       </xs:complexType>
                     </xs:element>
-                    <xs:element name="Connector">
+                    <xs:element name="Connector" maxOccurs="unbounded" minOccurs="0">
                       <xs:complexType>
                         <xs:simpleContent>
                           <xs:extension base="xs:string">
