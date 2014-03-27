@@ -1,0 +1,282 @@
+
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Agentconfig">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Agent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Body">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Segment" maxOccurs="unbounded" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="Color">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                  <xs:attribute type="xs:double" name="value" use="optional"/>
+                                  <xs:attribute type="xs:boolean" name="inherited" use="optional"/>
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="RestTranslation">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                  <xs:attribute type="xs:double" name="x" use="optional"/>
+                                  <xs:attribute type="xs:double" name="y" use="optional"/>
+                                  <xs:attribute type="xs:double" name="z" use="optional"/>
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="RestRotation">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                  <xs:attribute type="xs:double" name="x" use="optional"/>
+                                  <xs:attribute type="xs:double" name="y" use="optional"/>
+                                  <xs:attribute type="xs:double" name="z" use="optional"/>
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="Translation">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                  <xs:attribute type="xs:double" name="x" use="optional"/>
+                                  <xs:attribute type="xs:double" name="y" use="optional"/>
+                                  <xs:attribute type="xs:double" name="z" use="optional"/>
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="Rotation">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                  <xs:attribute type="xs:double" name="x" use="optional"/>
+                                  <xs:attribute type="xs:double" name="y" use="optional"/>
+                                  <xs:attribute type="xs:double" name="z" use="optional"/>
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="Size">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                  <xs:attribute type="xs:double" name="x" use="optional"/>
+                                  <xs:attribute type="xs:double" name="y" use="optional"/>
+                                  <xs:attribute type="xs:double" name="z" use="optional"/>
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="RotTransOrder">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                  <xs:attribute type="xs:string" name="order" use="optional"/>
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element type="xs:string" name="Tube" minOccurs="0"/>
+                          <xs:element type="xs:string" name="Sphere" minOccurs="0"/>
+                          <xs:element type="xs:string" name="Box" minOccurs="0"/>
+                        </xs:sequence>
+                        <xs:attribute type="xs:unsignedInt" name="id" use="optional"/>
+                        <xs:attribute type="xs:unsignedInt" name="parent" use="optional"/>
+                        <xs:attribute type="xs:string" name="name" use="optional"/>
+                        <xs:attribute type="xs:integer" name="editorx" use="optional"/>
+                        <xs:attribute type="xs:integer" name="editory" use="optional"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="MotionTrees">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Trigger" maxOccurs="unbounded" minOccurs="0">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute type="xs:unsignedInt" name="id" use="optional"/>
+                            <xs:attribute type="xs:string" name="name" use="optional"/>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="MotionTree" maxOccurs="unbounded" minOccurs="0">
+                      <xs:complexType mixed="true">
+                        <xs:sequence>
+                          <xs:element name="Action" maxOccurs="unbounded" minOccurs="0">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                  <xs:attribute type="xs:string" name="name" use="optional"/>
+                                  <xs:attribute type="xs:integer" name="editorX" use="optional"/>
+                                  <xs:attribute type="xs:integer" name="editorY" use="optional"/>
+                                  <xs:attribute type="xs:string" name="triggers" use="optional"/>
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="Transition" maxOccurs="unbounded" minOccurs="0">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                  <xs:attribute type="xs:string" name="name" use="optional"/>
+                                  <xs:attribute type="xs:integer" name="editorX" use="optional"/>
+                                  <xs:attribute type="xs:integer" name="editorY" use="optional"/>
+                                  <xs:attribute type="xs:byte" name="color" use="optional"/>
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="ActionTransitionConnection" maxOccurs="unbounded" minOccurs="0">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                  <xs:attribute type="xs:string" name="action" use="optional"/>
+                                  <xs:attribute type="xs:string" name="transition" use="optional"/>
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="TransitionActionConnection" maxOccurs="unbounded" minOccurs="0">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                  <xs:attribute type="xs:string" name="transition" use="optional"/>
+                                  <xs:attribute type="xs:string" name="action" use="optional"/>
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                        <xs:attribute type="xs:string" name="defaultaction" use="optional"/>
+                        <xs:attribute type="xs:unsignedInt" name="id" use="optional"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="Animations">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Animation" maxOccurs="unbounded" minOccurs="0">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute type="xs:string" name="fileName" use="optional"/>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="Brain">
+                <xs:complexType>
+                  <xs:choice maxOccurs="unbounded" minOccurs="0">
+                    <xs:element name="Output">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute type="xs:string" name="channel"/>
+                            <xs:attribute type="xs:double" name="min"/>
+                            <xs:attribute type="xs:double" name="max"/>
+                            <xs:attribute type="xs:unsignedInt" name="id"/>
+                            <xs:attribute type="xs:string" name="name"/>
+                            <xs:attribute type="xs:integer" name="editorx"/>
+                            <xs:attribute type="xs:integer" name="editory"/>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="And">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute type="xs:string" name="mode"/>
+                            <xs:attribute type="xs:unsignedInt" name="id"/>
+                            <xs:attribute type="xs:string" name="name"/>
+                            <xs:attribute type="xs:integer" name="editorx"/>
+                            <xs:attribute type="xs:integer" name="editory"/>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Or">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute type="xs:string" name="mode"/>
+                            <xs:attribute type="xs:unsignedInt" name="id"/>
+                            <xs:attribute type="xs:string" name="name"/>
+                            <xs:attribute type="xs:integer" name="editorx"/>
+                            <xs:attribute type="xs:integer" name="editory"/>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Input" maxOccurs="unbounded" minOccurs="0">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute type="xs:string" name="channel" use="optional"/>
+                            <xs:attribute type="xs:double" name="min" use="optional"/>
+                            <xs:attribute type="xs:double" name="max" use="optional"/>
+                            <xs:attribute type="xs:unsignedInt" name="id" use="optional"/>
+                            <xs:attribute type="xs:string" name="name" use="optional"/>
+                            <xs:attribute type="xs:integer" name="editorx" use="optional"/>
+                            <xs:attribute type="xs:integer" name="editory" use="optional"/>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Noise">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute type="xs:double" name="rate" use="optional"/>
+                            <xs:attribute type="xs:unsignedInt" name="id" use="optional"/>
+                            <xs:attribute type="xs:string" name="name" use="optional"/>
+                            <xs:attribute type="xs:integer" name="editorx" use="optional"/>
+                            <xs:attribute type="xs:integer" name="editory" use="optional"/>
+                            <xs:attribute type="xs:string" name="channel" use="optional"/>
+                            <xs:attribute type="xs:double" name="min" use="optional"/>
+                            <xs:attribute type="xs:double" name="max" use="optional"/>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Connector">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute type="xs:unsignedInt" name="parent"/>
+                            <xs:attribute type="xs:unsignedInt" name="child"/>
+                            <xs:attribute type="xs:byte" name="inverted"/>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:choice>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="name"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

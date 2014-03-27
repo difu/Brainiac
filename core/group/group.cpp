@@ -24,6 +24,8 @@
 #include "core/agent/agentmanager.h"
 #include "core/agent/agent.h"
 #include "core/scene.h"
+#include "core/brainiacerror.h"
+#include "core/brainiaclogger.h"
 
 Group::Group(Scene *scene)
 {
@@ -76,8 +78,8 @@ void Group::loadConfig(QXmlStreamReader *xml)
     if(m_agentManager->loadConfig()) {
 
     } else {
-        delete m_agentManager;
-        qCritical() << "Error while loading agentFile" << m_agentFileName;
+        qCDebug(bScene) << __PRETTY_FUNCTION__ << "Failed to load agentfile";
+        BrainiacError::printLastError();
     }
 }
 

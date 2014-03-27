@@ -47,6 +47,9 @@
 #include <QXmlStreamWriter>
 #include <QDebug>
 #include <QVector3D>
+#include <QXmlSchema>
+#include <QXmlSchemaValidator>
+
 
 AgentManager::AgentManager(Group *group)
 {
@@ -501,6 +504,25 @@ bool AgentManager::loadConfig()
 {
     QFile file(m_fileName);
     if(file.open(QIODevice::ReadOnly)) {
+
+        // Validate Agent file
+        QXmlSchema agentSchema;
+        QFile agentSchemaFile("://XML/AgentSchema.xml");
+        if(!agentSchemaFile.open(QIODevice::ReadOnly)) {
+            BrainiacError::setLastError(BrainiacError::FILE_NOT_FOUND,__PRETTY_FUNCTION__,0,QString("Failed to open validation file ").append(agentSchemaFile.fileName()));
+            return false;
+        }
+        if(!agentSchema.load(&agentSchemaFile)) {
+            BrainiacError::setLastError(BrainiacError::FILE_PARSER_FAILED,__PRETTY_FUNCTION__,0,QString("Failed to parse validation file ").append(agentSchemaFile.fileName()));
+            return false;
+        }
+        QXmlSchemaValidator validator(agentSchema);
+        if(!validator.validate(&file,QUrl::fromLocalFile(file.fileName()) )) {
+            BrainiacError::setLastError(BrainiacError::FILE_PARSER_FAILED,__PRETTY_FUNCTION__,0,QString("Failed to validate file ").append(m_fileName));
+            return false;
+        }
+        file.reset(); // set file to the beginning
+
         QXmlStreamReader reader;
         reader.setDevice(&file);
         while(reader.readNextStartElement()) {

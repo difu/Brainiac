@@ -1,5 +1,6 @@
-QT       += widgets testlib
-QT       += opengl
+QT += widgets testlib
+QT += opengl
+QT += xmlpatterns
 
 
 include ( BrainiacCommonSources.pri )
