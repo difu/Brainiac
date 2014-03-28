@@ -78,5 +78,6 @@ HEADERS  += gui/mainwindow.h \
     core/agent/body/animation/motiontreeanimationplayer.h \
     gui/Animation/motiontreeeditorgui.h \
     gui/Animation/motiontreeeditoritemconnector.h \
-    core/brainiaclogger.h
+    core/brainiaclogger.h \
+    gui/brainiacdisplaykeymouseeater.h
 

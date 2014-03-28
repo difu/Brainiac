@@ -34,6 +34,7 @@
 #include <osgViewer/ViewerEventHandlers>
 #include <osgViewer/Viewer>
 #include <osgQt/GraphicsWindowQt>
+#include "gui/brainiacdisplaykeymouseeater.h"
 
 class ViewerWidget : public QWidget
 {
@@ -68,44 +69,20 @@ protected:
 };
 
 
-class KeyPressReleaseEater : public QObject
- {
-     Q_OBJECT
-
- protected:
-     bool eventFilter(QObject *obj, QEvent *event)
-     {
-         if (event->type() == QEvent::KeyPress) {
-             QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-             qDebug("Ate key press %d", keyEvent->key());
-             emit keyPressed((Qt::Key)keyEvent->key());
-             return false; // continue event processing
-             //QObject::eventFilter(obj, event);
-         } else {
-             // standard event processing
-             return QObject::eventFilter(obj, event);
-         }
-     }
-signals:
-     void keyPressed(Qt::Key key);
- };
-
-
-
 class BrainiacGlWindow : public osgQt::GraphicsWindowQt
 {
 public:
     BrainiacGlWindow(osg::GraphicsContext::Traits* traits, QWidget* parent = NULL, const QGLWidget* shareWidget = NULL, Qt::WindowFlags f = 0 )
         :GraphicsWindowQt(traits, parent , shareWidget,f ){
-        m_kpEater=new KeyPressReleaseEater();
-        getGLWidget()->installEventFilter(m_kpEater);
+        m_kmEater=new BrainiacDisplayKeyMouseEater();
+        getGLWidget()->installEventFilter(m_kmEater);
     }
     virtual ~BrainiacGlWindow(){
-        getGLWidget()->removeEventFilter(m_kpEater);
-        m_kpEater->deleteLater();
+        getGLWidget()->removeEventFilter(m_kmEater);
+        m_kmEater->deleteLater();
     }
-    KeyPressReleaseEater *getKeyPressedReleasedEater() { return m_kpEater; }
-    KeyPressReleaseEater *m_kpEater;
+    BrainiacDisplayKeyMouseEater *getKeyMouseEater() { return m_kmEater; }
+    BrainiacDisplayKeyMouseEater *m_kmEater;
 };
 
 class RenderThread : public QThread

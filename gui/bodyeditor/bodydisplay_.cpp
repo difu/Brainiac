@@ -10,7 +10,7 @@ BodyDisplay_::BodyDisplay_() : OsgMultithreadedViewerWidget()
 {
 //    osg::Camera* camera = createCamera( 50, 50, 640, 480 );
 //    osg::Node *ground=osgDB::readNodeFile("/Users/dirkfuchs/Desktop/ground.obj");
-    connect(getGlWindow()->getKeyPressedReleasedEater(),SIGNAL(keyPressed(Qt::Key)),this,SLOT(keyPressed(Qt::Key)));
+    connect(getGlWindow()->getKeyMouseEater(),SIGNAL(keyPressed(Qt::Key)),this,SLOT(keyPressed(Qt::Key)));
     setWindowFlags(Qt::Tool);
     setWindowTitle("Body Editor");
     show();

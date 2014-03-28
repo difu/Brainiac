@@ -22,7 +22,7 @@ SceneDisplay_::SceneDisplay_(Scene *scene): OsgMultithreadedViewerWidget(0,scene
 {
     setWindowTitle("Scene");
     m_osgFileName=QDir::tempPath()%"/Scene.osg";
-    connect(getGlWindow()->getKeyPressedReleasedEater(),SIGNAL(keyPressed(Qt::Key)),this,SLOT(keyPressed(Qt::Key)));
+    connect(getGlWindow()->getKeyMouseEater(),SIGNAL(keyPressed(Qt::Key)),this,SLOT(keyPressed(Qt::Key)));
 
 }
 
