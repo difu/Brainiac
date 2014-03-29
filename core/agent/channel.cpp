@@ -135,9 +135,10 @@ void Channel::setInputValue(Agent *agent, const QString &channelName, qreal valu
         return;
         break;
     case Channel::NONE_WARN:
-        qCWarning(bChannel) << __PRETTY_FUNCTION__ << "Input Channel "<< channelName << " does not exist!";
+        qCDebug(bChannel) << __PRETTY_FUNCTION__ << "Input Channel "<< channelName << " does not exist!";
         break;
     case Channel::CREATE_IF_NOT_EXISTS:
+        qCWarning(bChannel) << __PRETTY_FUNCTION__ << "Create new input channel!";
         Channel *newInput=new Channel();
         newInput->setValue(value);
         bool success=agent->addInputChannel(newInput,channelName);
@@ -163,6 +164,7 @@ void Channel::setOutputValue(Agent *agent, const QString &channelName, qreal val
         qCWarning(bChannel) << __PRETTY_FUNCTION__ << "Output Channel "<< channelName << " does not exist!";
         break;
     case Channel::CREATE_IF_NOT_EXISTS:
+        qCDebug(bChannel) << __PRETTY_FUNCTION__ << "Create new output channel!";
         Channel *newOutput=new Channel();
         newOutput->setValue(value);
         bool success=agent->addOutputChannel(newOutput,channelName);

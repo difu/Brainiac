@@ -36,6 +36,7 @@
 Agent::Agent(AgentManager *manager, quint32 id) :
     QObject()
 {
+    qCDebug(bAgent) << __PRETTY_FUNCTION__ << " new Agent";
     m_id=id;
     m_agentManager=manager;
     m_scene=manager->getScene();
@@ -49,6 +50,7 @@ Agent::Agent(AgentManager *manager, quint32 id) :
 Agent::Agent(Agent *otherAgent, quint32 id)  :
     QObject()
 {
+    qCDebug(bAgent) << __PRETTY_FUNCTION__ << " new Agent with id " << id;
     m_id=id;
     createChannels();
     m_agentManager=otherAgent->getAgentManager();
@@ -364,7 +366,7 @@ Channel* Agent::getOutputChannel(const QString &name, Channel::ChannelNotExistOp
     return 0;
 }
 
-qreal Agent::getOtherAgentRelativeAngle(const Agent &otherAgent) const
+qreal Agent::getOtherAgentRelativeAngle(const Agent *otherAgent) const
 {
     QVector3D distVect=this->getOtherAgentRelativePosition(otherAgent);
     qreal scalar=-QVector3D::dotProduct(distVect,QVector3D(1.0,0.0,0.0));
@@ -379,7 +381,7 @@ qreal Agent::getOtherAgentRelativeAngle(const Agent &otherAgent) const
 
     // the absolute angle
     qreal angle=acos(scalar/(distVect.length())) * ((double)180.0)/BrainiacGlobals::PI;// + yRotation;
-    if(m_position.z()<otherAgent.getPosition().z()) {
+    if(m_position.z()<otherAgent->getPosition().z()) {
         angle=360.0-angle;
     }
 
@@ -396,7 +398,7 @@ qreal Agent::getOtherAgentRelativeAngle(const Agent &otherAgent) const
     rightPoint.setY(0.0);
     //qDebug() << "Position:" << m_position << "left:" << leftPoint << "right:" << rightPoint << yRotation;
 
-    QVector3D otherPos(otherAgent.getPosition().x(),otherAgent.getPosition().y(),otherAgent.getPosition().z());
+    QVector3D otherPos(otherAgent->getPosition().x(),otherAgent->getPosition().y(),otherAgent->getPosition().z());
 
     //qDebug() << "Other Agent Pos" << otherPos;
 
@@ -434,9 +436,9 @@ qreal Agent::getOtherAgentRelativeAngle(const Agent &otherAgent) const
     return resAngle;
 }
 
-qreal Agent::getOtherAgentRelativeOrientation(const Agent &otherAgent) const
+qreal Agent::getOtherAgentRelativeOrientation(const Agent *otherAgent) const
 {
-    qreal otherAgentOrientation=otherAgent.getRotation().y();
+    qreal otherAgentOrientation=otherAgent->getRotation().y();
     qreal ownOrientation=m_rotation.y();
     BrainiacGlobals::normalizeAngle(&otherAgentOrientation);
     BrainiacGlobals::normalizeAngle(&ownOrientation);
@@ -460,17 +462,17 @@ qreal Agent::getOtherAgentRelativeOrientation(const Agent &otherAgent) const
     return -res;
 }
 
-qreal Agent::getOtherAgentSoundReception(const Agent &otherAgent) const
+qreal Agent::getOtherAgentSoundReception(const Agent *otherAgent) const
 {
-    qreal otherAgentAmplitude=otherAgent.getOutputChannel(BrainiacGlobals::ChannelName_Sound_a)->getOldValue();
+    qreal otherAgentAmplitude=otherAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_a)->getOldValue();
     qreal distance=this->getOtherAgentRelativePosition(otherAgent).length();
     qreal reception=otherAgentAmplitude-distance;
     return qMax((qreal)0.0,reception);
 }
 
-QVector3D Agent::getOtherAgentRelativePosition(const Agent &otherAgent) const
+QVector3D Agent::getOtherAgentRelativePosition(const Agent *otherAgent) const
 {
-    return QVector3D(otherAgent.getPosition().x(),otherAgent.getPosition().y(),otherAgent.getPosition().z())-m_position;
+    return QVector3D(otherAgent->getPosition().x(),otherAgent->getPosition().y(),otherAgent->getPosition().z())-m_position;
 }
 
 const QVector3D &Agent::getPosition() const

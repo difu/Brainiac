@@ -79,7 +79,7 @@ public:
                     @param otherAgent a pointer to the original agent
                     @param id the id of the agent
     **/
-    Agent(Agent *otherAgent, quint32 id=0);
+    explicit Agent(Agent *otherAgent, quint32 id=0);
 
     /** \brief adds an input channel
 
@@ -204,7 +204,7 @@ public:
       polar coordinate about the Y axis of sound source. The unit is degree
       @param otherAgent the agent to which the relative angle is calculated
     **/
-    qreal getOtherAgentRelativeAngle(const Agent &otherAgent) const;
+    qreal getOtherAgentRelativeAngle(const Agent *otherAgent) const;
 
     /**
      * @brief returns the orientation relative to its own
@@ -212,19 +212,19 @@ public:
      * @param otherAgent the other agent
      * @return qreal the relative angle
      */
-    qreal getOtherAgentRelativeOrientation(const Agent &otherAgent) const;
+    qreal getOtherAgentRelativeOrientation(const Agent *otherAgent) const;
 
     /** \brief returns the sound reception of given agent
 
       @param otherAgent the agent to which the reception is calculated
     **/
-    qreal getOtherAgentSoundReception(const Agent &otherAgent) const;
+    qreal getOtherAgentSoundReception(const Agent *otherAgent) const;
 
     /** \brief returns the position given agent relative to current position
 
       @param otherAgent the agent to which the position is calculated
     **/
-    QVector3D getOtherAgentRelativePosition(const Agent &otherAgent) const;
+    QVector3D getOtherAgentRelativePosition(const Agent *otherAgent) const;
 
     /** \brief returns the position of the agent in world space
     **/
@@ -305,7 +305,8 @@ protected:
 signals:
 
 public slots:
-
+private:
+    Q_DISABLE_COPY(Agent)
 };
 
 #endif // AGENT_H

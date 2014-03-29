@@ -28,6 +28,7 @@
 #include "core/agent/body/animation/motiontreeanimationplayer.h"
 #include "core/agent/channel.h"
 #include "core/agent/body/bodysegment.h"
+#include "core/brainiaclogger.h"
 
 #include <QColor>
 
@@ -189,5 +190,10 @@ void Body::updatePosition() {
 
 Body::~Body()
 {
+    delete m_animationPlayer;
+    foreach(MotionTreeAnimationPlayer *player, m_treeAnimationPlayers) {
+        delete player;
+    }
+
     m_agent->getScene()->getRootSceneNode()->removeChild(m_bodyRoot);
 }
