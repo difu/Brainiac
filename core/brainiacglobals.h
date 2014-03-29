@@ -40,10 +40,10 @@ public:
     static const QList<QColor> EditorColors;
     static void normalizeAngle(qreal *angle)
     {
-        while (*angle < -360)
-            *angle += 360;
-        while (*angle > 360)
-            *angle -= 360;
+        while (*angle < -360.0)
+            *angle += 360.0;
+        while (*angle > 360.0)
+            *angle -= 360.0;
     }
 
     static qreal norm(qreal min, qreal max, qreal val) {
@@ -58,11 +58,11 @@ public:
         return deNorm;
     }
 
-    static qreal grad2rad(qreal grad) { return grad*PI/180.0f; }
-    static qreal rad2grad(qreal rad) { return rad*180.0f/PI; }
+    static qreal grad2rad(qreal grad) { return grad*PI/180.0; }
+    static qreal rad2grad(qreal rad) { return rad*180.0/PI; }
 
-    static qreal sinGrad( qreal grad) { return sin(grad*PI/180.0f); }
-    static qreal cosGrad( qreal grad) { return cos(grad*PI/180.0f); }
+    static qreal sinGrad( qreal grad) { return sin(grad*PI/180.0); }
+    static qreal cosGrad( qreal grad) { return cos(grad*PI/180.0); }
 
     static const qreal MAXQREAL;
     static const qreal MINQREAL;
