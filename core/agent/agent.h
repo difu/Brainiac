@@ -228,10 +228,10 @@ public:
 
     /** \brief returns the position of the agent in world space
     **/
-    const QVector3D getPosition() const;
+    const QVector3D& getPosition() const;
     /** \brief returns the rotation of the agent in world space
     **/
-    const QVector3D *getRotation() const;
+    const QVector3D& getRotation() const;
     /** \brief true if sound emmisions should be rendered
     **/
     bool getRenderSoundEmission() const;
@@ -245,14 +245,7 @@ public:
     /** \brief @returns true if channel exists
     **/
     bool outputChannelExists(const QString &name) const;
-    /** \brief renders the agent in gl context
-            calls the bodie´s render function
-            it also draws sound emmissions
-            @sa getRenderSoundEmission()
-            @sa renderSoundEmission()
-            @sa Body::renderGL()
-    **/
-    void renderGL();
+
     void renderSoundEmission(bool render);
     void reset();
     void setLocator(Locator *locator);
