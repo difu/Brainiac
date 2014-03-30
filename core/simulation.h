@@ -105,6 +105,7 @@ public:
     virtual ~Simulation();
 
 protected:
+    bool m_currentFrameIsCalculated; //!< true, if the current frame is actually calculated
     int m_frameCalculationTime; //!< time in ms a frame calculation took
     quint32 m_fps; //!< frametrate of the sim
     bool m_running; //!< true, if simulation is currently running

@@ -21,6 +21,7 @@
 
 #include <QObject>
 #include <QDir>
+#include <QThread>
 
 #include <QXmlStreamWriter>
 #include <QXmlStreamReader>
@@ -37,7 +38,9 @@ class Simulation;
 /** \brief  The Scene
 
         This class holds all contents of the scene.
-        All agents, lights, groups are referenced here
+        All agents, lights, groups are referenced here.
+
+        The simulation is run in its own thread. That´s why Simulation is not a child of Scene.
 
 **/
 class Scene : public QObject

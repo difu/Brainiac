@@ -38,7 +38,7 @@ void agentReset(Agent* param_agent)
 }
 
 Simulation::Simulation(Scene *scene) :
-    QObject(scene), m_scene(scene)
+    QObject(scene),  m_currentFrameIsCalculated(false), m_scene(scene)
 {
     m_frameCalculationTime=0;
     m_currentFrame=0;
@@ -55,14 +55,15 @@ Simulation::Simulation(Scene *scene) :
 void Simulation::advance()
 {
     if(m_simMutex.tryLock() ) {
-        m_t.start();
-        // Kepp the List up2date
-        m_agents=m_scene->getAgents();
-        m_futureWatcherAdvance.setFuture(QtConcurrent::map(m_agents,&::advanceAgent));
+        if(!m_currentFrameIsCalculated){
+            m_currentFrameIsCalculated=true;
+            m_t.start();
+            // Kepp the List up2date
+            m_agents=m_scene->getAgents();
+            m_futureWatcherAdvance.setFuture(QtConcurrent::map(m_agents,&::advanceAgent));
+        }
+        m_simMutex.unlock();
     } else {
-        m_late=true;
-        qCDebug(bSimulation) << __PRETTY_FUNCTION__ << "sim is late ";
-
     }
 }
 
@@ -75,9 +76,18 @@ void Simulation::advanceCommitDone()
 {
     m_currentFrame++;
     emit frameDone();
-    m_simMutex.unlock();
     m_frameCalculationTime=m_t.elapsed();
+    QMutexLocker locker(&m_simMutex);
+    Q_UNUSED(locker);
+    m_currentFrameIsCalculated=false;
+
     qCDebug(bSimulation) << __PRETTY_FUNCTION__ << "frame calc time " << m_frameCalculationTime;
+    if(m_frameCalculationTime>1000/(int)m_fps) {
+        m_late=true;
+        qCDebug(bSimulation) << __PRETTY_FUNCTION__ << "sim is late ";
+    } else {
+        m_late=false;
+    }
 }
 
 
@@ -102,12 +112,12 @@ void Simulation::advanceOneFrame()
 
 void Simulation::cancelSimulation()
 {
+    qCDebug(bSimulation) << __PRETTY_FUNCTION__ << "Cancelling started";
     stopSimulation();
-    resetSimulation();
     m_futureWatcherAdvance.cancel();
-    m_futureWatcherAdvance.waitForFinished();
     m_futureWatcherAdvanceCommit.cancel();
-    m_futureWatcherAdvanceCommit.waitForFinished();
+    resetSimulation();
+    qCDebug(bSimulation) << __PRETTY_FUNCTION__ << "Simulation canceled completly";
 }
 
 quint32 Simulation::getCurrentFrame() const
@@ -135,12 +145,14 @@ qreal Simulation::getFpsCalc() const {
 }
 
 void Simulation::resetSimulation() {
-    m_simMutex.lock();
-    QList<Agent *> agents=m_scene->getAgents();
+    QMutexLocker locker(&m_simMutex);
+    Q_UNUSED(locker);
     stopSimulation();
+    m_futureWatcherAdvance.waitForFinished();
+    m_futureWatcherAdvanceCommit.waitForFinished();
+    QList<Agent *> agents=m_scene->getAgents();
     QtConcurrent::blockingMap(agents,&::agentReset);
     m_currentFrame=0;
-    m_simMutex.unlock();
 }
 
 void Simulation::startSimulation()
