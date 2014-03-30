@@ -467,12 +467,12 @@ qreal Agent::getOtherAgentSoundReception(const Agent *otherAgent) const
     qreal otherAgentAmplitude=otherAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_a)->getOldValue();
     qreal distance=this->getOtherAgentRelativePosition(otherAgent).length();
     qreal reception=otherAgentAmplitude-distance;
-    return qMax((qreal)0.0,reception);
+    return qMax(0.0,reception);
 }
 
 QVector3D Agent::getOtherAgentRelativePosition(const Agent *otherAgent) const
 {
-    return QVector3D(otherAgent->getPosition().x(),otherAgent->getPosition().y(),otherAgent->getPosition().z())-m_position;
+    return otherAgent->getPosition()-m_position;
 }
 
 const QVector3D &Agent::getPosition() const
