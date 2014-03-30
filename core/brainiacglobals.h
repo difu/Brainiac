@@ -129,19 +129,19 @@ public:
     static const char* const FuzzFuzzModeTrapezoid;
     static const char* const FuzzFuzzInterpolationSine;
 
-    static const char* const  ChannelName_Sound_x;
-    static const char* const  ChannelName_Sound_ox;
-    static const char* const  ChannelName_Sound_d;
-    static const char* const  ChannelName_Sound_a;
-    static const char* const  ChannelName_Sound_f;
+    static const QString ChannelName_Sound_x;
+    static const QString ChannelName_Sound_ox;
+    static const QString ChannelName_Sound_d;
+    static const QString ChannelName_Sound_a;
+    static const QString ChannelName_Sound_f;
 
     static const char* const DefaultLatchName;
 
     static const QList<QString> ChannelNames_Latches;
     static const QList<QString> ChannelNames_Phases;
 
-    static const char* const ChannelPhaseOffsetSuffix;
-    static const char* const ChannelRunningSuffix;
+    static const QString ChannelPhaseOffsetSuffix;
+    static const QString ChannelRunningSuffix;
 
     static QColor defaultXColor;
     static QColor defaultYColor;
