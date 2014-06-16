@@ -194,7 +194,7 @@ public:
      * @fn name
      * @return QString the name
      */
-    QString name() const { return m_name;}
+    const QString& name() const { return m_name;}
 
     /**
      * @brief returns a modifiable reference to this Animation

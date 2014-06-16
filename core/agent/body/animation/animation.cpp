@@ -281,7 +281,7 @@ Animation* Animation::loadAnimation(QString fileName)
         anim=new Animation(animCurves,name);
     } else {
         anim=new Animation();
-        anim->name()=name;
+        anim->setName(name);
     }
     BrainiacGlobals::AnimationType animType;
     in >> (quint32&) animType;
