@@ -446,23 +446,39 @@ void ModifiableAnimation::setTansformRotation(qreal yAxisRot)
                                 origRootBoneRzCurve->getValue(rootBoneRzCurve->keyFrames().at(i).x()));
 
         qDebug() << __PRETTY_FUNCTION__ << "KF: "<< i << " Original Rotation Vector: " << originalRot << yAxisRot;
-        cml::EulerOrder cmlEulerOrder;
+        cml::EulerOrder cmlEulerOrder=cml::euler_order_xyz;
         Q_ASSERT(rotList.count()==3);
-        if(rotList.first()==BrainiacGlobals::RX && rotList.at(1)==BrainiacGlobals::RY && rotList.last()==BrainiacGlobals::RZ) {
-            cmlEulerOrder=cml::euler_order_xyz;
-        } else if(rotList.first()==BrainiacGlobals::RX && rotList.at(1)==BrainiacGlobals::RZ && rotList.last()==BrainiacGlobals::RY) {
-            cmlEulerOrder=cml::euler_order_xzy;
-        } else if(rotList.first()==BrainiacGlobals::RZ && rotList.at(1)==BrainiacGlobals::RY && rotList.last()==BrainiacGlobals::RX) {
-            cmlEulerOrder=cml::euler_order_zyx;
-        } else if(rotList.first()==BrainiacGlobals::RZ && rotList.at(1)==BrainiacGlobals::RX && rotList.last()==BrainiacGlobals::RY) {
-            cmlEulerOrder=cml::euler_order_zxy;
-        } else if(rotList.first()==BrainiacGlobals::RY && rotList.at(1)==BrainiacGlobals::RZ && rotList.last()==BrainiacGlobals::RX) {
-            cmlEulerOrder=cml::euler_order_yzx;
-        } else if(rotList.first()==BrainiacGlobals::RY && rotList.at(1)==BrainiacGlobals::RX && rotList.last()==BrainiacGlobals::RZ) {
-            cmlEulerOrder=cml::euler_order_yxz;
-        } else {
-            qCritical() << __PRETTY_FUNCTION__ << "This never should happen!";
-        }
+//        if(rotList.first()==BrainiacGlobals::RX && rotList.at(1)==BrainiacGlobals::RY && rotList.last()==BrainiacGlobals::RZ) {
+//            cmlEulerOrder=cml::euler_order_xyz;
+//        } else if(rotList.first()==BrainiacGlobals::RX && rotList.at(1)==BrainiacGlobals::RZ && rotList.last()==BrainiacGlobals::RY) {
+//            cmlEulerOrder=cml::euler_order_xzy;
+//        } else if(rotList.first()==BrainiacGlobals::RZ && rotList.at(1)==BrainiacGlobals::RY && rotList.last()==BrainiacGlobals::RX) {
+//            cmlEulerOrder=cml::euler_order_zyx;
+//        } else if(rotList.first()==BrainiacGlobals::RZ && rotList.at(1)==BrainiacGlobals::RX && rotList.last()==BrainiacGlobals::RY) {
+//            cmlEulerOrder=cml::euler_order_zxy;
+//        } else if(rotList.first()==BrainiacGlobals::RY && rotList.at(1)==BrainiacGlobals::RZ && rotList.last()==BrainiacGlobals::RX) {
+//            cmlEulerOrder=cml::euler_order_yzx;
+//        } else if(rotList.first()==BrainiacGlobals::RY && rotList.at(1)==BrainiacGlobals::RX && rotList.last()==BrainiacGlobals::RZ) {
+//            cmlEulerOrder=cml::euler_order_yxz;
+//        } else {
+//            qCritical() << __PRETTY_FUNCTION__ << "This never should happen!";
+//        }
+
+                if(rotList.first()==BrainiacGlobals::RX && rotList.at(1)==BrainiacGlobals::RY && rotList.last()==BrainiacGlobals::RZ) {
+                    cmlEulerOrder=cml::euler_order_zyx;
+                } else if(rotList.first()==BrainiacGlobals::RX && rotList.at(1)==BrainiacGlobals::RZ && rotList.last()==BrainiacGlobals::RY) {
+                    cmlEulerOrder=cml::euler_order_yzx;
+                } else if(rotList.first()==BrainiacGlobals::RZ && rotList.at(1)==BrainiacGlobals::RY && rotList.last()==BrainiacGlobals::RX) {
+                    cmlEulerOrder=cml::euler_order_xyz;
+                } else if(rotList.first()==BrainiacGlobals::RZ && rotList.at(1)==BrainiacGlobals::RX && rotList.last()==BrainiacGlobals::RY) {
+                    cmlEulerOrder=cml::euler_order_yxz;
+                } else if(rotList.first()==BrainiacGlobals::RY && rotList.at(1)==BrainiacGlobals::RZ && rotList.last()==BrainiacGlobals::RX) {
+                    cmlEulerOrder=cml::euler_order_xzy;
+                } else if(rotList.first()==BrainiacGlobals::RY && rotList.at(1)==BrainiacGlobals::RX && rotList.last()==BrainiacGlobals::RZ) {
+                    cmlEulerOrder=cml::euler_order_zxy;
+                } else {
+                    qCritical() << __PRETTY_FUNCTION__ << "This never should happen!";
+                }
 
         float xRot,yRot,zRot;
 
@@ -470,11 +486,11 @@ void ModifiableAnimation::setTansformRotation(qreal yAxisRot)
                                    BrainiacGlobals::grad2rad(originalRot.x()),
                                    BrainiacGlobals::grad2rad(originalRot.y()),
                                    BrainiacGlobals::grad2rad(originalRot.z()),
-                                   cml::euler_order_xyz);
+                                   cmlEulerOrder);
 
         cml::matrix_rotate_about_world_y(cmlRotMatrix,BrainiacGlobals::grad2rad(yAxisRot));
 
-        cml::matrix_to_euler(cmlRotMatrix,xRot,yRot,zRot,cml::euler_order_xyz);
+        cml::matrix_to_euler(cmlRotMatrix,xRot,yRot,zRot,cml::euler_order_zyx);
         qDebug() << __PRETTY_FUNCTION__ << "KF: "<< i << " Rotation CML:                       " << BrainiacGlobals::rad2grad(xRot) << BrainiacGlobals::rad2grad(yRot) << BrainiacGlobals::rad2grad(zRot);
 
         rootBoneRxCurve->keyFrames()[i].setY(BrainiacGlobals::rad2grad(xRot));
