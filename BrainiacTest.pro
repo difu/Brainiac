@@ -4,7 +4,6 @@ QT += xmlpatterns
 
 
 include ( BrainiacCommonSources.pri )
-include ( BrainiacCommonHeaders.pri )
 include ( BrainiacCommonForms.pri )
 
 SOURCES += tst_brainiacscenetest.cpp

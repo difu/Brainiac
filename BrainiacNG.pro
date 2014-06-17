@@ -16,7 +16,6 @@ TEMPLATE = app
 
 
 include ( BrainiacCommonSources.pri )
-include ( BrainiacCommonHeaders.pri )
 include ( BrainiacCommonForms.pri )
 
 SOURCES += main.cpp
