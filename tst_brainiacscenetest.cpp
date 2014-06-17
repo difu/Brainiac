@@ -34,9 +34,12 @@
 #include "core/agent/brain/input.h"
 #include "core/agent/brain/fuzzyor.h"
 
+typedef QList<QVector2D> QlistVec2d;
+
 Q_DECLARE_METATYPE(FuzzyAnd::Mode)
 Q_DECLARE_METATYPE(FuzzyOr::Mode)
 Q_DECLARE_METATYPE(BrainiacGlobals::AnimationType)
+Q_DECLARE_METATYPE(QlistVec2d)
 
 class BrainiacSceneTest : public QObject
 {
@@ -336,7 +339,7 @@ void BrainiacSceneTest::motionTree()
 void BrainiacSceneTest::curves()
 {
     AnimationCurve curve=ModifiableAnimation::createTransitionCurve();
-    QVERIFY2(curve.keyFrames().count()==ModifiableAnimation::TransitionCurveKeyFrames+1,"Wrong number of keyframes");
+    QVERIFY2(curve.keyFrames().count()==(int) ModifiableAnimation::TransitionCurveKeyFrames+1,"Wrong number of keyframes");
     qreal max=curve.getMaxValue();
     qreal min=curve.getMinValue();
     qreal length=curve.length();
@@ -351,19 +354,12 @@ void BrainiacSceneTest::animation_data()
     QTest::addColumn<QString>("animationName");
 
     QTest::addColumn<QString>("curve1Name");
-    QTest::addColumn<QVector2D>("c1kf1");
-    QTest::addColumn<QVector2D>("c1kf2");
-    QTest::addColumn<QVector2D>("c1kf3");
-    QTest::addColumn<QVector2D>("c1kf4");
-    QTest::addColumn<QVector2D>("c1kf5");
+    QTest::addColumn<QlistVec2d>("keyframesCurve1");
 
     QTest::addColumn<QString>("curve2Name");
-    QTest::addColumn<QVector2D>("c2kf1");
-    QTest::addColumn<QVector2D>("c2kf2");
-    QTest::addColumn<QVector2D>("c2kf3");
-    QTest::addColumn<QVector2D>("c2kf4");
+    QTest::addColumn<QlistVec2d>("keyframesCurve2");
 
-    QTest::addColumn<qreal>("maxTime");
+    QTest::addColumn<qreal>("maxTime"); // Expected max time
 
     QTest::addColumn<BrainiacGlobals::AnimationType>("animType");
     QTest::addColumn<bool>("isRetriggerable");
@@ -379,17 +375,28 @@ void BrainiacSceneTest::animation_data()
     QTest::addColumn<QVector2D>("l2_2");
     QTest::addColumn<QVector2D>("l2_3");
 
-    QTest::newRow("Case1") << "anim1"\
-                           << "curve1" << QVector2D(0.0,0.3) << QVector2D(0.1,0.3) << QVector2D(0.2,-50.3) << QVector2D(0.4,0.3) << QVector2D(1.0,0.3)\
-                           << "curve2" << QVector2D(0.0,0.1) << QVector2D(0.12,0.2) << QVector2D(0.21,-50.3) << QVector2D(10.0,0.4)\
+    QList<QVector2D> kfcurve1case1;
+    kfcurve1case1 << QVector2D(0.0,0.3) << QVector2D(0.1,0.3) << QVector2D(0.2,-50.3) << QVector2D(0.4,0.3) << QVector2D(1.0,0.3);
+    QList<QVector2D> kfcurve2case1;
+    kfcurve2case1 << QVector2D(0.0,0.1) << QVector2D(0.12,0.2) << QVector2D(0.21,-50.3) << QVector2D(10.0,0.4);
+
+    QTest::newRow("Case1") << "anim1" \
+                           << "curve1" << kfcurve1case1 \
+                           << "curve2" << kfcurve2case1 \
                            << 10.0\
                            << BrainiacGlobals::STATIC  << false << true\
                            << "latch1" << QVector2D(0.0,0.1) << QVector2D(0.2,0.1) << QVector2D(0.4,0.1)\
                            << "latch2" << QVector2D(0.0,0.11) << QVector2D(0.2,0.12) << QVector2D(0.4,0.13);
+
+    QList<QVector2D> kfcurve1case2;
+    kfcurve1case2 << QVector2D(0.0,0.3) << QVector2D(0.1,0.3) << QVector2D(0.2,-50.3) << QVector2D(0.4,0.3) << QVector2D(1.0,0.3);
+    QList<QVector2D> kfcurve2case2;
+    kfcurve2case2 << QVector2D(0.0,0.1) << QVector2D(0.12,0.2) << QVector2D(0.21,-50.3) << QVector2D(10.0,0.4) << QVector2D(11.0,0.4);
+
     QTest::newRow("Case2") << "aNimAtion"\
-                           << "curve1" << QVector2D(0.0,0.3) << QVector2D(0.1,0.3) << QVector2D(0.25,-51.3) << QVector2D(0.4,0.3) << QVector2D(1.0,0.3)\
-                           << "curve2" << QVector2D(0.0,0.1) << QVector2D(0.12,0.2) << QVector2D(0.21,-50.3) << QVector2D(10.5,0.4)\
-                           << 10.5\
+                           << "curve1" << kfcurve1case2 \
+                           << "curve2" << kfcurve2case2 \
+                           << 11.0\
                            << BrainiacGlobals::LOCOMOTION << true << false\
                            << "latch1" << QVector2D(0.0,0.15) << QVector2D(0.2,0.15) << QVector2D(0.4,0.15)\
                            << "latch2" << QVector2D(0.0,0.111) << QVector2D(0.2,0.123) << QVector2D(0.4,0.134);
@@ -402,29 +409,20 @@ void BrainiacSceneTest::animation()
     QTemporaryFile animFile;
 
     QFETCH(QString, curve1Name);
-    QFETCH(qreal, maxTime);
-    AnimationCurve testCurve1;
-    QFETCH(QVector2D, c1kf1);
-    testCurve1.addKeyFrame(c1kf1);
-    QFETCH(QVector2D, c1kf2);
-    testCurve1.addKeyFrame(c1kf2);
-    QFETCH(QVector2D, c1kf3);
-    testCurve1.addKeyFrame(c1kf3);
-    QFETCH(QVector2D, c1kf4);
-    testCurve1.addKeyFrame(c1kf4);
-    QFETCH(QVector2D, c1kf5);
-    testCurve1.addKeyFrame(c1kf5);
-
     QFETCH(QString, curve2Name);
+    AnimationCurve testCurve1;
     AnimationCurve testCurve2;
-    QFETCH(QVector2D, c2kf1);
-    testCurve2.addKeyFrame(c2kf1);
-    QFETCH(QVector2D, c2kf2);
-    testCurve2.addKeyFrame(c2kf2);
-    QFETCH(QVector2D, c2kf3);
-    testCurve2.addKeyFrame(c2kf3);
-    QFETCH(QVector2D, c2kf4);
-    testCurve2.addKeyFrame(c2kf4);
+    QFETCH(qreal, maxTime);
+
+    QFETCH(QlistVec2d, keyframesCurve1);
+    QFETCH(QlistVec2d, keyframesCurve2);
+
+    foreach( QVector2D kf, keyframesCurve1) {
+        testCurve1.addKeyFrame(kf);
+    }
+    foreach( QVector2D kf, keyframesCurve2) {
+        testCurve2.addKeyFrame(kf);
+    }
 
     QFETCH(QString, animationName);
     Animation testAnim;
@@ -470,7 +468,7 @@ void BrainiacSceneTest::animation()
 
     Animation* loadedAnimation;
     loadedAnimation=Animation::loadAnimation(animFile.fileName());
-
+qDebug() << "got " << testAnim.getLength()<< "Exp: " << maxTime;
     QVERIFY2(qFuzzyCompare(testAnim.getLength(),maxTime),"Wrong length calculation!");
 
     QVERIFY2(loadedAnimation->name().compare(animationName)==0,"wrong animation name in loaded animation");
@@ -483,11 +481,6 @@ void BrainiacSceneTest::animation()
 
     QVERIFY2(testAnim.isRetriggerable()==isRetriggerable,"is retriggerable differs");
     QVERIFY2(testAnim.isRetriggerable()==loadedAnimation->isRetriggerable(),"is retriggerable of loaded animation differs");
-
-    bool checkKf12=qFuzzyCompare((qreal)loadedAnimation->getValue(curve1Name,c1kf2.x()),(qreal)c1kf2.y());
-    QVERIFY2(checkKf12,"KF 2 in curve 1 differs");
-    bool checkKf22=qFuzzyCompare((qreal)loadedAnimation->getValue(curve2Name,c2kf2.x()),(qreal)c2kf2.y());
-    QVERIFY2(checkKf22,"KF 2 in curve 2 differs");
 
     if(testAnim.curves().count()!=loadedAnimation->curves().count()) {
         QFAIL("re-loaded animation has different curves count");
