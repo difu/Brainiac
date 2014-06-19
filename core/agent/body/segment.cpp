@@ -35,20 +35,7 @@ Segment::Segment()
 
 Segment::Segment(const Segment &other):QObject()
 {
-    m_transformNode=new osg::MatrixTransform;
-    m_segmentRotation=other.getRotation();
-    m_segmentTranslation=other.getTranslation();
-    m_segmentRestRotation=other.getRestRotation();
-    m_segmentRestTranslation=other.getRestTranslation();
-    m_segmentSize=other.getSize();
-    m_segmentId=other.getId();
-    m_segmentParentId=other.getParentId();
-    m_segmentType=other.getType();
-    QObject::setObjectName(other.getName());
-    m_segmentColor=other.getColor();
-    m_segmentColorInherited=other.getColorInherited();
-    m_segmentRotTransOrder=other.getRotationTranslationOrder();
-    updateAndNotify();
+    copyFromOther(other);
 }
 
 
