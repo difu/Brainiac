@@ -1,119 +1,26 @@
-#include <QtCore/QString>
-#include <QtTest/QtTest>
-
-#include <QTemporaryFile>
-#include <QGraphicsItem>
-
-#include "core/scene.h"
-#include "core/simulation.h"
-#include "core/generator/pointgenerator.h"
-#include "core/agent/agentmanager.h"
-#include "core/agent/agent.h"
-#include "core/agent/body/body.h"
-
-#include "core/agent/brain/brain.h"
-#include "core/agent/channel.h"
-
-#include "core/agent/body/bodymanager.h"
-
-#include "core/agent/body/animation/animation.h"
-#include "core/agent/body/animation/animationcurve.h"
-#include "core/agent/body/animation/modifiableanimation.h"
-#include "core/agent/body/animation/animationcurve.h"
-#include "core/agent/body/animation/latchcurve.h"
-#include "core/agent/body/animation/motiontree.h"
-#include "core/agent/body/animation/motiontreemanager.h"
-#include "core/agent/body/animation/motiontreeaction.h"
-#include "core/agent/body/animation/motiontreetransition.h"
-#include "gui/Animation/motiontreeeditoritem.h"
-
-#include "core/group/group.h"
+#include "brainiactest.h"
 
 
-#include "core/agent/brain/fuzzyand.h"
-#include "core/agent/brain/input.h"
-#include "core/agent/brain/fuzzyor.h"
-
-typedef QList<QVector2D> QlistVec2d;
-
-Q_DECLARE_METATYPE(FuzzyAnd::Mode)
-Q_DECLARE_METATYPE(FuzzyOr::Mode)
-Q_DECLARE_METATYPE(BrainiacGlobals::AnimationType)
-Q_DECLARE_METATYPE(QlistVec2d)
-
-class BrainiacSceneTest : public QObject
-{
-    Q_OBJECT
-
-public:
-    BrainiacSceneTest();
-
-private Q_SLOTS:
-    /**
-     * @brief Sets some stuff that is needed for testcases
-     *
-     *
-     */
-    void initTestCase();
-
-    /**
-     * @brief Tests, if scene loading/saving is valid
-     *
-     * creates a scene (Scene1), adds some groups. The scene will be saved, loaded again and compared to the initial setup
-     */
-    void sceneCreateLoadSave();
-
-    void parseBVH();
-
-    void agentManager_data();
-    void agentManager();
-
-    void motionTree();
-
-    void curves();
-    void animation_data();
-    void animation();
-
-    void fuzzyAnd_data();
-    void fuzzyAnd();
-    void fuzzyOr_data();
-    void fuzzyOr();
-    void simulation1();
-    void cleanupTestCase();
-
-
-private:
-    static const QString testInput1Name;
-    static const QString testInput2Name;
-    static const QString testInput3Name;
-    static const QString testAndName;
-    static const QString testOrName;
-    static int m_numOfTestSegments;
-    void createBody(AgentManager *am, int var);
-    void createBrain(AgentManager *am);
-
-};
-
-BrainiacSceneTest::BrainiacSceneTest()
+BrainiacTest::BrainiacTest()
 {
     QLoggingCategory::setFilterRules("*.debug=true");
 }
 
-const QString BrainiacSceneTest::testInput1Name=QString("TESTINPUT1");
-const QString BrainiacSceneTest::testInput2Name=QString("TESTINPUT2");
-const QString BrainiacSceneTest::testInput3Name=QString("TESTINPUT3");
-const QString BrainiacSceneTest::testAndName=QString("TESTAND");
-const QString BrainiacSceneTest::testOrName=QString("TESTOR");
-int BrainiacSceneTest::m_numOfTestSegments=0;
+const QString BrainiacTest::testInput1Name=QString("TESTINPUT1");
+const QString BrainiacTest::testInput2Name=QString("TESTINPUT2");
+const QString BrainiacTest::testInput3Name=QString("TESTINPUT3");
+const QString BrainiacTest::testAndName=QString("TESTAND");
+const QString BrainiacTest::testOrName=QString("TESTOR");
+int BrainiacTest::m_numOfTestSegments=0;
 
 
-void BrainiacSceneTest::initTestCase()
+void BrainiacTest::initTestCase()
 {
     QVERIFY2(BrainiacGlobals::ChannelNames_Latches.count()==(int)MotionTreeManager::NUM_OF_TREE_TRACKS,"Latch channel name count mismatch!");
     QVERIFY2(BrainiacGlobals::ChannelNames_Phases.count()==(int)MotionTreeManager::NUM_OF_TREE_TRACKS,"Phase channel name count mismatch!");
 }
 
-void BrainiacSceneTest::parseBVH()
+void BrainiacTest::parseBVH()
 {
     int numOfSegments=0;
     QString bvhFileName=":animation/walk-cycle.bvh";
@@ -147,7 +54,7 @@ void BrainiacSceneTest::parseBVH()
     testScene1->deleteLater();
 }
 
-void BrainiacSceneTest::agentManager_data()
+void BrainiacTest::agentManager_data()
 {
     QTest::addColumn<QString>("agentName");
 
@@ -167,7 +74,7 @@ void BrainiacSceneTest::agentManager_data()
 
 }
 
-void BrainiacSceneTest::agentManager()
+void BrainiacTest::agentManager()
 {
     Scene testScene1;
     Group *grp=new Group(&testScene1);
@@ -180,7 +87,7 @@ void BrainiacSceneTest::agentManager()
 
 }
 
-void BrainiacSceneTest::motionTree()
+void BrainiacTest::motionTree()
 {
     QString action1Name="action 1";
     QString transition1Name="trans 1";
@@ -336,7 +243,7 @@ void BrainiacSceneTest::motionTree()
 
 }
 
-void BrainiacSceneTest::curves()
+void BrainiacTest::curves()
 {
     AnimationCurve curve=ModifiableAnimation::createTransitionCurve();
     QVERIFY2(curve.keyFrames().count()==(int) ModifiableAnimation::TransitionCurveKeyFrames+1,"Wrong number of keyframes");
@@ -349,7 +256,7 @@ void BrainiacSceneTest::curves()
 }
 
 
-void BrainiacSceneTest::animation_data()
+void BrainiacTest::animation_data()
 {
     QTest::addColumn<QString>("animationName");
 
@@ -404,7 +311,7 @@ void BrainiacSceneTest::animation_data()
 
 }
 
-void BrainiacSceneTest::animation()
+void BrainiacTest::animation()
 {
     QTemporaryFile animFile;
 
@@ -511,7 +418,7 @@ qDebug() << "got " << testAnim.getLength()<< "Exp: " << maxTime;
     delete(loadedAnimation);
 }
 
-void BrainiacSceneTest::fuzzyAnd_data()
+void BrainiacTest::fuzzyAnd_data()
 {
     QTest::addColumn<qreal>("in1");
     QTest::addColumn<qreal>("in2");
@@ -528,7 +435,7 @@ void BrainiacSceneTest::fuzzyAnd_data()
     QTest::newRow("mix Mode PROD") << 0.1 << 0.3 << 0.2 << FuzzyAnd::PRODUCT << 0.1*0.2*0.3;
 }
 
-void BrainiacSceneTest::fuzzyAnd()
+void BrainiacTest::fuzzyAnd()
 {
     Scene testScene1;
     Group *grp=new Group(&testScene1);
@@ -574,7 +481,7 @@ void BrainiacSceneTest::fuzzyAnd()
     QCOMPARE(testAnd->getResult(), result);
 }
 
-void BrainiacSceneTest::fuzzyOr_data()
+void BrainiacTest::fuzzyOr_data()
 {
     QTest::addColumn<qreal>("in1");
     QTest::addColumn<qreal>("in2");
@@ -601,7 +508,7 @@ void BrainiacSceneTest::fuzzyOr_data()
 }
 
 
-void BrainiacSceneTest::fuzzyOr()
+void BrainiacTest::fuzzyOr()
 {
     Scene testScene1;
     Group *grp=new Group(&testScene1);
@@ -647,12 +554,12 @@ void BrainiacSceneTest::fuzzyOr()
     //testScene1->deleteLater();
 }
 
-void BrainiacSceneTest::cleanupTestCase()
+void BrainiacTest::cleanupTestCase()
 {
 
 }
 
-void BrainiacSceneTest::sceneCreateLoadSave()
+void BrainiacTest::sceneCreateLoadSave()
 {
     Scene *testScene1;
     QTemporaryFile scene1File;
@@ -785,7 +692,7 @@ void BrainiacSceneTest::sceneCreateLoadSave()
     testScene2->deleteLater();
 }
 
-void BrainiacSceneTest::simulation1()
+void BrainiacTest::simulation1()
 {
     int numOfAgents=10;
     int numOfFrames=10;
@@ -848,7 +755,7 @@ void BrainiacSceneTest::simulation1()
 //    }
 }
 
-void BrainiacSceneTest::createBody(AgentManager *am, int var)
+void BrainiacTest::createBody(AgentManager *am, int var)
 {
         //!< @bug @todo rewrite with statical data
     QVector3D testVec=QVector3D(1,2,3);
@@ -909,7 +816,7 @@ void BrainiacSceneTest::createBody(AgentManager *am, int var)
     m_numOfTestSegments=4;
 }
 
-void BrainiacSceneTest::createBrain(AgentManager *am)
+void BrainiacTest::createBrain(AgentManager *am)
 {
     quint32 testAndId,testOrId,testInput1Id,testInput2Id,testInput3Id;
     testAndId=am->addAndFuzz(50,50);
@@ -934,6 +841,4 @@ void BrainiacSceneTest::createBrain(AgentManager *am)
     am->addConnector(testOrId,testInput3Id,false);
 }
 
-QTEST_MAIN(BrainiacSceneTest)
-
-#include "tst_brainiacscenetest.moc"
+QTEST_MAIN(BrainiacTest)

@@ -6,7 +6,9 @@ QT += xmlpatterns
 include ( BrainiacCommonSources.pri )
 include ( BrainiacCommonForms.pri )
 
-SOURCES += tests/tst_brainiacscenetest.cpp
+HEADERS += tests/brainiactest.h
+
+SOURCES += tests/brainiactest.cpp
 
 RESOURCES +=  \
     testData.qrc\
