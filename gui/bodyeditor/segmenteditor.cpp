@@ -239,14 +239,14 @@ void SegmentEditor::manualDimensionsChanged(qreal value) {
     case BrainiacGlobals::BOXSEGMENT:
         m_agentManager->setSegmentDimensions(m_id,m_SliderDimensionX->getValue(),m_SliderDimensionY->getValue(),m_SliderDimensionZ->getValue());
         if(m_editSymetric) {
-            quint32 otherId=getSymetricSegmentId();
+            //quint32 otherId=getSymetricSegmentId();
             //m_agentManager->setSegmentDimensions(otherId,m_SliderDimensionX->getValue(),m_SliderDimensionY->getValue(),m_SliderDimensionZ->getValue());
         }
         break;
     case BrainiacGlobals::SPHERESEGMENT:
         m_agentManager->setSegmentDimensions(m_id,m_SliderSphereRadius->getValue(),m_SliderSphereRadius->getValue(),m_SliderSphereRadius->getValue());
         if(m_editSymetric) {
-            quint32 otherId=getSymetricSegmentId();
+            //quint32 otherId=getSymetricSegmentId();
             //m_agentManager->setSegmentDimensions(otherId,m_SliderSphereRadius->getValue(),m_SliderSphereRadius->getValue(),m_SliderSphereRadius->getValue());
         }
         break;
