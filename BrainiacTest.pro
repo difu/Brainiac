@@ -6,7 +6,7 @@ QT += xmlpatterns
 include ( BrainiacCommonSources.pri )
 include ( BrainiacCommonForms.pri )
 
-SOURCES += tst_brainiacscenetest.cpp
+SOURCES += tests/tst_brainiacscenetest.cpp
 
 RESOURCES +=  \
     testData.qrc\
@@ -37,6 +37,8 @@ unix: LIBS += -L $$OSG_LIB_DIR -losg -losgQt -losgViewer -losgGA -losgDB -lOpenT
 unix: INCLUDEPATH += $$OSG_INC_DIR
 # unix: DEPENDPATH += /usr/include
 QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
+
+DEFINES += "BRAINIAC_SUPPRESS_THIRD_PARTY_WARNINGS"
 
 macx: QMAKE_CFLAGS_X86_64 += -mmacosx-version-min=10.9
 macx: QMAKE_CFLAGS_X86_64 += -Wall

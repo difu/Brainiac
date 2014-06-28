@@ -18,7 +18,7 @@ TEMPLATE = app
 include ( BrainiacCommonSources.pri )
 include ( BrainiacCommonForms.pri )
 
-SOURCES += main.cpp
+SOURCES += brainiac/main.cpp
 
 RESOURCES += \
     brainiac.qrc
