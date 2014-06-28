@@ -4,7 +4,14 @@
 #include <osg/Drawable>
 #include <osg/Geode>
 #include <osg/Geometry>
+#ifdef BRAINIAC_SUPPRESS_THIRD_PARTY_WARNINGS
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Woverloaded-virtual"
+#endif
 #include <osgViewer/Viewer>
+#ifdef BRAINIAC_SUPPRESS_THIRD_PARTY_WARNINGS
+    #pragma clang diagnostic pop
+#endif
 
 
 /**

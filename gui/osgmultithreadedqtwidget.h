@@ -22,6 +22,10 @@
 #include <QWidget>
 #include <QtCore/QtCore>
 #include <QtWidgets/QtWidgets>
+#ifdef BRAINIAC_SUPPRESS_THIRD_PARTY_WARNINGS
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Woverloaded-virtual"
+#endif
 #include <osgDB/ReadFile>
 #include <osg/ShapeDrawable>
 #include <osg/MatrixTransform>
@@ -33,6 +37,9 @@
 #include <osgGA/KeySwitchMatrixManipulator>
 #include <osgViewer/ViewerEventHandlers>
 #include <osgViewer/Viewer>
+#ifdef BRAINIAC_SUPPRESS_THIRD_PARTY_WARNINGS
+    #pragma clang diagnostic pop
+#endif
 #include <osgQt/GraphicsWindowQt>
 #include "gui/brainiacdisplaykeymouseeater.h"
 

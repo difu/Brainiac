@@ -58,8 +58,9 @@ CONFIG(debug, debug|release){
 
 macx: QMAKE_CFLAGS_X86_64 += -mmacosx-version-min=10.9
 macx: QMAKE_CFLAGS_X86_64 += -Wall
-macx: QMAKE_CFLAGS_X86_64 += -Wno-overloaded-virtual
 QMAKE_CXXFLAGS_X86_64 = $$QMAKE_CFLAGS_X86_64
+
+DEFINES += "BRAINIAC_SUPPRESS_THIRD_PARTY_WARNINGS"
 
 LASTCOMMIT= $$system(git log | head -1 | awk \'{print $2;}\')
 DEFINES += "__LASTCOMMIT__=\'\"($$LASTCOMMIT)\"\'"

@@ -28,7 +28,14 @@
 #include "core/agent/body/animation/animationcurve.h"
 #include "core/agent/body/animation/latchcurve.h"
 #include "core/brainiaclogger.h"
+#ifdef BRAINIAC_SUPPRESS_THIRD_PARTY_WARNINGS
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wunused-parameter"
+#endif
 #include "cml/cml.h"
+#ifdef BRAINIAC_SUPPRESS_THIRD_PARTY_WARNINGS
+    #pragma clang diagnostic pop
+#endif
 #include "cml/mathlib/matrix_rotation.h"
 #include "core/simulation.h"
 
