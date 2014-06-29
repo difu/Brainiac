@@ -186,6 +186,9 @@ void ActionEditor::refreshCurveList()
     }
 
     foreach(LatchCurve *latchCurve, m_activeAnimation->latches()) {
+        Q_UNUSED(latchCurve); /** \todo reimplement for all latchcurves
+
+    **/
         QListWidgetItem *latchItem=new QListWidgetItem(ui->listCurves);
         latchItem->setText(QString(BrainiacGlobals::DefaultLatchName));
         latchItem->setData(Qt::UserRole,QVariant(QString(BrainiacGlobals::DefaultLatchName)));

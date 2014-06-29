@@ -104,7 +104,7 @@ public:
      */
     void setFileName(const QString &fileName) { m_fileName=fileName; }
 
-protected:
+private:
     void createAgents(Generator *gen);
     QString m_fileName; //!< the filename of this scene´s config file
     QXmlStreamWriter m_streamWriter;

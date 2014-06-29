@@ -62,7 +62,7 @@ public slots:
     void animationRunningToggle();
     void animationOneFrameForward();
     void animationOneFrameBackward();
-protected:
+private:
     void applyAnimation();
     void setActiveAnimation(QString animName);
     void addCurvesToList(const Segment &seg, quint32 level);
@@ -89,7 +89,7 @@ protected:
      */
     enum Tabs{ACTIONS=0,CURVES=1,EDIT=2,LOOP=3,AGENT=4};
     int m_lastTabIndex;
-protected slots:
+private slots:
     void animationSelectionChanged(int rowId);
     void animationNameChanged();
     void uiTabChanged(int tabIndex);

@@ -104,7 +104,7 @@ public:
      */
     virtual ~Simulation();
 
-protected:
+private:
     bool m_currentFrameIsCalculated; //!< true, if the current frame is actually calculated
     int m_frameCalculationTime; //!< time in ms a frame calculation took
     quint32 m_fps; //!< frametrate of the sim
@@ -127,7 +127,7 @@ protected:
     * this has to be kept up2date everytime advance() is called!
     **/
     QList<Agent *> m_agents;
-protected slots:
+private slots:
     /**
      * @brief called when the asynchronous calculation of agent advancing is done
      * It further starts the asynchronous calculation of agent advance commit step.
