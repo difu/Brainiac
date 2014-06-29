@@ -36,6 +36,8 @@ QString BrainiacError::getErrorDescription(ErrorCode code)
     case FILE_NOT_FOUND:             return "File not found";
     case INVALID_FILE_FORMAT:        return "Invalid file format";
     case FILE_PARSER_FAILED:         return "Parser failed to process file";
+    case COULD_NOT_OPEN_FILE:        return "Could not open file";
+    case COULD_NOT_WRITE_FILE:       return "Could not write file";
     default:                         return "Unknown error";
   }
 }

@@ -46,6 +46,7 @@
 #include "core/agent/body/animation/motiontreemanager.h"
 #include "core/agent/body/animation/motiontree.h"
 #include "gui/Animation/motiontreeeditor.h"
+#include "core/brainiacerror.h"
 #include <QDebug>
 #include <QComboBox>
 #include <QDialog>
@@ -518,7 +519,10 @@ void MainWindow::saveScene()
         }
     }
 
-    m_scene->saveConfig();
+    bool success=m_scene->saveConfig();
+    if(!success) {
+        qDebug() << __PRETTY_FUNCTION__ << "Error while saving " << BrainiacError::getLastErrorDescription();
+    }
 }
 
 void MainWindow::sceneEditorItemClicked()

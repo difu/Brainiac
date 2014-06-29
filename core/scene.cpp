@@ -202,8 +202,9 @@ bool Scene::saveConfig()
 
 bool Scene::saveConfig(const QString & fileName)
 {
-    QFile file(fileName);
-    if(file.open(QIODevice::ReadWrite|QIODevice::Truncate)) {
+    QSaveFile file(fileName);
+    file.setDirectWriteFallback(true);
+    if(file.open(QIODevice::WriteOnly)) {
         m_streamWriter.setDevice(&file);
         m_streamWriter.setAutoFormatting(true);
         m_streamWriter.writeStartDocument();
@@ -223,11 +224,16 @@ bool Scene::saveConfig(const QString & fileName)
         m_streamWriter.writeEndElement(); // Place
 
         m_streamWriter.writeEndDocument();
-        file.close();
+        //file.close();
         m_fileName=fileName;
-        return true;
+        if(file.commit()) {
+            return true;
+        } else {
+            BrainiacError::setLastError(BrainiacError::COULD_NOT_WRITE_FILE,__PRETTY_FUNCTION__,0,"Failed to write file savely.");
+            return false;
+        }
     }
-
+    BrainiacError::setLastError(BrainiacError::COULD_NOT_WRITE_FILE,__PRETTY_FUNCTION__,0,"Unable to open file for writing.");
     return false;
 }
 
