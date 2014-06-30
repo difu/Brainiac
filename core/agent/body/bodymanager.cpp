@@ -24,6 +24,7 @@
 #include "core/agent/body/segmentbox.h"
 #include "core/agent/body/segmenttube.h"
 #include "gui/bodyeditor/bodyeditor.h"
+#include <QObject>
 
 BodyManager::BodyManager(AgentManager *manager)
 {
@@ -118,6 +119,7 @@ bool BodyManager::createNewSegment(bool processRootId)
     addSegmentToAgents(newSegment->getId());
     resetNewSegmentProperties();
     m_bodyEditor->addSegment(newSegment->getId());
+    QObject::connect(newSegment,SIGNAL(updated()),m_agentManager,SLOT(segmentChanged()));
     return true;
 }
 
@@ -284,6 +286,22 @@ qreal BodyManager::getSegmentDiameter(quint32 id) const
         qCritical() << __PRETTY_FUNCTION__ << "No Segment with id" << id;
     }
     return 0;
+}
+
+int BodyManager::getSegmentLevel(quint32 id) const
+{
+    int level=0;
+    SegmentShape *s=m_segments.value(id,0);
+    if(!s) {
+        return -1;
+    }
+    quint32 parentId=s->getParentId();
+    while(s->getParentId() != 0) {
+        s=m_segments.value(parentId);
+        parentId=s->getParentId();
+        level++;
+    }
+    return level;
 }
 
 qreal BodyManager::getSegmentLength(quint32 id) const

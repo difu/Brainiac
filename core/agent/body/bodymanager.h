@@ -222,6 +222,16 @@ public:
 
     qreal getSegmentLength(quint32 id) const;
 
+    /**
+     * @brief returns the level of this segment
+     * the level of the root segment is 0
+     *
+     * @fn getSegmentLevel
+     * @param id the id of the segment
+     * @return int the level, -1 is returned in case of an error
+     */
+    int getSegmentLevel(quint32 id) const;
+
     QVector3D getSegmentRestRotation(quint32 id) const;
 
     QVector3D getSegmentRotation(quint32 id) const;

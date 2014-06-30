@@ -20,6 +20,7 @@
 #define AGENTMANAGER_H
 
 #include <QtCore>
+#include <QObject>
 #include "core/agent/brain/output.h"
 #include "core/idgenerator.h"
 #include "core/agent/brain/fuzzyfuzz.h"
@@ -33,8 +34,9 @@ class BodyManager;
 class BrainEditor;
 class MotionTreeManager;
 
-class AgentManager
+class AgentManager : public QObject
 {
+    Q_OBJECT
 public:
     AgentManager(Group *group);
 
@@ -221,6 +223,16 @@ public:
      * @return Agent
      */
     Agent* getBodyAgent() {return m_spBodyAgent;}
+
+    /**
+     * @brief returns the BVH representation of the skeleton of the agent
+     *
+     * the motion data is not included!
+     *
+     * @fn getBVHSkeleton
+     * @return const QString the BVH data
+     */
+    const QString& getBVHSkeleton() const;
 
     /**
      * @brief returns a pointer to the actions agent
@@ -451,7 +463,9 @@ public:
     void setSelectedAgent(Agent *agent);
     void updateSoundConfigs();
     ~AgentManager();
-protected:
+public slots:
+    void segmentChanged();
+private:
     Agent *m_masterAgent; /**< special purpose agent. The reference all other instances are created from */
     Agent *m_spBodyAgent; /**< special purpose agent. This agent will be used within the BodyEditor */
     Agent *m_spActionAgent; /**< special purpose agent. This agent will be used within the ActionEditor */
@@ -474,6 +488,8 @@ protected:
     QList<Agent *> m_agents; /**< contains all agents, including special purpose agents like @sa m_masterAgent */
     BrainEditor *m_brainEditor; /**< contains the editor widgets of the brain */
     quint32 m_activeMotionTreeEditor; /**< id of the currently edited tree in @sa MainWindow */
+    mutable QString m_bvhSkeleton; /**< holds the bvh representation of the skeleton */
+    bool m_bvhSkeletonDirty; /**< true, if the bvh representation has to be recalculated */
 
     // Brain stuff
     void addAndFuzz(quint32 id, QString name, QString mode, quint32 editorX, quint32 editorY);

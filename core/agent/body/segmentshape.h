@@ -30,6 +30,7 @@
  */
 class SegmentShape : public Segment
 {
+    Q_OBJECT
 public:
 /**
  * @brief Copy Constructor
