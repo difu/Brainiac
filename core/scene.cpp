@@ -26,6 +26,7 @@
 #include "generator/pointgenerator.h"
 #include "group/group.h"
 #include "agent/body/body.h"
+#include "core/simulationsettings.h"
 #include "core/brainiaclogger.h"
 #include "core/brainiacerror.h"
 
@@ -145,6 +146,34 @@ Group* Scene::getGroup(quint32 id)
     return 0;
 }
 
+QString Scene::getSceneXml() const
+{
+    QString xml;
+    QXmlStreamWriter sWriter(&xml);
+    sWriter.setAutoFormatting(true);
+    sWriter.writeStartDocument();
+//    sWriter.writeStartElement("BrainiacScene");
+//    m_simulation->getSettings()->saveConfig(&sWriter);
+    sWriter.writeStartElement("Place");
+    sWriter.writeStartElement("Groups");
+    foreach(Group *grp, m_groups) {
+        grp->saveConfig(&sWriter);
+    }
+    sWriter.writeEndElement(); // Groups
+    sWriter.writeStartElement("Generators");
+    foreach(Generator *gen, m_generators) {
+        if(gen->getType()==Generator::POINT) {
+            static_cast<PointGenerator *>(gen)->saveConfig(&sWriter);
+        }
+    }
+    sWriter.writeEndElement(); // Generators
+    sWriter.writeEndElement(); // Place
+//    sWriter.writeEndElement(); // BrainiacScene
+
+    sWriter.writeEndDocument();
+    return xml;
+}
+
 bool Scene::openConfig(const QString & fileName)
 {
     m_fileName=fileName;
@@ -205,25 +234,26 @@ bool Scene::saveConfig(const QString & fileName)
     QSaveFile file(fileName);
     file.setDirectWriteFallback(true);
     if(file.open(QIODevice::WriteOnly)) {
-        m_streamWriter.setDevice(&file);
-        m_streamWriter.setAutoFormatting(true);
-        m_streamWriter.writeStartDocument();
-        m_streamWriter.writeStartElement("Place");
-        m_streamWriter.writeStartElement("Groups");
-        foreach(Group *grp, m_groups) {
-            grp->saveConfig(&m_streamWriter);
-        }
-        m_streamWriter.writeEndElement(); // Groups
-        m_streamWriter.writeStartElement("Generators");
-        foreach(Generator *gen, m_generators) {
-            if(gen->getType()==Generator::POINT) {
-                static_cast<PointGenerator *>(gen)->saveConfig(&m_streamWriter);
-            }
-        }
-        m_streamWriter.writeEndElement(); // Generators
-        m_streamWriter.writeEndElement(); // Place
+        file.write( getSceneXml().toStdString().c_str() );
+//        m_streamWriter.setDevice(&file);
+//        m_streamWriter.setAutoFormatting(true);
+//        m_streamWriter.writeStartDocument();
+//        m_streamWriter.writeStartElement("Place");
+//        m_streamWriter.writeStartElement("Groups");
+//        foreach(Group *grp, m_groups) {
+//            grp->saveConfig(&m_streamWriter);
+//        }
+//        m_streamWriter.writeEndElement(); // Groups
+//        m_streamWriter.writeStartElement("Generators");
+//        foreach(Generator *gen, m_generators) {
+//            if(gen->getType()==Generator::POINT) {
+//                static_cast<PointGenerator *>(gen)->saveConfig(&m_streamWriter);
+//            }
+//        }
+//        m_streamWriter.writeEndElement(); // Generators
+//        m_streamWriter.writeEndElement(); // Place
 
-        m_streamWriter.writeEndDocument();
+//        m_streamWriter.writeEndDocument();
         //file.close();
         m_fileName=fileName;
         if(file.commit()) {

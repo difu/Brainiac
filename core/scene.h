@@ -85,6 +85,14 @@ public:
     QString getRelativeFileDir(QString file) const;
 
     /**
+     * @brief returns the scene description as xml
+     *
+     * @fn getSceneXml
+     * @return QString contains the xml
+     */
+    QString getSceneXml() const;
+
+    /**
      * @brief getRootSceneNode
      * @return
      */
@@ -107,7 +115,7 @@ public:
 private:
     void createAgents(Generator *gen);
     QString m_fileName; //!< the filename of this scene´s config file
-    QXmlStreamWriter m_streamWriter;
+//    QXmlStreamWriter m_streamWriter;
     QXmlStreamReader m_streamReader;
     QList<Agent *> m_agents; //!< all agents of this scene
     QList<Camera *> m_cameras; //!< all cameras of this scene

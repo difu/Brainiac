@@ -1,5 +1,6 @@
 #include "brainiactest.h"
 
+#include "core/simulationsettings.h"
 
 BrainiacTest::BrainiacTest()
 {
@@ -622,6 +623,8 @@ void BrainiacTest::sceneCreateLoadSave()
     // Load scene 2
     testScene2=new Scene();
     QVERIFY2(testScene2->openConfig(testScene1->getFileName()),"Error loading scene 2 from scene 1 file");
+    qDebug() << testScene2->getSceneXml();
+    qDebug() << testScene1->getSceneXml();
     QVERIFY2(testScene2->getGroups().count()==numberOfTestGroups,"Number of groups in scene 2 is not equal");
 
     // Save agents of scene 2
@@ -690,6 +693,29 @@ void BrainiacTest::sceneCreateLoadSave()
     }
     testScene1->deleteLater();
     testScene2->deleteLater();
+}
+
+void BrainiacTest::simulation_data()
+{
+
+}
+
+void BrainiacTest::simulation()
+{
+    Scene scene1;
+    Simulation *sim1=scene1.getSimulation();
+    SimulationSettings *simSet1=sim1->getSettings();
+    QString xmlSettings1;
+    QXmlStreamWriter w(&xmlSettings1);
+    simSet1->saveConfig(&w);
+    qDebug() << scene1.getSceneXml();
+    Scene scene2;
+    Simulation *sim2=scene2.getSimulation();
+    //QString xmlSettings2;
+    QXmlStreamReader r(xmlSettings1);
+
+    //sim2->getSettings()->loadConfig(&r);
+
 }
 
 void BrainiacTest::simulation1()

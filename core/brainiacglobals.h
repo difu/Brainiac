@@ -85,6 +85,7 @@ public:
     static const char* const XmlAngleAttrib;
     static const char* const XmlDistanceAttrib;
     static const char* const XmlFileNameAttrib;
+    static const char* const XmlFpsAttrib; /**< Frames per second of scene/simulation */
     static const char* const XmlGroupsAttrib;
     static const char* const XmlGroupRatioAttrib;
     static const char* const XmlNumberAttrib;
@@ -100,6 +101,7 @@ public:
     static const char* const XmlTreeTransitionAttrib;
     static const char* const XmlTriggersAttrib;
 
+
     static const char* const XmlSizeTag;
     static const char* const XmlRotationTag;
     static const char* const XmlTranslationTag;
@@ -111,6 +113,7 @@ public:
     static const char* const XmlRotTransOrderTag;
     static const char* const XmlMotionTreesTag;
     static const char* const XmlMotionTreeTag;
+    static const char* const XmlSimulationTag;
     static const char* const XmlTreeTransitionActionConnectionTag;
     static const char* const XmlTreeActionTransitionConnectionTag;
     static const char* const XmlTreeActionTag;

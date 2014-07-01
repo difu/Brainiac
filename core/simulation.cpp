@@ -20,6 +20,7 @@
 #include <QtConcurrent/QtConcurrent>
 #include "core/agent/agent.h"
 #include "core/scene.h"
+#include "core/simulationsettings.h"
 #include "core/brainiaclogger.h"
 
 void advanceAgent(Agent* param_agent)
@@ -40,12 +41,13 @@ void agentReset(Agent* param_agent)
 Simulation::Simulation(Scene *scene) :
     QObject(scene),  m_currentFrameIsCalculated(false), m_scene(scene)
 {
+    m_settings=new SimulationSettings(this);
     m_frameCalculationTime=0;
     m_currentFrame=0;
     m_late=true;
     m_running=false;
-    m_fps=24;
-    startTimer(1000/m_fps);
+    //m_fps=24;
+    startTimer(1000/getFps());
     connect(&m_futureWatcherAdvance,SIGNAL(finished()),this,SLOT(advanceDone()));
     connect(&m_futureWatcherAdvanceCommit,SIGNAL(finished()),this,SLOT(advanceCommitDone()));
     m_agents=m_scene->getAgents();
@@ -82,7 +84,7 @@ void Simulation::advanceCommitDone()
     m_currentFrameIsCalculated=false;
 
     qCDebug(bSimulation) << __PRETTY_FUNCTION__ << "frame calc time " << m_frameCalculationTime;
-    if(m_frameCalculationTime>1000/(int)m_fps) {
+    if(m_frameCalculationTime>1000/(int)getFps()) {
         m_late=true;
         qCDebug(bSimulation) << __PRETTY_FUNCTION__ << "sim is late ";
     } else {
@@ -125,23 +127,28 @@ quint32 Simulation::getCurrentFrame() const
     return m_currentFrame;
 }
 
+qreal Simulation::getCurrentTimeMs() const
+{
+    return m_currentFrame*1000.0/getFps();
+}
+
 quint32 Simulation::getFps() const
 {
-    return m_fps;
+    return m_settings->getFps();
 }
 
 qreal Simulation::getFpsCalc() const {
     if(m_running) {
         if( !qFuzzyCompare(m_frameCalculationTime+1.0f,1.0f)) {
             qreal fps=1000.0f/m_frameCalculationTime;
-            if(fps>(qreal)m_fps)
-                return (qreal)m_fps;
+            if(fps>(qreal)getFps())
+                return (qreal)getFps();
             else
                 return fps;
         }
-        return (qreal)m_fps;
+        return (qreal)getFps();
     } else
-        return 0.0f;
+        return 0.0;
 }
 
 void Simulation::resetSimulation() {

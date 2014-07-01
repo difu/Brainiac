@@ -78,7 +78,17 @@ private Q_SLOTS:
     void fuzzyAnd();
     void fuzzyOr_data();
     void fuzzyOr();
+    void simulation_data();
+
+    /**
+     * @brief tests basic functionality of a simulation
+     * saving/loading
+     *
+     * @fn simulation
+     */
+    void simulation();
     void simulation1();
+
     void cleanupTestCase();
 
 

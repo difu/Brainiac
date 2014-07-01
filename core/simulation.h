@@ -26,6 +26,7 @@
 
 class Scene;
 class Agent;
+class SimulationSettings;
 
 
 /** \brief  The Simulation manager of the scene
@@ -68,14 +69,14 @@ public:
      *
      * @return quint32 the current time of the Simulation in s
      */
-    qreal getCurrentTime() const { return (qreal)m_currentFrame*1.0/(qreal)m_fps; }
+    qreal getCurrentTime() const { return (qreal)m_currentFrame*1.0/(qreal)getFps(); }
 
     /**
      * @brief returns the current time of the Simulation in ms
      *
      * @return quint32 the current time of the Simulation in ms
      */
-    qreal getCurrentTimeMs() const { return m_currentFrame*1000.0/m_fps; }
+    qreal getCurrentTimeMs() const;
 
     /**
      * @brief returns the framerate of the Simulation
@@ -92,6 +93,7 @@ public:
      * @return qreal the actual framerate
      */
     qreal getFpsCalc() const;
+    SimulationSettings *getSettings() { return m_settings; }
 
     /** \brief @returns true if simulation is running
     **/
@@ -107,7 +109,6 @@ public:
 private:
     bool m_currentFrameIsCalculated; //!< true, if the current frame is actually calculated
     int m_frameCalculationTime; //!< time in ms a frame calculation took
-    quint32 m_fps; //!< frametrate of the sim
     bool m_running; //!< true, if simulation is currently running
     Scene *m_scene; //!< The scene
     quint32 m_currentFrame;  //!< current frame of the simualtion;
@@ -115,6 +116,7 @@ private:
     QMutex m_simMutex; //!< prevent new simulation step when current has not finished yet
     QFutureWatcher<void> m_futureWatcherAdvance; /**< the future watcher of the async advance calculation */
     QFutureWatcher<void> m_futureWatcherAdvanceCommit; /**< th future watcher of the async advance commit calculation */
+    SimulationSettings *m_settings;
 
     /** \brief go one step further in simulation
 
