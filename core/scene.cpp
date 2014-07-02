@@ -217,6 +217,7 @@ bool Scene::saveConfig(const QString & fileName)
 
 bool Scene::setByXml(QXmlStreamReader &xmlReader)
 {
+    clear();
     while(xmlReader.readNextStartElement())  {
         if(xmlReader.name()==BrainiacGlobals::XmlSceneTag) {
             while(xmlReader.readNextStartElement()) {

@@ -114,6 +114,7 @@ public:
     /**
      * @brief sets the contents of the scene by xml
      *
+     * all previous content is removed
      * @param xml the QString that holds the scene xml
      * @return bool true, if everything is ok
      */
@@ -122,6 +123,7 @@ public:
     /**
      * @brief sets the file name of the scene
      *
+     * all previous content is removed
      * Invoking this function does not save the scene!
      *
      * @fn setFileName
