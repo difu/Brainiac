@@ -98,9 +98,26 @@ public:
      */
     osg::Group* getRootSceneNode() { return m_rootNode.get(); }
     Simulation *getSimulation() { return m_simulation; }
+
     bool openConfig(const QString & fileName);
     bool saveConfig(const QString & fileName);
     bool saveConfig();
+
+    /**
+     * @brief sets the contents of the scene by xml
+     *
+     * @param xml the QXmlStreamReader that holds the scene xml
+     * @return bool true, if everything is ok
+     */
+    bool setByXml(QXmlStreamReader &xmlReader);
+
+    /**
+     * @brief sets the contents of the scene by xml
+     *
+     * @param xml the QString that holds the scene xml
+     * @return bool true, if everything is ok
+     */
+    bool setByXml(const QString &xml);
 
     /**
      * @brief sets the file name of the scene
@@ -115,8 +132,6 @@ public:
 private:
     void createAgents(Generator *gen);
     QString m_fileName; //!< the filename of this scene´s config file
-//    QXmlStreamWriter m_streamWriter;
-    QXmlStreamReader m_streamReader;
     QList<Agent *> m_agents; //!< all agents of this scene
     QList<Camera *> m_cameras; //!< all cameras of this scene
     QList<Generator *> m_generators; //!< all agent generators of this scene

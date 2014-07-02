@@ -102,6 +102,7 @@ const char* const BrainiacGlobals::XmlTreeActionAttrib="action\0";
 const char* const BrainiacGlobals::XmlTreeTransitionAttrib="transition\0";
 const char* const BrainiacGlobals::XmlTriggersAttrib="triggers\0";
 
+const char* const BrainiacGlobals::XmlGroupsTag="Groups\0";
 const char* const BrainiacGlobals::XmlSizeTag="Size\0";
 const char* const BrainiacGlobals::XmlTranslationTag="Translation\0";
 const char* const BrainiacGlobals::XmlRotationTag="Rotation\0";
@@ -113,6 +114,8 @@ const char* const BrainiacGlobals::XmlTubeTag="Tube\0";
 const char* const BrainiacGlobals::XmlRotTransOrderTag="RotTransOrder\0";
 const char* const BrainiacGlobals::XmlMotionTreesTag="MotionTrees\0";
 const char* const BrainiacGlobals::XmlMotionTreeTag="MotionTree\0";
+const char* const BrainiacGlobals::XmlPlaceTag="Place\0";
+const char* const BrainiacGlobals::XmlSceneTag="Scene\0";
 const char* const BrainiacGlobals::XmlSimulationTag="Simulation\0";
 const char* const BrainiacGlobals::XmlTreeActionTransitionConnectionTag="ActionTransitionConnection\0";
 const char* const BrainiacGlobals::XmlTreeTransitionActionConnectionTag="TransitionActionConnection\0";

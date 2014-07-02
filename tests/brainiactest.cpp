@@ -623,8 +623,6 @@ void BrainiacTest::sceneCreateLoadSave()
     // Load scene 2
     testScene2=new Scene();
     QVERIFY2(testScene2->openConfig(testScene1->getFileName()),"Error loading scene 2 from scene 1 file");
-    qDebug() << testScene2->getSceneXml();
-    qDebug() << testScene1->getSceneXml();
     QVERIFY2(testScene2->getGroups().count()==numberOfTestGroups,"Number of groups in scene 2 is not equal");
 
     // Save agents of scene 2
@@ -702,20 +700,20 @@ void BrainiacTest::simulation_data()
 
 void BrainiacTest::simulation()
 {
+    static quint32 testFps=123;
     Scene scene1;
     Simulation *sim1=scene1.getSimulation();
     SimulationSettings *simSet1=sim1->getSettings();
+    simSet1->setFps(testFps);
     QString xmlSettings1;
     QXmlStreamWriter w(&xmlSettings1);
     simSet1->saveConfig(&w);
-    qDebug() << scene1.getSceneXml();
+//    qDebug() << scene1.getSceneXml();
     Scene scene2;
+    scene2.setByXml(scene1.getSceneXml());
     Simulation *sim2=scene2.getSimulation();
-    //QString xmlSettings2;
-    QXmlStreamReader r(xmlSettings1);
-
-    //sim2->getSettings()->loadConfig(&r);
-
+//    qDebug() << scene2.getSceneXml();
+    QVERIFY2(sim1->getFps()==sim2->getFps(),"Wrong fps");
 }
 
 void BrainiacTest::simulation1()

@@ -152,10 +152,10 @@ QString Scene::getSceneXml() const
     QXmlStreamWriter sWriter(&xml);
     sWriter.setAutoFormatting(true);
     sWriter.writeStartDocument();
-//    sWriter.writeStartElement("BrainiacScene");
-//    m_simulation->getSettings()->saveConfig(&sWriter);
-    sWriter.writeStartElement("Place");
-    sWriter.writeStartElement("Groups");
+    sWriter.writeStartElement(BrainiacGlobals::XmlSceneTag);
+    m_simulation->getSettings()->saveConfig(&sWriter);
+    sWriter.writeStartElement(BrainiacGlobals::XmlPlaceTag);
+    sWriter.writeStartElement(BrainiacGlobals::XmlGroupsTag);
     foreach(Group *grp, m_groups) {
         grp->saveConfig(&sWriter);
     }
@@ -168,7 +168,7 @@ QString Scene::getSceneXml() const
     }
     sWriter.writeEndElement(); // Generators
     sWriter.writeEndElement(); // Place
-//    sWriter.writeEndElement(); // BrainiacScene
+    sWriter.writeEndElement(); // BrainiacScene
 
     sWriter.writeEndDocument();
     return xml;
@@ -180,45 +180,13 @@ bool Scene::openConfig(const QString & fileName)
     QFile file(fileName);
     if(file.open(QIODevice::ReadOnly)) {
         this->clear();
-        m_streamReader.setDevice(&file);
-        while(m_streamReader.readNextStartElement()) {
-            if(m_streamReader.name()=="Place") {
-                while(m_streamReader.readNextStartElement()) {
-                    if(m_streamReader.name()=="Generators") {
-                        while(m_streamReader.readNextStartElement()) {
-                            if(m_streamReader.name()=="PointGenerator") {
-                                //qDebug() << "scene.cpp openconfig openConfigPointgenerator missing!";
-                                PointGenerator *pg=new PointGenerator(this);
-                                pg->loadConfig(&m_streamReader);
-                                m_generators.append(pg);
-                            } else {
-                                m_streamReader.skipCurrentElement();
-                            }
-                        } // all generators done
-                    } else if(m_streamReader.name()=="Groups") {
-                        //m_streamReader.skipCurrentElement();
-                        while(m_streamReader.readNextStartElement()) {
-                            if(m_streamReader.name()=="Group") {
-                                Group *grp=new Group(this);
-                                grp->loadConfig(&m_streamReader);
-                                //addGroup(grp);
-                                //m_groups.append(grp);
-                            } else {
-                                m_streamReader.skipCurrentElement();
-                            }
-
-                        }
-                    } else {
-                        m_streamReader.skipCurrentElement();
-                    }
-                }
-            } else {
-                m_streamReader.skipCurrentElement();
-            }
-        }
+        QXmlStreamReader streamReader;
+        streamReader.setDevice(&file);
+        bool ok=setByXml(streamReader);
         file.close();
-        createAgents();
-        return true;
+        if(ok)
+            createAgents();
+        return ok;
     }
     BrainiacError::setLastError(BrainiacError::FILE_NOT_FOUND,__PRETTY_FUNCTION__,0,QString("Failed to open file ").append(fileName));
     return false;
@@ -235,26 +203,6 @@ bool Scene::saveConfig(const QString & fileName)
     file.setDirectWriteFallback(true);
     if(file.open(QIODevice::WriteOnly)) {
         file.write( getSceneXml().toStdString().c_str() );
-//        m_streamWriter.setDevice(&file);
-//        m_streamWriter.setAutoFormatting(true);
-//        m_streamWriter.writeStartDocument();
-//        m_streamWriter.writeStartElement("Place");
-//        m_streamWriter.writeStartElement("Groups");
-//        foreach(Group *grp, m_groups) {
-//            grp->saveConfig(&m_streamWriter);
-//        }
-//        m_streamWriter.writeEndElement(); // Groups
-//        m_streamWriter.writeStartElement("Generators");
-//        foreach(Generator *gen, m_generators) {
-//            if(gen->getType()==Generator::POINT) {
-//                static_cast<PointGenerator *>(gen)->saveConfig(&m_streamWriter);
-//            }
-//        }
-//        m_streamWriter.writeEndElement(); // Generators
-//        m_streamWriter.writeEndElement(); // Place
-
-//        m_streamWriter.writeEndDocument();
-        //file.close();
         m_fileName=fileName;
         if(file.commit()) {
             return true;
@@ -265,6 +213,59 @@ bool Scene::saveConfig(const QString & fileName)
     }
     BrainiacError::setLastError(BrainiacError::COULD_NOT_WRITE_FILE,__PRETTY_FUNCTION__,0,"Unable to open file for writing.");
     return false;
+}
+
+bool Scene::setByXml(QXmlStreamReader &xmlReader)
+{
+    while(xmlReader.readNextStartElement())  {
+        if(xmlReader.name()==BrainiacGlobals::XmlSceneTag) {
+            while(xmlReader.readNextStartElement()) {
+                if(xmlReader.name()==BrainiacGlobals::XmlPlaceTag) {
+                    while(xmlReader.readNextStartElement()) {
+                        if(xmlReader.name()=="Generators") {
+                            while(xmlReader.readNextStartElement()) {
+                                if(xmlReader.name()=="PointGenerator") {
+                                    //qDebug() << "scene.cpp openconfig openConfigPointgenerator missing!";
+                                    PointGenerator *pg=new PointGenerator(this);
+                                    pg->loadConfig(&xmlReader);
+                                    m_generators.append(pg);
+                                } else {
+                                    xmlReader.skipCurrentElement();
+                                }
+                            } // all generators done
+                        } else if(xmlReader.name()==BrainiacGlobals::XmlGroupsTag) {
+                            //m_streamReader.skipCurrentElement();
+                            while(xmlReader.readNextStartElement()) {
+                                if(xmlReader.name()=="Group") {
+                                    Group *grp=new Group(this);
+                                    grp->loadConfig(&xmlReader);
+                                    //addGroup(grp);
+                                    //m_groups.append(grp);
+                                } else {
+                                    xmlReader.skipCurrentElement();
+                                }
+
+                            }
+                        } else {
+                            xmlReader.skipCurrentElement();
+                        }
+                    }
+                    xmlReader.skipCurrentElement();
+                } else if(xmlReader.name()==BrainiacGlobals::XmlSimulationTag) {
+                    m_simulation->getSettings()->loadConfig(&xmlReader);
+                } else {
+                    xmlReader.skipCurrentElement();
+                }
+            }
+        }
+    }
+    return true;
+}
+
+bool Scene::setByXml(const QString &xml)
+{
+    QXmlStreamReader xmlReader(xml);
+    return setByXml(xmlReader);
 }
 
 Scene::~Scene()

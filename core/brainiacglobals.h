@@ -101,7 +101,7 @@ public:
     static const char* const XmlTreeTransitionAttrib;
     static const char* const XmlTriggersAttrib;
 
-
+    static const char* const XmlGroupsTag;
     static const char* const XmlSizeTag;
     static const char* const XmlRotationTag;
     static const char* const XmlTranslationTag;
@@ -113,6 +113,8 @@ public:
     static const char* const XmlRotTransOrderTag;
     static const char* const XmlMotionTreesTag;
     static const char* const XmlMotionTreeTag;
+    static const char* const XmlPlaceTag;
+    static const char* const XmlSceneTag;
     static const char* const XmlSimulationTag;
     static const char* const XmlTreeTransitionActionConnectionTag;
     static const char* const XmlTreeActionTransitionConnectionTag;

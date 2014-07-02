@@ -82,6 +82,14 @@ public:
     void saveConfig(QXmlStreamWriter *xml);
 
     /**
+     * @brief sets the framerate
+     *
+     * @fn setFps
+     * @param fps frames per second
+     */
+    void setFps( quint32 fps ) { m_fps=fps; }
+
+    /**
      * @brief sets the dir name to write motion data in
      * the directory is relative to scene directory
      *
