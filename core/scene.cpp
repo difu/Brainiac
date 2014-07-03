@@ -115,7 +115,7 @@ QString Scene::getAbsoluteFileDir() const {
     return fInfo.absolutePath();
 }
 
-QString Scene::getRelativeFileDir(QString file) const
+QString Scene::getRelativeFileDir(const QString &file) const
 {
     QDir dir(getAbsoluteFileDir());
     return dir.relativeFilePath(file);

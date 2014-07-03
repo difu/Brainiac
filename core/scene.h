@@ -82,7 +82,7 @@ public:
      * @param file
      * @return QString
      */
-    QString getRelativeFileDir(QString file) const;
+    QString getRelativeFileDir(const QString &file) const;
 
     /**
      * @brief returns the scene description as xml

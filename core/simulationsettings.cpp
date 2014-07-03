@@ -34,6 +34,14 @@ void SimulationSettings::loadConfig(QXmlStreamReader *xml)
     m_fps=attribs.value(BrainiacGlobals::XmlFpsAttrib).toString().toInt();
 
     while (xml->readNextStartElement()) {
+        if(xml->isStartElement() && xml->name() == BrainiacGlobals::XmlSimulationDirectoryOutputTag) {
+            QXmlStreamAttributes attribs = xml->attributes();
+            m_motionOutDir=attribs.value(BrainiacGlobals::XmlNameAttrib).toString();
+            m_writeMotion=attribs.value(BrainiacGlobals::XmlEnabledAttrib).toString().toInt()==1;
+            xml->skipCurrentElement();
+        } else {
+            xml->skipCurrentElement();
+        }
     }
     //xml->skipCurrentElement();
 }
@@ -42,8 +50,10 @@ void SimulationSettings::loadConfig(QXmlStreamReader *xml)
 void SimulationSettings::saveConfig(QXmlStreamWriter *xml)
 {
     xml->writeStartElement(BrainiacGlobals::XmlSimulationTag);
-//    xml->writeStartElement("xxx");
-//    xml->writeEndElement();
     xml->writeAttribute(BrainiacGlobals::XmlFpsAttrib,QString::number(m_fps));
+    xml->writeStartElement(BrainiacGlobals::XmlSimulationDirectoryOutputTag);
+    xml->writeAttribute(BrainiacGlobals::XmlNameAttrib,m_motionOutDir);
+    xml->writeAttribute(BrainiacGlobals::XmlEnabledAttrib,QString::number((int)m_writeMotion));
+    xml->writeEndElement();
     xml->writeEndElement();
 }

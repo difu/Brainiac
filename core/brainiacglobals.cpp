@@ -76,6 +76,7 @@ const qreal BrainiacGlobals::ActionTriggerValue=1.0;
 const qreal BrainiacGlobals::ActionForceTriggerValue=2.0;
 
 const char* const BrainiacGlobals::XmlColorAttrib="color\0";
+const char* const BrainiacGlobals::XmlEnabledAttrib="enabled\0";
 const char* const BrainiacGlobals::XmlModeAttrib="mode\0";
 const char* const BrainiacGlobals::XmlNameAttrib="name\0";
 const char* const BrainiacGlobals::XmlXAttrib="x\0";
@@ -86,11 +87,13 @@ const char* const BrainiacGlobals::XmlAngleAttrib="angle\0";
 const char* const BrainiacGlobals::XmlDistanceAttrib="distance\0";
 const char* const BrainiacGlobals::XmlGroupsAttrib="groups\0";
 const char* const BrainiacGlobals::XmlGroupRatioAttrib="groupratio\0";
+const char* const BrainiacGlobals::XmlInputAttrib="input\0";
 const char* const BrainiacGlobals::XmlFileNameAttrib="fileName\0";
 const char* const BrainiacGlobals::XmlFpsAttrib="fps\0";
 const char* const BrainiacGlobals::XmlNumberAttrib="number\0";
 const char* const BrainiacGlobals::XmlNoiseAttrib="noise\0";
 const char* const BrainiacGlobals::XmlNoiseFreqAttrib="noisefreq\0";
+const char* const BrainiacGlobals::XmlOutputAttrib="output\0";
 const char* const BrainiacGlobals::XmlHeightVarAttrib="heightvariation\0";
 const char* const BrainiacGlobals::XmlHeightAttrib="height\0";
 const char* const BrainiacGlobals::XmlIdAttrib="id\0";
@@ -102,7 +105,10 @@ const char* const BrainiacGlobals::XmlTreeActionAttrib="action\0";
 const char* const BrainiacGlobals::XmlTreeTransitionAttrib="transition\0";
 const char* const BrainiacGlobals::XmlTriggersAttrib="triggers\0";
 
+const char* const BrainiacGlobals::XmlDirectoryTag="Directory";
 const char* const BrainiacGlobals::XmlGroupsTag="Groups\0";
+const char* const BrainiacGlobals::XmlInputTag="Input\0";
+const char* const BrainiacGlobals::XmlOutputTag="Output\0";
 const char* const BrainiacGlobals::XmlSizeTag="Size\0";
 const char* const BrainiacGlobals::XmlTranslationTag="Translation\0";
 const char* const BrainiacGlobals::XmlRotationTag="Rotation\0";
@@ -117,6 +123,9 @@ const char* const BrainiacGlobals::XmlMotionTreeTag="MotionTree\0";
 const char* const BrainiacGlobals::XmlPlaceTag="Place\0";
 const char* const BrainiacGlobals::XmlSceneTag="Scene\0";
 const char* const BrainiacGlobals::XmlSimulationTag="Simulation\0";
+const char* const BrainiacGlobals::XmlSimulationDirectoryOutputTag="SimOutDir\0";
+
+
 const char* const BrainiacGlobals::XmlTreeActionTransitionConnectionTag="ActionTransitionConnection\0";
 const char* const BrainiacGlobals::XmlTreeTransitionActionConnectionTag="TransitionActionConnection\0";
 const char* const BrainiacGlobals::XmlTreeActionTag="Action\0";

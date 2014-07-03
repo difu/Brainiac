@@ -75,6 +75,7 @@ public:
     static const qreal ActionForceTriggerValue; /**< value that forces the action (do not check for latch etc.) */
 
     static const char* const XmlColorAttrib;
+    static const char* const XmlEnabledAttrib;
     static const char* const XmlModeAttrib;
     static const char* const XmlNameAttrib;
     static const char* const XmlIdAttrib;
@@ -88,9 +89,11 @@ public:
     static const char* const XmlFpsAttrib; /**< Frames per second of scene/simulation */
     static const char* const XmlGroupsAttrib;
     static const char* const XmlGroupRatioAttrib;
+    static const char* const XmlInputAttrib;
     static const char* const XmlNumberAttrib;
     static const char* const XmlNoiseAttrib;
     static const char* const XmlNoiseFreqAttrib;
+    static const char* const XmlOutputAttrib;
     static const char* const XmlHeightVarAttrib;
     static const char* const XmlHeightAttrib;
     static const char* const XmlRadiusAttrib;
@@ -101,7 +104,10 @@ public:
     static const char* const XmlTreeTransitionAttrib;
     static const char* const XmlTriggersAttrib;
 
+    static const char* const XmlDirectoryTag;
     static const char* const XmlGroupsTag;
+    static const char* const XmlInputTag;
+    static const char* const XmlOutputTag;
     static const char* const XmlSizeTag;
     static const char* const XmlRotationTag;
     static const char* const XmlTranslationTag;
@@ -116,6 +122,7 @@ public:
     static const char* const XmlPlaceTag;
     static const char* const XmlSceneTag;
     static const char* const XmlSimulationTag;
+    static const char* const XmlSimulationDirectoryOutputTag;
     static const char* const XmlTreeTransitionActionConnectionTag;
     static const char* const XmlTreeActionTransitionConnectionTag;
     static const char* const XmlTreeActionTag;
