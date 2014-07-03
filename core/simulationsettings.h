@@ -40,6 +40,13 @@ public:
      */
     explicit SimulationSettings(QObject *parent = 0);
 
+    /**
+     * @brief returns the end frame
+     *
+     * @fn getEndFrame
+     * @return quint32 the end frame
+     */
+    quint32 getEndFrame() const { return m_endFrame; }
 
     /**
      * @brief returns the framerate of the Simulation
@@ -55,6 +62,14 @@ public:
      * @return QString string containing the dir relative to scene directory
      */
     QString getMotionOutputDir() const { return m_motionOutDir; }
+
+    /**
+     * @brief returns the start frame
+     *
+     * @fn getStartFrame
+     * @return quint32 the start frame
+     */
+    quint32 getStartFrame() const { return m_startFrame; }
 
     /**
      * @brief returns if motion data should be written
@@ -98,6 +113,16 @@ public:
      */
     void setMotionOutputDir( const QString &dirName ) { m_motionOutDir=dirName;}
 
+
+    /**
+     * @brief sets start and end frame
+     * if endFrame is equal or less than startFrame, end frame will be startFrame+1
+     * @fn setStartEndFrame
+     * @param startFrame the start frane
+     * @param endFrame the end frame
+     */
+    void setStartEndFrame(quint32 startFrame, quint32 endFrame);
+
     /**
      * @brief switch on/off of writing motion data
      * switches on/off writing motion data in motion data dir
@@ -112,6 +137,8 @@ private:
     QString m_motionOutDir; //!< directory to write ot motion data relative to scene directory
     bool m_writeMotion; //!< toggles writing of motion data in @sa m_motionOutDir
     quint32 m_fps; //!< frametrate of the sim
+    quint32 m_startFrame; //!< number of start frame
+    quint32 m_endFrame; //!< number of end frame
 
 signals:
 

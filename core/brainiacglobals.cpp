@@ -77,6 +77,7 @@ const qreal BrainiacGlobals::ActionForceTriggerValue=2.0;
 
 const char* const BrainiacGlobals::XmlColorAttrib="color\0";
 const char* const BrainiacGlobals::XmlEnabledAttrib="enabled\0";
+const char* const BrainiacGlobals::XmlEndFrameAttrib="endFrame\0";
 const char* const BrainiacGlobals::XmlModeAttrib="mode\0";
 const char* const BrainiacGlobals::XmlNameAttrib="name\0";
 const char* const BrainiacGlobals::XmlXAttrib="x\0";
@@ -100,6 +101,7 @@ const char* const BrainiacGlobals::XmlIdAttrib="id\0";
 const char* const BrainiacGlobals::XmlRadiusAttrib="radius\0";
 const char* const BrainiacGlobals::XmlEditorXPosAttrib="editorX\0";
 const char* const BrainiacGlobals::XmlEditorYPosAttrib="editorY\0";
+const char* const BrainiacGlobals::XmlStartFrameAttrib="startFrame\0";
 const char* const BrainiacGlobals::XmlTreeDefaultActionAttrib="defaultaction\0";
 const char* const BrainiacGlobals::XmlTreeActionAttrib="action\0";
 const char* const BrainiacGlobals::XmlTreeTransitionAttrib="transition\0";

@@ -142,6 +142,15 @@ public:
     **/
     void advanceCommit();
 
+    /**
+     * @brief creates or updates the list containing the pointers of the traversed segment channels according to bvh format
+     *
+     * this list is used to provide quick access to the output channels of all segments
+     *
+     * @fn createBVHChannelList
+     */
+    void createBVHChannelList();
+
     /** \brief deletes channel
 
                     the channel is deleted both from inputs and outputs.
@@ -269,7 +278,7 @@ public:
     void dDumpChannels();
     virtual ~Agent();
 
-protected:
+private:
     AgentManager *m_agentManager;//!< the AgentManager this Agent belongs to
     Body *m_body; //!< the agent´s body
     Brain *m_brain; //!< the agent´s brain
@@ -291,6 +300,7 @@ protected:
     Channel *m_iSoundOX; //!< relative angle of receiving sound source (input)
     Channel *m_iSoundD; //!< distance of received sound;
     Channel *m_iSoundF; //!< frequency of received sound;
+    QList<Channel *> m_bvhChannelList;
 
     Locator *m_locator; //!< the locator that holds the initial position and rotation
     Scene *m_scene; //!< the scene

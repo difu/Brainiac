@@ -41,6 +41,22 @@ class Simulation : public QObject
 {
     Q_OBJECT
 public:
+    /**
+     * @brief Behaviour of Simulation
+     *
+     * @enum SimulationMode
+     */
+    enum SimulationMode {
+        INTERACTIVE, /**< Interactive mode, user can start, stop, etc, no data is written to disk */
+        SIMULATE /**< non interactive, not realtime. Data will be written to disk */
+    };
+
+    /**
+     * @brief Constructor
+     *
+     * @fn Simulation
+     * @param scene
+     */
     explicit Simulation(Scene *scene);
 
     /**
@@ -93,11 +109,34 @@ public:
      * @return qreal the actual framerate
      */
     qreal getFpsCalc() const;
+
+    /**
+     * @brief returns the setting
+     *
+     * @fn getSettings
+     * @return SimulationSettings
+     */
     SimulationSettings *getSettings() { return m_settings; }
+
+    /**
+     * @brief returns the SimulationMode
+     *
+     * @fn getSimulationMode
+     * @return SimulationMode
+     */
+    SimulationMode getSimulationMode() const { return m_simMode; }
 
     /** \brief @returns true if simulation is running
     **/
     bool isRunning() const { return m_running; }
+
+    /**
+     * @brief sets the SimulationMode
+     *
+     * @fn setSimulationMode
+     * @param simMode the SimulationMode
+     */
+    void setSimulationMode( SimulationMode simMode) { m_simMode=simMode; }
 
     /**
      * @brief Destructor
@@ -115,8 +154,9 @@ private:
     bool m_late; //!< shows, if sim step is calculated in realtime
     QMutex m_simMutex; //!< prevent new simulation step when current has not finished yet
     QFutureWatcher<void> m_futureWatcherAdvance; /**< the future watcher of the async advance calculation */
-    QFutureWatcher<void> m_futureWatcherAdvanceCommit; /**< th future watcher of the async advance commit calculation */
+    QFutureWatcher<void> m_futureWatcherAdvanceCommit; /**< the future watcher of the async advance commit calculation */
     SimulationSettings *m_settings;
+    SimulationMode m_simMode;
 
     /** \brief go one step further in simulation
 

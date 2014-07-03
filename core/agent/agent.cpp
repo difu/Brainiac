@@ -238,6 +238,14 @@ void Agent::advanceCommit()
     //qDebug() << __PRETTY_FUNCTION__ << m_position;
 }
 
+void Agent::createBVHChannelList()
+{
+    m_bvhChannelList.clear();
+    foreach(QString channelName, m_agentManager->getBVHMotionChannelList()) {
+        m_bvhChannelList.append(getOutputChannel(channelName,Channel::NONE));
+    }
+}
+
 void Agent::createChannels()
 {
     m_rx=new Channel();

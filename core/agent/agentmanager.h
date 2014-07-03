@@ -225,6 +225,14 @@ public:
     Agent* getBodyAgent() {return m_spBodyAgent;}
 
     /**
+     * @brief returns the list of channels according to bvh skeleton
+     *
+     * @fn getBVHMotionChannelList
+     * @return const QString
+     */
+    const QList<QString>& getBVHMotionChannelList() const;
+
+    /**
      * @brief returns the BVH representation of the skeleton of the agent
      *
      * the motion data is not included!
@@ -490,6 +498,8 @@ private:
     quint32 m_activeMotionTreeEditor; /**< id of the currently edited tree in @sa MainWindow */
     mutable QString m_bvhSkeleton; /**< holds the bvh representation of the skeleton */
     bool m_bvhSkeletonDirty; /**< true, if the bvh representation has to be recalculated */
+    mutable bool m_bvhSegmentChannelListDirty; /**< true, if the bvh representation has to be recalculated */
+    mutable QList<QString> m_bvhChannelList; /** traveresed list of motionchannels of bvh skeleton */
 
     // Brain stuff
     void addAndFuzz(quint32 id, QString name, QString mode, quint32 editorX, quint32 editorY);

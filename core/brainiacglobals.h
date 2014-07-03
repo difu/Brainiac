@@ -76,6 +76,7 @@ public:
 
     static const char* const XmlColorAttrib;
     static const char* const XmlEnabledAttrib;
+    static const char* const XmlEndFrameAttrib; /**< end frame of simulation */
     static const char* const XmlModeAttrib;
     static const char* const XmlNameAttrib;
     static const char* const XmlIdAttrib;
@@ -99,6 +100,7 @@ public:
     static const char* const XmlRadiusAttrib;
     static const char* const XmlEditorXPosAttrib; /**< X Position in an editor */
     static const char* const XmlEditorYPosAttrib; /**< Y Position in an editor */
+    static const char* const XmlStartFrameAttrib; /**< start frame of simulation */
     static const char* const XmlTreeDefaultActionAttrib; /**< contains the name of the tree default action */
     static const char* const XmlTreeActionAttrib;
     static const char* const XmlTreeTransitionAttrib;

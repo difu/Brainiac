@@ -25,6 +25,8 @@ SimulationSettings::SimulationSettings(QObject *parent) :
 {
     m_writeMotion=false;
     m_fps=24;
+    m_startFrame=0;
+    m_endFrame=1;
 }
 
 void SimulationSettings::loadConfig(QXmlStreamReader *xml)
@@ -32,6 +34,8 @@ void SimulationSettings::loadConfig(QXmlStreamReader *xml)
     Q_ASSERT(xml->isStartElement() && xml->name() == BrainiacGlobals::XmlSimulationTag);
     QXmlStreamAttributes attribs = xml->attributes();
     m_fps=attribs.value(BrainiacGlobals::XmlFpsAttrib).toString().toInt();
+    m_startFrame=attribs.value(BrainiacGlobals::XmlStartFrameAttrib).toString().toInt();
+    m_endFrame=attribs.value(BrainiacGlobals::XmlEndFrameAttrib).toString().toInt();
 
     while (xml->readNextStartElement()) {
         if(xml->isStartElement() && xml->name() == BrainiacGlobals::XmlSimulationDirectoryOutputTag) {
@@ -51,9 +55,20 @@ void SimulationSettings::saveConfig(QXmlStreamWriter *xml)
 {
     xml->writeStartElement(BrainiacGlobals::XmlSimulationTag);
     xml->writeAttribute(BrainiacGlobals::XmlFpsAttrib,QString::number(m_fps));
+    xml->writeAttribute(BrainiacGlobals::XmlStartFrameAttrib,QString::number(m_startFrame));
+    xml->writeAttribute(BrainiacGlobals::XmlEndFrameAttrib,QString::number(m_endFrame));
     xml->writeStartElement(BrainiacGlobals::XmlSimulationDirectoryOutputTag);
     xml->writeAttribute(BrainiacGlobals::XmlNameAttrib,m_motionOutDir);
     xml->writeAttribute(BrainiacGlobals::XmlEnabledAttrib,QString::number((int)m_writeMotion));
     xml->writeEndElement();
     xml->writeEndElement();
+}
+
+void SimulationSettings::setStartEndFrame(quint32 startFrame, quint32 endFrame)
+{
+    if(startFrame>=endFrame) {
+        endFrame=startFrame+1;
+    }
+    m_startFrame=startFrame;
+    m_endFrame=endFrame;
 }

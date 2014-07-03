@@ -52,6 +52,7 @@ void BrainiacTest::parseBVH()
         }
     }
     QVERIFY2(foundNonZeroTranslation==true,"BVH only has zero length segments!");
+    qDebug() << am->getBVHMotionChannelList();
     testScene1->deleteLater();
 }
 
@@ -698,9 +699,11 @@ void BrainiacTest::simulation_data()
     QTest::addColumn<quint32>("fps");
     QTest::addColumn<bool>("writeSimOut");
     QTest::addColumn<QString>("simOutDir");
+    QTest::addColumn<quint32>("startFrame");
+    QTest::addColumn<quint32>("endFrame");
 
-    QTest::newRow("Sim1") << (quint32)24 << true << QString("simOut");
-    QTest::newRow("Sim2") << (quint32)48 << false << QString("simOut2");
+    QTest::newRow("Sim1") << (quint32)24 << true << QString("simOut") << (quint32)1 << (quint32)2;
+    QTest::newRow("Sim2") << (quint32)48 << false << QString("simOut2") << (quint32)2 << (quint32)100;
 }
 
 void BrainiacTest::simulation()
@@ -708,15 +711,20 @@ void BrainiacTest::simulation()
     QFETCH(quint32, fps);
     QFETCH(bool, writeSimOut);
     QFETCH(QString, simOutDir);
+    QFETCH(quint32, startFrame);
+    QFETCH(quint32, endFrame);
     Scene scene1;
     Simulation *sim1=scene1.getSimulation();
     SimulationSettings *simSet1=sim1->getSettings();
     simSet1->setFps(fps);
     simSet1->setMotionOutputDir(simOutDir);
     simSet1->setWriteMotion(writeSimOut);
+    simSet1->setStartEndFrame(startFrame, endFrame);
     QVERIFY2(sim1->getFps()==fps,"Wrong fps");
     QVERIFY2(simSet1->getWriteMotion()==writeSimOut,"Wrong writeOutput");
     QVERIFY2(simSet1->getMotionOutputDir()==simOutDir,"Wrong simOutDir");
+    QVERIFY2(simSet1->getStartFrame()==startFrame,"Wrong startFrame");
+    QVERIFY2(simSet1->getEndFrame()==endFrame,"Wrong endFrame");
     QString xmlSettings1;
     QXmlStreamWriter w(&xmlSettings1);
     simSet1->saveConfig(&w);
@@ -728,8 +736,10 @@ void BrainiacTest::simulation()
 
 //    qDebug() << scene2.getSceneXml();
     QVERIFY2(sim1->getFps()==sim2->getFps(),"Wrong fps in loaded sim");
-    QVERIFY2(simSet2->getWriteMotion()==writeSimOut,"Wrong writeOutput");
-    QVERIFY2(simSet2->getMotionOutputDir()==simOutDir,"Wrong simOutDir");
+    QVERIFY2(simSet2->getWriteMotion()==writeSimOut,"Wrong loaded writeOutput");
+    QVERIFY2(simSet2->getMotionOutputDir()==simOutDir,"Wrong loaded simOutDir");
+    QVERIFY2(simSet2->getStartFrame()==startFrame,"Wrong loaded startFrame");
+    QVERIFY2(simSet2->getEndFrame()==endFrame,"Wrong loaded endFrame");
 
 }
 

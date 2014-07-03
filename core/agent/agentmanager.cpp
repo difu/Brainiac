@@ -73,6 +73,7 @@ AgentManager::AgentManager(Group *group)
     m_activeMotionTreeEditor=0;
     m_selectedAgent=m_masterAgent;
     m_bvhSkeletonDirty=true;
+    m_bvhSegmentChannelListDirty=true;
 }
 
 void AgentManager::addSegmentFromConfig(QXmlStreamReader *reader, quint32 id, QString name, quint32 parent, quint32 editorX, quint32 editorY)
@@ -476,6 +477,40 @@ void AgentManager::deleteFuzz(quint32 fuzzId)
     }
     updateSoundConfigs();
     m_brainEditor->deleteFuzzyItem(fuzzId);
+}
+
+const QList<QString>& AgentManager::getBVHMotionChannelList() const {
+    if(m_bvhSegmentChannelListDirty) {
+        m_bvhChannelList.clear();
+        foreach(quint32 segId, m_bodyManager->getTraversedSegmentIds()) {
+            Segment seg=m_bodyManager->getSegment(segId);
+            for(int i=5 ; i>=0 ; i--) {
+                BrainiacGlobals::RotTrans rt=seg.getRotationTranslationOrder().at(i);
+                switch(rt) {
+                case BrainiacGlobals::TX:
+                    m_bvhChannelList.append(seg.getName()%":tx");
+                    break;
+                case BrainiacGlobals::TY:
+                    m_bvhChannelList.append(seg.getName()%":ty");
+                    break;
+                case BrainiacGlobals::TZ:
+                    m_bvhChannelList.append(seg.getName()%":tz");
+                    break;
+                case BrainiacGlobals::RX:
+                    m_bvhChannelList.append(seg.getName()%":rx");
+                    break;
+                case BrainiacGlobals::RY:
+                    m_bvhChannelList.append(seg.getName()%":ry");
+                    break;
+                case BrainiacGlobals::RZ:
+                    m_bvhChannelList.append(seg.getName()%":rz");
+                    break;
+                }
+            }
+        }
+        m_bvhSegmentChannelListDirty=false;
+    }
+    return m_bvhChannelList;
 }
 
 const QString& AgentManager::getBVHSkeleton() const
@@ -1230,6 +1265,7 @@ void AgentManager::reset()
 void AgentManager::segmentChanged()
 {
     m_bvhSkeletonDirty=true;
+    m_bvhSegmentChannelListDirty=true;
 
 }
 
