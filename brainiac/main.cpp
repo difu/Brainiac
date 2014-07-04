@@ -47,8 +47,11 @@ int main(int argc, char *argv[])
 
     QCommandLineOption sceneFileOption(QStringList() << "scene","Load scene <file>.","file");
     parser.addOption(sceneFileOption);
+    QCommandLineOption simulationOption(QStringList() << "simulation","Runs a simulation in frame range <start-end>.","start-end");
+    parser.addOption(simulationOption);
     QCommandLineOption windowPosOption(QStringList() << "window","Open window at <x,y,w,h>.","x,y,w,h");
     parser.addOption(windowPosOption);
+
 
 
     // Process the actual command line arguments given by the user
