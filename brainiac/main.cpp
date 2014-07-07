@@ -23,6 +23,7 @@
 #include <QTextStream>
 #include <QCommandLineParser>
 #include "core/scene.h"
+#include "core/simulation.h"
 #include "core/brainiacerror.h"
 
 
@@ -51,6 +52,8 @@ int main(int argc, char *argv[])
     parser.addOption(simulationOption);
     QCommandLineOption windowPosOption(QStringList() << "window","Open window at <x,y,w,h>.","x,y,w,h");
     parser.addOption(windowPosOption);
+    QCommandLineOption numOfThreadsOption(QStringList() << "threads","Sets the maximum number of threads <numOfThreads>.","numOfThreads");
+    parser.addOption(numOfThreadsOption);
 
 
 
@@ -81,7 +84,17 @@ int main(int argc, char *argv[])
         }
     }
 
+    if(parser.isSet(numOfThreadsOption)) {
+        int numOfThreads=parser.value(numOfThreadsOption).toInt();
+        if(numOfThreads>0) {
+            QThreadPool::globalInstance()->setMaxThreadCount(numOfThreads);
+        } else {
+            std::cerr << "Number of threads must be greater or even one. " << std::endl << std::flush;
+            exit(1);
+        }
+    }
 
+    std::cout << "Starting Brainiac with " << QThreadPool::globalInstance()->maxThreadCount() << " threads" << std::endl << std::flush;
     Scene theScene;
     QThread sceneThread; //!<  thread that runs the scene
 
@@ -94,7 +107,6 @@ int main(int argc, char *argv[])
             exit(1);
         }
     }
-
 
     if(!parser.isSet(noGuiOption)) {
         // Apply stylesheet
@@ -116,6 +128,10 @@ int main(int argc, char *argv[])
             w->move(x,y);
         }
         w->show();
+    }
+
+    if(parser.isSet(simulationOption)) {
+        theScene.getSimulation()->setSimulationMode(Simulation::SIMULATE);
     }
 
     return a.exec();
