@@ -83,12 +83,20 @@ void Simulation::advanceCommitDone()
     Q_UNUSED(locker);
     m_currentFrameIsCalculated=false;
 
-    qCDebug(bSimulation) << __PRETTY_FUNCTION__ << "frame calc time " << m_frameCalculationTime;
+    qCDebug(bSimulation) << __PRETTY_FUNCTION__ << "frame calc time " << m_frameCalculationTime << "for frame " << m_currentFrame;
     if(m_frameCalculationTime>1000/(int)getFps()) {
         m_late=true;
         qCDebug(bSimulation) << __PRETTY_FUNCTION__ << "sim is late ";
     } else {
         m_late=false;
+    }
+    if(getSimulationMode()==SIMULATE) {
+        if(m_currentFrame>=m_settings->getEndFrame()) {
+            m_running=false;
+        }
+    }
+    if(!m_running) {
+        emit stopped();
     }
 }
 
@@ -164,6 +172,9 @@ void Simulation::resetSimulation() {
 
 void Simulation::startSimulation()
 {
+    if(!m_running) {
+        emit started();
+    }
     m_running=true;
 }
 

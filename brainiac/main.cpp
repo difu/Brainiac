@@ -24,6 +24,7 @@
 #include <QCommandLineParser>
 #include "core/scene.h"
 #include "core/simulation.h"
+#include "core/simulationsettings.h"
 #include "core/brainiacerror.h"
 
 
@@ -68,7 +69,7 @@ int main(int argc, char *argv[])
         QString winPos=parser.value(windowPosOption);
         QStringList winPosList=winPos.split(",", QString::SkipEmptyParts);
         if(winPosList.count()!=4) {
-            std::cerr << "wrong number or format for parameter window. " << std::endl << std::flush;
+            std::cerr << "Error: wrong number or format for parameter window. " << std::endl << std::flush;
             exit(1);
         }
 
@@ -89,17 +90,17 @@ int main(int argc, char *argv[])
         if(numOfThreads>0) {
             QThreadPool::globalInstance()->setMaxThreadCount(numOfThreads);
         } else {
-            std::cerr << "Number of threads must be greater or even one. " << std::endl << std::flush;
+            std::cerr << "Error: number of threads must be greater or even one. " << std::endl << std::flush;
             exit(1);
         }
     }
 
     std::cout << "Starting Brainiac with " << QThreadPool::globalInstance()->maxThreadCount() << " threads" << std::endl << std::flush;
     Scene theScene;
-    QThread sceneThread; //!<  thread that runs the scene
+//    QThread sceneThread; //!<  thread that runs the scene
 
-    theScene.moveToThread(&sceneThread);
-    sceneThread.start();
+//    theScene.moveToThread(&sceneThread);
+//    sceneThread.start();
 
     if(!sceneFileName.isEmpty()) {
         if(!theScene.openConfig(sceneFileName)) {
@@ -131,11 +132,32 @@ int main(int argc, char *argv[])
     }
 
     if(parser.isSet(simulationOption)) {
+        if(parser.values(simulationOption).count()==1) {
+            QString simFrames=parser.value(simulationOption);
+            QStringList simFrameList=simFrames.split("-", QString::SkipEmptyParts);
+            if(simFrameList.count()==2) {
+                int startFrame=simFrameList.at(0).toInt();
+                int endFrame=simFrameList.at(1).toInt();
+                if(startFrame>=endFrame || endFrame < 1 ) {
+                    std::cerr << "Error: wrong parameters for simulation frames. " << std::endl << std::flush;
+                    exit(1);
+                }
+                theScene.getSimulation()->getSettings()->setStartEndFrame(startFrame,endFrame);
+            }
+        }
         theScene.getSimulation()->setSimulationMode(Simulation::SIMULATE);
+        theScene.getSimulation()->startSimulation();
+        if(parser.isSet(noGuiOption)) {
+            QObject::connect(theScene.getSimulation(),SIGNAL(stopped()),&a,SLOT(quit()));
+        }
+    } else {
+        if(parser.isSet(noGuiOption)) {
+            exit(0);
+        }
     }
 
     return a.exec();
 
-    sceneThread.terminate();
-    sceneThread.wait();
+//    sceneThread.terminate();
+//    sceneThread.wait();
 }
