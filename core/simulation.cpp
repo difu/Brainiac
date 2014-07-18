@@ -19,6 +19,8 @@
 #include "simulation.h"
 #include <QtConcurrent/QtConcurrent>
 #include "core/agent/agent.h"
+#include "core/agent/agentmanager.h"
+#include "core/brainiacerror.h"
 #include "core/scene.h"
 #include "core/simulationsettings.h"
 #include "core/brainiaclogger.h"
@@ -31,6 +33,9 @@ void advanceAgent(Agent* param_agent)
 void advanceAgentCommit(Agent* param_agent)
 {
     param_agent->advanceCommit();
+    if(param_agent->getScene()->getSimulation()->writeMotionData()) {
+        param_agent->writeBVHMotionData();
+    }
 }
 
 void agentReset(Agent* param_agent)
@@ -170,12 +175,38 @@ void Simulation::resetSimulation() {
     m_currentFrame=0;
 }
 
-void Simulation::startSimulation()
+bool Simulation::startSimulation()
 {
     if(!m_running) {
+        // if we run in simulate mode, check if we want to write something to any sim out dirs
+        if(getSimulationMode()==SIMULATE) {
+            if( writeMotionData() ) {
+                QString dir=m_scene->getAbsoluteFileDir()%QDir::separator()%m_settings->getMotionOutputDir()%QDir::separator();
+                qCDebug(bSimulation) << __PRETTY_FUNCTION__ << "writing sim output to " << dir;
+                m_agents=m_scene->getAgents();
+                foreach(Agent *agent, m_agents) {
+                    agent->createBVHChannelList();
+                    QFile agentMotionFile(dir%agent->objectName()%".bvh");
+                    if (!agentMotionFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
+                        qCDebug(bSimulation) << __PRETTY_FUNCTION__ << "unable to open file " << agentMotionFile.fileName();
+                        BrainiacError::setLastError(BrainiacError::COULD_NOT_WRITE_FILE,agentMotionFile.fileName(),0,"unable to write to file for motion data");
+                        cancelSimulation();
+                        return false;
+                    }
+                    qCDebug(bSimulation) << __PRETTY_FUNCTION__ << "writing to file " << agentMotionFile.fileName();
+                    agent->setBVHFileName(agentMotionFile.fileName());
+                    QTextStream out(&agentMotionFile);
+                    out << agent->getAgentManager()->getBVHSkeleton();
+                    out << "MOTION\n" <<
+                           "Frames: " << QString::number(m_settings->getEndFrame()-m_settings->getStartFrame()) << "\n" <<
+                           "Frame Time: " << QString::number(1.0/(qreal)m_settings->getFps(),'f') << "\n";
+                }
+            }
+        }
         emit started();
     }
     m_running=true;
+    return true;
 }
 
 void Simulation::stopSimulation()
@@ -190,9 +221,14 @@ void Simulation::timerEvent(QTimerEvent *)
     }
 }
 
+bool Simulation::writeMotionData() const
+{
+    return (!m_settings->getMotionOutputDir().isEmpty() && m_settings->getWriteMotion() );
+}
+
 Simulation::~Simulation()
 {
     cancelSimulation();
-    qDebug() << __PRETTY_FUNCTION__ << "DODJ";
+    qDebug() << __PRETTY_FUNCTION__;
 }
 

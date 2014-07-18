@@ -541,8 +541,8 @@ const QString& AgentManager::getBVHSkeleton() const
             m_bvhSkeleton.append(seg.getName());
             m_bvhSkeleton.append("\n").append(indent).append("{").append("\n");
             m_bvhSkeleton.append(indent_1).append("OFFSET ");
-            m_bvhSkeleton.append(QString::number(seg.getRestTranslation().x())).append(" ").append(QString::number(seg.getRestTranslation().y())).append(" ").append(QString::number(seg.getRestTranslation().z())).append("\n");
-            m_bvhSkeleton.append(indent_1).append("CHANNELS ");
+            m_bvhSkeleton.append(QString::number(seg.getRestTranslation().x(),'f')).append(" ").append(QString::number(seg.getRestTranslation().y(),'f')).append(" ").append(QString::number(seg.getRestTranslation().z(),'f')).append("\n");
+            m_bvhSkeleton.append(indent_1).append("CHANNELS ").append(QString::number(seg.getRotationTranslationOrder().count())).append(" ");
             for(int i=5 ; i>=0 ; i--) {
                 BrainiacGlobals::RotTrans rt=seg.getRotationTranslationOrder().at(i);
                 switch(rt) {
@@ -565,6 +565,14 @@ const QString& AgentManager::getBVHSkeleton() const
                     m_bvhSkeleton.append("Zrotation ");
                     break;
                 }
+            }
+            //if(false) {
+            if(m_bodyManager->hasChildren(seg.getId())) {
+                m_bvhSkeleton.append("\n");
+                m_bvhSkeleton.append(indent_1).append("End Site\n");
+                m_bvhSkeleton.append(indent_1).append("{\n");
+                m_bvhSkeleton.append(indent_1).append(" OFFSET ").append(QString::number(seg.getTranslation().x(),'f')).append(" ").append(QString::number(seg.getTranslation().y(),'f')).append(" ").append(QString::number(seg.getTranslation().z(),'f')).append("\n");;
+                m_bvhSkeleton.append(indent_1).append("}");
             }
             m_bvhSkeleton.append("\n");
         }

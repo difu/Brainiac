@@ -187,6 +187,11 @@ QList<quint32> BodyManager::getSegmentChildIds(quint32 id) const
     return childIds;
 }
 
+bool BodyManager::hasChildren(quint32 id) const
+{
+    return getChildIds(id).empty();
+}
+
 bool BodyManager::hasRootSegment() const {
     foreach(SegmentShape* segShape,m_segments) {
         if(segShape->isRootSegment())

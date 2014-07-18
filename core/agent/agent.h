@@ -180,9 +180,20 @@ public:
     /** \brief returns the body
     **/
     Body *getBody() const;
+
+    /**
+     * @brief returns a string containing the channel values of all agent segments in proper order for bvh file
+     *
+     * @sa createBVHChannelList()
+     * @fn getBvhMotionData
+     * @return QString a string with blank seperated channel values
+     */
+    QString &getBvhMotionData() const;
+
     /** \brief returns the brain
     **/
     Brain *getBrain() const;
+
     /** \brief returns the bodie´s color
             by default this value is inherited recursivly to all segments of the body
             @sa Segment::setColorInherited(bool inherited)
@@ -257,6 +268,17 @@ public:
 
     void renderSoundEmission(bool render);
     void reset();
+
+    /**
+     * @brief sets the name of the file to write the bvh motion data
+     *
+     * @fn setBVHFileName
+     * @param fileName the file name
+     */
+    void setBVHFileName( const QString& fileName ) {
+        m_bvh_fileName=fileName;
+    }
+
     void setLocator(Locator *locator);
 
     /**
@@ -269,6 +291,9 @@ public:
     void setTranslation(qreal x, qreal y, qreal z);
     void setRestRotation(qreal x, qreal y, qreal z);
     void setRestTranslation(qreal x, qreal y, qreal z);
+
+    void writeBVHMotionData();
+
 
     /**
      * @brief dumps list of all channels
@@ -300,7 +325,9 @@ private:
     Channel *m_iSoundOX; //!< relative angle of receiving sound source (input)
     Channel *m_iSoundD; //!< distance of received sound;
     Channel *m_iSoundF; //!< frequency of received sound;
-    QList<Channel *> m_bvhChannelList;
+    QList<Channel *> m_bvhChannelList; //!< the list of the agent channels according to bvh order
+    QString m_bvh_fileName; //!< the name of the file to write bvh motion data
+    mutable QString m_bvhMotionData; //!< contains actual bvh motion data @sa getBvhMotionData()
 
     Locator *m_locator; //!< the locator that holds the initial position and rotation
     Scene *m_scene; //!< the scene

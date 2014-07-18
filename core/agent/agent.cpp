@@ -23,6 +23,7 @@
 #include "brain/timer.h"
 #include "body/body.h"
 #include "core/brainiacglobals.h"
+#include "core/brainiacerror.h"
 #include "channel.h"
 #include "core/scene.h"
 #include "core/agent/agentmanager.h"
@@ -327,6 +328,15 @@ Brain* Agent::getBrain() const
     return m_brain;
 }
 
+QString& Agent::getBvhMotionData() const
+{
+    m_bvhMotionData.clear();
+    foreach(Channel *c,m_bvhChannelList) {
+        m_bvhMotionData.append(QString::number(c->getOldValue(),'f')).append(" ");
+    }
+//     qCDebug(bAgent) << __PRETTY_FUNCTION__ << m_bvhMotionData;
+    return m_bvhMotionData;
+}
 
 Channel* Agent::getColor() const
 {
@@ -573,6 +583,18 @@ void Agent::setTranslation(qreal x, qreal y, qreal z)
     m_position.setZ(z);
 }
 
+
+void Agent::writeBVHMotionData() {
+    qCDebug(bAgent) << "writing motion data for agent " << objectName();
+    QFile agentMotionFile(m_bvh_fileName);
+    if (!agentMotionFile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)) {
+        qCDebug(bSimulation) << __PRETTY_FUNCTION__ << "unable to open file " << agentMotionFile.fileName();
+        BrainiacError::setLastError(BrainiacError::COULD_NOT_WRITE_FILE,agentMotionFile.fileName(),0,"unable to write to file for motion data");
+        return;
+    }
+    QTextStream out(&agentMotionFile);
+    out << getBvhMotionData() << "\n";
+}
 
 void Agent::dDumpChannels()
 {

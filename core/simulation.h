@@ -139,6 +139,14 @@ public:
     void setSimulationMode( SimulationMode simMode) { m_simMode=simMode; }
 
     /**
+     * @brief should motion data be written
+     *
+     * @fn writeMotionData
+     * @return bool truze, if motion data should be writtem
+     */
+    bool writeMotionData() const;
+
+    /**
      * @brief Destructor
      *
      * @fn ~Simulation
@@ -200,8 +208,9 @@ public slots:
     /**
      * @brief starts the simulation
      *
+     * @returns true, if starting was successful, false otherwise
      */
-    void startSimulation();
+    bool startSimulation();
 
     /**
      * @brief stops/pauses the simulation
