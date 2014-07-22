@@ -22,6 +22,15 @@
 #include<QtCore>
 #include<QColor>
 #include "gui/coordcrossdrawable.h"
+#ifdef BRAINIAC_SUPPRESS_THIRD_PARTY_WARNINGS
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wunused-parameter"
+#endif
+#include "cml/cml.h"
+#include "cml/mathlib/matrix_rotation.h"
+#ifdef BRAINIAC_SUPPRESS_THIRD_PARTY_WARNINGS
+    #pragma clang diagnostic pop
+#endif
 
 /**
  * @brief Global data used by several components of Brainiac
@@ -57,6 +66,9 @@ public:
         qreal deNorm=min+val*dist;
         return deNorm;
     }
+
+    static void decomposeMatrix(const cml::matrix33d_r& matrix, const QList<RotTrans> &order, qreal *rx, qreal *ry, qreal *rz, bool reverse=false);
+    static cml::EulerOrder getCmlOrderFromBrainiacOrder(const QList<RotTrans> &order, bool reverse=false);
 
     static qreal grad2rad(qreal grad) { return grad*PI/180.0; }
     static qreal rad2grad(qreal rad) { return rad*180.0/PI; }

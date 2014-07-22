@@ -19,6 +19,51 @@
 #include "brainiacglobals.h"
 #include <limits>
 
+cml::EulerOrder BrainiacGlobals::getCmlOrderFromBrainiacOrder(const QList<RotTrans> &order, bool reverse)
+{
+    cml::EulerOrder cmlEulerOrder=cml::euler_order_xyz;
+    QList<BrainiacGlobals::RotTrans> rotList;
+    foreach(BrainiacGlobals::RotTrans rot,order) {
+        switch( rot ) {
+        case BrainiacGlobals::RX:
+        case BrainiacGlobals::RY:
+        case BrainiacGlobals::RZ:
+            if(reverse)
+                rotList.prepend(rot);
+            else
+                rotList.append(rot);
+        break;
+        default:
+            continue;
+        }
+    }
+    Q_ASSERT(rotList.count()==3);
+
+    if(rotList.first()==BrainiacGlobals::RX && rotList.at(1)==BrainiacGlobals::RY && rotList.last()==BrainiacGlobals::RZ) {
+        cmlEulerOrder=cml::euler_order_zyx;
+    } else if(rotList.first()==BrainiacGlobals::RX && rotList.at(1)==BrainiacGlobals::RZ && rotList.last()==BrainiacGlobals::RY) {
+        cmlEulerOrder=cml::euler_order_yzx;
+    } else if(rotList.first()==BrainiacGlobals::RZ && rotList.at(1)==BrainiacGlobals::RY && rotList.last()==BrainiacGlobals::RX) {
+        cmlEulerOrder=cml::euler_order_xyz;
+    } else if(rotList.first()==BrainiacGlobals::RZ && rotList.at(1)==BrainiacGlobals::RX && rotList.last()==BrainiacGlobals::RY) {
+        cmlEulerOrder=cml::euler_order_yxz;
+    } else if(rotList.first()==BrainiacGlobals::RY && rotList.at(1)==BrainiacGlobals::RZ && rotList.last()==BrainiacGlobals::RX) {
+        cmlEulerOrder=cml::euler_order_xzy;
+    } else if(rotList.first()==BrainiacGlobals::RY && rotList.at(1)==BrainiacGlobals::RX && rotList.last()==BrainiacGlobals::RZ) {
+        cmlEulerOrder=cml::euler_order_zxy;
+    } else {
+        qCritical() << __PRETTY_FUNCTION__ << "This never should happen!";
+    }
+    return cmlEulerOrder;
+}
+
+void BrainiacGlobals::decomposeMatrix( const cml::matrix33d_r& matrix, const QList<RotTrans> &order, qreal *rx, qreal *ry, qreal *rz, bool reverse)
+{
+    cml::EulerOrder cmlEulerOrder=BrainiacGlobals::getCmlOrderFromBrainiacOrder(order,reverse);
+    cml::matrix_to_euler(matrix,*rx,*ry,*rz,cmlEulerOrder);
+
+}
+
 QColor BrainiacGlobals::getColorFromBrainiacColorValue(qreal colVal)
 {
     qreal val=qBound(0.0,colVal,1.0);

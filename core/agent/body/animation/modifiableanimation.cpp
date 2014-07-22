@@ -426,24 +426,11 @@ void ModifiableAnimation::setTansformRotation(qreal yAxisRot)
     // Rotation Curves
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    QList<BrainiacGlobals::RotTrans> rotList;
-    foreach(BrainiacGlobals::RotTrans rot,seg.getRotationTranslationOrder()) {
-        switch( rot ) {
-        case BrainiacGlobals::RX:
-        case BrainiacGlobals::RY:
-        case BrainiacGlobals::RZ:
-            rotList.append(rot);
-        break;
-        default:
-            continue;
-        }
-    }
 
-    QVector3D lastOrigVec;
-    QVector3D lastCMLVec;
+
+//    QVector3D lastOrigVec;
+//    QVector3D lastCMLVec;
     for(int i=0;i<rootBoneRyCurve->keyFrames().count();i++) {
-//        QMatrix4x4 rotMatrix;
-//        rotMatrix.setToIdentity();
 
         cml::matrix33d_r cmlRotMatrix;
         cmlRotMatrix.identity();
@@ -454,38 +441,8 @@ void ModifiableAnimation::setTansformRotation(qreal yAxisRot)
 
         qDebug() << __PRETTY_FUNCTION__ << "KF: "<< i << " Original Rotation Vector: " << originalRot << yAxisRot;
         cml::EulerOrder cmlEulerOrder=cml::euler_order_xyz;
-        Q_ASSERT(rotList.count()==3);
-//        if(rotList.first()==BrainiacGlobals::RX && rotList.at(1)==BrainiacGlobals::RY && rotList.last()==BrainiacGlobals::RZ) {
-//            cmlEulerOrder=cml::euler_order_xyz;
-//        } else if(rotList.first()==BrainiacGlobals::RX && rotList.at(1)==BrainiacGlobals::RZ && rotList.last()==BrainiacGlobals::RY) {
-//            cmlEulerOrder=cml::euler_order_xzy;
-//        } else if(rotList.first()==BrainiacGlobals::RZ && rotList.at(1)==BrainiacGlobals::RY && rotList.last()==BrainiacGlobals::RX) {
-//            cmlEulerOrder=cml::euler_order_zyx;
-//        } else if(rotList.first()==BrainiacGlobals::RZ && rotList.at(1)==BrainiacGlobals::RX && rotList.last()==BrainiacGlobals::RY) {
-//            cmlEulerOrder=cml::euler_order_zxy;
-//        } else if(rotList.first()==BrainiacGlobals::RY && rotList.at(1)==BrainiacGlobals::RZ && rotList.last()==BrainiacGlobals::RX) {
-//            cmlEulerOrder=cml::euler_order_yzx;
-//        } else if(rotList.first()==BrainiacGlobals::RY && rotList.at(1)==BrainiacGlobals::RX && rotList.last()==BrainiacGlobals::RZ) {
-//            cmlEulerOrder=cml::euler_order_yxz;
-//        } else {
-//            qCritical() << __PRETTY_FUNCTION__ << "This never should happen!";
-//        }
 
-                if(rotList.first()==BrainiacGlobals::RX && rotList.at(1)==BrainiacGlobals::RY && rotList.last()==BrainiacGlobals::RZ) {
-                    cmlEulerOrder=cml::euler_order_zyx;
-                } else if(rotList.first()==BrainiacGlobals::RX && rotList.at(1)==BrainiacGlobals::RZ && rotList.last()==BrainiacGlobals::RY) {
-                    cmlEulerOrder=cml::euler_order_yzx;
-                } else if(rotList.first()==BrainiacGlobals::RZ && rotList.at(1)==BrainiacGlobals::RY && rotList.last()==BrainiacGlobals::RX) {
-                    cmlEulerOrder=cml::euler_order_xyz;
-                } else if(rotList.first()==BrainiacGlobals::RZ && rotList.at(1)==BrainiacGlobals::RX && rotList.last()==BrainiacGlobals::RY) {
-                    cmlEulerOrder=cml::euler_order_yxz;
-                } else if(rotList.first()==BrainiacGlobals::RY && rotList.at(1)==BrainiacGlobals::RZ && rotList.last()==BrainiacGlobals::RX) {
-                    cmlEulerOrder=cml::euler_order_xzy;
-                } else if(rotList.first()==BrainiacGlobals::RY && rotList.at(1)==BrainiacGlobals::RX && rotList.last()==BrainiacGlobals::RZ) {
-                    cmlEulerOrder=cml::euler_order_zxy;
-                } else {
-                    qCritical() << __PRETTY_FUNCTION__ << "This never should happen!";
-                }
+        cmlEulerOrder=BrainiacGlobals::getCmlOrderFromBrainiacOrder(seg.getRotationTranslationOrder(),false);
 
         float xRot,yRot,zRot;
 
@@ -495,9 +452,9 @@ void ModifiableAnimation::setTansformRotation(qreal yAxisRot)
                                    BrainiacGlobals::grad2rad(originalRot.z()),
                                    cmlEulerOrder);
 
-        cml::matrix_rotate_about_world_y(cmlRotMatrix,BrainiacGlobals::grad2rad(yAxisRot));
+        cml::matrix_rotate_about_world_x(cmlRotMatrix,BrainiacGlobals::grad2rad(yAxisRot)); // x axis??? Looks ok ;-)
 
-        cml::matrix_to_euler(cmlRotMatrix,xRot,yRot,zRot,cml::euler_order_zyx);
+        cml::matrix_to_euler(cmlRotMatrix,xRot,yRot,zRot,cmlEulerOrder);
         qDebug() << __PRETTY_FUNCTION__ << "KF: "<< i << " Rotation CML:                       " << BrainiacGlobals::rad2grad(xRot) << BrainiacGlobals::rad2grad(yRot) << BrainiacGlobals::rad2grad(zRot);
 
         rootBoneRxCurve->keyFrames()[i].setY(BrainiacGlobals::rad2grad(xRot));
@@ -508,9 +465,6 @@ void ModifiableAnimation::setTansformRotation(qreal yAxisRot)
 //        lastOrigVec=originalRot;
 //        lastCMLVec=QVector3D(xRot,yRot,zRot);
     }
-
-//    SkeletonNode *rootSkeletonNode=m_body->getRootSkeletonNode();
-//    rootSkeletonNode->setRestRotation(QVector3D(0.0f,rot,0.0f));
 }
 
 ModifiableAnimation::~ModifiableAnimation(){
