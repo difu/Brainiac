@@ -440,10 +440,7 @@ void ModifiableAnimation::setTansformRotation(qreal yAxisRot)
                                 origRootBoneRzCurve->getValue(rootBoneRzCurve->keyFrames().at(i).x()));
 
         qDebug() << __PRETTY_FUNCTION__ << "KF: "<< i << " Original Rotation Vector: " << originalRot << yAxisRot;
-        cml::EulerOrder cmlEulerOrder=cml::euler_order_xyz;
-
-        cmlEulerOrder=BrainiacGlobals::getCmlOrderFromBrainiacOrder(seg.getRotationTranslationOrder(),false);
-
+        cml::EulerOrder cmlEulerOrder=BrainiacGlobals::getCmlOrderFromBrainiacOrder(seg.getRotationTranslationOrder(),false);
         float xRot,yRot,zRot;
 
         cml::matrix_rotation_euler(cmlRotMatrix,
