@@ -39,6 +39,7 @@
 #include "core/agent/body/animation/motiontreemanager.h"
 #include "core/agent/body/animation/motiontree.h"
 #include "core/agent/body/animation/motiontreeaction.h"
+#include "core/agent/body/animation/bvhmanager.h"
 #include "core/brainiaclogger.h"
 #include "core/brainiacerror.h"
 #include "gui/braineditor/braineditor.h"
@@ -72,8 +73,7 @@ AgentManager::AgentManager(Group *group)
     m_brainEditor=new BrainEditor(m_scene,this);
     m_activeMotionTreeEditor=0;
     m_selectedAgent=m_masterAgent;
-    m_bvhSkeletonDirty=true;
-    m_bvhSegmentChannelListDirty=true;
+    m_bvhManager=new BvhManager(this);
 }
 
 void AgentManager::addSegmentFromConfig(QXmlStreamReader *reader, quint32 id, QString name, quint32 parent, quint32 editorX, quint32 editorY)
@@ -479,111 +479,6 @@ void AgentManager::deleteFuzz(quint32 fuzzId)
     m_brainEditor->deleteFuzzyItem(fuzzId);
 }
 
-const QList<QString>& AgentManager::getBVHMotionChannelList() const {
-    if(m_bvhSegmentChannelListDirty) {
-        m_bvhChannelList.clear();
-        foreach(quint32 segId, m_bodyManager->getTraversedSegmentIds()) {
-            Segment seg=m_bodyManager->getSegment(segId);
-            for(int i=5 ; i>=0 ; i--) {
-                BrainiacGlobals::RotTrans rt=seg.getRotationTranslationOrder().at(i);
-                switch(rt) {
-                case BrainiacGlobals::TX:
-                    m_bvhChannelList.append(seg.getName()%":tx");
-                    break;
-                case BrainiacGlobals::TY:
-                    m_bvhChannelList.append(seg.getName()%":ty");
-                    break;
-                case BrainiacGlobals::TZ:
-                    m_bvhChannelList.append(seg.getName()%":tz");
-                    break;
-                case BrainiacGlobals::RX:
-                    m_bvhChannelList.append(seg.getName()%":rx");
-                    break;
-                case BrainiacGlobals::RY:
-                    m_bvhChannelList.append(seg.getName()%":ry");
-                    break;
-                case BrainiacGlobals::RZ:
-                    m_bvhChannelList.append(seg.getName()%":rz");
-                    break;
-                }
-            }
-        }
-        m_bvhSegmentChannelListDirty=false;
-    }
-    return m_bvhChannelList;
-}
-
-const QString& AgentManager::getBVHSkeleton() const
-{
-    if(m_bvhSkeletonDirty) {
-        m_bvhSkeleton.clear();
-        m_bvhSkeleton.append("HIERARCHY\n");
-        int level=0;
-        int oldLevel=-1;
-        foreach(quint32 segId, m_bodyManager->getTraversedSegmentIds()) {
-            Segment seg=m_bodyManager->getSegment(segId);
-            level=m_bodyManager->getSegmentLevel(segId);
-            if(oldLevel>level) {
-                for( int i=oldLevel-level; i>=0; i--) {
-                    m_bvhSkeleton.append(QString(" ").repeated((level + i)*2)).append("}\n");
-                }
-            }
-            oldLevel=level;
-
-            QString indent=QString(" ").repeated(level*2);
-            QString indent_1=QString(" ").repeated((level+1)*2);
-            m_bvhSkeleton.append(indent);
-            if(seg.isRootSegment()) {
-                m_bvhSkeleton.append("ROOT ");
-            } else {
-                m_bvhSkeleton.append("JOINT ");
-            }
-            m_bvhSkeleton.append(seg.getName());
-            m_bvhSkeleton.append("\n").append(indent).append("{").append("\n");
-            m_bvhSkeleton.append(indent_1).append("OFFSET ");
-            m_bvhSkeleton.append(QString::number(seg.getRestTranslation().x(),'f')).append(" ").append(QString::number(seg.getRestTranslation().y(),'f')).append(" ").append(QString::number(seg.getRestTranslation().z(),'f')).append("\n");
-            m_bvhSkeleton.append(indent_1).append("CHANNELS ").append(QString::number(seg.getRotationTranslationOrder().count())).append(" ");
-            for(int i=5 ; i>=0 ; i--) {
-                BrainiacGlobals::RotTrans rt=seg.getRotationTranslationOrder().at(i);
-                switch(rt) {
-                case BrainiacGlobals::TX:
-                    m_bvhSkeleton.append("Xposition ");
-                    break;
-                case BrainiacGlobals::TY:
-                    m_bvhSkeleton.append("Yposition ");
-                    break;
-                case BrainiacGlobals::TZ:
-                    m_bvhSkeleton.append("Zposition ");
-                    break;
-                case BrainiacGlobals::RX:
-                    m_bvhSkeleton.append("Xrotation ");
-                    break;
-                case BrainiacGlobals::RY:
-                    m_bvhSkeleton.append("Yrotation ");
-                    break;
-                case BrainiacGlobals::RZ:
-                    m_bvhSkeleton.append("Zrotation ");
-                    break;
-                }
-            }
-            //if(false) {
-            if(m_bodyManager->hasChildren(seg.getId())) {
-                m_bvhSkeleton.append("\n");
-                m_bvhSkeleton.append(indent_1).append("End Site\n");
-                m_bvhSkeleton.append(indent_1).append("{\n");
-                m_bvhSkeleton.append(indent_1).append(" OFFSET ").append(QString::number(seg.getTranslation().x(),'f')).append(" ").append(QString::number(seg.getTranslation().y(),'f')).append(" ").append(QString::number(seg.getTranslation().z(),'f')).append("\n");;
-                m_bvhSkeleton.append(indent_1).append("}");
-            }
-            m_bvhSkeleton.append("\n");
-        }
-        // Close all braces at the end
-        for( int i=level; i>=0; i--) {
-            m_bvhSkeleton.append(QString(" ").repeated(i*2)).append("}\n");
-        }
-    }
-
-    return m_bvhSkeleton;
-}
 
 QHash<quint32, QPoint> AgentManager::getEditorSegmentNodeLocations()
 {
@@ -730,7 +625,7 @@ bool AgentManager::loadConfig()
                 reader.skipCurrentElement();
             }
         }
-        qCDebug(bAgent) << __PRETTY_FUNCTION__ << getBVHSkeleton();
+        qCDebug(bAgent) << __PRETTY_FUNCTION__ << m_bvhManager->getBVHSkeleton();
         return true;
     }
     return false;
@@ -1272,9 +1167,8 @@ void AgentManager::reset()
 
 void AgentManager::segmentChanged()
 {
-    m_bvhSkeletonDirty=true;
-    m_bvhSegmentChannelListDirty=true;
-
+    m_bvhManager->setChannelListDirty();
+    m_bvhManager->setSkeletonDirty();
 }
 
 void AgentManager::setEditorTranslation(qint32 x, qint32 y)

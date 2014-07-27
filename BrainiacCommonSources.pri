@@ -80,7 +80,8 @@ HEADERS  += gui/mainwindow.h \
     gui/Animation/motiontreeeditoritemconnector.h \
     core/brainiaclogger.h \
     gui/brainiacdisplaykeymouseeater.h \
-    core/simulationsettings.h
+    core/simulationsettings.h \
+    core/agent/body/animation/bvhmanager.h
 
 
 
@@ -166,5 +167,6 @@ SOURCES += gui/mainwindow.cpp \
     gui/Animation/motiontreeeditoritemconnector.cpp \
     core/brainiaclogger.cpp \
     gui/brainiacdisplaykeymouseeater.cpp \
-    core/simulationsettings.cpp
+    core/simulationsettings.cpp \
+    core/agent/body/animation/bvhmanager.cpp
 

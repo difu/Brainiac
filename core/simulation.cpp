@@ -20,6 +20,7 @@
 #include <QtConcurrent/QtConcurrent>
 #include "core/agent/agent.h"
 #include "core/agent/agentmanager.h"
+#include "core/agent/body/animation/bvhmanager.h"
 #include "core/brainiacerror.h"
 #include "core/scene.h"
 #include "core/simulationsettings.h"
@@ -33,7 +34,7 @@ void advanceAgent(Agent* param_agent)
 void advanceAgentCommit(Agent* param_agent)
 {
     param_agent->advanceCommit();
-    if(param_agent->getScene()->getSimulation()->writeMotionData()) {
+    if(param_agent->getScene()->getSimulation()->writeMotionData() && param_agent->getScene()->getSimulation()->getSimulationMode()==Simulation::SIMULATE) {
         param_agent->writeBVHMotionData();
     }
 }
@@ -196,7 +197,7 @@ bool Simulation::startSimulation()
                     qCDebug(bSimulation) << __PRETTY_FUNCTION__ << "writing to file " << agentMotionFile.fileName();
                     agent->setBVHFileName(agentMotionFile.fileName());
                     QTextStream out(&agentMotionFile);
-                    out << agent->getAgentManager()->getBVHSkeleton();
+                    out << agent->getAgentManager()->getBvhManager()->getBVHSkeleton();
                     out << "MOTION\n" <<
                            "Frames: " << QString::number(m_settings->getEndFrame()-m_settings->getStartFrame()) << "\n" <<
                            "Frame Time: " << QString::number(1.0/(qreal)m_settings->getFps(),'f') << "\n";

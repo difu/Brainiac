@@ -58,6 +58,54 @@ public:
      */
     void computeMatrix();
 
+    /**
+     * @brief the Tx Channel
+     *
+     * @return Channel the Tx channel
+     */
+    Channel* getChannelTx() { return m_oTx; }
+
+    /**
+     * @brief the Ty Channel
+     *
+     * @return Channel the Ty channel
+     */
+    Channel* getChannelTy() { return m_oTy; }
+
+    /**
+     * @brief the Tz Channel
+     *
+     * @return Channel the Tz channel
+     */
+    Channel* getChannelTz() { return m_oTz; }
+
+    /**
+     * @brief the Rx Channel
+     *
+     * @return Channel the Rx channel
+     */
+    Channel* getChannelRx() { return m_oRx; }
+
+    /**
+     * @brief the Ry Channel
+     *
+     * @return Channel the Ry channel
+     */
+    Channel* getChannelRy() { return m_oRy; }
+
+    /**
+     * @brief the Rz Channel
+     *
+     * @return Channel the Rz channel
+     */
+    Channel* getChannelRz() { return m_oRz; }
+
+    /**
+     * @brief return the color channel
+     *
+     * @fn getColorChannel
+     * @return Channel the color channel
+     */
     Channel* getColorChannel() { return m_oColor; }
 
     /**

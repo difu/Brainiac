@@ -33,6 +33,7 @@ class Animation;
 class BodyManager;
 class BrainEditor;
 class MotionTreeManager;
+class BvhManager;
 
 class AgentManager : public QObject
 {
@@ -225,24 +226,6 @@ public:
     Agent* getBodyAgent() {return m_spBodyAgent;}
 
     /**
-     * @brief returns the list of channels according to bvh skeleton
-     *
-     * @fn getBVHMotionChannelList
-     * @return const QString
-     */
-    const QList<QString>& getBVHMotionChannelList() const;
-
-    /**
-     * @brief returns the BVH representation of the skeleton of the agent
-     *
-     * the motion data is not included!
-     *
-     * @fn getBVHSkeleton
-     * @return const QString the BVH data
-     */
-    const QString& getBVHSkeleton() const;
-
-    /**
      * @brief returns a pointer to the actions agent
      *
      * The action agent is a special purpose agent. It is used by the ActionEditor.
@@ -253,7 +236,15 @@ public:
      */
     Agent* getActionAgent() {return m_spActionAgent;}
 
-    QString & getName() {return m_name;}
+    /**
+     * @brief returns a pointer to the BvhManager
+     *
+     * @fn getBvhManager
+     * @return BvhManager
+     */
+    BvhManager *getBvhManager() const { return m_bvhManager; }
+
+    QString& getName() {return m_name;}
     QString getName() const { return m_name;}
 
     BodyManager *getBodyManager() { return m_bodyManager; }
@@ -496,10 +487,7 @@ private:
     QList<Agent *> m_agents; /**< contains all agents, including special purpose agents like @sa m_masterAgent */
     BrainEditor *m_brainEditor; /**< contains the editor widgets of the brain */
     quint32 m_activeMotionTreeEditor; /**< id of the currently edited tree in @sa MainWindow */
-    mutable QString m_bvhSkeleton; /**< holds the bvh representation of the skeleton */
-    bool m_bvhSkeletonDirty; /**< true, if the bvh representation has to be recalculated */
-    mutable bool m_bvhSegmentChannelListDirty; /**< true, if the bvh representation has to be recalculated */
-    mutable QList<QString> m_bvhChannelList; /** traveresed list of motionchannels of bvh skeleton */
+    BvhManager *m_bvhManager;
 
     // Brain stuff
     void addAndFuzz(quint32 id, QString name, QString mode, quint32 editorX, quint32 editorY);

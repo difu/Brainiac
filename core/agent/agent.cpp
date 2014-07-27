@@ -22,6 +22,8 @@
 #include "brain/fuzzybase.h"
 #include "brain/timer.h"
 #include "body/body.h"
+#include "body/bodymanager.h"
+#include "body/bodysegment.h"
 #include "core/brainiacglobals.h"
 #include "core/brainiacerror.h"
 #include "channel.h"
@@ -29,6 +31,7 @@
 #include "core/agent/agentmanager.h"
 #include "core/agent/body/animation/motiontreemanager.h"
 #include "core/agent/body/animation/animationplayer.h"
+#include "core/agent/body/animation/bvhmanager.h"
 #include "core/generator/locator.h"
 #include "core/brainiaclogger.h"
 #include <QDebug>
@@ -242,7 +245,7 @@ void Agent::advanceCommit()
 void Agent::createBVHChannelList()
 {
     m_bvhChannelList.clear();
-    foreach(QString channelName, m_agentManager->getBVHMotionChannelList()) {
+    foreach(QString channelName, m_agentManager->getBvhManager()->getBVHMotionChannelList()) {
         m_bvhChannelList.append(getOutputChannel(channelName,Channel::NONE));
     }
 }
@@ -331,8 +334,25 @@ Brain* Agent::getBrain() const
 QString& Agent::getBvhMotionData() const
 {
     m_bvhMotionData.clear();
+    BodySegment *rootBs=m_body->getBodySegment(m_agentManager->getBvhManager()->getBvhRootId());
     foreach(Channel *c,m_bvhChannelList) {
-        m_bvhMotionData.append(QString::number(c->getOldValue(),'f')).append(" ");
+        // check, if we have a root segment channel
+        // if so, we have to add translation values to the value;
+        qreal channelVal=c->getOldValue();
+        if(rootBs->getChannelTx()==c) {
+            channelVal+=m_position.x();
+        } else if(rootBs->getChannelTy()==c) {
+            channelVal+=m_position.y();
+        } else if(rootBs->getChannelTz()==c) {
+            channelVal+=m_position.z();
+        }/* else if(rootBs->getChannelRx()==c) {
+            channelVal+=m_rotation.x();
+        } else if(rootBs->getChannelRy()==c) {
+            channelVal+=m_rotation.y();
+        } else if(rootBs->getChannelRz()==c) {
+            channelVal+=m_rotation.z();
+        }*/
+        m_bvhMotionData.append(QString::number(channelVal,'f')).append(" ");
     }
 //     qCDebug(bAgent) << __PRETTY_FUNCTION__ << m_bvhMotionData;
     return m_bvhMotionData;

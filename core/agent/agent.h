@@ -325,9 +325,11 @@ private:
     Channel *m_iSoundOX; //!< relative angle of receiving sound source (input)
     Channel *m_iSoundD; //!< distance of received sound;
     Channel *m_iSoundF; //!< frequency of received sound;
+
     QList<Channel *> m_bvhChannelList; //!< the list of the agent channels according to bvh order
     QString m_bvh_fileName; //!< the name of the file to write bvh motion data
-    mutable QString m_bvhMotionData; //!< contains actual bvh motion data @sa getBvhMotionData()
+    mutable QString m_bvhMotionData; //!< contains actual bvh motion data
+
 
     Locator *m_locator; //!< the locator that holds the initial position and rotation
     Scene *m_scene; //!< the scene
