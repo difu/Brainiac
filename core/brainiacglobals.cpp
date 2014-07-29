@@ -187,6 +187,8 @@ const QList<QString> BrainiacGlobals::ChannelNames_Latches=(QList<QString>()) <<
 
 const QList<QColor> BrainiacGlobals::EditorColors=(QList<QColor>()) << QColor(Qt::darkBlue) << QColor(Qt::darkCyan) << QColor(Qt::darkGray) << QColor(Qt::darkGreen);// << QColor;// QColor(Qt::darkBlue));// << QColor(Qt::darkCyan);
 
+const QList<BrainiacGlobals::RotTrans> BrainiacGlobals::AgentDefaultRotTrans=(QList<BrainiacGlobals::RotTrans>()) << BrainiacGlobals::RX << BrainiacGlobals::RY <<  BrainiacGlobals::RZ << BrainiacGlobals::TZ << BrainiacGlobals::TY << BrainiacGlobals::TX;
+
 const char* const BrainiacGlobals::DefaultLatchName="Latch\0";
 
 const char* const BrainiacGlobals::FuzzAndModeMin="min\0";

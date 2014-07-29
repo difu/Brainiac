@@ -226,6 +226,8 @@ public:
 
     Segment getRootSegment() const;
 
+    const QList<BrainiacGlobals::RotTrans>& getRootRotTransOrder() const { return m_rootSegmentRotTransOrder; }
+
     qreal getSegmentDiameter(quint32 id) const;
 
     qreal getSegmentLength(quint32 id) const;
@@ -302,6 +304,7 @@ protected:
     Segment m_newSegment; /**< Temporary Segment */
     QHash<quint32, SegmentShape *> m_segments; /**< TODO */
     BodyEditor *m_bodyEditor; /**< the BodyEditor */
+    QList<BrainiacGlobals::RotTrans> m_rootSegmentRotTransOrder;
 };
 
 #endif // BODYMANAGER_H

@@ -19,6 +19,7 @@ void BrainiacTest::initTestCase()
 {
     QVERIFY2(BrainiacGlobals::ChannelNames_Latches.count()==(int)MotionTreeManager::NUM_OF_TREE_TRACKS,"Latch channel name count mismatch!");
     QVERIFY2(BrainiacGlobals::ChannelNames_Phases.count()==(int)MotionTreeManager::NUM_OF_TREE_TRACKS,"Phase channel name count mismatch!");
+    QVERIFY2(BrainiacGlobals::AgentDefaultRotTrans.count()==6,"Wrong number of rotations/translations!");
 }
 
 void BrainiacTest::parseBVH()
@@ -52,7 +53,6 @@ void BrainiacTest::parseBVH()
         }
     }
     QVERIFY2(foundNonZeroTranslation==true,"BVH only has zero length segments!");
-    qDebug() << am->getBVHMotionChannelList();
     testScene1->deleteLater();
 }
 

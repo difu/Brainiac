@@ -166,6 +166,8 @@ public:
     static const QList<QString> ChannelNames_Latches;
     static const QList<QString> ChannelNames_Phases;
 
+    static const QList<RotTrans> AgentDefaultRotTrans;
+
     static const QString ChannelPhaseOffsetSuffix;
     static const QString ChannelRunningSuffix;
 
