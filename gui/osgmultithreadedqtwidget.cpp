@@ -41,7 +41,7 @@ OsgMultithreadedViewerWidget::OsgMultithreadedViewerWidget( osg::Camera* camera,
     keyswitchManipulator->addMatrixManipulator( '4', "Terrain", new osgGA::TerrainManipulator() );
     keyswitchManipulator->addMatrixManipulator( '5', "SPHERIC", new osgGA::SphericalManipulator() );
     keyswitchManipulator->addMatrixManipulator( '6', "Orbit", new osgGA::OrbitManipulator() );
-    keyswitchManipulator->addMatrixManipulator( '6', "Multitouch", new osgGA::MultiTouchTrackballManipulator() );
+    keyswitchManipulator->addMatrixManipulator( '7', "Multitouch", new osgGA::MultiTouchTrackballManipulator() );
     keyswitchManipulator->setHomePosition(osg::Vec3f(-300,0,0),osg::Vec3f(),osg::Vec3f(0,1,0));
     m_viewer.setCameraManipulator(keyswitchManipulator);
 
