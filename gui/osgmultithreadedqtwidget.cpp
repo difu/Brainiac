@@ -1,3 +1,9 @@
+#include "gui/osgmultithreadedqtwidget.h"
+
+#ifdef BRAINIAC_SUPPRESS_THIRD_PARTY_WARNINGS
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Woverloaded-virtual"
+#endif
 #include <osgGA/TrackballManipulator>
 #include <osgGA/SphericalManipulator>
 #include <osgGA/OrbitManipulator>
@@ -6,9 +12,10 @@
 #include <osgGA/TerrainManipulator>
 #include <osgGA/KeySwitchMatrixManipulator>
 #include <osgGA/MultiTouchTrackballManipulator>
-
-#include "gui/osgmultithreadedqtwidget.h"
 #include "osgDB/WriteFile"
+#ifdef BRAINIAC_SUPPRESS_THIRD_PARTY_WARNINGS
+    #pragma clang diagnostic pop
+#endif
 
 OsgMultithreadedViewerWidget::OsgMultithreadedViewerWidget( osg::Camera* camera, osg::Node* scene )
 {
