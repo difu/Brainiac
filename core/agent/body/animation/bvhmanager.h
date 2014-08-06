@@ -21,6 +21,7 @@
 #define BVHMANAGER_H
 
 #include <QObject>
+#include "core/brainiacglobals.h"
 
 class AgentManager;
 
@@ -36,12 +37,31 @@ class BvhManager : public QObject
     Q_OBJECT
 public:
     /**
+     * @brief Options for BVH output
+     *
+     * @enum BvhOptions
+     */
+    enum BvhOptions {
+        Default=0, /**< Simple write out bvh skeleton */
+        PositionAsBone=1 /**< Add additional bone that contains the transformation of the agent */
+    };
+
+    /**
      * @brief constructor
      *
      * @fn BvhManager
      * @param parent
      */
     explicit BvhManager(AgentManager *parent);
+
+    /**
+     * @brief creates a bvh conform string containing the rotation translation order
+     *
+     * @fn getBvhRotTransFromBrainiacRotTrans
+     * @param list list of Brainiac order
+     * @return QString bvh string of order
+     */
+    static QString getBvhRotTransFromBrainiacRotTrans(const QList<BrainiacGlobals::RotTrans> &list);
 
     /**
      * @brief returns the list of channels according to bvh skeleton
@@ -63,11 +83,27 @@ public:
     const QString& getBVHSkeleton() const;
 
     /**
+     * @brief returns the options
+     *
+     * @fn getOptions
+     * @return BvhOptions
+     */
+    BvhOptions getOptions() const { return m_options; }
+
+    /**
      * @brief marks channel list dirty
      *
      * @fn setChannelListDirty
      */
     void setChannelListDirty();
+
+    /**
+     * @brief sets the options
+     * setChannelListDirty() and setSkeletonDirty() will be called implicitly
+     * @fn setOptions
+     * @param options
+     */
+    void setOptions(BvhOptions options);
 
     /**
      * @brief marks skeleton dirty.
@@ -84,7 +120,7 @@ private:
     mutable QList<QString> m_bvhChannelList; /** traveresed list of motionchannels of bvh skeleton */
     mutable QString m_bvhMotionData; //!< contains actual bvh motion data @sa getBvhMotionData()
     quint32 m_bvhRootId;
-
+    BvhOptions m_options;
 signals:
 
 public slots:

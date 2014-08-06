@@ -451,6 +451,9 @@ void ModifiableAnimation::setTansformRotation(qreal yAxisRot)
 
         cml::matrix_rotate_about_world_x(cmlRotMatrix,BrainiacGlobals::grad2rad(yAxisRot)); // x axis??? Looks ok ;-)
 
+        /**
+         * @todo Use correct Agent order
+         */
         cml::matrix_to_euler(cmlRotMatrix,xRot,yRot,zRot,cmlEulerOrder);
         qDebug() << __PRETTY_FUNCTION__ << "KF: "<< i << " Rotation CML:                       " << BrainiacGlobals::rad2grad(xRot) << BrainiacGlobals::rad2grad(yRot) << BrainiacGlobals::rad2grad(zRot);
 

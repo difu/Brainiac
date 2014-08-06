@@ -334,24 +334,33 @@ Brain* Agent::getBrain() const
 QString& Agent::getBvhMotionData() const
 {
     m_bvhMotionData.clear();
-    BodySegment *rootBs=m_body->getBodySegment(m_agentManager->getBvhManager()->getBvhRootId());
+    if(m_agentManager->getBvhManager()->getOptions()&BvhManager::PositionAsBone) {
+        foreach(BrainiacGlobals::RotTrans rt,m_agentManager->getBodyManager()->getRootRotTransOrder()) {
+            switch( rt ) {
+            case BrainiacGlobals::RX:
+                m_bvhMotionData.append(QString::number(getRotation().x(),'f')).append(" ");
+                break;
+            case BrainiacGlobals::RY:
+                m_bvhMotionData.append(QString::number(getRotation().y(),'f')).append(" ");
+                break;
+            case BrainiacGlobals::RZ:
+                m_bvhMotionData.append(QString::number(getRotation().z(),'f')).append(" ");
+                break;
+            case BrainiacGlobals::TX:
+                m_bvhMotionData.append(QString::number(getPosition().x(),'f')).append(" ");
+                break;
+            case BrainiacGlobals::TY:
+                m_bvhMotionData.append(QString::number(getPosition().y(),'f')).append(" ");
+                break;
+            case BrainiacGlobals::TZ:
+                m_bvhMotionData.append(QString::number(getPosition().z(),'f')).append(" ");
+                break;
+            }
+        }
+    }
+//    BodySegment *rootBs=m_body->getBodySegment(m_agentManager->getBvhManager()->getBvhRootId());
     foreach(Channel *c,m_bvhChannelList) {
-        // check, if we have a root segment channel
-        // if so, we have to add translation values to the value;
         qreal channelVal=c->getOldValue();
-        if(rootBs->getChannelTx()==c) {
-            channelVal+=m_position.x();
-        } else if(rootBs->getChannelTy()==c) {
-            channelVal+=m_position.y();
-        } else if(rootBs->getChannelTz()==c) {
-            channelVal+=m_position.z();
-        }/* else if(rootBs->getChannelRx()==c) {
-            channelVal+=m_rotation.x();
-        } else if(rootBs->getChannelRy()==c) {
-            channelVal+=m_rotation.y();
-        } else if(rootBs->getChannelRz()==c) {
-            channelVal+=m_rotation.z();
-        }*/
         m_bvhMotionData.append(QString::number(channelVal,'f')).append(" ");
     }
 //     qCDebug(bAgent) << __PRETTY_FUNCTION__ << m_bvhMotionData;

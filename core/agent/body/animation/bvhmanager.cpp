@@ -26,6 +26,7 @@
 BvhManager::BvhManager(AgentManager *parent) :
     QObject(parent)
 {
+    m_options=PositionAsBone;
     m_bvhSkeletonDirty=true;
     m_bvhSegmentChannelListDirty=true;
 }
@@ -71,39 +72,55 @@ quint32 BvhManager::getBvhRootId() const
     return am->getBodyManager()->getRootSegment().getId();;
 }
 
+QString BvhManager::getBvhRotTransFromBrainiacRotTrans(const QList<BrainiacGlobals::RotTrans> &list)
+{
+    QString bvhRotTrans;
+    Q_ASSERT(list.count()==6);
+    for(int i=5 ; i>=0 ; i--) {
+        BrainiacGlobals::RotTrans rt=list.at(i);
+        switch(rt) {
+        case BrainiacGlobals::TX:
+            bvhRotTrans.append("Xposition ");
+            break;
+        case BrainiacGlobals::TY:
+            bvhRotTrans.append("Yposition ");
+            break;
+        case BrainiacGlobals::TZ:
+            bvhRotTrans.append("Zposition ");
+            break;
+        case BrainiacGlobals::RX:
+            bvhRotTrans.append("Xrotation ");
+            break;
+        case BrainiacGlobals::RY:
+            bvhRotTrans.append("Yrotation ");
+            break;
+        case BrainiacGlobals::RZ:
+            bvhRotTrans.append("Zrotation ");
+            break;
+        }
+    }
+    return bvhRotTrans;
+
+}
+
 const QString& BvhManager::getBVHSkeleton() const
 {
+    AgentManager *am=(AgentManager *) parent();
     if(m_bvhSkeletonDirty) {
         AgentManager *am=(AgentManager *) parent();
         m_bvhSkeleton.clear();
         m_bvhSkeleton.append("HIERARCHY\n");
         int level=0;
-        int oldLevel=-1;
-        foreach(quint32 segId, am->getBodyManager()->getTraversedSegmentIds()) {
-            Segment seg=am->getBodyManager()->getSegment(segId);
-            level=am->getBodyManager()->getSegmentLevel(segId);
-            if(oldLevel>level) {
-                for( int i=oldLevel-level; i>=0; i--) {
-                    m_bvhSkeleton.append(QString(" ").repeated((level + i)*2)).append("}\n");
-                }
-            }
-            oldLevel=level;
-
-            QString indent=QString(" ").repeated(level*2);
-            QString indent_1=QString(" ").repeated((level+1)*2);
-            m_bvhSkeleton.append(indent);
-            if(seg.isRootSegment()) {
-                m_bvhSkeleton.append("ROOT ");
-            } else {
-                m_bvhSkeleton.append("JOINT ");
-            }
-            m_bvhSkeleton.append(seg.getName());
-            m_bvhSkeleton.append("\n").append(indent).append("{").append("\n");
-            m_bvhSkeleton.append(indent_1).append("OFFSET ");
-            m_bvhSkeleton.append(QString::number(seg.getRestTranslation().x(),'f')).append(" ").append(QString::number(seg.getRestTranslation().y(),'f')).append(" ").append(QString::number(seg.getRestTranslation().z(),'f')).append("\n");
-            m_bvhSkeleton.append(indent_1).append("CHANNELS ").append(QString::number(seg.getRotationTranslationOrder().count())).append(" ");
-            for(int i=5 ; i>=0 ; i--) {
-                BrainiacGlobals::RotTrans rt=seg.getRotationTranslationOrder().at(i);
+        int oldLevel=level-1;
+        int levelOffset=0;
+        if(m_options&PositionAsBone) {
+            levelOffset=1;
+            m_bvhSkeleton.append("ROOT Position\n");
+            m_bvhSkeleton.append("{\n");
+            m_bvhSkeleton.append(" OFFSET 0.0 0.0 0.0\n");
+            m_bvhSkeleton.append(" CHANNELS 6 ");
+            for(int i=0 ; i<=5 ; i++) {
+                BrainiacGlobals::RotTrans rt=am->getBodyManager()->getRootRotTransOrder().at(i);
                 switch(rt) {
                 case BrainiacGlobals::TX:
                     m_bvhSkeleton.append("Xposition ");
@@ -125,6 +142,57 @@ const QString& BvhManager::getBVHSkeleton() const
                     break;
                 }
             }
+            m_bvhSkeleton.append("\n");
+            //m_bvhSkeleton.append(QString::number(seg.getRestTranslation().x(),'f')).append(" ").append(QString::number(seg.getRestTranslation().y(),'f')).append(" ").append(QString::number(seg.getRestTranslation().z(),'f')).append("\n");
+        }
+        foreach(quint32 segId, am->getBodyManager()->getTraversedSegmentIds()) {
+            Segment seg=am->getBodyManager()->getSegment(segId);
+            level=am->getBodyManager()->getSegmentLevel(segId)+levelOffset;
+            if(oldLevel>level) {
+                for( int i=oldLevel-level; i>=0; i--) {
+                    m_bvhSkeleton.append(QString(" ").repeated((level + i)*2)).append("}\n");
+                }
+            }
+            oldLevel=level;
+
+            QString indent=QString(" ").repeated(level*2);
+            QString indent_1=QString(" ").repeated((level+1)*2);
+            m_bvhSkeleton.append(indent);
+            if(seg.isRootSegment() && level==0) {
+                m_bvhSkeleton.append("ROOT ");
+            } else {
+                m_bvhSkeleton.append("JOINT ");
+            }
+            m_bvhSkeleton.append(seg.getName());
+            m_bvhSkeleton.append("\n").append(indent).append("{").append("\n");
+            m_bvhSkeleton.append(indent_1).append("OFFSET ");
+            m_bvhSkeleton.append(QString::number(seg.getRestTranslation().x(),'f')).append(" ").append(QString::number(seg.getRestTranslation().y(),'f')).append(" ").append(QString::number(seg.getRestTranslation().z(),'f')).append("\n");
+            m_bvhSkeleton.append(indent_1).append("CHANNELS ").append(QString::number(seg.getRotationTranslationOrder().count())).append(" ");
+//            for(int i=5 ; i>=0 ; i--) {
+//                BrainiacGlobals::RotTrans rt=seg.getRotationTranslationOrder().at(i);
+//                switch(rt) {
+//                case BrainiacGlobals::TX:
+//                    m_bvhSkeleton.append("Xposition ");
+//                    break;
+//                case BrainiacGlobals::TY:
+//                    m_bvhSkeleton.append("Yposition ");
+//                    break;
+//                case BrainiacGlobals::TZ:
+//                    m_bvhSkeleton.append("Zposition ");
+//                    break;
+//                case BrainiacGlobals::RX:
+//                    m_bvhSkeleton.append("Xrotation ");
+//                    break;
+//                case BrainiacGlobals::RY:
+//                    m_bvhSkeleton.append("Yrotation ");
+//                    break;
+//                case BrainiacGlobals::RZ:
+//                    m_bvhSkeleton.append("Zrotation ");
+//                    break;
+//                }
+//            }
+            m_bvhSkeleton.append(getBvhRotTransFromBrainiacRotTrans(seg.getRotationTranslationOrder()));
+
             //if(false) {
             if(am->getBodyManager()->hasChildren(seg.getId())) {
                 m_bvhSkeleton.append("\n");
@@ -148,6 +216,13 @@ const QString& BvhManager::getBVHSkeleton() const
 void BvhManager::setChannelListDirty()
 {
     m_bvhSegmentChannelListDirty=true;
+}
+
+void BvhManager::setOptions(BvhOptions options)
+{
+    setChannelListDirty();
+    setSkeletonDirty();
+    m_options=options;
 }
 
 void BvhManager::setSkeletonDirty()

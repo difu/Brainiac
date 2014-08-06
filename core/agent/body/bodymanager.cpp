@@ -31,6 +31,7 @@ BodyManager::BodyManager(AgentManager *manager)
     m_agentManager=manager;
     resetNewSegmentProperties();
     m_bodyEditor=new BodyEditor(m_agentManager->getScene(),m_agentManager); //!< @todo Fix this! Ugly!
+    m_rootSegmentRotTransOrder=BrainiacGlobals::AgentDefaultRotTrans;
 }
 
 void BodyManager::addSegmentToAgents(quint32 id)
