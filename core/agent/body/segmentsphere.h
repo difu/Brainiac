@@ -1,6 +1,4 @@
-// Brainiac is a free and open source tool for the creation of crowd simulation
-
-// Copyright (C) 2012  Dirk Fuchs dirkfux@googlemail.com
+// Copyright (C) 2014  Dirk Fuchs dirkfux@googlemail.com
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,19 +13,27 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "segmentshape.h"
+#ifndef SEGMENTSPHERE_H
+#define SEGMENTSPHERE_H
 
-SegmentShape::SegmentShape(const Segment &other ):Segment(other)
-{
-    m_transformNode.get()->setName(getName().toStdString());
-}
+#include "core/agent/body/segmentshape.h"
 
-void SegmentShape::updateAndNotify()
+/**
+ * @brief Sphere Segment
+ *
+ * @class SegmentSphere segmentsphere.h "core/agent/body/segmentsphere.h"
+ */
+class SegmentSphere : public SegmentShape
 {
-    Segment::updateAndNotify();
-}
+public:
+    SegmentSphere(const SegmentShape &other );
 
-SegmentShape::~SegmentShape()
-{
-    //delete m_shapeDrawable;
-}
+    /**
+     * @brief updateAndNotify Updates internal data and emit signals
+     *
+     * Whenever this is called, the transformation matrix is re-calculated
+     */
+    virtual void updateAndNotify();
+};
+
+#endif // SEGMENTSPHERE_H

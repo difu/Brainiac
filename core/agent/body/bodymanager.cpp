@@ -23,6 +23,7 @@
 #include "core/agent/body/bodysegment.h"
 #include "core/agent/body/segmentbox.h"
 #include "core/agent/body/segmenttube.h"
+#include "core/agent/body/segmentsphere.h"
 #include "gui/bodyeditor/bodyeditor.h"
 #include <QObject>
 
@@ -109,9 +110,11 @@ bool BodyManager::createNewSegment(bool processRootId)
     case BrainiacGlobals::TUBESEGMENT:
         newSegment=new SegmentTube(m_newSegment);
         break;
-    default:
-        newSegment=new SegmentShape(m_newSegment);
+    case BrainiacGlobals::SPHERESEGMENT:
+        newSegment=new SegmentSphere(m_newSegment);
         break;
+    default:
+        qCritical() << __PRETTY_FUNCTION__ << "This never sould happen";
     }
 
     //SegmentShape *newSegment=new SegmentShape(m_newSegment);

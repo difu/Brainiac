@@ -19,9 +19,7 @@
 
 SegmentTube::SegmentTube(const SegmentShape &other ):SegmentShape(other)
 {
-    //new osg::Capsule(osg::Vec3(0.0f, 0.0f, 0.0f),1,1);
     m_shape= new osg::Capsule(osg::Vec3(0.0f, 0.0f, 0.0f),getDiameter()/2,getLength());
-//    m_shapeDrawable->setShape(m_shape);
 }
 
 void SegmentTube::updateAndNotify()
