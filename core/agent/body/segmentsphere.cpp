@@ -1,6 +1,4 @@
-// Brainiac is a free and open source tool for the creation of crowd simulation
-
-// Copyright (C) 2012  Dirk Fuchs dirkfux@googlemail.com
+// Copyright (C) 2014  Dirk Fuchs dirkfux@googlemail.com
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,19 +13,20 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "segmentshape.h"
+#include "segmentsphere.h"
 
-SegmentShape::SegmentShape(const Segment &other ):Segment(other)
+SegmentSphere::SegmentSphere(const SegmentShape &other ):SegmentShape(other)
 {
-    m_transformNode.get()->setName(getName().toStdString());
+    m_shape= new osg::Sphere(osg::Vec3(0.0f, 0.0f, 0.0f),
+                             getDiameter()/2.0);
 }
 
-void SegmentShape::updateAndNotify()
+void SegmentSphere::updateAndNotify()
 {
+    osg::Sphere *sphere;
+    sphere=dynamic_cast<osg::Sphere *>(m_shape.get());
+    if(sphere) {
+        sphere->setRadius(getDiameter()/2.0);
+    }
     Segment::updateAndNotify();
-}
-
-SegmentShape::~SegmentShape()
-{
-    //delete m_shapeDrawable;
 }

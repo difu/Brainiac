@@ -81,7 +81,8 @@ HEADERS  += gui/mainwindow.h \
     core/brainiaclogger.h \
     gui/brainiacdisplaykeymouseeater.h \
     core/simulationsettings.h \
-    core/agent/body/animation/bvhmanager.h
+    core/agent/body/animation/bvhmanager.h \
+    core/agent/body/segmentsphere.h
 
 
 
@@ -168,5 +169,6 @@ SOURCES += gui/mainwindow.cpp \
     core/brainiaclogger.cpp \
     gui/brainiacdisplaykeymouseeater.cpp \
     core/simulationsettings.cpp \
-    core/agent/body/animation/bvhmanager.cpp
+    core/agent/body/animation/bvhmanager.cpp \
+    core/agent/body/segmentsphere.cpp
 
