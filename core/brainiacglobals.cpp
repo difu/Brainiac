@@ -17,6 +17,7 @@
 
 
 #include "brainiacglobals.h"
+#include <osgDB/Registry>
 #include <limits>
 
 cml::EulerOrder BrainiacGlobals::getCmlOrderFromBrainiacOrder(const QList<RotTrans> &order, bool reverse)
@@ -227,3 +228,17 @@ QColor BrainiacGlobals::defaultRadiusColor=QColor(50,50,200);
 QColor BrainiacGlobals::DefaultLatchColor=QColor(150,150,250);
 
 osg::ref_ptr<CoordCrossDrawable> BrainiacGlobals::CoordCross=new CoordCrossDrawable;
+
+osg::ref_ptr<osg::Node> BrainiacGlobals::loadOsgNodeFromQFile(QFile &file){
+    QFileInfo info(file);
+    osg::ref_ptr<osg::Node> loadedNode=0;
+    if (file.open(QIODevice::ReadOnly)) {
+        QByteArray data=file.readAll();
+        osgDB::ReaderWriter* plugin=osgDB::Registry::instance()->getReaderWriterForExtension(info.completeSuffix().toUpper().toStdString());
+        std::stringstream stream;
+        stream.write(data.constData(), data.size());
+        osgDB::ReaderWriter::ReadResult result=plugin->readNode(stream);
+        loadedNode=result.getNode();
+    }
+    return loadedNode;
+}

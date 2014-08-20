@@ -192,5 +192,14 @@ public:
     static qreal getRand( quint32 index ) { return randoms[index%NUMBER_OF_RANDOMS]; }
 
     static osg::ref_ptr<CoordCrossDrawable> CoordCross;
+
+    /**
+     * @brief loads an OSG node from a QFile
+     *
+     * @fn loadOsgNodeFromQFile
+     * @param file
+     * @return osg::ref_ptr<osg::Node> the osg node
+     */
+    static osg::ref_ptr<osg::Node> loadOsgNodeFromQFile(QFile &file);
 };
 #endif // BRAINIACGLOBALS_H
