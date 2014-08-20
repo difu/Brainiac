@@ -44,38 +44,6 @@
 #include <osgQt/GraphicsWindowQt>
 #include "gui/brainiacdisplaykeymouseeater.h"
 
-class ViewerWidget : public QWidget
-{
-public:
-    ViewerWidget( osg::Camera* camera, osg::Node* scene )
-    :   QWidget()
-    {
-        m_viewer.setCamera( camera );
-        m_viewer.setSceneData( scene );
-        m_viewer.addEventHandler( new osgViewer::StatsHandler );
-        m_viewer.setCameraManipulator( new osgGA::TrackballManipulator );
-        m_viewer.setThreadingModel( osgViewer::Viewer::SingleThreaded );
-
-        osgQt::GraphicsWindowQt* gw = dynamic_cast<osgQt::GraphicsWindowQt*>( camera->getGraphicsContext() );
-        if ( gw )
-        {
-            QVBoxLayout* layout = new QVBoxLayout;
-            layout->addWidget( gw->getGLWidget() );
-            setLayout( layout );
-        }
-
-        connect( &m_timer, SIGNAL(timeout()), this, SLOT(update()) );
-        m_timer.start( 40 );
-    }
-
-protected:
-    virtual void paintEvent( QPaintEvent* event ) { Q_UNUSED(event);  m_viewer.frame(); }
-
-    osgViewer::Viewer m_viewer;
-    QTimer m_timer;
-    osg::Group *m_rootNode;
-};
-
 
 class BrainiacGlWindow : public osgQt::GraphicsWindowQt
 {
@@ -149,10 +117,27 @@ public:
     osg::Camera* createCamera( int x, int y, int w, int h );
     BrainiacGlWindow *getGlWindow();
 
+    /**
+     * @brief switches on/off a coordinate cross at the origin of the scene
+     *
+     * @fn showOriginCoordCross
+     * @param show true, if the coord cross should appear
+     */
+    void showOriginCoordCross(bool show);
+
+public slots:
+    /**
+     * @brief toggles the coordinate cross at origin
+     *
+     * @sa showOriginCoordCross()
+     * @fn toggleOriginCoordCross
+     */
+    void toggleOriginCoordCross();
+
     osgGA::CameraManipulator* getCameraManipulator();
 
 protected:
-    virtual void paintEvent( QPaintEvent* event ) { Q_UNUSED(event);m_viewer.frame(); }
+    virtual void paintEvent( QPaintEvent* event );
     osgViewer::Viewer m_viewer;
     osg::Group *m_rootNode;
     osg::Camera* m_camera;
@@ -161,9 +146,9 @@ protected:
     QTimer m_timer;
     QString m_osgFileName;
     osgQt::GraphicsWindowQt *m_gw;
-    osgGA::TrackballManipulator *m_trackBallManipulator;
-    osgGA::SphericalManipulator *m_sphericalManipulatior;
-    osgGA::CameraManipulator *m_currentManipulator;
+    osg::Matrix m_scaleOriginCoordCross;
+    osg::ref_ptr<osg::Switch> m_originCoordCrossWitch;
+    bool m_showOriginCoordCross;
 };
 
 #endif // OSGMULTITHREADEDQTWIDGET_H

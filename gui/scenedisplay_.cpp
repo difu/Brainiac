@@ -32,6 +32,8 @@ void SceneDisplay_::keyPressed(Qt::Key key)
         if( saveSceneGraph() ) {
             qDebug() << "Saved scene to " << m_osgFileName;
         }
+    } else if(key==Qt::Key_C) {
+        toggleOriginCoordCross();
     }
     //Q_UNUSED(key);
 }

@@ -16,41 +16,43 @@
 #ifdef BRAINIAC_SUPPRESS_THIRD_PARTY_WARNINGS
     #pragma clang diagnostic pop
 #endif
+#include "core/brainiaclogger.h"
+#include "core/brainiacglobals.h"
 
-OsgMultithreadedViewerWidget::OsgMultithreadedViewerWidget( osg::Camera* camera, osg::Node* scene )
+OsgMultithreadedViewerWidget::OsgMultithreadedViewerWidget( osg::Camera* camera, osg::Node* scene ):
+    m_camera(camera),
+    m_showOriginCoordCross(false)
 {
     m_osgFileName=QDir::tempPath()%"/osgOut.osg";
-    m_camera=camera;
     m_rootNode=new osg::Group;
     m_rootNode->setName("Viewer rootGroupNode");
     if(!m_camera)
         m_camera=createCamera( 50, 50, 640, 480 );
     m_viewer.setCamera( m_camera );
-    if(scene)
+    if(scene) {
         m_rootNode->addChild(scene);
-    else {
-        m_rootNode->addChild(osgDB::readNodeFile("/ground.obj"));
+    } else {
+
     }
+
+    {
+        osg::MatrixTransform *trans=new osg::MatrixTransform();
+        m_originCoordCrossWitch=new osg::Switch();
+        m_scaleOriginCoordCross.identity();
+        m_scaleOriginCoordCross.makeScale(100,100,100);
+        trans->getOrCreateStateSet()->setMode(GL_RESCALE_NORMAL,osg::StateAttribute::ON);
+        trans->setMatrix(m_scaleOriginCoordCross);
+        QFile coordCross("://gui/geo/axes.osgt");
+        m_originCoordCrossWitch->addChild(trans,m_showOriginCoordCross);
+        trans->addChild(BrainiacGlobals::loadOsgNodeFromQFile(coordCross));
+        m_rootNode->addChild(m_originCoordCrossWitch);
+    }
+
     m_viewer.setSceneData(m_rootNode);
     m_viewer.addEventHandler( new osgViewer::StatsHandler );
-    m_trackBallManipulator=new osgGA::TrackballManipulator;
-    m_sphericalManipulatior=new osgGA::SphericalManipulator;
-//        m_currentManipulator=m_trackBallManipulator;
-//        m_currentManipulator->setHomePosition(osg::Vec3f(-300,0,0),osg::Vec3f(),osg::Vec3f(0,1,0));
-    //m_viewer.setCameraManipulator(m_currentManipulator  );
-//        changeManipulator(TRACKBALL);
-    osg::ref_ptr<osgGA::KeySwitchMatrixManipulator> keyswitchManipulator = new osgGA::KeySwitchMatrixManipulator;
-
-    keyswitchManipulator->addMatrixManipulator( '1', "Trackball", new osgGA::TrackballManipulator() );
-    keyswitchManipulator->addMatrixManipulator( '2', "Flight", new osgGA::FlightManipulator() );
-    keyswitchManipulator->addMatrixManipulator( '3', "Drive", new osgGA::DriveManipulator() );
-//        unsigned int num = keyswitchManipulator->getNumMatrixManipulators();
-    keyswitchManipulator->addMatrixManipulator( '4', "Terrain", new osgGA::TerrainManipulator() );
-    keyswitchManipulator->addMatrixManipulator( '5', "SPHERIC", new osgGA::SphericalManipulator() );
-    keyswitchManipulator->addMatrixManipulator( '6', "Orbit", new osgGA::OrbitManipulator() );
-    keyswitchManipulator->addMatrixManipulator( '7', "Multitouch", new osgGA::MultiTouchTrackballManipulator() );
-    keyswitchManipulator->setHomePosition(osg::Vec3f(-300,0,0),osg::Vec3f(),osg::Vec3f(0,1,0));
-    m_viewer.setCameraManipulator(keyswitchManipulator);
+    osgGA::TrackballManipulator *tbm=new osgGA::TrackballManipulator();
+    tbm->setHomePosition(osg::Vec3d(-2000.,0.,0.),osg::Vec3d(0.,0.,0.),osg::Vec3d(0.,1.,0.),false);
+    m_viewer.setCameraManipulator(tbm);
 
     m_viewer.setThreadingModel(osgViewer::Viewer::SingleThreaded);
     //m_viewer.setThreadingModel( osgViewer::Viewer::CullThreadPerCameraDrawThreadPerContext );
@@ -73,6 +75,8 @@ OsgMultithreadedViewerWidget::OsgMultithreadedViewerWidget( osg::Camera* camera,
     setGeometry( 100, 100, 800, 600 );
     setWindowFlags(Qt::Tool);
     show();
+    m_viewer.getCameraManipulator()->home(0);
+
 }
 
 
@@ -117,4 +121,21 @@ BrainiacGlWindow *OsgMultithreadedViewerWidget::getGlWindow()
 
 osgGA::CameraManipulator *OsgMultithreadedViewerWidget::getCameraManipulator() {
     return m_viewer.getCameraManipulator();
+}
+
+void OsgMultithreadedViewerWidget::paintEvent(QPaintEvent *event)
+{
+    Q_UNUSED(event);
+    m_viewer.frame();
+}
+
+void OsgMultithreadedViewerWidget::showOriginCoordCross(bool show)
+{
+    m_showOriginCoordCross=show;
+    m_originCoordCrossWitch->setValue(0,m_showOriginCoordCross);
+}
+
+void OsgMultithreadedViewerWidget::toggleOriginCoordCross()
+{
+    showOriginCoordCross(!m_showOriginCoordCross);
 }
