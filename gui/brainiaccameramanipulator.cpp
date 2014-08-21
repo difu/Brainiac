@@ -108,6 +108,7 @@ bool BrainiacCameraManipulator::handleMouseWheel(const osgGA::GUIEventAdapter &e
 bool BrainiacCameraManipulator::performMovementRightMouseButton(const double eventTimeDelta, const double dx, const double dy)
 {
     // zoom model
+    Q_UNUSED(dy);
     zoomModel( dx * getThrowScale( eventTimeDelta ), true );
     return true;
 }
