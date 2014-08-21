@@ -29,13 +29,6 @@
 #include <osgDB/ReadFile>
 #include <osg/ShapeDrawable>
 #include <osg/MatrixTransform>
-#include <osgGA/TrackballManipulator>
-#include <osgGA/SphericalManipulator>
-#include <osgGA/OrbitManipulator>
-#include <osgGA/FlightManipulator>
-#include <osgGA/DriveManipulator>
-#include <osgGA/TerrainManipulator>
-#include <osgGA/KeySwitchMatrixManipulator>
 #include <osgViewer/ViewerEventHandlers>
 #include <osgViewer/Viewer>
 #ifdef BRAINIAC_SUPPRESS_THIRD_PARTY_WARNINGS
@@ -43,6 +36,7 @@
 #endif
 #include <osgQt/GraphicsWindowQt>
 #include "gui/brainiacdisplaykeymouseeater.h"
+#include "gui/brainiaccameramanipulator.h"
 
 
 class BrainiacGlWindow : public osgQt::GraphicsWindowQt
@@ -147,6 +141,7 @@ private:
     RenderThread m_thread;
     BrainiacGlWindow *m_glWindow;
     QTimer m_timer;
+    BrainiacCameraManipulator *m_cameraManipulator;
 
 
 protected:

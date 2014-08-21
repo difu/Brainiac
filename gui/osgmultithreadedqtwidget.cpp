@@ -1,17 +1,26 @@
+// Brainiac is a free and open source tool for the creation of crowd simulation
+
+// Copyright (C) 2012  Dirk Fuchs dirkfux@googlemail.com
+
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #include "gui/osgmultithreadedqtwidget.h"
 
 #ifdef BRAINIAC_SUPPRESS_THIRD_PARTY_WARNINGS
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Woverloaded-virtual"
 #endif
-#include <osgGA/TrackballManipulator>
-#include <osgGA/SphericalManipulator>
-#include <osgGA/OrbitManipulator>
-#include <osgGA/FlightManipulator>
-#include <osgGA/DriveManipulator>
-#include <osgGA/TerrainManipulator>
-#include <osgGA/KeySwitchMatrixManipulator>
-#include <osgGA/MultiTouchTrackballManipulator>
 #include "osgDB/WriteFile"
 #ifdef BRAINIAC_SUPPRESS_THIRD_PARTY_WARNINGS
     #pragma clang diagnostic pop
@@ -23,6 +32,7 @@ OsgMultithreadedViewerWidget::OsgMultithreadedViewerWidget( osg::Camera* camera,
     m_rootNode(new osg::Group),
     m_showOriginCoordCross(false),
     m_camera(camera),
+    m_cameraManipulator(new BrainiacCameraManipulator),
     m_sceneNode(new osg::Group)
 {
     m_osgFileName=QDir::tempPath()%"/osgOut.osg";
@@ -53,18 +63,15 @@ OsgMultithreadedViewerWidget::OsgMultithreadedViewerWidget( osg::Camera* camera,
 
     m_viewer.setSceneData(m_rootNode);
     m_viewer.addEventHandler( new osgViewer::StatsHandler );
-    osgGA::TrackballManipulator *tbm=new osgGA::TrackballManipulator();
     if(fixVerticalAxis) {
-        tbm->setVerticalAxisFixed(true);
-        tbm->setHomePosition(osg::Vec3d(0.,-2000.,0.),osg::Vec3d(0.,0.,0.),osg::Vec3d(0.,0.,1.),false);
+        m_cameraManipulator->setVerticalAxisFixed(true);
+        m_cameraManipulator->setHomePosition(osg::Vec3d(0.,-2000.,0.),osg::Vec3d(0.,0.,0.),osg::Vec3d(0.,0.,1.),false);
     } else {
-        tbm->setHomePosition(osg::Vec3d(-2000.,0.,0.),osg::Vec3d(0.,0.,0.),osg::Vec3d(0.,1.,0.),false);
+        m_cameraManipulator->setHomePosition(osg::Vec3d(-2000.,0.,0.),osg::Vec3d(0.,0.,0.),osg::Vec3d(0.,1.,0.),false);
     }
-    m_viewer.setCameraManipulator(tbm);
+    m_viewer.setCameraManipulator(m_cameraManipulator);
 
     m_viewer.setThreadingModel(osgViewer::Viewer::SingleThreaded);
-    //m_viewer.setThreadingModel( osgViewer::Viewer::CullThreadPerCameraDrawThreadPerContext );
-    //m_viewer.setRunFrameScheme(osgViewer::ViewerBase::ON_DEMAND);
 
     m_gw = dynamic_cast<osgQt::GraphicsWindowQt*>( m_camera->getGraphicsContext() );
     if ( m_gw )
