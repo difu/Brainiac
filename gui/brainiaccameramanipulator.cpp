@@ -109,6 +109,6 @@ bool BrainiacCameraManipulator::performMovementRightMouseButton(const double eve
 {
     // zoom model
     Q_UNUSED(dy);
-    zoomModel( dx * getThrowScale( eventTimeDelta ), true );
+    zoomModel( -dx * getThrowScale( eventTimeDelta ), true );
     return true;
 }

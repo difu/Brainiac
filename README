@@ -9,3 +9,5 @@ http://openiconlibrary.sourceforge.net/
 They were renamed to match the brainiac naming convention. Here is a list of the icons used:
 people-xbill.png http://www.wpclipart.com/ Public Domain
 system-users-3.png http://tango.freedesktop.org/Tango_Icon_Library Public Domain
+
+Some code of osgGA::StandardManipulator and osgGA::OrbitManipulator was used and modified  in BrainiacCameraManipulator to meet Brainiac requirements.
