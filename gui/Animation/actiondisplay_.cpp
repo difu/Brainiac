@@ -24,7 +24,7 @@
 
 
 ActionDisplay_::ActionDisplay_():
-    OsgMultithreadedViewerWidget(0)
+    OsgMultithreadedViewerWidget(0,0,false)
 {
     //setParent(parent);
     setWindowFlags(Qt::Tool);
@@ -89,8 +89,8 @@ void ActionDisplay_::setAgentManager(AgentManager *agentManager)
 {
     m_followAgent=false;
     m_agentManager=agentManager;
-    m_rootNode->removeChildren(0,m_rootNode->getNumChildren());
-    m_rootNode->addChild(m_agentManager->getActionAgent()->getBody()->getBodyRoot());
+    m_sceneNode->removeChildren(0,m_sceneNode->getNumChildren());
+    m_sceneNode->addChild(m_agentManager->getActionAgent()->getBody()->getBodyRoot());
     followUnfollowAgent();
 }
 

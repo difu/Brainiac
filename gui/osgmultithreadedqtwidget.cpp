@@ -19,40 +19,42 @@
 #include "core/brainiaclogger.h"
 #include "core/brainiacglobals.h"
 
-const bool OsgMultithreadedViewerWidget::FixVerticalAxisAndMakeZUp=true;
-
-OsgMultithreadedViewerWidget::OsgMultithreadedViewerWidget( osg::Camera* camera, osg::Node* scene ):
+OsgMultithreadedViewerWidget::OsgMultithreadedViewerWidget( osg::Camera* camera, osg::Node* scene, bool fixVerticalAxis ):
+    m_rootNode(new osg::Group),
+    m_showOriginCoordCross(false),
     m_camera(camera),
-    m_showOriginCoordCross(false)
+    m_sceneNode(new osg::Group)
 {
     m_osgFileName=QDir::tempPath()%"/osgOut.osg";
-    m_rootNode=new osg::Group;
+
     m_rootNode->setName("Viewer rootGroupNode");
     if(!m_camera)
         m_camera=createCamera( 50, 50, 640, 480 );
     m_viewer.setCamera( m_camera );
     if(scene) {
-        if(FixVerticalAxisAndMakeZUp) {
-            osg::MatrixTransform *trans=new osg::MatrixTransform();
-            trans->setName("Fix vertical axis node");
-            osg::Matrix m;
-            m.makeRotate(M_PI_2,1.,0.,0.);
-            trans->setMatrix(m);
-            trans->addChild(scene);
-            m_rootNode->addChild(trans);
-            addOriginCoordCross(trans);
-        } else {
-            addOriginCoordCross(m_rootNode);
-            m_rootNode->addChild(scene);
-        }
+        m_sceneNode->addChild(scene);
     } else {
 
+    }
+
+    if(fixVerticalAxis) {
+        osg::MatrixTransform *trans=new osg::MatrixTransform();
+        trans->setName("Fix vertical axis node");
+        osg::Matrix m;
+        m.makeRotate(M_PI_2,1.,0.,0.);
+        trans->setMatrix(m);
+        m_rootNode->addChild(trans);
+        addOriginCoordCross(trans);
+        trans->addChild(m_sceneNode);
+    } else {
+        addOriginCoordCross(m_rootNode);
+        m_rootNode->addChild(m_sceneNode);
     }
 
     m_viewer.setSceneData(m_rootNode);
     m_viewer.addEventHandler( new osgViewer::StatsHandler );
     osgGA::TrackballManipulator *tbm=new osgGA::TrackballManipulator();
-    if(FixVerticalAxisAndMakeZUp) {
+    if(fixVerticalAxis) {
         tbm->setVerticalAxisFixed(true);
         tbm->setHomePosition(osg::Vec3d(0.,-2000.,0.),osg::Vec3d(0.,0.,0.),osg::Vec3d(0.,0.,1.),false);
     } else {

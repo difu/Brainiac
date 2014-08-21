@@ -109,7 +109,7 @@ class OsgMultithreadedViewerWidget : public QWidget
 {
 public:
     enum Manipulator {TRACKBALL,SPHERICAL};
-    OsgMultithreadedViewerWidget( osg::Camera* camera=0, osg::Node* scene=0 );
+    OsgMultithreadedViewerWidget( osg::Camera* camera=0, osg::Node* scene=0, bool fixVerticalAxis=true );
     bool saveSceneGraph();
     virtual ~OsgMultithreadedViewerWidget() {
     }
@@ -136,21 +136,24 @@ public slots:
 
     osgGA::CameraManipulator* getCameraManipulator();
 
-protected:
-    virtual void paintEvent( QPaintEvent* event );
-    void addOriginCoordCross(osg::Group * node );
-    osgViewer::Viewer m_viewer;
+private:
     osg::Group *m_rootNode;
-    osg::Camera* m_camera;
-    RenderThread m_thread;
-    BrainiacGlWindow *m_glWindow;
-    QTimer m_timer;
-    QString m_osgFileName;
     osgQt::GraphicsWindowQt *m_gw;
     osg::Matrix m_scaleOriginCoordCross;
     osg::ref_ptr<osg::Switch> m_originCoordCrossWitch;
     bool m_showOriginCoordCross;
-    static const bool FixVerticalAxisAndMakeZUp;
+    osgViewer::Viewer m_viewer;
+    osg::Camera* m_camera;
+    RenderThread m_thread;
+    BrainiacGlWindow *m_glWindow;
+    QTimer m_timer;
+
+
+protected:
+    virtual void paintEvent( QPaintEvent* event );
+    void addOriginCoordCross(osg::Group * node );
+    QString m_osgFileName;
+    osg::ref_ptr<osg::Group> m_sceneNode;
 };
 
 #endif // OSGMULTITHREADEDQTWIDGET_H
