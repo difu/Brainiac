@@ -31,12 +31,35 @@
 #include "brainiaccameramanipulator.h"
 #include <QGuiApplication>
 #include <QScreen>
+#include "core/brainiaclogger.h"
 
 using namespace osgGA;
 
-BrainiacCameraManipulator::BrainiacCameraManipulator() : osgGA::TrackballManipulator()
+BrainiacCameraManipulator::BrainiacCameraManipulator() :
+    osgGA::TrackballManipulator(),
+    m_centerKeysPressed(false)
 {
     setAnimationTime(0);
+}
+
+bool BrainiacCameraManipulator::handleKeyDown(const GUIEventAdapter &ea, GUIActionAdapter &us)
+{
+    if( ea.getKey() == GUIEventAdapter::KEY_Alt_L ||
+        ea.getKey() == GUIEventAdapter::KEY_Alt_R) {
+        m_centerKeysPressed=true;
+        return true;
+    }
+    return osgGA::TrackballManipulator::handleKeyDown(ea,us);
+}
+
+bool BrainiacCameraManipulator::handleKeyUp(const GUIEventAdapter &ea, GUIActionAdapter &us)
+{
+    if( ea.getKey() == GUIEventAdapter::KEY_Alt_L ||
+        ea.getKey() == GUIEventAdapter::KEY_Alt_R) {
+        m_centerKeysPressed=false;
+        return true;
+    }
+    return osgGA::TrackballManipulator::handleKeyUp(ea,us);
 }
 
 void BrainiacCameraManipulator::centerMousePointer(const GUIEventAdapter &ea, GUIActionAdapter &us)
@@ -49,33 +72,20 @@ void BrainiacCameraManipulator::centerMousePointer(const GUIEventAdapter &ea, GU
     us.requestWarpPointer( _mouseCenterX, _mouseCenterY );
 }
 
+bool BrainiacCameraManipulator::handleMousePush(const GUIEventAdapter &ea, GUIActionAdapter &us)
+{
+    if(ea.getButton()==GUIEventAdapter::MIDDLE_MOUSE_BUTTON) {
+        if( m_centerKeysPressed ) {
+            setCenterByMousePointerIntersection( ea, us );
+            return true;
+        }
+    }
+    return osgGA::StandardManipulator::handleMousePush(ea,us);
+}
+
 bool BrainiacCameraManipulator::handleMouseWheel(const osgGA::GUIEventAdapter &ea, osgGA::GUIActionAdapter &us)
 {
     osgGA::GUIEventAdapter::ScrollingMotion sm = ea.getScrollingMotion();
-
-    // handle centering
-    //if( _flags & SET_CENTER_ON_WHEEL_FORWARD_MOVEMENT )
-    {
-
-        if( ((sm == GUIEventAdapter::SCROLL_DOWN )) ||
-            ((sm == GUIEventAdapter::SCROLL_UP   )) )
-        {
-
-            if( getAnimationTime() <= 0. )
-            {
-                // center by mouse intersection (no animation)
-                setCenterByMousePointerIntersection( ea, us );
-            }
-            else
-            {
-                // start new animation only if there is no animation in progress
-                if( !isAnimating() )
-                    startAnimationByMousePointerIntersection( ea, us );
-
-            }
-
-        }
-    }
 
     switch( sm )
     {

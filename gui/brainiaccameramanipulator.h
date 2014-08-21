@@ -28,14 +28,29 @@
     #pragma clang diagnostic pop
 #endif
 
+/**
+ * @brief Manipulates the camera.
+ * Provides functionality to move, orbit, pan, zoom a camera
+ * @class BrainiacCameraManipulator brainiaccameramanipulator.h "gui/brainiaccameramanipulator.h"
+ */
 class BrainiacCameraManipulator : public osgGA::TrackballManipulator
 {
 public:
+    /**
+     * @brief constructs a new BrainiacCameraManipulator
+     *
+     * @fn BrainiacCameraManipulator
+     */
     BrainiacCameraManipulator();
 protected:
     virtual void centerMousePointer( const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& us );
+    virtual bool handleKeyDown(const osgGA::GUIEventAdapter &ea, osgGA::GUIActionAdapter &us);
+    virtual bool handleKeyUp(const osgGA::GUIEventAdapter &ea, osgGA::GUIActionAdapter &us);
+    virtual bool handleMousePush(const osgGA::GUIEventAdapter &ea, osgGA::GUIActionAdapter &us);
     virtual bool handleMouseWheel(const osgGA::GUIEventAdapter &ea, osgGA::GUIActionAdapter &us);
     virtual bool performMovementRightMouseButton(const double eventTimeDelta, const double dx, const double dy);
+private:
+    bool m_centerKeysPressed; /**< true, if one of the keys is pressed that centers the view */
 
 };
 
