@@ -32,6 +32,11 @@ class BrainiacCameraManipulator : public osgGA::TrackballManipulator
 {
 public:
     BrainiacCameraManipulator();
+protected:
+    virtual void centerMousePointer( const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& us );
+    virtual bool handleMouseWheel(const osgGA::GUIEventAdapter &ea, osgGA::GUIActionAdapter &us);
+    virtual bool performMovementRightMouseButton(const double eventTimeDelta, const double dx, const double dy);
+
 };
 
 #endif // BRAINIACCAMERAMANIPULATOR_H
