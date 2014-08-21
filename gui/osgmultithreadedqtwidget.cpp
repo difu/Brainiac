@@ -19,6 +19,8 @@
 #include "core/brainiaclogger.h"
 #include "core/brainiacglobals.h"
 
+const bool OsgMultithreadedViewerWidget::FixVerticalAxisAndMakeZUp=true;
+
 OsgMultithreadedViewerWidget::OsgMultithreadedViewerWidget( osg::Camera* camera, osg::Node* scene ):
     m_camera(camera),
     m_showOriginCoordCross(false)
@@ -30,28 +32,32 @@ OsgMultithreadedViewerWidget::OsgMultithreadedViewerWidget( osg::Camera* camera,
         m_camera=createCamera( 50, 50, 640, 480 );
     m_viewer.setCamera( m_camera );
     if(scene) {
-        m_rootNode->addChild(scene);
+        if(FixVerticalAxisAndMakeZUp) {
+            osg::MatrixTransform *trans=new osg::MatrixTransform();
+            trans->setName("Fix vertical axis node");
+            osg::Matrix m;
+            m.makeRotate(M_PI_2,1.,0.,0.);
+            trans->setMatrix(m);
+            trans->addChild(scene);
+            m_rootNode->addChild(trans);
+            addOriginCoordCross(trans);
+        } else {
+            addOriginCoordCross(m_rootNode);
+            m_rootNode->addChild(scene);
+        }
     } else {
 
-    }
-
-    {
-        osg::MatrixTransform *trans=new osg::MatrixTransform();
-        m_originCoordCrossWitch=new osg::Switch();
-        m_scaleOriginCoordCross.identity();
-        m_scaleOriginCoordCross.makeScale(100,100,100);
-        trans->getOrCreateStateSet()->setMode(GL_RESCALE_NORMAL,osg::StateAttribute::ON);
-        trans->setMatrix(m_scaleOriginCoordCross);
-        QFile coordCross("://gui/geo/axes.osgt");
-        m_originCoordCrossWitch->addChild(trans,m_showOriginCoordCross);
-        trans->addChild(BrainiacGlobals::loadOsgNodeFromQFile(coordCross));
-        m_rootNode->addChild(m_originCoordCrossWitch);
     }
 
     m_viewer.setSceneData(m_rootNode);
     m_viewer.addEventHandler( new osgViewer::StatsHandler );
     osgGA::TrackballManipulator *tbm=new osgGA::TrackballManipulator();
-    tbm->setHomePosition(osg::Vec3d(-2000.,0.,0.),osg::Vec3d(0.,0.,0.),osg::Vec3d(0.,1.,0.),false);
+    if(FixVerticalAxisAndMakeZUp) {
+        tbm->setVerticalAxisFixed(true);
+        tbm->setHomePosition(osg::Vec3d(0.,-2000.,0.),osg::Vec3d(0.,0.,0.),osg::Vec3d(0.,0.,1.),false);
+    } else {
+        tbm->setHomePosition(osg::Vec3d(-2000.,0.,0.),osg::Vec3d(0.,0.,0.),osg::Vec3d(0.,1.,0.),false);
+    }
     m_viewer.setCameraManipulator(tbm);
 
     m_viewer.setThreadingModel(osgViewer::Viewer::SingleThreaded);
@@ -77,6 +83,21 @@ OsgMultithreadedViewerWidget::OsgMultithreadedViewerWidget( osg::Camera* camera,
     show();
     m_viewer.getCameraManipulator()->home(0);
 
+}
+
+
+void OsgMultithreadedViewerWidget::addOriginCoordCross(osg::Group *node)
+{
+    osg::MatrixTransform *trans=new osg::MatrixTransform();
+    m_originCoordCrossWitch=new osg::Switch();
+    m_scaleOriginCoordCross.identity();
+    m_scaleOriginCoordCross.makeScale(100,100,100);
+    trans->getOrCreateStateSet()->setMode(GL_RESCALE_NORMAL,osg::StateAttribute::ON);
+    trans->setMatrix(m_scaleOriginCoordCross);
+    QFile coordCross("://gui/geo/axes.osgt");
+    m_originCoordCrossWitch->addChild(trans,m_showOriginCoordCross);
+    trans->addChild(BrainiacGlobals::loadOsgNodeFromQFile(coordCross));
+    node->addChild(m_originCoordCrossWitch);
 }
 
 
@@ -109,7 +130,6 @@ osg::Camera *OsgMultithreadedViewerWidget::createCamera(int x, int y, int w, int
     camera->setProjectionMatrixAsPerspective(
                 30.0f, static_cast<double>(traits->width)/static_cast<double>(traits->height), 1.0f, 10000.0f );
 
-    //camera->setViewMatrixAsLookAt(osg::Vec3f(-1000,0.0f,0.0f),osg::Vec3f(),osg::Vec3f(1.0f,0.0f,0.0f));
     camera->getOrCreateStateSet()->setGlobalDefaults(); //! \bug "wrong gfx" http://forum.openscenegraph.org/viewtopic.php?t=13111
     return camera.release();
 }

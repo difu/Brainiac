@@ -138,6 +138,7 @@ public slots:
 
 protected:
     virtual void paintEvent( QPaintEvent* event );
+    void addOriginCoordCross(osg::Group * node );
     osgViewer::Viewer m_viewer;
     osg::Group *m_rootNode;
     osg::Camera* m_camera;
@@ -149,6 +150,7 @@ protected:
     osg::Matrix m_scaleOriginCoordCross;
     osg::ref_ptr<osg::Switch> m_originCoordCrossWitch;
     bool m_showOriginCoordCross;
+    static const bool FixVerticalAxisAndMakeZUp;
 };
 
 #endif // OSGMULTITHREADEDQTWIDGET_H
