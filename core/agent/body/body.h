@@ -67,6 +67,8 @@ public:
      */
     void setAnimations(QHash<QString, Animation *> *animations);
 
+    void showPositionMarker(bool show);
+
     void showPivotCoordCrosses(bool show);
 
     void reset();

@@ -142,6 +142,15 @@ private:
     IdGenerator m_groupIdGenerator; //!< Group Id generator
     osg::ref_ptr<osg::Group> m_rootNode;
 
+public slots:
+    /**
+     * @brief sets if a coord cross should be displayed at position of agent
+     *
+     * @fn setShowAgentAxis
+     * @param show true, if axis should be displayed
+     */
+    void setShowAgentAxis(bool show);
+
 signals:
     void groupAdded(Group *group); //!< emitted when a group is added
 

@@ -21,6 +21,7 @@
 
 #include<QtCore>
 #include<QColor>
+#include<QKeySequence>
 #include "gui/coordcrossdrawable.h"
 #ifdef BRAINIAC_SUPPRESS_THIRD_PARTY_WARNINGS
     #pragma clang diagnostic push
@@ -185,6 +186,14 @@ public:
     static Qt::Key ToogleFollowAgentKey; /**< default key to toggle to follow an agent */
     static Qt::Key ToggleSegmentCoordCrossesKey; /**< default key to toggle an segments pivot point */
     static Qt::Key ToggleAgentPositionMarkerKey; /**< default key to toggle an agents position and orientation marker */
+    static Qt::Key ToggleAgentSoundEmissionKey; /**< default key to toggle an agents sound emission */
+
+
+    static Qt::Modifier ModifierKey; /**< default modifier key */
+
+    static QKeySequence KeySequenceToggleAgentAxis;  /**< Keysequence to toggle agent axis */
+    static QKeySequence KeySequenceToggleAgentSoundEmission;  /**< Keysequence to toggle agent sound emission */
+
 
     static const quint32 animationFileFormatMagicNumber=0xA1B2C3D4; /**< Magic number to identify the Brainiac Animation Fileformat */
     static const qint32 animationFileFormatVersion=100; /**< Version of Brainiac Animation File Format */
