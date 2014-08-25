@@ -213,11 +213,19 @@ const QString BrainiacGlobals::ChannelPhaseOffsetSuffix=":phase_offset\0";
 const QString BrainiacGlobals::ChannelRunningSuffix=":running\0";
 
 Qt::Key BrainiacGlobals::ToggleSegmentCoordCrossesKey=Qt::Key_C;
-Qt::Key BrainiacGlobals::ToggleAgentPositionMarkerKey=Qt::Key_P;
+Qt::Key BrainiacGlobals::ToggleAgentPositionMarkerKey=Qt::Key_A;
+Qt::Key BrainiacGlobals::ToggleAgentSoundEmissionKey=Qt::Key_E;
 Qt::Key BrainiacGlobals::ToogleFollowAgentKey=Qt::Key_F;
 Qt::Key BrainiacGlobals::AnimationPauseKey=Qt::Key_Down;
 Qt::Key BrainiacGlobals::AnimationOneFrameBackwardKey=Qt::Key_Right;
 Qt::Key BrainiacGlobals::AnimationOneFrameForwardKey=Qt::Key_Left;
+#ifdef __APPLE__
+    Qt::Modifier BrainiacGlobals::ModifierKey=Qt::META;  //! \bug alt key does not work under os x?
+#else
+    Qt::Modifier BrainiacGlobals::ModifierKey=Qt::ALT;
+#endif
+QKeySequence BrainiacGlobals::KeySequenceToggleAgentAxis=QKeySequence(BrainiacGlobals::ModifierKey + BrainiacGlobals::ToggleAgentPositionMarkerKey);
+QKeySequence BrainiacGlobals::KeySequenceToggleAgentSoundEmission=QKeySequence(BrainiacGlobals::ModifierKey + BrainiacGlobals::ToggleAgentSoundEmissionKey);
 
 QColor BrainiacGlobals::defaultXColor=QColor(200,0,0);
 QColor BrainiacGlobals::defaultYColor=QColor(0,200,0);

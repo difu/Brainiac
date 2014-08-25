@@ -263,6 +263,13 @@ bool Scene::setByXml(QXmlStreamReader &xmlReader)
     return true;
 }
 
+void Scene::setShowAgentAxis(bool show)
+{
+    foreach(Agent *agent, m_agents) {
+        agent->getBody()->showPositionMarker(show);
+    }
+}
+
 bool Scene::setByXml(const QString &xml)
 {
     QXmlStreamReader xmlReader(xml);

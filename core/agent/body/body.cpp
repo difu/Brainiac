@@ -154,6 +154,12 @@ void Body::setAnimations(QHash<QString, Animation *> *animations)
     }
 }
 
+void Body::showPositionMarker(bool show)
+{
+    m_showPositionMarker=show;
+    m_switchPositionMarker->setValue(0,m_showPositionMarker);
+}
+
 void Body::showPivotCoordCrosses(bool show)
 {
     foreach(BodySegment *seg, m_bodySegments) {
@@ -170,7 +176,8 @@ void Body::toggleShowCoordCrosses()
 void Body::toggleShowPositionMarker()
 {
     m_showPositionMarker=!m_showPositionMarker;
-    m_switchPositionMarker->setValue(0,m_showPositionMarker);
+    this->showPositionMarker(m_showPositionMarker);
+
 }
 
 void Body::toggleShowSkeleton()

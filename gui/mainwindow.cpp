@@ -75,6 +75,7 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
     createEditModeWidgets();
     createActions();
     createMenues();
+    createShortCuts();
 
     widget->setLayout(m_layout);
     setCentralWidget(widget);
@@ -168,6 +169,9 @@ void MainWindow::createActions()
     m_viewSoundEmmisions->setCheckable(true);
     m_viewAgentInfos=new QAction(tr("View Agent Infos"),this);
     m_viewAgentInfos->setCheckable(true);
+    m_viewAgentAxis=new QAction(tr("Agent axes"),this);
+    m_viewAgentAxis->setCheckable(true);
+    connect(m_viewAgentAxis,SIGNAL(toggled(bool)),m_scene,SLOT(setShowAgentAxis(bool)));
 }
 
 void MainWindow::createEditors()
@@ -335,6 +339,15 @@ void MainWindow::createMenues()
     m_viewMenu=menuBar()->addMenu(tr("&View"));
     m_viewMenu->addAction(m_viewAgentInfos);
     m_viewMenu->addAction(m_viewSoundEmmisions);
+    m_viewMenu->addAction(m_viewAgentAxis);
+}
+
+void MainWindow::createShortCuts()
+{
+    m_viewAgentAxis->setShortcut(BrainiacGlobals::KeySequenceToggleAgentAxis);
+    m_viewAgentAxis->setShortcutContext(Qt::ApplicationShortcut);
+    m_viewSoundEmmisions->setShortcut(BrainiacGlobals::KeySequenceToggleAgentSoundEmission);
+    m_viewSoundEmmisions->setShortcutContext(Qt::ApplicationShortcut);
 }
 
 void MainWindow::editModeComboChange(int index)

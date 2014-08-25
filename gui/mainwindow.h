@@ -81,12 +81,22 @@ protected:
      * @param ev the close event
      */
     void closeEvent(QCloseEvent *ev);
+
+private:
     void createActions();
     void createEditors();
     void createEditModeWidgets();
     void createEditorItemBars();
     void createEditorWidgets();
+
     void createMenues();
+
+    /**
+     * @brief creates global shortcuts
+     *
+     * @fn createShortCuts
+     */
+    void createShortCuts();
 
     /**
      * @brief reads the window´s geometry
@@ -148,6 +158,7 @@ protected:
     // View menu actions
     QAction *m_viewSoundEmmisions;
     QAction *m_viewAgentInfos;
+    QAction *m_viewAgentAxis;
 
     QMenu *m_fileMenu;
     QMenu *m_editMenu;
