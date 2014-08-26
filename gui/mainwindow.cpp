@@ -157,12 +157,13 @@ void MainWindow::createActions()
     connect(m_editSymetricAction,SIGNAL(toggled(bool)),m_segmentEditor,SLOT(editSymetric(bool)));
 
     // Simulation Menu Actions
-    m_runSimulationAction=new QAction(tr("Run"), this);
-    connect(m_runSimulationAction,SIGNAL(triggered()),m_scene->getSimulation(),SLOT(startSimulation()));
-    m_stopSimulationAction=new QAction(tr("Stop"),this);
-    connect(m_stopSimulationAction,SIGNAL(triggered()),m_scene->getSimulation(),SLOT(stopSimulation()));
     m_resetSimulationAction=new QAction(tr("Reset"), this);
     connect(m_resetSimulationAction,SIGNAL(triggered()),m_scene->getSimulation(),SLOT(resetSimulation()));
+
+    m_startStopSimulationAction=new QAction(tr("Start/Stop"), this);
+    m_startStopSimulationAction->setCheckable(true);
+    connect(m_scene->getSimulation(),SIGNAL(isRunning(bool)),m_startStopSimulationAction,SLOT(setChecked(bool)));
+    connect(m_startStopSimulationAction,SIGNAL(triggered(bool)),m_scene->getSimulation(),SLOT(setRunning(bool)));
 
     //View Menu Actions
     m_viewSoundEmmisions=new QAction(tr("Sound Emmissions"),this);
@@ -332,8 +333,7 @@ void MainWindow::createMenues()
     m_editMenu->addAction(m_editSymetricAction);
 
     m_simulationMenu=menuBar()->addMenu(tr("&Simulation"));
-    m_simulationMenu->addAction(m_runSimulationAction);
-    m_simulationMenu->addAction(m_stopSimulationAction);
+    m_simulationMenu->addAction(m_startStopSimulationAction);
     m_simulationMenu->addAction(m_resetSimulationAction);
 
     m_viewMenu=menuBar()->addMenu(tr("&View"));
@@ -346,8 +346,12 @@ void MainWindow::createShortCuts()
 {
     m_viewAgentAxis->setShortcut(BrainiacGlobals::KeySequenceToggleAgentAxis);
     m_viewAgentAxis->setShortcutContext(Qt::ApplicationShortcut);
+
     m_viewSoundEmmisions->setShortcut(BrainiacGlobals::KeySequenceToggleAgentSoundEmission);
     m_viewSoundEmmisions->setShortcutContext(Qt::ApplicationShortcut);
+
+    m_startStopSimulationAction->setShortcut(BrainiacGlobals::KeySequenceToggleSimulationStartStop);
+    m_startStopSimulationAction->setShortcutContext(Qt::ApplicationShortcut);
 }
 
 void MainWindow::editModeComboChange(int index)

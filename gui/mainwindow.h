@@ -151,9 +151,8 @@ private:
     QAction *m_editSymetricAction;
 
     // Simulation menu actions
-    QAction *m_runSimulationAction;
     QAction *m_resetSimulationAction;
-    QAction *m_stopSimulationAction;
+    QAction *m_startStopSimulationAction;
 
     // View menu actions
     QAction *m_viewSoundEmmisions;

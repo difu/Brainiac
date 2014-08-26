@@ -218,6 +218,7 @@ Qt::Key BrainiacGlobals::ToggleSegmentCoordCrossesKey=Qt::Key_C;
 Qt::Key BrainiacGlobals::ToggleAgentPositionMarkerKey=Qt::Key_A;
 Qt::Key BrainiacGlobals::ToggleAgentSoundEmissionKey=Qt::Key_E;
 Qt::Key BrainiacGlobals::ToogleFollowAgentKey=Qt::Key_F;
+Qt::Key BrainiacGlobals::ToggleSimulationKey=Qt::Key_Space;
 Qt::Key BrainiacGlobals::AnimationPauseKey=Qt::Key_Down;
 Qt::Key BrainiacGlobals::AnimationOneFrameBackwardKey=Qt::Key_Right;
 Qt::Key BrainiacGlobals::AnimationOneFrameForwardKey=Qt::Key_Left;
@@ -228,6 +229,7 @@ Qt::Key BrainiacGlobals::AnimationOneFrameForwardKey=Qt::Key_Left;
 #endif
 QKeySequence BrainiacGlobals::KeySequenceToggleAgentAxis=QKeySequence(BrainiacGlobals::ModifierKey + BrainiacGlobals::ToggleAgentPositionMarkerKey);
 QKeySequence BrainiacGlobals::KeySequenceToggleAgentSoundEmission=QKeySequence(BrainiacGlobals::ModifierKey + BrainiacGlobals::ToggleAgentSoundEmissionKey);
+QKeySequence BrainiacGlobals::KeySequenceToggleSimulationStartStop=QKeySequence(BrainiacGlobals::ModifierKey + BrainiacGlobals::ToggleSimulationKey);
 
 QColor BrainiacGlobals::defaultXColor=QColor(200,0,0);
 QColor BrainiacGlobals::defaultYColor=QColor(0,200,0);

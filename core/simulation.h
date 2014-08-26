@@ -203,6 +203,7 @@ signals:
     void reset(); //!<  emmited when simulation is reset
     void stopped(); //!< emitted when simulation is stopped
     void simLate(); //!< emitted when simulation is late
+    void isRunning(bool); //!< emitted when simulation when running state changes
 
 public slots:
     /**
@@ -217,6 +218,8 @@ public slots:
      *
      */
     void stopSimulation();
+
+    void setRunning(bool run);
 
     /**
      * @brief resets the simulation

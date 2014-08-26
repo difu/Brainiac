@@ -103,6 +103,7 @@ void Simulation::advanceCommitDone()
     }
     if(!m_running) {
         emit stopped();
+        emit isRunning(false);
     }
 }
 
@@ -174,6 +175,13 @@ void Simulation::resetSimulation() {
     QList<Agent *> agents=m_scene->getAgents();
     QtConcurrent::blockingMap(agents,&::agentReset);
     m_currentFrame=0;
+    emit stopped();
+    emit isRunning(false);
+}
+
+void Simulation::setRunning(bool run)
+{
+    m_running=run;
 }
 
 bool Simulation::startSimulation()
@@ -205,6 +213,7 @@ bool Simulation::startSimulation()
             }
         }
         emit started();
+        emit isRunning(true);
     }
     m_running=true;
     return true;

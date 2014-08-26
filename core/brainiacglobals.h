@@ -189,12 +189,14 @@ public:
     static Qt::Key ToggleSegmentCoordCrossesKey; /**< default key to toggle an segments pivot point */
     static Qt::Key ToggleAgentPositionMarkerKey; /**< default key to toggle an agents position and orientation marker */
     static Qt::Key ToggleAgentSoundEmissionKey; /**< default key to toggle an agents sound emission */
+    static Qt::Key ToggleSimulationKey; /**< default key to toggle start/stop simulation */
 
 
     static Qt::Modifier ModifierKey; /**< default modifier key */
 
     static QKeySequence KeySequenceToggleAgentAxis;  /**< Keysequence to toggle agent axis */
     static QKeySequence KeySequenceToggleAgentSoundEmission;  /**< Keysequence to toggle agent sound emission */
+    static QKeySequence KeySequenceToggleSimulationStartStop;  /**< Keysequence to toggle start/stop of simulation */
 
 
     static const quint32 animationFileFormatMagicNumber=0xA1B2C3D4; /**< Magic number to identify the Brainiac Animation Fileformat */
