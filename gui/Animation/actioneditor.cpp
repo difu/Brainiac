@@ -33,7 +33,7 @@
 #include "core/agent/body/animation/modifiableanimation.h"
 #include "core/agent/body/animation/latchcurve.h"
 #include "core/brainiaclogger.h"
-#include "gui/Animation/actiondisplay_.h"
+#include "gui/Animation/actiondisplay.h"
 #include "gui/brainiacslider.h"
 #include "gui/Animation/loopeditorscene.h"
 #include <QListWidgetItem>
@@ -52,7 +52,7 @@ ActionEditor::ActionEditor(Scene *scene, QWidget *parent) :
     //setWindowModality(Qt::Tool);
     connect(ui->listAnimation,SIGNAL(currentRowChanged(int)),this,SLOT(animationSelectionChanged(int)));
     //m_actionDisplay=new ActionDisplay(this);
-    m_actionDisplay_=new ActionDisplay_();
+    m_actionDisplay_=new ActionDisplay();
 //    connect(m_actionDisplay,SIGNAL(animationOneFrameBackward()),this,SLOT(animationOneFrameBackward()));
 //    connect(m_actionDisplay,SIGNAL(animationOneFrameForward()),this,SLOT(animationOneFrameForward()));
 //    connect(m_actionDisplay,SIGNAL(animationRunningToggled()),this,SLOT(animationRunningToggle()));

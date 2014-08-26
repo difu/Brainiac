@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "actiondisplay_.h"
+#include "actiondisplay.h"
 
 #include "core/agent/agent.h"
 #include "core/agent/agentmanager.h"
@@ -23,7 +23,7 @@
 
 
 
-ActionDisplay_::ActionDisplay_():
+ActionDisplay::ActionDisplay():
     OsgMultithreadedViewerWidget(0,0,false)
 {
     //setParent(parent);
@@ -37,7 +37,7 @@ ActionDisplay_::ActionDisplay_():
 
 }
 
-void ActionDisplay_::followUnfollowAgent()
+void ActionDisplay::followUnfollowAgent()
 {
     if(m_followAgent) {
         osg::Matrixd camMatrix;
@@ -49,7 +49,7 @@ void ActionDisplay_::followUnfollowAgent()
     }
 }
 
-void ActionDisplay_::keyPressed(Qt::Key key)
+void ActionDisplay::keyPressed(Qt::Key key)
 {
     if(key==BrainiacGlobals::AnimationPauseKey) {
         emit animationRunningToggled();
@@ -85,7 +85,7 @@ void ActionDisplay_::keyPressed(Qt::Key key)
 //}
 
 
-void ActionDisplay_::setAgentManager(AgentManager *agentManager)
+void ActionDisplay::setAgentManager(AgentManager *agentManager)
 {
     m_followAgent=false;
     m_agentManager=agentManager;
@@ -94,7 +94,7 @@ void ActionDisplay_::setAgentManager(AgentManager *agentManager)
     followUnfollowAgent();
 }
 
-void ActionDisplay_::updateCameraMatrix()
+void ActionDisplay::updateCameraMatrix()
 {
     if(m_followAgent) {
         osg::Matrixd camMatrix;

@@ -29,7 +29,7 @@ class BrainiacSlider;
 class LoopEditorScene;
 class ModifiableAnimation;
 class Segment;
-class ActionDisplay_;
+class ActionDisplay;
 class Scene;
 
 class QDoubleValidator;
@@ -74,7 +74,7 @@ private:
     ModifiableAnimation *m_activeAnimation;
     QString m_activeAnimationName;
 //    ActionDisplay *m_actionDisplay; /**< TODO */
-    ActionDisplay_ *m_actionDisplay_; /**< The OSGWindow that displays the agent */
+    ActionDisplay *m_actionDisplay_; /**< The OSGWindow that displays the agent */
     Scene *m_scene;
     QMutex m_animationChangeMutex;
     LoopEditorScene *m_loopEditorScene;

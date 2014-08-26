@@ -16,8 +16,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#ifndef ACTIONDISPLAY__H
-#define ACTIONDISPLAY__H
+#ifndef ACTIONDISPLAY_H
+#define ACTIONDISPLAY_H
 #include "gui/osgmultithreadedqtwidget.h"
 #include "osg/Vec3d"
 
@@ -25,7 +25,7 @@ class AgentManager;
 /**
  * @brief The ActionDisplay class
  */
-class ActionDisplay_ : public OsgMultithreadedViewerWidget
+class ActionDisplay : public OsgMultithreadedViewerWidget
 {
     Q_OBJECT
 public:
@@ -33,7 +33,7 @@ public:
      * @brief ActionDisplay
      * The Constructor
      */
-    explicit ActionDisplay_();
+    explicit ActionDisplay();
 
     /**
      * @brief setAgentManager
@@ -60,4 +60,4 @@ protected slots:
     void keyPressed(Qt::Key key);
 };
 
-#endif // ACTIONDISPLAY__H
+#endif // ACTIONDISPLAY_H
