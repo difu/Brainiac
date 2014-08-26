@@ -212,6 +212,8 @@ const QString BrainiacGlobals::ChannelName_Sound_f="sound.f\0";
 const QString BrainiacGlobals::ChannelPhaseOffsetSuffix=":phase_offset\0";
 const QString BrainiacGlobals::ChannelRunningSuffix=":running\0";
 
+const QString BrainiacGlobals::DropTextPrefix="AddLogicType";
+
 Qt::Key BrainiacGlobals::ToggleSegmentCoordCrossesKey=Qt::Key_C;
 Qt::Key BrainiacGlobals::ToggleAgentPositionMarkerKey=Qt::Key_A;
 Qt::Key BrainiacGlobals::ToggleAgentSoundEmissionKey=Qt::Key_E;

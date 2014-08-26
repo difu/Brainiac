@@ -21,6 +21,7 @@
 #include "core/agent/agentmanager.h"
 #include "core/agent/brain/brain.h"
 #include "core/agent/brain/output.h"
+#include "core/brainiaclogger.h"
 #include "gui/braineditor/braineditoritem.h"
 #include "gui/editoritemconnector.h"
 #include <QGraphicsSceneMouseEvent>
@@ -41,7 +42,6 @@ void BrainEditor::addFuzzyItem(quint32 id)
         BrainEditorItem *item=new BrainEditorItem((BrainiacGlobals::ItemType)m_agentManager->getFuzzType(id),m_agentManager,id);
         item->setPos(m_agentManager->getEditorFuzzyLocations().value(id).x()+BrainEditorItem::WIDTH,m_agentManager->getEditorFuzzyLocations().value(id).y());
         addItem(item);
-        //qDebug() << __PRETTY_FUNCTION__ <<  item->getId() << item->getType();
     } else {
         qCritical() << __PRETTY_FUNCTION__ << "No item with id"  << id;
     }
@@ -97,8 +97,6 @@ void BrainEditor::addConnector(quint32 sourceId, quint32 destId)
             eItem->setPos(eItem->x()-EditorItem::_raster,eItem->y());
         }
     }
-
-    //qDebug() << __PRETTY_FUNCTION__ << sourceId << destId;
 }
 
 void BrainEditor::deleteFuzzyItem(quint32 id)
@@ -113,7 +111,6 @@ void BrainEditor::deleteFuzzyItem(quint32 id)
             delete(eItem);
         }
     }
-
 }
 
 void BrainEditor::deleteConnector(quint32 sourceId, quint32 destId)
@@ -153,15 +150,6 @@ void BrainEditor::deleteSelectedItems()
             EditorItem *eItem=(EditorItem *) item;
             // first delete connections to this item
             eItem->removeConnectors();
-//            foreach(QGraphicsItem *item_, this->items()) {
-//                if(item_->type()==EditorItemConnector::Type) {
-//                    EditorItemConnector *conn=(EditorItemConnector*)item_;
-//                    if(conn->startItem()->getId()==eItem->getId() || conn->endItem()->getId()==eItem->getId()) {
-//                        removeItem(conn);
-//                        delete(conn);
-//                    }
-//                }
-//            }
             m_agentManager->deleteFuzz(eItem->getId());
             removeItem(eItem);
             delete(eItem);
@@ -174,31 +162,19 @@ void BrainEditor::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     BrainEditorItem *item = qgraphicsitem_cast<BrainEditorItem *>(itemAt( event->scenePos().x(), event->scenePos().y(),QTransform()) );
     ItemEditorWidgetsBase::editMessage msg;
     if( item ) {
-        if(item->getType() == BrainiacGlobals::OUTPUT) {
+        BrainiacGlobals::ItemType iType=item->getType();
+        if(     iType == BrainiacGlobals::OUTPUT ||
+                iType == BrainiacGlobals::INPUT ||
+                iType == BrainiacGlobals::NOISE ||
+                iType == BrainiacGlobals::DEFUZZ ||
+                iType == BrainiacGlobals::FUZZ
+          ) {
             msg.object=item->getObject();
-            msg.type=BrainiacGlobals::OUTPUT;
+            msg.type=item->getType();
             msg.id=item->getId();
             emit itemClicked(msg);
-        } else if(item->getType() == BrainiacGlobals::INPUT) {
-            msg.object=item->getObject();
-            msg.type=BrainiacGlobals::INPUT;
-            msg.id=item->getId();
-            emit itemClicked(msg);
-        } else if(item->getType() == BrainiacGlobals::NOISE) {
-            msg.object=item->getObject();
-            msg.type=BrainiacGlobals::NOISE;
-            msg.id=item->getId();
-            emit itemClicked(msg);
-        } else if(item->getType() == BrainiacGlobals::DEFUZZ) {
-            msg.object=item->getObject();
-            msg.type=BrainiacGlobals::DEFUZZ;
-            msg.id=item->getId();
-            emit itemClicked(msg);
-        } else if(item->getType() == BrainiacGlobals::FUZZ) {
-            msg.object=item->getObject();
-            msg.type=BrainiacGlobals::FUZZ;
-            msg.id=item->getId();
-            emit itemClicked(msg);
+        } else {
+            qWarning() << __PRETTY_FUNCTION__ << "Item type not yet implemented";
         }
         if(m_altPressed) {
             if(m_connectSourceItem==0) {
@@ -269,8 +245,8 @@ void BrainEditor::keyReleaseEvent(QKeyEvent *event)
 void BrainEditor::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
     QString dropAction=event->mimeData()->text();
-    qDebug() << "Droptext "<< dropAction;
-    if(dropAction.startsWith("AddLogicType")) {
+    qCDebug(bGui) << __PRETTY_FUNCTION__ << "Droptext "<< dropAction;
+    if(dropAction.startsWith(BrainiacGlobals::DropTextPrefix)) {
         BrainiacGlobals::ItemType type=(BrainiacGlobals::ItemType)dropAction.right(1).toInt();
         quint32 fuzzId=0;
         switch(type) {
@@ -299,7 +275,7 @@ void BrainEditor::dropEvent(QGraphicsSceneDragDropEvent *event)
             fuzzId=m_agentManager->addTimerFuzz(event->scenePos().x(),event->scenePos().y());
             break;
         default:
-            qDebug()<<__PRETTY_FUNCTION__ << "Not a valid label!";
+            qWarning()<< __PRETTY_FUNCTION__ << "Not a valid label!";
         }
     }
 }

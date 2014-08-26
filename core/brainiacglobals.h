@@ -162,6 +162,8 @@ public:
     static const QString ChannelName_Sound_a;
     static const QString ChannelName_Sound_f;
 
+    static const QString DropTextPrefix; /**< Prefix Text for DragDrop of EditorItems */
+
     static const char* const DefaultLatchName;
 
     static const QList<QString> ChannelNames_Latches;
