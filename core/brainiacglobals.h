@@ -185,7 +185,7 @@ public:
     static Qt::Key AnimationOneFrameForwardKey; /**< default key to go one frame further */
     static Qt::Key AnimationOneFrameBackwardKey; /**< default key to go one frame back */
     static Qt::Key AnimationPauseKey; /**< default key to pause */
-    static Qt::Key ToogleFollowAgentKey; /**< default key to toggle to follow an agent */
+    static Qt::Key ToggleFollowAgentKey; /**< default key to toggle to follow an agent */
     static Qt::Key ToggleSegmentCoordCrossesKey; /**< default key to toggle an segments pivot point */
     static Qt::Key ToggleAgentPositionMarkerKey; /**< default key to toggle an agents position and orientation marker */
     static Qt::Key ToggleAgentSoundEmissionKey; /**< default key to toggle an agents sound emission */

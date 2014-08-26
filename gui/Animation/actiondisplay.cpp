@@ -57,7 +57,7 @@ void ActionDisplay::keyPressed(Qt::Key key)
         emit animationOneFrameBackward();
     } else if(key==BrainiacGlobals::AnimationOneFrameBackwardKey) {
         emit animationOneFrameForward();
-    } else if(key==BrainiacGlobals::ToogleFollowAgentKey) {
+    } else if(key==BrainiacGlobals::ToggleFollowAgentKey) {
         m_followAgent=!m_followAgent;
         followUnfollowAgent();
     } else if(key==BrainiacGlobals::ToggleAgentPositionMarkerKey) {
