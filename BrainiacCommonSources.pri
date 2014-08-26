@@ -57,7 +57,7 @@ HEADERS  += gui/mainwindow.h \
     core/agent/body/animation/latchcurve.h \
     gui/braineditor/andeditor.h \
     gui/osgmultithreadedqtwidget.h \
-    gui/bodyeditor/bodydisplay_.h \
+    gui/bodyeditor/bodydisplay.h \
     core/agent/body/bodymanager.h \
     core/agent/body/segment.h \
     core/agent/body/segmentshape.h \
@@ -146,7 +146,7 @@ SOURCES += gui/mainwindow.cpp \
     core/agent/body/animation/latchcurve.cpp \
     gui/braineditor/andeditor.cpp \
     gui/osgmultithreadedqtwidget.cpp \
-    gui/bodyeditor/bodydisplay_.cpp \
+    gui/bodyeditor/bodydisplay.cpp \
     core/agent/body/bodymanager.cpp \
     core/agent/body/segment.cpp \
     core/agent/body/segmentshape.cpp \

@@ -15,20 +15,20 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef BODYDISPLAY__H
-#define BODYDISPLAY__H
+#ifndef BODYDISPLAY_H
+#define BODYDISPLAY_H
 
 #include "gui/osgmultithreadedqtwidget.h"
 
 class Scene;
 class AgentManager;
 
-class BodyDisplay_ : public OsgMultithreadedViewerWidget
+class BodyDisplay : public OsgMultithreadedViewerWidget
 {
     Q_OBJECT
 public:
-    BodyDisplay_();
-    virtual ~BodyDisplay_();
+    BodyDisplay();
+    virtual ~BodyDisplay();
     /**
      * @brief setAgentManager
      * sets the current agent manager
@@ -42,4 +42,4 @@ protected slots:
     void keyPressed(Qt::Key key);
 };
 
-#endif // BODYDISPLAY__H
+#endif // BODYDISPLAY_H

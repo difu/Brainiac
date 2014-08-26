@@ -46,7 +46,7 @@ class NoiseEditor;
 class BodyDisplay;
 class SegmentEditor;
 class ActionEditor;
-class BodyDisplay_;
+class BodyDisplay;
 class SceneDisplay;
 
 class AgentManager;
@@ -169,7 +169,7 @@ private:
     //BodyDisplay *m_bodyDisplay; //!< Window that shows the body of selected agent
     ActionEditor *m_actionEditor;  /**< Window of ActionEditor */
 
-    BodyDisplay_ *m_bodyDisplayOSG;
+    BodyDisplay *m_bodyDisplayOSG;
     SceneDisplay *m_sceneDisplayOSG; //!< Window that shows the body of selected agent
 
 public slots:
