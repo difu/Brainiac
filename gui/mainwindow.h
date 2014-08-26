@@ -47,7 +47,7 @@ class BodyDisplay;
 class SegmentEditor;
 class ActionEditor;
 class BodyDisplay_;
-class SceneDisplay_;
+class SceneDisplay;
 
 class AgentManager;
 class BrainEditor;
@@ -170,7 +170,7 @@ private:
     ActionEditor *m_actionEditor;  /**< Window of ActionEditor */
 
     BodyDisplay_ *m_bodyDisplayOSG;
-    SceneDisplay_ *m_sceneDisplayOSG; //!< Window that shows the body of selected agent
+    SceneDisplay *m_sceneDisplayOSG; //!< Window that shows the body of selected agent
 
 public slots:
     void statusBarMessageChange( const QString & message );

@@ -63,7 +63,7 @@ HEADERS  += gui/mainwindow.h \
     core/agent/body/segmentshape.h \
     core/agent/body/bodysegment.h \
     core/agent/body/bodysegmentsignalhandler.h \
-    gui/scenedisplay_.h \
+    gui/scenedisplay.h \
     gui/Animation/actiondisplay_.h \
     core/agent/body/animation/motiontreemanager.h \
     core/brainiacerror.h \
@@ -152,7 +152,7 @@ SOURCES += gui/mainwindow.cpp \
     core/agent/body/segmentshape.cpp \
     core/agent/body/bodysegment.cpp \
     core/agent/body/bodysegmentsignalhandler.cpp \
-    gui/scenedisplay_.cpp \
+    gui/scenedisplay.cpp \
     gui/Animation/actiondisplay_.cpp \
     core/agent/body/animation/motiontreemanager.cpp \
     core/brainiacerror.cpp \

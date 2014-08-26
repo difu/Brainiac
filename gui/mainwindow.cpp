@@ -34,7 +34,7 @@
 #include "gui/Animation/actioneditor.h"
 #include "gui/Animation/motiontreeeditorgui.h"
 #include "gui/bodyeditor/bodydisplay_.h"
-#include "gui/scenedisplay_.h"
+#include "gui/scenedisplay.h"
 #include "editorlabel.h"
 #include "core/agent/agentmanager.h"
 #include "core/agent/body/bodymanager.h"
@@ -82,7 +82,7 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
 
 
     m_bodyDisplayOSG=new BodyDisplay_();
-    m_sceneDisplayOSG=new SceneDisplay_(this->m_scene);
+    m_sceneDisplayOSG=new SceneDisplay(this->m_scene);
     setEditMode(m_editMode);
 
     connect(m_sceneEditor,SIGNAL(selectionChanged()),this,SLOT(sceneEditorItemClicked()));
