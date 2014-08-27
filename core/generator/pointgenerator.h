@@ -34,7 +34,6 @@ public:
     void saveConfig(QXmlStreamWriter *xml);
 
 protected:
-    void addLocation(qreal x, qreal y, qreal z, qreal w, Group *group);
 };
 
 #endif // POINTGENERATOR_H

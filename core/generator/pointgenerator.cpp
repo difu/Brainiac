@@ -29,12 +29,6 @@ PointGenerator::PointGenerator(Scene *scene):Generator(Generator::POINT, scene)
 {
 }
 
-void PointGenerator::addLocation(qreal x, qreal y, qreal z, qreal w, Group *group)
-{
-    Locator* loc=new Locator(group, x, y, z, w);
-    m_locations.append(loc);
-}
-
 void PointGenerator::generateLocators()
 {
     static qreal min_rad=1.0f;
@@ -62,7 +56,7 @@ void PointGenerator::generateLocators()
         qreal z=sin(angle)*min_rad;
         qreal y=0;
         qreal yOrient=m_angle+m_angleNoise*BrainiacGlobals::getRand(i+m_id*3)-m_angleNoise/2.0f;
-        Locator *newLoc=new Locator(m_scene->getGroup(groupId),x+m_centerPos.x(),y,z+m_centerPos.z(),yOrient);
+        Locator *newLoc=new Locator(m_scene->getGroup(groupId),this,x,y,z,yOrient);
         //quint32 i=1;
         quint32 j=1; // Correction step
         bool allOk=false;
@@ -70,18 +64,18 @@ void PointGenerator::generateLocators()
             allOk=true;
 
             foreach(Locator *loc,m_locations) {
-                QVector3D vec=loc->getLocation().toVector3D()-newLoc->getLocation().toVector3D();
+                QVector3D vec=loc->getLocationRelativeToCenter().toVector3D()-newLoc->getLocationRelativeToCenter().toVector3D();
                 qreal dist=vec.length();
 
                 while(dist<m_distance) {
                     allOk=false;
                     x=cos(angle+j)*min_rad;
                     z=sin(angle+j)*min_rad;
-                    qreal x1=x*1.1f*j+m_centerPos.x();
-                    qreal z1=z*1.1f*j+m_centerPos.z();
-                    newLoc->getLocation().setX(x1);
-                    newLoc->getLocation().setZ(z1);
-                    vec=loc->getLocation().toVector3D()-newLoc->getLocation().toVector3D();
+                    qreal x1=x*1.1f*j;
+                    qreal z1=z*1.1f*j;
+                    newLoc->getLocationRelativeToCenter().setX(x1);
+                    newLoc->getLocationRelativeToCenter().setZ(z1);
+                    vec=loc->getLocationRelativeToCenter().toVector3D()-newLoc->getLocationRelativeToCenter().toVector3D();
                     dist=vec.length();
                     j++;
                     //qDebug() << "Correction" << m_id << i << angle << newLoc->getLocation();

@@ -22,6 +22,7 @@
 #include <QList>
 #include <QXmlStreamAttributes>
 #include <QHash>
+#include <QVector3D>
 #include "locator.h"
 
 class Scene;
@@ -44,6 +45,7 @@ public:
 
     Generator( GeneratorType genType, Scene *scene);
 
+    QVector4D getCenter() const;
 
     /**
      * @brief returns a list of all Locators

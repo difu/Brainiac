@@ -29,6 +29,11 @@ Generator::Generator(GeneratorType genType,Scene *scene):m_genType(genType),m_sc
     m_number=0;
 }
 
+QVector4D Generator::getCenter() const
+{
+    return m_centerPos;
+}
+
 const QList<Locator *> *Generator::getLocations() const
 {
     return &m_locations;

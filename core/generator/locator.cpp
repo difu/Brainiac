@@ -17,18 +17,33 @@
 
 
 #include "locator.h"
+#include "core/generator/generator.h"
 
-Locator::Locator(Group *group, qreal x, qreal y, qreal z, qreal w)
+Locator::Locator(Group *group, Generator *generator, qreal x, qreal y, qreal z, qreal w):
+    m_position(QVector4D(x,y,z,w)),
+    m_generator(generator),
+    m_group(group),
+    m_agent(0)
 {
-    m_position.setW(w);
-    m_position.setX(x);
-    m_position.setY(y);
-    m_position.setZ(z);
-    m_group=group;
-    m_agent=0;
 }
 
-QVector4D& Locator::getLocation()
+bool Locator::hasInstance() const
+{
+    if(m_agent) {
+        return true;
+    }
+    return false;
+}
+
+QVector4D Locator::getLocation() const
+{
+    return QVector4D(m_position.x()+m_generator->getCenter().x(),
+                     m_position.y()+m_generator->getCenter().y(),
+                     m_position.z()+m_generator->getCenter().z(),
+                     m_position.w());
+}
+
+QVector4D& Locator::getLocationRelativeToCenter()
 {
     return m_position;
 }

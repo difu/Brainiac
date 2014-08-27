@@ -24,6 +24,7 @@
 
 class Group;
 class Agent;
+class Generator;
 
 /**
  * @brief Describes an agent position in the Scene
@@ -42,7 +43,7 @@ public:
  * @param z z ordinate
  * @param w rotation angle around y axis
  */
-    Locator(Group *group, qreal x=0.0, qreal y=0.0, qreal z=0.0, qreal w=0.0);
+    Locator(Group *group, Generator *generator, qreal x=0.0, qreal y=0.0, qreal z=0.0, qreal w=0.0);
 
     Group* getGroup() {return m_group;}
 
@@ -57,7 +58,17 @@ public:
      *
      * @return QVector4D position and y rotation
      */
-    QVector4D& getLocation();
+    QVector4D getLocation() const;
+
+    QVector4D& getLocationRelativeToCenter();
+
+    /**
+     * @brief checks, if this Locator has an instanced agent
+     *
+     * @fn hasInstance
+     * @return bool true, if this locator has an instanced agent, false otherwise
+     */
+    bool hasInstance() const;
 
     /**
      * @brief sets the agent to this locator
@@ -72,8 +83,9 @@ public:
      */
 
     virtual ~Locator();
-protected:
+private:
     QVector4D m_position; /**< Position and rotation of agent */
+    Generator *m_generator; /**< The generator of this locator */
     Group *m_group; /**< Group of this locator */
     Agent *m_agent; /**< Agent of this locator */
 };

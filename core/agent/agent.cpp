@@ -77,6 +77,7 @@ Agent::~Agent() {
         chan->deleteLater();
     }
     m_outputs.clear();
+    m_locator->setAgent(0);
 }
 
 bool Agent::addInputChannel(Channel *channel, const QString &name)
