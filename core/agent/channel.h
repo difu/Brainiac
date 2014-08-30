@@ -50,7 +50,7 @@ public:
     /** \brief Constructor
             Init the channel with a max, min and a default value, that is also set as current and old value
     **/
-    Channel(qreal min=BrainiacGlobals::MINQREAL, qreal max=BrainiacGlobals::MAXQREAL, qreal value=0);
+    Channel(Agent *agent, qreal min=BrainiacGlobals::MINQREAL, qreal max=BrainiacGlobals::MAXQREAL, qreal value=0);
 
     /** \brief set channels old value to actual value
     **/

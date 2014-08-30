@@ -21,7 +21,8 @@
 #include "core/brainiaclogger.h"
 
 
-Channel::Channel(qreal min, qreal max, qreal value)
+Channel::Channel(Agent *agent, qreal min, qreal max, qreal value):
+    QObject( qobject_cast<QObject *> (agent))
 {
     m_max=max;
     m_min=min;
@@ -139,7 +140,7 @@ void Channel::setInputValue(Agent *agent, const QString &channelName, qreal valu
         break;
     case Channel::CREATE_IF_NOT_EXISTS:
         qCWarning(bChannel) << __PRETTY_FUNCTION__ << "Create new input channel!";
-        Channel *newInput=new Channel();
+        Channel *newInput=new Channel(agent);
         newInput->setValue(value);
         bool success=agent->addInputChannel(newInput,channelName);
         if(!success) {
@@ -165,7 +166,7 @@ void Channel::setOutputValue(Agent *agent, const QString &channelName, qreal val
         break;
     case Channel::CREATE_IF_NOT_EXISTS:
         qCDebug(bChannel) << __PRETTY_FUNCTION__ << "Create new output channel!";
-        Channel *newOutput=new Channel();
+        Channel *newOutput=new Channel(agent);
         newOutput->setValue(value);
         bool success=agent->addOutputChannel(newOutput,channelName);
         if(!success) {

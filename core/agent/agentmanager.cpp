@@ -425,7 +425,7 @@ void AgentManager::addConnector(quint32 childId, quint32 parentId, bool inverted
 void AgentManager::addInputChannel(const QString &name, qreal min, qreal max)
 {
     foreach(Agent* agent,m_agents) {
-        Channel *c=new Channel(min,max);
+        Channel *c=new Channel(agent,min,max);
         agent->addInputChannel(c,name);
     }
 }
@@ -433,7 +433,7 @@ void AgentManager::addInputChannel(const QString &name, qreal min, qreal max)
 void AgentManager::addOutputChannel(const QString &name, qreal min, qreal max)
 {
     foreach(Agent* agent,m_agents) {
-        Channel *c=new Channel(min,max);
+        Channel *c=new Channel(agent,min,max);
         agent->addOutputChannel(c,name);
     }
 }

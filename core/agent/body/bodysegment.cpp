@@ -103,31 +103,31 @@ void BodySegment::createChannels()
 {
     QString segName(getName().c_str());
     //qDebug() << __PRETTY_FUNCTION__ << "creating channels for Segment" << segName;
-    m_oRx=new Channel();
+    m_oRx=new Channel(m_body->getAgent());
     QObject::connect(m_oRx,SIGNAL(oldValueChanged(qreal)),m_signalHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
     m_body->getAgent()->addOutputChannel(m_oRx,segName % ":rx");
 
-    m_oRy=new Channel();
+    m_oRy=new Channel(m_body->getAgent());
     QObject::connect(m_oRy,SIGNAL(oldValueChanged(qreal)),m_signalHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
     m_body->getAgent()->addOutputChannel(m_oRy,segName % ":ry");
 
-    m_oRz=new Channel();
+    m_oRz=new Channel(m_body->getAgent());
     QObject::connect(m_oRz,SIGNAL(oldValueChanged(qreal)),m_signalHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
     m_body->getAgent()->addOutputChannel(m_oRz,segName % ":rz");
 
-    m_oTx=new Channel();
+    m_oTx=new Channel(m_body->getAgent());
     QObject::connect(m_oTx,SIGNAL(oldValueChanged(qreal)),m_signalHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
     m_body->getAgent()->addOutputChannel(m_oTx,segName % ":tx");
 
-    m_oTy=new Channel();
+    m_oTy=new Channel(m_body->getAgent());
     QObject::connect(m_oTy,SIGNAL(oldValueChanged(qreal)),m_signalHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
     m_body->getAgent()->addOutputChannel(m_oTy,segName % ":ty");
 
-    m_oTz=new Channel();
+    m_oTz=new Channel(m_body->getAgent());
     QObject::connect(m_oTz,SIGNAL(oldValueChanged(qreal)),m_signalHandler,SLOT(restMatrixChanged()),Qt::DirectConnection);
     m_body->getAgent()->addOutputChannel(m_oTz,segName % ":tz");
 
-    m_oColor=new Channel();
+    m_oColor=new Channel(m_body->getAgent());
     m_oColor->setDefault(1);
     QObject::connect(m_oColor,SIGNAL(oldValueChanged(qreal)),m_signalHandler,SLOT(colorChanged()),Qt::DirectConnection);
     m_body->getAgent()->addOutputChannel(m_oColor,segName % ":color");

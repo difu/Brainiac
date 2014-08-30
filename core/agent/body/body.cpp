@@ -43,7 +43,7 @@ Body::Body(Agent *agent)
         m_treeAnimationPlayers.append(player);
     }
     foreach(QString triggerName, m_agent->getAgentManager()->getMotionTreeManager()->getTriggers()) {
-        Channel *tc=new Channel(0.0,BrainiacGlobals::ActionForceTriggerValue);
+        Channel *tc=new Channel(m_agent,0.0,BrainiacGlobals::ActionForceTriggerValue);
         m_agent->addOutputChannel(tc,triggerName);
     }
     m_bodyRoot=new osg::PositionAttitudeTransform;
@@ -142,14 +142,14 @@ void Body::setAnimations(QHash<QString, Animation *> *animations)
        m_treeAnimationPlayers.at(i)->setAnimations(animations);
     }
     foreach(Animation *anim, *m_animationPlayer->getAnimations()) {
-        Channel *oChan=new Channel(0.0,2.0);
+        Channel *oChan=new Channel(m_agent,0.0,2.0);
         m_agent->addOutputChannel(oChan,anim->name());
 
-        Channel *iChan=new Channel(0.0,1.0);
+        Channel *iChan=new Channel(m_agent,0.0,1.0);
         m_agent->addInputChannel(iChan,anim->name()%BrainiacGlobals::ChannelRunningSuffix);
 
         QString phaseOffsetChannelName=anim->name()%BrainiacGlobals::ChannelPhaseOffsetSuffix;
-        Channel *phaseOffset=new Channel(0.0,1.0);
+        Channel *phaseOffset=new Channel(m_agent,0.0,1.0);
         m_agent->addOutputChannel(phaseOffset,phaseOffsetChannelName);
     }
 }

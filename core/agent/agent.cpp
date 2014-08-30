@@ -253,50 +253,50 @@ void Agent::createBVHChannelList()
 
 void Agent::createChannels()
 {
-    m_rx=new Channel();
+    m_rx=new Channel(this);
     addInputChannel(m_rx,"rx");
     addOutputChannel(m_rx,"rx");
 
-    m_ry=new Channel();
+    m_ry=new Channel(this);
     addInputChannel(m_ry,"ry");
     addOutputChannel(m_ry,"ry");
 
-    m_rz=new Channel();
+    m_rz=new Channel(this);
     addInputChannel(m_rz,"rz");
     addOutputChannel(m_rz,"rz");
 
-    m_tx=new Channel();
+    m_tx=new Channel(this);
     addInputChannel(m_tx,"tx");
     addOutputChannel(m_tx,"tx");
 
-    m_ty=new Channel();
+    m_ty=new Channel(this);
     addInputChannel(m_ty,"ty");
     addOutputChannel(m_ty,"ty");
 
-    m_tz=new Channel();
+    m_tz=new Channel(this);
     addInputChannel(m_tz,"tz");
     addOutputChannel(m_tz,"tz");
 
-    m_color=new Channel(0.0,1.0,0.0);
+    m_color=new Channel(this,0.0,1.0,0.0);
     addInputChannel(m_color,"color");
     addOutputChannel(m_color,"color");
 
-    m_oSoundA=new Channel(0.0);
+    m_oSoundA=new Channel(this,0.0);
     addOutputChannel(m_oSoundA,BrainiacGlobals::ChannelName_Sound_a);
 
-    m_oSoundF=new Channel(0.0,10.0,0.0);
+    m_oSoundF=new Channel(this,0.0,10.0,0.0);
     addOutputChannel(m_oSoundF,BrainiacGlobals::ChannelName_Sound_f);
 
-    m_iSoundX=new Channel(-180.0,180.0,0.0);
+    m_iSoundX=new Channel(this,-180.0,180.0,0.0);
     addInputChannel(m_iSoundX,BrainiacGlobals::ChannelName_Sound_x);
 
-    m_iSoundOX=new Channel(-180.0,180.0,0.0);
+    m_iSoundOX=new Channel(this,-180.0,180.0,0.0);
     addInputChannel(m_iSoundOX,BrainiacGlobals::ChannelName_Sound_ox);
 
-    m_iSoundF=new Channel(0.0,10.0,0.0);
+    m_iSoundF=new Channel(this,0.0,10.0,0.0);
     addInputChannel(m_iSoundF,BrainiacGlobals::ChannelName_Sound_f);
 
-    m_iSoundD=new Channel(0.0,1.0,0.0);
+    m_iSoundD=new Channel(this,0.0,1.0,0.0);
     addInputChannel(m_iSoundD,BrainiacGlobals::ChannelName_Sound_d);
 
 }
@@ -314,7 +314,7 @@ void Agent::deleteChannel(Channel *channel)
     name = m_outputs.key(channel);
     if(m_outputs.contains(name))
         m_outputs.remove(name);
-    delete channel;
+    channel->deleteLater();
 }
 
 void Agent::deleteFuzz(quint32 fuzzId)
