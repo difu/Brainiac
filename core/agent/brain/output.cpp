@@ -66,6 +66,11 @@ void Output::calculate()
     }
 }
 
+void Output::channelDelete()
+{
+    m_channel=0;
+}
+
 /** \brief returns the channel name
 
                 Outputs may (and mostly they are) connected to an output channel. This function provides access
@@ -88,8 +93,10 @@ void Output::setChannelName(QString channel)
     m_channel=m_brain->getAgent()->getOutputChannel(m_channelName);
 //    m_maxValue=m_channel->getMax();
 //    m_minValue=m_channel->getMin();
-    if(m_channel)
+    if(m_channel) {
+        connect(m_channel,SIGNAL(destroyed()),SLOT(channelDelete()),Qt::DirectConnection);
         setResult(m_channel->getValue());
+    }
 }
 
 void Output::setDefuzzMode(DefuzzMode mode)

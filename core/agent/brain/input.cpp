@@ -53,7 +53,13 @@ void Input::setChannelName(QString channel)
     }
     m_channelName=channel;
     m_channel=m_brain->getAgent()->getInputChannel(m_channelName);
-    if(m_channel)
+    if(m_channel) {
+        connect(m_channel,SIGNAL(destroyed()),SLOT(channelDelete()),Qt::DirectConnection);
         setResult(m_channel->getOldValue());
+    }
 }
 
+void Input::channelDelete()
+{
+    m_channel=0;
+}

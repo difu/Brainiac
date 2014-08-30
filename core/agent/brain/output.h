@@ -31,6 +31,7 @@ class Channel;
 **/
 class Output : public FuzzyBase
 {
+    Q_OBJECT
 public:
     enum DefuzzMode {AVERAGE, MAX};
     Output(quint32 id, Brain *brain, QString name, QString channel, qreal min, qreal max);
@@ -40,6 +41,9 @@ public:
     void setChannelName(QString channel);
     void setDefuzzMode( DefuzzMode mode);
     bool setResult(qreal result,bool emitChange=true);
+
+protected slots:
+    void channelDelete();
 
 protected:
     QString m_channelName;

@@ -32,6 +32,7 @@ class Channel;
 
 class Input : public FuzzyBase
 {
+    Q_OBJECT
 public:
     Input(quint32 id, Brain *brain, QString name, QString channel, qreal min, qreal max);
     /** \brief  @return the channel name
@@ -54,6 +55,9 @@ public:
       @param channel the name of the channel assigned to this Input
     **/
     void setChannelName(QString channel);
+
+protected slots:
+    void channelDelete();
 
 protected:
     QString m_channelName; //!< name of this input node
