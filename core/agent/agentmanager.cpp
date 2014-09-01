@@ -440,7 +440,6 @@ void AgentManager::addOutputChannel(const QString &name, qreal min, qreal max)
 Agent* AgentManager::cloneAgent(quint32 id)
 {
     Agent *agent=new Agent(m_masterAgent,id);
-    m_bodyManager->applyBodyOnAgent(agent);
     return agent;
 }
 
