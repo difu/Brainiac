@@ -206,11 +206,30 @@ public:
         @returns 0 if channel does not exist
     **/
     Channel *getInputChannel(const QString &name, Channel::ChannelNotExistOptions options=Channel::NONE) const;
+
+    /**
+     * @brief returns the name of the input channel
+     *
+     * @fn getInputChannelName
+     * @param channel pointer of the channel
+     * @return QString name of the channel, empty String if channel was not found
+     */
+    QString getInputChannelName(const Channel *channel) const;
+
     /** \brief returns output channel
         @param name the name of the output channel
         @returns 0 if channel does not exist
     **/
     Channel *getOutputChannel(const QString &name, Channel::ChannelNotExistOptions options=Channel::NONE) const;
+
+    /**
+     * @brief returns the name of the output channel
+     *
+     * @fn getOutputChannelName
+     * @param channel pointer of the channel
+     * @return QString name of the channel, empty String if channel was not found
+     */
+    QString getOutputChannelName(const Channel *channel) const;
 
     /**
      * @brief returns the id of this agent

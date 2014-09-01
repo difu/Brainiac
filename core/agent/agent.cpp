@@ -396,6 +396,18 @@ Channel* Agent::getInputChannel(const QString &name, Channel::ChannelNotExistOpt
     return 0;
 }
 
+QString Agent::getInputChannelName(const Channel *channel) const
+{
+    QHashIterator<QString, Channel *> i(m_inputs);
+    while (i.hasNext()) {
+        i.next();
+        if(i.value()==channel) {
+            return i.key();
+        }
+    }
+    return QString();
+}
+
 Channel* Agent::getOutputChannel(const QString &name, Channel::ChannelNotExistOptions options) const
 {
     if(this->outputChannelExists(name))
@@ -412,6 +424,18 @@ Channel* Agent::getOutputChannel(const QString &name, Channel::ChannelNotExistOp
         }
     }
     return 0;
+}
+
+QString Agent::getOutputChannelName(const Channel *channel) const
+{
+    QHashIterator<QString, Channel *> i(m_outputs);
+    while (i.hasNext()) {
+        i.next();
+        if(i.value()==channel) {
+            return i.key();
+        }
+    }
+    return QString();
 }
 
 qreal Agent::getOtherAgentRelativeAngle(const Agent *otherAgent) const
@@ -641,4 +665,5 @@ void Agent::dDumpChannels()
         io.next();
         std::cout <<io.key().toStdString() << " Value " << io.value()->getValue() << std::endl;
     }
+    std::cout << std::flush;
 }

@@ -21,7 +21,8 @@
 #include "core/agent/agent.h"
 #include "core/agent/channel.h"
 
-Input::Input( quint32 id, Brain *brain, QString name, QString channel, qreal min, qreal max) : FuzzyBase(FuzzyBase::INPUT, brain, id, name, min, max)
+Input::Input(quint32 id, Brain *brain, const QString &name, const QString &channel, qreal min, qreal max) :
+    FuzzyChannel(FuzzyBase::INPUT, id, brain, name, channel,  min, max)
 {
     setChannelName(channel);
 }
@@ -35,12 +36,7 @@ void Input::calculate()
     }
 }
 
-QString Input::getChannelName()
-{
-    return m_channelName;
-}
-
-void Input::setChannelName(QString channel)
+void Input::setChannelName(const QString& channel)
 {
     if(     QString::compare(channel,BrainiacGlobals::ChannelName_Sound_a,Qt::CaseInsensitive)==0 ||
             QString::compare(channel,BrainiacGlobals::ChannelName_Sound_d,Qt::CaseInsensitive)==0 ||
@@ -51,15 +47,6 @@ void Input::setChannelName(QString channel)
     } else {
         m_isSoundInput=false;
     }
-    m_channelName=channel;
-    m_channel=m_brain->getAgent()->getInputChannel(m_channelName);
-    if(m_channel) {
-        connect(m_channel,SIGNAL(destroyed()),SLOT(channelDelete()),Qt::DirectConnection);
-        setResult(m_channel->getOldValue());
-    }
+    FuzzyChannel::setChannelName(channel);
 }
 
-void Input::channelDelete()
-{
-    m_channel=0;
-}

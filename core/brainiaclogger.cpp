@@ -19,6 +19,7 @@
 
 Q_LOGGING_CATEGORY(bGui, "brainiac.gui")
 Q_LOGGING_CATEGORY(bGuiAnimation, "brainiac.gui.animation")
+Q_LOGGING_CATEGORY(bAgentManager, "brainiac.agent.manager")
 Q_LOGGING_CATEGORY(bAgent, "brainiac.agent")
 Q_LOGGING_CATEGORY(bChannel, "brainiac.agent.channel")
 Q_LOGGING_CATEGORY(bAnimation, "brainiac.agent.body.animation")

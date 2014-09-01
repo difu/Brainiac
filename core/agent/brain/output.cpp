@@ -22,10 +22,11 @@
 #include "core/agent/agent.h"
 #include "core/agent/channel.h"
 
-Output::Output( quint32 id, Brain *brain, QString name, QString channel, qreal min, qreal max) : FuzzyBase(FuzzyBase::OUTPUT, brain, id, name, min, max)
+Output::Output(quint32 id, Brain *brain, const QString &name, const QString &channel, qreal min, qreal max) :
+    FuzzyChannel(FuzzyBase::OUTPUT, id, brain, name, channel,  min, max),
+    m_defuzzMode(AVERAGE)
 {
     setChannelName(channel);
-    m_defuzzMode=AVERAGE;
 }
 
 void Output::calculate()
@@ -66,38 +67,38 @@ void Output::calculate()
     }
 }
 
-void Output::channelDelete()
-{
-    m_channel=0;
-}
+//void Output::channelDelete()
+//{
+//    m_channel=0;
+//}
 
-/** \brief returns the channel name
+///** \brief returns the channel name
 
-                Outputs may (and mostly they are) connected to an output channel. This function provides access
+//                Outputs may (and mostly they are) connected to an output channel. This function provides access
 
-        \return the name of the channel associated with this output
-**/
-QString Output::getChannelName()
-{
-    return m_channelName;
-}
+//        \return the name of the channel associated with this output
+//**/
+//QString Output::getChannelName()
+//{
+//    return m_channelName;
+//}
 
 Output::DefuzzMode Output::getDefuzzMode()
 {
     return m_defuzzMode;
 }
 
-void Output::setChannelName(QString channel)
-{
-    m_channelName=channel;
-    m_channel=m_brain->getAgent()->getOutputChannel(m_channelName);
-//    m_maxValue=m_channel->getMax();
-//    m_minValue=m_channel->getMin();
-    if(m_channel) {
-        connect(m_channel,SIGNAL(destroyed()),SLOT(channelDelete()),Qt::DirectConnection);
-        setResult(m_channel->getValue());
-    }
-}
+//void Output::setChannelName(QString channel)
+//{
+//    m_channelName=channel;
+//    m_channel=m_brain->getAgent()->getOutputChannel(m_channelName);
+////    m_maxValue=m_channel->getMax();
+////    m_minValue=m_channel->getMin();
+//    if(m_channel) {
+//        connect(m_channel,SIGNAL(destroyed()),SLOT(channelDelete()),Qt::DirectConnection);
+//        setResult(m_channel->getValue());
+//    }
+//}
 
 void Output::setDefuzzMode(DefuzzMode mode)
 {

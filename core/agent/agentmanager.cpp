@@ -351,7 +351,6 @@ quint32 AgentManager::addInputFuzz(QString name, QString channel, qreal min, qre
 
 void AgentManager::addInputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY)
 {
-    //m_masterAgent->addInputFuzz(id, name, channel, min, max);
     foreach(Agent* agent,m_agents) {
         agent->addInputFuzz(id, name, channel, min, max);
     }
@@ -554,6 +553,7 @@ bool AgentManager::loadConfig()
                             } else if(reader.name()==BrainiacGlobals::XmlMotionTreesTag) {
                                 m_motionTreeManager->loadConfig(&reader);
                             } else if(reader.name()=="Brain") {
+                                qCDebug(bAgentManager) << __PRETTY_FUNCTION__ << "Parsing brain";
                                 while(reader.readNextStartElement()) {
                                     if(reader.name()=="Output") {
                                         QXmlStreamAttributes attribs = reader.attributes();
@@ -596,6 +596,7 @@ bool AgentManager::loadConfig()
                                     }
                                 }
                             } else if(reader.name()=="Animations") {
+                                qCDebug(bAgentManager) << __PRETTY_FUNCTION__ << "Parsing animation";
                                 while(reader.readNextStartElement()) {
                                     if(reader.name()=="Animation") {
                                         QXmlStreamAttributes attribs = reader.attributes();
@@ -613,6 +614,7 @@ bool AgentManager::loadConfig()
                                         reader.skipCurrentElement();
                                     }
                                 }
+                                m_masterAgent->getBody()->setAnimations(&m_animations); /**< @todo TODO ugly code*/
                             }else {
                                 reader.skipCurrentElement();
                             }

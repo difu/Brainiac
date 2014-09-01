@@ -23,6 +23,7 @@
 #include "core/agent/brain/noise.h"
 #include "core/agent/brain/fuzzydefuzz.h"
 #include "core/agent/brain/fuzzyfuzz.h"
+#include "core/brainiaclogger.h"
 
 Brain::Brain(Agent *agent, Brain *brain) :
     QObject(),m_agent(agent)

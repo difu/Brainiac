@@ -19,7 +19,7 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-#include "core/agent/brain/fuzzybase.h"
+#include "core/agent/brain/fuzzychannel.h"
 
 class Channel;
 
@@ -30,14 +30,11 @@ class Channel;
 
 **/
 
-class Input : public FuzzyBase
+class Input : public FuzzyChannel
 {
     Q_OBJECT
 public:
-    Input(quint32 id, Brain *brain, QString name, QString channel, qreal min, qreal max);
-    /** \brief  @return the channel name
-    **/
-    QString getChannelName();
+    Input(quint32 id, Brain *brain, const QString& name, const QString& channel, qreal min, qreal max);
 
     void calculate();
 
@@ -46,22 +43,17 @@ public:
     **/
     bool isSoundInput() const { return m_isSoundInput; }
 
+    /** \brief  set the channel of this fuzzy
+      @param channel the name of the channel assigned to this Input
+    **/
+    virtual void setChannelName(const QString &channel);
+
     /** \brief  set the this input as a sound input
       @param isSound true, if this input is a sound Input
     **/
     void setIsSoundInput(bool isSound) { m_isSoundInput=isSound; }
 
-    /** \brief  set the channel of this input
-      @param channel the name of the channel assigned to this Input
-    **/
-    void setChannelName(QString channel);
-
-protected slots:
-    void channelDelete();
-
-protected:
-    QString m_channelName; //!< name of this input node
-    Channel *m_channel; //!< a pointer to the channel, null if no channel is assigned
+private:
     bool m_isSoundInput; //!< true, if a sound channel is assigned
 };
 

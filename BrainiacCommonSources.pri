@@ -83,7 +83,8 @@ HEADERS  += gui/mainwindow.h \
     core/simulationsettings.h \
     core/agent/body/animation/bvhmanager.h \
     core/agent/body/segmentsphere.h \
-    gui/brainiaccameramanipulator.h
+    gui/brainiaccameramanipulator.h \
+    core/agent/brain/fuzzychannel.h
 
 
 
@@ -172,5 +173,6 @@ SOURCES += gui/mainwindow.cpp \
     core/simulationsettings.cpp \
     core/agent/body/animation/bvhmanager.cpp \
     core/agent/body/segmentsphere.cpp \
-    gui/brainiaccameramanipulator.cpp
+    gui/brainiaccameramanipulator.cpp \
+    core/agent/brain/fuzzychannel.cpp
 

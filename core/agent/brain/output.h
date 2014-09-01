@@ -19,7 +19,7 @@
 #ifndef OUTPUT_H
 #define OUTPUT_H
 
-#include "core/agent/brain/fuzzybase.h"
+#include "core/agent/brain/fuzzychannel.h"
 
 class Channel;
 
@@ -29,25 +29,23 @@ class Channel;
         if this node is associated with an output channel, it writes the calculated results out
 
 **/
-class Output : public FuzzyBase
+class Output : public FuzzyChannel
 {
     Q_OBJECT
 public:
     enum DefuzzMode {AVERAGE, MAX};
-    Output(quint32 id, Brain *brain, QString name, QString channel, qreal min, qreal max);
-    QString getChannelName();
+    Output(quint32 id, Brain *brain, const QString &name, const QString &channel, qreal min, qreal max);
+//    QString getChannelName();
     void calculate();
     Output::DefuzzMode getDefuzzMode();
-    void setChannelName(QString channel);
+//    void setChannelName(QString channel);
     void setDefuzzMode( DefuzzMode mode);
     bool setResult(qreal result,bool emitChange=true);
 
-protected slots:
-    void channelDelete();
+//protected slots:
+//    void channelDelete();
 
-protected:
-    QString m_channelName;
-    Channel *m_channel;
+private:
     DefuzzMode m_defuzzMode;
 };
 
