@@ -165,13 +165,14 @@ void Channel::setOutputValue(Agent *agent, const QString &channelName, qreal val
         qCWarning(bChannel) << __PRETTY_FUNCTION__ << "Output Channel "<< channelName << " does not exist!";
         break;
     case Channel::CREATE_IF_NOT_EXISTS:
-        qCDebug(bChannel) << __PRETTY_FUNCTION__ << "Create new output channel!";
-        Channel *newOutput=new Channel(agent);
-        newOutput->setValue(value);
-        bool success=agent->addOutputChannel(newOutput,channelName);
-        if(!success) {
-            qCWarning(bChannel) << __PRETTY_FUNCTION__ << "Output Channel creation failed!";
-            delete newOutput;
-        }
+        qCritical() << __PRETTY_FUNCTION__ << "TODO";
+//        qCDebug(bChannel) << __PRETTY_FUNCTION__ << "Create new output channel!";
+//        Channel *newOutput=new Channel(agent);
+//        newOutput->setValue(value);
+//        bool success=agent->getOrCreateOutputChannel(newOutput,channelName);
+//        if(!success) {
+//            qCWarning(bChannel) << __PRETTY_FUNCTION__ << "Output Channel creation failed!";
+//            delete newOutput;
+//        }
     }
 }

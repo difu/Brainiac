@@ -432,8 +432,9 @@ void AgentManager::addInputChannel(const QString &name, qreal min, qreal max)
 void AgentManager::addOutputChannel(const QString &name, qreal min, qreal max)
 {
     foreach(Agent* agent,m_agents) {
-        Channel *c=new Channel(agent,min,max);
-        agent->addOutputChannel(c,name);
+        Channel *c=agent->getOrCreateOutputChannel(name);
+        c->setMinValue(min);
+        c->setMaxValue(max);
     }
 }
 

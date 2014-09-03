@@ -42,9 +42,11 @@ Body::Body(Agent *agent)
         MotionTreeAnimationPlayer *player=new MotionTreeAnimationPlayer(this,m_agent->getAgentManager()->getMotionTreeManager()->getMotionTrees().value(i));
         m_treeAnimationPlayers.append(player);
     }
+    qCDebug(bAnimation) << __PRETTY_FUNCTION__ << "Create trigger outputs";
     foreach(QString triggerName, m_agent->getAgentManager()->getMotionTreeManager()->getTriggers()) {
-        Channel *tc=new Channel(m_agent,0.0,BrainiacGlobals::ActionForceTriggerValue);
-        m_agent->addOutputChannel(tc,triggerName);
+        Channel *tc=m_agent->getOrCreateOutputChannel(triggerName);
+        tc->setMinValue(0.0);
+        tc->setMaxValue(BrainiacGlobals::ActionForceTriggerValue);
     }
     m_bodyRoot=new osg::PositionAttitudeTransform;
     m_bodyRoot.get()->setName("AgentBody Root Segment");
@@ -141,16 +143,19 @@ void Body::setAnimations(QHash<QString, Animation *> *animations)
     for(quint32 i=0; i<MotionTreeManager::NUM_OF_TREE_TRACKS;i++) {
        m_treeAnimationPlayers.at(i)->setAnimations(animations);
     }
+    qCDebug(bAnimation) << __PRETTY_FUNCTION__ << "Creating "  << BrainiacGlobals::ChannelPhaseOffsetSuffix << "(out) " << BrainiacGlobals::ChannelRunningSuffix << "(in) and <ANIMATIONNAME> (out) channels";
     foreach(Animation *anim, *m_animationPlayer->getAnimations()) {
-        Channel *oChan=new Channel(m_agent,0.0,2.0);
-        m_agent->addOutputChannel(oChan,anim->name());
+        Channel *oChan=m_agent->getOrCreateOutputChannel(anim->name());
+        oChan->setMinValue(0.0);
+        oChan->setMaxValue(2.0);
 
         Channel *iChan=new Channel(m_agent,0.0,1.0);
         m_agent->addInputChannel(iChan,anim->name()%BrainiacGlobals::ChannelRunningSuffix);
 
         QString phaseOffsetChannelName=anim->name()%BrainiacGlobals::ChannelPhaseOffsetSuffix;
-        Channel *phaseOffset=new Channel(m_agent,0.0,1.0);
-        m_agent->addOutputChannel(phaseOffset,phaseOffsetChannelName);
+        Channel *phaseOffset=m_agent->getOrCreateOutputChannel(phaseOffsetChannelName);
+        phaseOffset->setMinValue(0.0);
+        phaseOffset->setMaxValue(1.0);
     }
 }
 

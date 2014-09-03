@@ -32,6 +32,7 @@
 
 MotionTreeAnimationPlayer::MotionTreeAnimationPlayer(Body *body, MotionTree *tree) : AnimationPlayer(body), m_motionTree(tree)
 {
+    qCDebug(bAnimation) << __PRETTY_FUNCTION__ << "Creating phases and latch channels of track " << m_motionTree->getTrack();
     m_phaseChannel=new Channel(0,1);
     m_body->getAgent()->addInputChannel(m_phaseChannel,BrainiacGlobals::ChannelNames_Phases.at(m_motionTree->getTrack()));
     m_latchChannel=new Channel(0,1);

@@ -81,6 +81,19 @@ Agent::~Agent() {
     m_locator->setAgent(0);
 }
 
+bool Agent::addOutputChannel(Channel *channel, const QString &name)
+{
+    if(m_outputs.contains(name)) {
+        qDebug() << __PRETTY_FUNCTION__ << "Channel " << name << "already exists!";
+        return false;
+        return m_outputs.value(name);
+    } else {
+        m_outputs.insert(name,channel);
+        return true;
+        return getOutputChannel(name,Channel::CREATE_IF_NOT_EXISTS);
+    }
+}
+
 bool Agent::addInputChannel(Channel *channel, const QString &name)
 {
     if(m_inputs.contains(name)) {
@@ -92,14 +105,13 @@ bool Agent::addInputChannel(Channel *channel, const QString &name)
     }
 }
 
-bool Agent::addOutputChannel(Channel *channel, const QString &name)
+Channel* Agent::getOrCreateOutputChannel(const QString &name)
 {
     if(m_outputs.contains(name)) {
         qDebug() << __PRETTY_FUNCTION__ << "Channel " << name << "already exists!";
-        return false;
+        return m_outputs.value(name);
     } else {
-        m_outputs.insert(name,channel);
-        return true;
+        return getOutputChannel(name,Channel::CREATE_IF_NOT_EXISTS);
     }
 }
 
@@ -254,39 +266,37 @@ void Agent::createBVHChannelList()
 
 void Agent::createChannels()
 {
-    m_rx=new Channel(this);
+    m_rx=getOrCreateOutputChannel("rx");
     addInputChannel(m_rx,"rx");
-    addOutputChannel(m_rx,"rx");
 
-    m_ry=new Channel(this);
+    m_ry=getOrCreateOutputChannel("ry");
     addInputChannel(m_ry,"ry");
-    addOutputChannel(m_ry,"ry");
 
-    m_rz=new Channel(this);
+    m_rz=getOrCreateOutputChannel("rz");
     addInputChannel(m_rz,"rz");
-    addOutputChannel(m_rz,"rz");
 
-    m_tx=new Channel(this);
+    m_tx=getOrCreateOutputChannel("tx");
     addInputChannel(m_tx,"tx");
-    addOutputChannel(m_tx,"tx");
 
-    m_ty=new Channel(this);
+    m_ty=getOrCreateOutputChannel("ty");
     addInputChannel(m_ty,"ty");
-    addOutputChannel(m_ty,"ty");
 
-    m_tz=new Channel(this);
+    m_tz=getOrCreateOutputChannel("tz");
     addInputChannel(m_tz,"tz");
-    addOutputChannel(m_tz,"tz");
 
-    m_color=new Channel(this,0.0,1.0,0.0);
+    m_color=getOrCreateOutputChannel("color");
+    m_color->setMinValue(0.0);
+    m_color->setMaxValue(1.0);
+    m_color->setValue(0.0);
     addInputChannel(m_color,"color");
-    addOutputChannel(m_color,"color");
 
-    m_oSoundA=new Channel(this,0.0);
-    addOutputChannel(m_oSoundA,BrainiacGlobals::ChannelName_Sound_a);
+    m_oSoundA=getOrCreateOutputChannel(BrainiacGlobals::ChannelName_Sound_a);
+    m_oSoundA->setMinValue(0.0);
 
-    m_oSoundF=new Channel(this,0.0,10.0,0.0);
-    addOutputChannel(m_oSoundF,BrainiacGlobals::ChannelName_Sound_f);
+    m_oSoundF=getOrCreateOutputChannel(BrainiacGlobals::ChannelName_Sound_f);
+    m_oSoundF->setMinValue(0.0);
+    m_oSoundF->setMaxValue(10.0);
+    m_oSoundF->setValue(0.0);
 
     m_iSoundX=new Channel(this,-180.0,180.0,0.0);
     addInputChannel(m_iSoundX,BrainiacGlobals::ChannelName_Sound_x);
@@ -379,7 +389,7 @@ quint32 Agent::getId() const
     return m_id;
 }
 
-Channel* Agent::getInputChannel(const QString &name, Channel::ChannelNotExistOptions options) const
+Channel* Agent::getInputChannel(const QString &name, Channel::ChannelNotExistOptions options)
 {
     if(this->inputChannelExists(name))
         return(m_inputs.value(name));
@@ -391,7 +401,9 @@ Channel* Agent::getInputChannel(const QString &name, Channel::ChannelNotExistOpt
             qCWarning(bAgent) << __PRETTY_FUNCTION__ << "Input Channel "<< name << " does not exist!";
             break;
         case Channel::CREATE_IF_NOT_EXISTS:
-            qCWarning(bAgent)  << __PRETTY_FUNCTION__ << "Input Channel "<< name << " cannot be created here!";
+            Channel *newChannel=new Channel(this);
+            return newChannel;
+//            qCWarning(bAgent)  << __PRETTY_FUNCTION__ << "Input Channel "<< name << " cannot be created here!";
         }
     }
     return 0;
@@ -408,12 +420,18 @@ QString Agent::getInputChannelName(const Channel *channel) const
     }
     return QString();
 }
+Channel* Agent::getOutputChannel(const QString &name) const {
+    if(this->outputChannelExists(name))
+        return(m_outputs.value(name));
+    return 0;
+}
 
-Channel* Agent::getOutputChannel(const QString &name, Channel::ChannelNotExistOptions options) const
+Channel* Agent::getOutputChannel(const QString &name, Channel::ChannelNotExistOptions options)
 {
     if(this->outputChannelExists(name))
         return(m_outputs.value(name));
     else {
+        Channel *newChannel;
         switch(options) {
         case Channel::NONE:
             break;
@@ -421,7 +439,12 @@ Channel* Agent::getOutputChannel(const QString &name, Channel::ChannelNotExistOp
             qCWarning(bAgent) << __PRETTY_FUNCTION__ << "Output Channel "<< name << " does not exist!";
             break;
         case Channel::CREATE_IF_NOT_EXISTS:
-            qCWarning(bAgent)  << __PRETTY_FUNCTION__ << "Output Channel "<< name << " cannot be created here!";
+            newChannel=new Channel(this);
+            if(addOutputChannel(newChannel,name)) {
+               return newChannel;
+            } else {
+                qCritical() << __PRETTY_FUNCTION__ << "Channel exists! Channel name " << name;
+            }
         }
     }
     return 0;

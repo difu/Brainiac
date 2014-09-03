@@ -100,6 +100,14 @@ public:
     **/
     bool addOutputChannel(Channel* channel, const QString &name);
 
+    /** \brief get an output channel, if the channel does not exist, a new channel is created and added as an output channel
+
+                    @param name name of the channel
+                    \return pointer to the channel
+
+    **/
+    Channel* getOrCreateOutputChannel(const QString &name);
+
     /** \brief connects to fuzz rules
 
                     @param child the id of the child of the connection (the receiver)
@@ -205,7 +213,7 @@ public:
         @param options behavior, if channel does not exit
         @returns 0 if channel does not exist
     **/
-    Channel *getInputChannel(const QString &name, Channel::ChannelNotExistOptions options=Channel::NONE) const;
+    Channel *getInputChannel(const QString &name, Channel::ChannelNotExistOptions options=Channel::NONE);
 
     /**
      * @brief returns the name of the input channel
@@ -220,7 +228,8 @@ public:
         @param name the name of the output channel
         @returns 0 if channel does not exist
     **/
-    Channel *getOutputChannel(const QString &name, Channel::ChannelNotExistOptions options=Channel::NONE) const;
+    Channel *getOutputChannel(const QString &name) const;
+    Channel *getOutputChannel(const QString &name, Channel::ChannelNotExistOptions options=Channel::NONE);
 
     /**
      * @brief returns the name of the output channel
