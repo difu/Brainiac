@@ -55,7 +55,8 @@ void PointGenerator::generateLocators()
         qreal x=cos(angle)*min_rad;
         qreal z=sin(angle)*min_rad;
         qreal y=0;
-        qreal yOrient=m_angle+m_angleNoise*BrainiacGlobals::getRand(i+m_id*3)-m_angleNoise/2.0f;
+        qreal angleNoise=m_angleNoise*(0.5-BrainiacGlobals::getRand(i+m_id*3));
+        qreal yOrient=m_angle+angleNoise;
         Locator *newLoc=new Locator(m_scene->getGroup(groupId),this,x,y,z,yOrient);
         //quint32 i=1;
         quint32 j=1; // Correction step
