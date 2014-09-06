@@ -41,6 +41,8 @@ class Body
 public:
     Body(Agent *agent);
 
+    void addAnimation(Animation *animation);
+
     void addBodySegment( osg::ref_ptr<BodySegment> bodySegment, quint32 parentId);
 
     /**
@@ -56,16 +58,6 @@ public:
     QList<MotionTreeAnimationPlayer *>  getMotionTreeAnimationPlayers() { return m_treeAnimationPlayers; }
 
     void highlightSegment(quint32 id, bool unselectOthers=true);
-
-    /**
-     * @brief sets the current set of animations
-     *
-     * this allows setting of different animation sets of individual agents. Normally each agent instance of a group has a common set of animations. This allows setting of an individial set e.g. when editing in the action editor
-     * It also creates the action input and output channels
-     * @fn setAnimations
-     * @param QHash<quint32, Animation *>
-     */
-    void setAnimations(QHash<QString, Animation *> *animations);
 
     void showPositionMarker(bool show);
 

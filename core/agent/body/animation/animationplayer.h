@@ -57,14 +57,6 @@ public:
     **/
     void apply(const Animation &animation, qreal time);
 
-    /**
-     * @brief returns a hashmap of all animations
-     *
-     * @fn getAnimations
-     * @return QHash<quint32, Animation *>
-     */
-    QHash<QString,Animation *> * getAnimations() {return m_animations;}
-
     Animation* getCurrentAnimation() { return m_currentAnimation; }
 
     /**
@@ -73,16 +65,6 @@ public:
      * all animations and states are cleared
      */
     virtual void reset();
-
-    /**
-     * @brief sets the current set of animations
-     *
-     * this allows setting of different animation sets of individual agents. Normally each agent instance of a group has a common set of animations. This allows setting of an individial set e.g. when editing in the action editor
-     * @fn setAnimations
-     * @param QHash<quint32
-     * @param animations
-     */
-    void setAnimations(QHash<QString, Animation *> *animations);
 protected:
     Animation *m_currentAnimation; /**< Pointer to current Animation */
     bool m_currentAnimationStartedForFirstTime; /**< true, if the Animation is running for the 1st time during this loop */
@@ -91,11 +73,6 @@ protected:
     qreal m_nextAnimationStartTime; /**< time when the next animation was started in Simulation time */
     Simulation *m_simulation;
     Body *m_body;
-//    QStateMachine m_stateMachine;
-//    QState m_animDefault;
-//    QState m_animCanTrans;
-//    QState m_animInTransition;
-    QHash<QString,Animation *> *m_animations; /**< Pointer to Animation array */
 
 signals:
     void animCanTransit();

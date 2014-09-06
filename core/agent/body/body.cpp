@@ -48,6 +48,10 @@ Body::Body(Agent *agent)
         tc->setMinValue(0.0);
         tc->setMaxValue(BrainiacGlobals::ActionForceTriggerValue);
     }
+    qCDebug(bAnimation) << __PRETTY_FUNCTION__ << "Create animations";
+    foreach(Animation *anim, *getAgent()->getAgentManager()->getAnimations()) {
+        this->addAnimation(anim);
+    }
     m_bodyRoot=new osg::PositionAttitudeTransform;
     m_bodyRoot.get()->setName("AgentBody Root Segment");
     m_showAllCoordCrosses=false;
@@ -66,6 +70,21 @@ Body::Body(Agent *agent)
     m_switchPositionMarker->addChild(geo,false);
     m_bodyRoot->addChild(m_switchPositionMarker);
     m_showPositionMarker=false;
+}
+
+void Body::addAnimation(Animation *animation)
+{
+    Channel *oChan=m_agent->getOrCreateOutputChannel(animation->name());
+    oChan->setMinValue(0.0);
+    oChan->setMaxValue(2.0);
+
+    Channel *iChan=new Channel(m_agent,0.0,1.0);
+    m_agent->addInputChannel(iChan,animation->name()%BrainiacGlobals::ChannelRunningSuffix); /**< @todo TODO create this name in AgentManager */
+
+    QString phaseOffsetChannelName=animation->name()%BrainiacGlobals::ChannelPhaseOffsetSuffix; /**< @todo TODO create this name in AgentManager */
+    Channel *phaseOffset=m_agent->getOrCreateOutputChannel(phaseOffsetChannelName);
+    phaseOffset->setMinValue(0.0);
+    phaseOffset->setMaxValue(1.0);
 }
 
 void Body::addBodySegment(osg::ref_ptr<BodySegment> bodySegment, quint32 parentId)
@@ -107,11 +126,6 @@ Agent* Body::getAgent()
     return m_agent;
 }
 
-QHash<QString,Animation *> * Body::getAnimations()
-{
-    return m_animationPlayer->getAnimations();
-}
-
 void Body::highlightSegment(quint32 id, bool unselectOthers)
 {
     if(unselectOthers) {
@@ -134,28 +148,6 @@ void Body::reset()
     m_animationPlayer->reset();
     for(quint32 i=0; i<MotionTreeManager::NUM_OF_TREE_TRACKS;i++) {
        m_treeAnimationPlayers.at(i)->reset();
-    }
-}
-
-void Body::setAnimations(QHash<QString, Animation *> *animations)
-{
-    m_animationPlayer->setAnimations(animations);
-    for(quint32 i=0; i<MotionTreeManager::NUM_OF_TREE_TRACKS;i++) {
-       m_treeAnimationPlayers.at(i)->setAnimations(animations);
-    }
-    qCDebug(bAnimation) << __PRETTY_FUNCTION__ << "Creating "  << BrainiacGlobals::ChannelPhaseOffsetSuffix << "(out) " << BrainiacGlobals::ChannelRunningSuffix << "(in) and <ANIMATIONNAME> (out) channels";
-    foreach(Animation *anim, *m_animationPlayer->getAnimations()) {
-        Channel *oChan=m_agent->getOrCreateOutputChannel(anim->name());
-        oChan->setMinValue(0.0);
-        oChan->setMaxValue(2.0);
-
-        Channel *iChan=new Channel(m_agent,0.0,1.0);
-        m_agent->addInputChannel(iChan,anim->name()%BrainiacGlobals::ChannelRunningSuffix);
-
-        QString phaseOffsetChannelName=anim->name()%BrainiacGlobals::ChannelPhaseOffsetSuffix;
-        Channel *phaseOffset=m_agent->getOrCreateOutputChannel(phaseOffsetChannelName);
-        phaseOffset->setMinValue(0.0);
-        phaseOffset->setMaxValue(1.0);
     }
 }
 

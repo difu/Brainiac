@@ -61,7 +61,6 @@ Agent::Agent(Agent *otherAgent, quint32 id)  :
     m_scene=otherAgent->getScene();
     m_body=new Body(this);
     m_agentManager->getBodyManager()->applyBodyOnAgent(this);
-    m_body->setAnimations(otherAgent->getBody()->getAnimations());
     m_brain=new Brain(this,otherAgent->getBrain());
     m_renderSoundEmission=true;
     m_locator=0;

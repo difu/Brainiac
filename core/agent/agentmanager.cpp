@@ -62,7 +62,6 @@ AgentManager::AgentManager(Group *group)
     m_bodyManager=new BodyManager(this);
     m_masterAgent=new Agent(this,0); // Id 0 is ok, its just a master agent
     m_masterAgent->setObjectName("masterAgent");
-    m_masterAgent->getBody()->setAnimations(&m_animations);
     m_agents.append(m_masterAgent);
     m_spBodyAgent=cloneAgent(0);
     m_spBodyAgent->setObjectName("bodyAgent");
@@ -74,6 +73,24 @@ AgentManager::AgentManager(Group *group)
     m_activeMotionTreeEditor=0;
     m_selectedAgent=m_masterAgent;
     m_bvhManager=new BvhManager(this);
+}
+
+bool AgentManager::addAnimation(Animation *animation)
+{
+    if(animation->name().size()>0) {
+        if(m_animations.contains(animation->name())) {
+            qCWarning(bAgentManager) << __PRETTY_FUNCTION__ << "animation "<< animation->name() << " already in list";
+            return false;
+        } else {
+            m_animations.insert(animation->name(),animation);
+            foreach(Agent *agent, m_agents) {
+                agent->getBody()->addAnimation(animation);
+            }
+            return true;
+        }
+    }
+    qCWarning(bAgentManager) << __PRETTY_FUNCTION__ << "name has zero length";
+    return false;
 }
 
 void AgentManager::addSegmentFromConfig(QXmlStreamReader *reader, quint32 id, QString name, quint32 parent, quint32 editorX, quint32 editorY)
@@ -607,14 +624,12 @@ bool AgentManager::loadConfig()
 //                                        if(id<=0) {
 //                                            qWarning() <<__PRETTY_FUNCTION__ << "Wrong animation id";
 //                                        }
-                                        m_animations.insert(anim->name(),anim);
-                                        //m_animationIdGenerator.registerId(id);
+                                        addAnimation(anim);
                                         reader.skipCurrentElement();
                                     }else {
                                         reader.skipCurrentElement();
                                     }
                                 }
-                                m_masterAgent->getBody()->setAnimations(&m_animations); /**< @todo TODO ugly code*/
                             }else {
                                 reader.skipCurrentElement();
                             }
@@ -645,7 +660,7 @@ bool AgentManager::loadAnimation(const QString &filename)
     } else if(filename.endsWith(".baf")) {
         Animation *anim=Animation::loadAnimation(filename);
         if(anim) {
-            m_animations.insert(anim->name(),anim);
+            addAnimation(anim);
         } else {
             qWarning() << __PRETTY_FUNCTION__ << "Could not load "<< filename;
         }
@@ -659,13 +674,6 @@ bool AgentManager::loadAnimation(const QString &filename)
 
 bool AgentManager::loadAnmationBVH(QFile &file)
 {
-//    AnimationCurve *tst=new AnimationCurve();
-//    tst->addKeyFrame(0,1.01f);
-//    tst->addKeyFrame(1,2);
-//    tst->addKeyFrame(2,4);
-//    tst->addKeyFrame(3,8);
-//    tst->dPrintKeyFrames();
-//    qDebug() << tst->getValue(0.5f) << tst->getValue(1.5f) << tst->getValue(0) << tst->getValue(4);
     QString nodeName;
     QHash<QString, AnimationCurve*> animCurves;
     QList<AnimationCurve *> curveIndex;
@@ -723,17 +731,11 @@ bool AgentManager::loadAnmationBVH(QFile &file)
     }
     QFileInfo fInfo(file);
     Animation *anim=new Animation(animCurves,fInfo.fileName().split('.').first());
-    m_animations.insert(anim->name(),anim);
-//    foreach(Animation *anim,m_animations) {
-//        qDebug() << anim->name();
-//        QHashIterator<QString, AnimationCurve *> i(anim->curves()) ;
-//        while(i.hasNext()) {
-//            i.next();
-//            qDebug() << i.key();
-//            i.value()->dPrintKeyFrames(0,3);
-//        }
-//    }
-    return true;
+    bool success=addAnimation(anim);
+    if(!success) {
+        delete anim;
+    }
+    return success;
 }
 
 bool AgentManager::loadSkeleton(const QString &filename)

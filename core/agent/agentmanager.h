@@ -41,6 +41,7 @@ class AgentManager : public QObject
 public:
     AgentManager(Group *group);
 
+    bool addAnimation(Animation *animation);
     // Brain stuff
     /** \brief adds an And fuzz rule to all agent brains
 
@@ -462,6 +463,7 @@ public:
     void setSelectedAgent(Agent *agent);
     void updateSoundConfigs();
     ~AgentManager();
+
 public slots:
     void segmentChanged();
 private:

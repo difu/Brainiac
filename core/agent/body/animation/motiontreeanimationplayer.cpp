@@ -33,9 +33,9 @@
 MotionTreeAnimationPlayer::MotionTreeAnimationPlayer(Body *body, MotionTree *tree) : AnimationPlayer(body), m_motionTree(tree)
 {
     qCDebug(bAnimation) << __PRETTY_FUNCTION__ << "Creating phases and latch channels of track " << m_motionTree->getTrack();
-    m_phaseChannel=new Channel(0,1);
+    m_phaseChannel=new Channel(m_body->getAgent(),0,1);
     m_body->getAgent()->addInputChannel(m_phaseChannel,BrainiacGlobals::ChannelNames_Phases.at(m_motionTree->getTrack()));
-    m_latchChannel=new Channel(0,1);
+    m_latchChannel=new Channel(m_body->getAgent(),0,1);
     m_body->getAgent()->addInputChannel(m_latchChannel,BrainiacGlobals::ChannelNames_Latches.at(m_motionTree->getTrack()));
 
     reset();
@@ -45,7 +45,7 @@ void MotionTreeAnimationPlayer::apply()
 {
     MotionTreeAction *currentAction=0;
     if(m_currentAnimation==0) {
-        m_currentAnimation=m_animations->value(m_motionTree->getDefaultActionName(),0);
+        m_currentAnimation=m_body->getAgent()->getAgentManager()->getAnimations()->value(m_motionTree->getDefaultActionName(),0);
         if(m_currentAnimation) {
             m_currentAnimationStartTime=m_simulation->getCurrentTime();
         }
@@ -70,6 +70,7 @@ void MotionTreeAnimationPlayer::apply()
         } else {
             m_phaseChannel->setValue(diffTime/animLength);
             animTime=diffTime;
+            qCDebug(bAnimation) << __PRETTY_FUNCTION__ << "anim is not looped";
         }
         AnimationPlayer::apply(*m_currentAnimation,animTime);
         hasLatch=m_currentAnimation->hasLatch(animTime);
@@ -104,7 +105,7 @@ void MotionTreeAnimationPlayer::apply()
                         }
                     }
                     if(nextAction) {
-                        m_nextAnimation=m_animations->value(nextAction->getName());
+                        m_nextAnimation=m_body->getAgent()->getAgentManager()->getAnimations()->value(nextAction->getName());
                         qCDebug(bAnimation) << __PRETTY_FUNCTION__ << "Next action name: "<< nextAction->getName();
                         break;
                     }
