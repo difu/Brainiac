@@ -307,8 +307,6 @@ public:
         m_bvh_fileName=fileName;
     }
 
-    void setLocator(Locator *locator);
-
     /**
      * @brief setObjectName sets the name of the agent
      *

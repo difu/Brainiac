@@ -48,7 +48,6 @@ Agent::Agent(AgentManager *manager, quint32 id) :
     m_body=new Body(this);
     m_brain=new Brain(this,0);
     m_renderSoundEmission=true;
-    m_locator=0;
 }
 
 Agent::Agent(Agent *otherAgent, quint32 id)  :
@@ -63,7 +62,6 @@ Agent::Agent(Agent *otherAgent, quint32 id)  :
     m_agentManager->getBodyManager()->applyBodyOnAgent(this);
     m_brain=new Brain(this,otherAgent->getBrain());
     m_renderSoundEmission=true;
-    m_locator=0;
 }
 
 Agent::~Agent() {
@@ -77,7 +75,6 @@ Agent::~Agent() {
         chan->deleteLater();
     }
     m_outputs.clear();
-    m_locator->setAgent(0);
 }
 
 bool Agent::addOutputChannel(Channel *channel, const QString &name)
@@ -615,14 +612,17 @@ void Agent::renderSoundEmission(bool render)
 
 void Agent::reset()
 {
-    if(m_locator) {
-        m_position.setX(m_locator->getLocation().x());
-        m_position.setY(m_locator->getLocation().y());
-        m_position.setZ(m_locator->getLocation().z());
+    if(parent()) {
+        Locator *loc=qobject_cast<Locator *>(parent());
+        if(loc) {
+            m_position.setX(loc->getLocation().x());
+            m_position.setY(loc->getLocation().y());
+            m_position.setZ(loc->getLocation().z());
 
-        m_rotation.setX(0.0);
-        m_rotation.setY(m_locator->getLocation().w());
-        m_rotation.setZ(0.0);
+            m_rotation.setX(0.0);
+            m_rotation.setY(loc->getLocation().w());
+            m_rotation.setZ(0.0);
+        }
     } else {
         m_position=QVector3D();
         m_rotation=QVector3D();
@@ -636,11 +636,6 @@ void Agent::setObjectName(const QString &name)
 {
     QObject::setObjectName(name);
     m_body->getBodyRoot().get()->setName(name.toStdString());
-}
-
-void Agent::setLocator(Locator *locator)
-{
-    m_locator=locator;
 }
 
 void Agent::setRotation(qreal x, qreal y, qreal z)

@@ -19,6 +19,7 @@
 #ifndef LOCATOR_H
 #define LOCATOR_H
 
+#include <QObject>
 #include <QtGlobal>
 #include <QVector4D>
 
@@ -30,8 +31,9 @@ class Generator;
  * @brief Describes an agent position in the Scene
  *
  */
-class Locator
+class Locator : public QObject
 {
+    Q_OBJECT
 public:
 
 /**
@@ -51,7 +53,7 @@ public:
      * @brief returns the agent this Locater is associated with
      * @return Agent * pointer to the agent
      */
-    Agent* getAgent() {return m_agent;}
+    Agent* getAgent();
 
     /**
      * @brief returns the xyz position and rotation angle around y axis
@@ -75,7 +77,7 @@ public:
      *
      * @param Agent *agent pointer to the agent
      */
-    void setAgent(Agent *agent) { m_agent=agent;}
+    void setAgent(Agent *agent);
 
     /**
      * @brief Destructor
@@ -87,7 +89,6 @@ private:
     QVector4D m_position; /**< Position and rotation of agent */
     Generator *m_generator; /**< The generator of this locator */
     Group *m_group; /**< Group of this locator */
-    Agent *m_agent; /**< Agent of this locator */
 };
 
 #endif // LOCATOR_H

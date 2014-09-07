@@ -18,18 +18,32 @@
 
 #include "locator.h"
 #include "core/generator/generator.h"
+#include "core/agent/agent.h"
 
 Locator::Locator(Group *group, Generator *generator, qreal x, qreal y, qreal z, qreal w):
+    QObject(0),
     m_position(QVector4D(x,y,z,w)),
     m_generator(generator),
-    m_group(group),
-    m_agent(0)
+    m_group(group)
 {
+}
+
+Agent* Locator::getAgent()
+{
+    if(hasInstance()) {
+        return qobject_cast<Agent *>(children().first());
+    }
+    return 0;
 }
 
 bool Locator::hasInstance() const
 {
-    if(m_agent) {
+    int numChildren=children().count();
+    Q_ASSERT(numChildren<=1);
+    if(numChildren!=1) {
+        return false;
+    }
+    if(qobject_cast<Agent *>(children().first())) {
         return true;
     }
     return false;
@@ -46,6 +60,11 @@ QVector4D Locator::getLocation() const
 QVector4D& Locator::getLocationRelativeToCenter()
 {
     return m_position;
+}
+
+void Locator::setAgent(Agent *agent)
+{
+    agent->setParent(this);
 }
 
 Locator::~Locator()
