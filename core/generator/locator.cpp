@@ -19,6 +19,8 @@
 #include "locator.h"
 #include "core/generator/generator.h"
 #include "core/agent/agent.h"
+#include "core/agent/agentmanager.h"
+#include "core/group/group.h"
 
 Locator::Locator(Group *group, Generator *generator, qreal x, qreal y, qreal z, qreal w):
     QObject(0),
@@ -26,6 +28,26 @@ Locator::Locator(Group *group, Generator *generator, qreal x, qreal y, qreal z, 
     m_generator(generator),
     m_group(group)
 {
+}
+
+Agent* Locator::createInstance()
+{
+    Agent *agent=getAgent();
+    if(agent) {
+        return agent;
+    } else {
+        if(m_group->getAgentManager()) {
+            agent=m_group->createAndAddNewAgent();
+            setAgent(agent);
+            agent->reset();
+            QString name;
+            name=m_group->getName()+QString::number(agent->getId());
+            agent->setObjectName(name);
+            return agent;
+        }
+    }
+    qWarning() << __PRETTY_FUNCTION__ << "no AgentManager found";
+    return 0;
 }
 
 Agent* Locator::getAgent()

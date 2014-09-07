@@ -83,6 +83,11 @@ void Group::loadConfig(QXmlStreamReader *xml)
     }
 }
 
+void Group::removeAgent(Agent *agent)
+{
+    m_agents.removeAll(agent);
+}
+
 void Group::saveConfig(QXmlStreamWriter *xml)
 {
     xml->writeStartElement("Group");

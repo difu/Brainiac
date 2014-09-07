@@ -28,14 +28,14 @@ isEmpty(OSG_LIB_DIR){
 message(OSG Include dir $$OSG_INC_DIR)
 message(OSG Lib dir $$OSG_LIB_DIR)
 
-macx: LIBS += -L $$OSG_LIB_DIR -losg -losgQt -losgViewer -losgGA -losgDB -lOpenThreads -losgFX -losgUtil
+macx: LIBS += -L $$OSG_LIB_DIR -losg -losgQt -losgViewer -losgGA -losgDB -lOpenThreads -losgFX -losgUtil -losgAnimation
 macx: LIBS += -framework glut
 macx: LIBS += -framework QtConcurrent
 macx: INCLUDEPATH += $$OSG_INC_DIR
 #macx: DEPENDPATH += /usr/local/include
 
 
-unix: LIBS += -L $$OSG_LIB_DIR -losg -losgQt -losgViewer -losgGA -losgDB -lOpenThreads -losgFX -losgUtil
+unix: LIBS += -L $$OSG_LIB_DIR -losg -losgQt -losgViewer -losgGA -losgDB -lOpenThreads -losgFX -losgUtil -losgAnimation
 unix: INCLUDEPATH += $$OSG_INC_DIR
 # unix: DEPENDPATH += /usr/include
 QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9

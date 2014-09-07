@@ -31,6 +31,9 @@ PointGenerator::PointGenerator(Scene *scene):Generator(Generator::POINT, scene)
 
 void PointGenerator::generateLocators()
 {
+    if(m_number==m_locations.count()) {
+        return;
+    }
     static qreal min_rad=1.0f;
     if(m_groupRatio.count()==0) {
         qDebug() << __PRETTY_FUNCTION__ << "Gen "  << m_id << " has no groupratio!";

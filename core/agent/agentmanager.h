@@ -289,6 +289,15 @@ public:
     bool loadSkeleton(const QString &filename);
 
     void reset();
+
+    /**
+     * @brief removes an agent from the list of agents controlled by this manager
+     *
+     * @fn removeAgent
+     * @param agent
+     */
+    void removeAgent(Agent *agent);
+
     bool saveConfig();
 
     /**

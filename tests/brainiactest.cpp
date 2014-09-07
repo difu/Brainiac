@@ -89,6 +89,71 @@ void BrainiacTest::agentManager()
 
 }
 
+void BrainiacTest::agentInstancing_data()
+{
+    QTest::addColumn<qint32>("numOfAgents");
+    QTest::addColumn<QListQReal>("groupRatios");
+    QListQReal groupRatio1;
+    groupRatio1 << 1.0;
+    QListQReal groupRatio3;
+    groupRatio3 << 0.3 << 0.2 << 0.5;
+
+    QTest::newRow("Case1") << 100 << groupRatio1;
+    QTest::newRow("Case2") << 200 << groupRatio3;
+    QTest::newRow("Case2") << 300 << groupRatio3;
+
+}
+
+void BrainiacTest::agentInstancing()
+{
+    QFETCH(qint32, numOfAgents);
+    QFETCH(QListQReal, groupRatios);
+    Scene testScene1;
+    QList<Group *> groups;
+    PointGenerator *gen=new PointGenerator(&testScene1);
+    QHash<quint32,qreal> groupRatio;
+    foreach(qreal ratio, groupRatios) {
+        Group *testGroup=new Group(&testScene1);
+        groupRatio.insert(testGroup->getId(),ratio);
+        groups.append(testGroup);
+    }
+    gen->setNumber(numOfAgents);
+    gen->setGroupRatios(groupRatio);
+    testScene1.addGenerator(gen);
+    gen->generateLocators();
+    QVERIFY2(testScene1.getAgents().count()==0,"No agent instances expected!");
+    testScene1.createAgents();
+    QVERIFY2(testScene1.getAgents().count()==numOfAgents,"Wrong number of agents created!");
+    QVERIFY2(testScene1.getGenerators().count()==1,"Wrong number of generators");
+
+    int totalGroupAgents=0;
+    foreach(Group *group, testScene1.getGroups()) {
+        totalGroupAgents+=group->getAgents().count();
+    }
+    QVERIFY2(numOfAgents==totalGroupAgents,"Wrong number of agents in group(s)!");
+    int agentsDeleted=0;
+    foreach(Group *group, testScene1.getGroups()) {
+        if(group->getAgents().count()>1) {
+            AgentManager *am=group->getAgentManager();
+            int managerAgents=am->getAllManagedAgents().count();
+            Agent *deleteAgent=group->getAgents().last();
+            Locator *deleteAgentLocator=qobject_cast<Locator *>(deleteAgent->parent());
+            QVERIFY2(deleteAgentLocator->hasInstance(),"Locator has no instance");
+            delete deleteAgent;
+            QVERIFY2(!deleteAgentLocator->hasInstance(),"Locator should not have instance");
+            QVERIFY2(managerAgents-1==am->getAllManagedAgents().count(),"Wrong number of agents in AgentManager after deletion");
+            agentsDeleted++;
+        }
+    }
+    QVERIFY2(agentsDeleted>0,"No agents deleted");
+    QVERIFY2(testScene1.getAgents().count()==numOfAgents-agentsDeleted,"Wrong number of agents in scene after deleting agents!");
+    totalGroupAgents=0;
+    foreach(Group *group, testScene1.getGroups()) {
+        totalGroupAgents+=group->getAgents().count();
+    }
+    QVERIFY2(totalGroupAgents==numOfAgents-agentsDeleted,"Wrong number of agents in group(s) after deletion!");
+}
+
 void BrainiacTest::motionTree()
 {
     QString action1Name="action 1";
@@ -263,10 +328,10 @@ void BrainiacTest::animation_data()
     QTest::addColumn<QString>("animationName");
 
     QTest::addColumn<QString>("curve1Name");
-    QTest::addColumn<QlistVec2d>("keyframesCurve1");
+    QTest::addColumn<QListVec2d>("keyframesCurve1");
 
     QTest::addColumn<QString>("curve2Name");
-    QTest::addColumn<QlistVec2d>("keyframesCurve2");
+    QTest::addColumn<QListVec2d>("keyframesCurve2");
 
     QTest::addColumn<qreal>("maxTime"); // Expected max time
 
@@ -323,8 +388,8 @@ void BrainiacTest::animation()
     AnimationCurve testCurve2;
     QFETCH(qreal, maxTime);
 
-    QFETCH(QlistVec2d, keyframesCurve1);
-    QFETCH(QlistVec2d, keyframesCurve2);
+    QFETCH(QListVec2d, keyframesCurve1);
+    QFETCH(QListVec2d, keyframesCurve2);
 
     foreach( QVector2D kf, keyframesCurve1) {
         testCurve1.addKeyFrame(kf);

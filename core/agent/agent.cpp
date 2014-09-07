@@ -33,6 +33,7 @@
 #include "core/agent/body/animation/animationplayer.h"
 #include "core/agent/body/animation/bvhmanager.h"
 #include "core/generator/locator.h"
+#include "core/group/group.h"
 #include "core/brainiaclogger.h"
 #include <QDebug>
 #include <QtGlobal>
@@ -65,6 +66,9 @@ Agent::Agent(Agent *otherAgent, quint32 id)  :
 }
 
 Agent::~Agent() {
+    m_scene->removeAgentFromScene(this);
+    m_agentManager->removeAgent(this);
+    m_agentManager->getGroup()->removeAgent(this);
     delete m_body;
     delete m_brain;
     foreach(Channel *chan,m_inputs) {

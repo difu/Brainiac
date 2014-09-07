@@ -83,6 +83,7 @@ public:
     QString & getAgentFileName() { return m_agentFileName; }
     Scene* getScene() { return m_scene;}
     void loadConfig(QXmlStreamReader *xml);
+    void removeAgent(Agent *agent);
     void saveConfig(QXmlStreamWriter *xml);
     void setEditorTranslation(qint32 x, qint32 y);
     void setId(quint32 id) { m_id=id; }

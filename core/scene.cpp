@@ -85,17 +85,9 @@ void Scene::createAgents(Generator *gen)
             if(locAgent) {
                 continue;
             } else {
-                Group *grp=loc->getGroup();
-                if(grp->getAgentManager()) { // only, if we successfully loaded an agent
-                    Agent *agent=grp->createAndAddNewAgent();
-                    loc->setAgent(agent);
-                    m_agents.append(agent); // add the agent to all the other agents of the scene
-                    m_rootNode.get()->addChild(agent->getBody()->getBodyRoot());
-                    agent->reset();
-                    QString name;
-                    name=grp->getName()+QString::number(agent->getId());
-                    agent->setObjectName(name);
-                }
+                locAgent=loc->createInstance();
+                m_agents.append(locAgent); // add the agent to all the other agents of the scene
+                m_rootNode.get()->addChild(locAgent->getBody()->getBodyRoot());
             }
         }
     }
@@ -103,6 +95,18 @@ void Scene::createAgents(Generator *gen)
         if(grp->getAgentManager()) {
             grp->getAgentManager()->updateSoundConfigs();
         }
+    }
+}
+
+void Scene::removeAgentFromScene(Agent *agent)
+{
+    int removedAgents=m_agents.removeAll(agent);
+    bool removedFromSceneGraph=m_rootNode.get()->removeChild(agent->getBody()->getBodyRoot());
+    if(removedAgents>1) {
+        qCWarning(bScene) << __PRETTY_FUNCTION__ << "more than one agent removed from scene list!";
+    }
+    if(removedAgents>=1 && !removedFromSceneGraph) {
+        qCWarning(bScene) << __PRETTY_FUNCTION__ << "could not delete/find agent from scene graph!";
     }
 }
 
@@ -125,6 +129,11 @@ QList<Agent *> Scene::getAgents()
 QList<Camera *> Scene::getCameras()
 {
     return m_cameras;
+}
+
+QList<Generator *> Scene::getGenerators() const
+{
+    return m_generators;
 }
 
 /** \brief get group by its id

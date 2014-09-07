@@ -34,12 +34,13 @@
 #include "core/agent/brain/input.h"
 #include "core/agent/brain/fuzzyor.h"
 
-typedef QList<QVector2D> QlistVec2d;
+typedef QList<QVector2D> QListVec2d;
+typedef QList<qreal> QListQReal;
 
 Q_DECLARE_METATYPE(FuzzyAnd::Mode)
 Q_DECLARE_METATYPE(FuzzyOr::Mode)
 Q_DECLARE_METATYPE(BrainiacGlobals::AnimationType)
-Q_DECLARE_METATYPE(QlistVec2d)
+Q_DECLARE_METATYPE(QListVec2d)
 
 class BrainiacTest : public QObject
 {
@@ -67,6 +68,9 @@ private Q_SLOTS:
 
     void agentManager_data();
     void agentManager();
+
+    void agentInstancing_data();
+    void agentInstancing();
 
     void motionTree();
 

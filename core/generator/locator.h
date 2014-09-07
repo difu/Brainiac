@@ -47,6 +47,8 @@ public:
  */
     Locator(Group *group, Generator *generator, qreal x=0.0, qreal y=0.0, qreal z=0.0, qreal w=0.0);
 
+    Agent* createInstance();
+
     Group* getGroup() {return m_group;}
 
     /**

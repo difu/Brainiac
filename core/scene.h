@@ -55,6 +55,7 @@ public:
     void createAgents();
     QList<Agent *> getAgents();
     QList<Camera *> getCameras();
+    QList<Generator *> getGenerators() const;
     Group *getGroup(quint32 id);
     QList<Group *> getGroups() { return m_groups; }
     QString getFileName() {return m_fileName; }
@@ -100,6 +101,8 @@ public:
     Simulation *getSimulation() { return m_simulation; }
 
     bool openConfig(const QString & fileName);
+    void removeAgentFromScene(Agent* agent);
+
     bool saveConfig(const QString & fileName);
     bool saveConfig();
 

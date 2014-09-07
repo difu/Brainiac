@@ -1162,6 +1162,14 @@ bool AgentManager::saveConfig()
     return true;
 }
 
+void AgentManager::removeAgent(Agent *agent)
+{
+    int remAgents=m_agents.removeAll(agent);
+    if(remAgents!=0) {
+        qCWarning(bAgent) << __PRETTY_FUNCTION__ << remAgents <<  " agent(s) removed!";
+    }
+}
+
 void AgentManager::reset()
 {
     foreach(Agent *agent, m_agents) {
