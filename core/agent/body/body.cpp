@@ -74,15 +74,17 @@ Body::Body(Agent *agent)
 
 void Body::addAnimation(Animation *animation)
 {
+    qCDebug(bAnimation) << __PRETTY_FUNCTION__ << "Create animation channel " << animation->name();
     Channel *oChan=m_agent->getOrCreateOutputChannel(animation->name());
     oChan->setMinValue(0.0);
     oChan->setMaxValue(2.0);
 
+    qCDebug(bAnimation) << __PRETTY_FUNCTION__ << "Create animation:running input channel " << animation->getRunningChannelName();
     Channel *iChan=new Channel(m_agent,0.0,1.0);
-    m_agent->addInputChannel(iChan,animation->name()%BrainiacGlobals::ChannelRunningSuffix); /**< @todo TODO create this name in AgentManager */
+    m_agent->addInputChannel(iChan,animation->getRunningChannelName());
 
-    QString phaseOffsetChannelName=animation->name()%BrainiacGlobals::ChannelPhaseOffsetSuffix; /**< @todo TODO create this name in AgentManager */
-    Channel *phaseOffset=m_agent->getOrCreateOutputChannel(phaseOffsetChannelName);
+    qCDebug(bAnimation) << __PRETTY_FUNCTION__ << "Create animation:phase output channel " << animation->getPhaseOffsetChannelName();
+    Channel *phaseOffset=m_agent->getOrCreateOutputChannel(animation->getPhaseOffsetChannelName());
     phaseOffset->setMinValue(0.0);
     phaseOffset->setMaxValue(1.0);
 }

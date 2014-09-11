@@ -60,7 +60,7 @@ void MotionTreeAnimationPlayer::apply()
             qCDebug(bAnimation) << __PRETTY_FUNCTION__ << "Action does not match Animation " << m_currentAnimation->name();
         }
         qreal animLength=m_currentAnimation->getLength();
-        qreal offset=Channel::getOutputValue(m_body->getAgent(),m_currentAnimation->name()%BrainiacGlobals::ChannelPhaseOffsetSuffix)*animLength;
+        qreal offset=Channel::getOutputValue(m_body->getAgent(),m_currentAnimation->getPhaseOffsetChannelName())*animLength;
         qreal diffTime=m_simulation->getCurrentTime()-m_currentAnimationStartTime+offset;
         qreal animTime=0.0;
         if(m_currentAnimation->isLoopedAnimation()) {
@@ -75,7 +75,7 @@ void MotionTreeAnimationPlayer::apply()
         AnimationPlayer::apply(*m_currentAnimation,animTime);
         hasLatch=m_currentAnimation->hasLatch(animTime);
         m_latchChannel->setValue(hasLatch?1.0:0.0);
-        Channel::setInputValue(m_body->getAgent(),m_currentAnimation->name()%BrainiacGlobals::ChannelRunningSuffix,1.0,Channel::NONE_WARN);
+        Channel::setInputValue(m_body->getAgent(),m_currentAnimation->getRunningChannelName(),1.0,Channel::NONE_WARN);
     }
 
     // check for triggers of next possible actions

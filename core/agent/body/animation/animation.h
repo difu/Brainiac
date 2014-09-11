@@ -133,6 +133,9 @@ public:
      */
     bool hasLatch(qreal time) const;
 
+    const QString& getPhaseOffsetChannelName() const { return m_channelPhaseOffsetName; }
+
+    const QString& getRunningChannelName() const { return m_channelRunningName; }
 
     virtual qreal getValue(const QString &curve, qreal time) const;
 
@@ -252,14 +255,13 @@ public:
      * @fn setName
      * @param name
      */
-    virtual void setName(QString name) { m_name=name; }
+    virtual void setName(QString name);
 
     void setTransitionCurve(AnimationCurve transitionCurve);
     virtual ~Animation();
 protected:
     mutable qreal m_length; /**< length of this animation. This is the maximum length of all AnimationCurves */
     QHash<QString, AnimationCurve*> m_curves; /**< all AnimationCurves, QString is the curve name, that correspondents to the agent´s BodySegement channel @sa BodySegment @sa Channel */
-    QString m_name; /**< name of this Animation */
     QString m_fileName; /**< filename relative to scenefile */
     bool m_isLoopedAnimation;
     bool m_isRetriggerable;
@@ -267,6 +269,10 @@ protected:
     BrainiacGlobals::AnimationType m_animType; /**< the type of this animation */
     QHash<QString, LatchCurve*> m_latchCurves; /**< all latchCurves, QString is the curve name */
     AnimationCurve *m_transitionCurve; /**< the transition curve */
+private:
+    QString m_name; /**< name of this Animation */
+    QString m_channelPhaseOffsetName; /**< name of phase offset channel name, depends on m_name, constructed in setName() */
+    QString m_channelRunningName; /**< name of running channel name, depends on m_name, constructed in setName() */
 };
 
 #endif // ANIMATION_H

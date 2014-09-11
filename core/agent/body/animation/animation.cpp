@@ -38,7 +38,7 @@ Animation::Animation( Animation *animation)
 
 Animation::Animation(QHash<QString, AnimationCurve *> curves, QString name="")
 {
-    m_name=name;
+    setName(name);
     m_curves=curves;
     m_isLoopedAnimation=true;
     m_isRetriggerable=false;
@@ -112,7 +112,7 @@ void Animation::copyFromAnimation(Animation *animation)
         m_latchCurves.insert(j.key(),newLatchCurve);
     }
     calculateLength();
-    m_name=animation->name();
+    setName(animation->name());
     m_fileName=animation->fileName();
     m_isLoopedAnimation=animation->isLoopedAnimation();
     m_isRetriggerable=animation->isRetriggerable();
@@ -405,6 +405,13 @@ bool Animation::saveAnimation(QString &fileName)
 
 
     return true;
+}
+
+void Animation::setName(QString name)
+{
+    m_name=name;
+    m_channelPhaseOffsetName=m_name%BrainiacGlobals::ChannelPhaseOffsetSuffix;
+    m_channelRunningName=m_name%BrainiacGlobals::ChannelRunningSuffix;
 }
 
 void Animation::setTransitionCurve(AnimationCurve transitionCurve) {
