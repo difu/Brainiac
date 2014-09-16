@@ -32,6 +32,7 @@ class Scene;
 class Animation;
 class BodyManager;
 class BrainEditor;
+class BrainManager;
 class MotionTreeManager;
 class BvhManager;
 
@@ -499,6 +500,7 @@ private:
     BrainEditor *m_brainEditor; /**< contains the editor widgets of the brain */
     quint32 m_activeMotionTreeEditor; /**< id of the currently edited tree in @sa MainWindow */
     BvhManager *m_bvhManager;
+    BrainManager *m_brainManager; /**< manages all brain related stuff */
 
     // Brain stuff
     void addAndFuzz(quint32 id, QString name, QString mode, quint32 editorX, quint32 editorY);

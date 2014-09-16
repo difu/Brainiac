@@ -21,6 +21,7 @@
 #include "core/scene.h"
 #include "core/agent/agent.h"
 #include "core/agent/body/body.h"
+#include "core/agent/brain/brainmanager.h"
 #include "core/agent/brain/brain.h"
 #include "core/agent/brain/fuzzydefuzz.h"
 #include "core/agent/brain/fuzzyand.h"
@@ -60,6 +61,7 @@ AgentManager::AgentManager(Group *group)
     m_id=0;
     m_motionTreeManager=new MotionTreeManager(this);
     m_bodyManager=new BodyManager(this);
+    m_brainManager=new BrainManager(this);
     m_masterAgent=new Agent(this,0); // Id 0 is ok, its just a master agent
     m_masterAgent->setObjectName("masterAgent");
     m_agents.append(m_masterAgent);

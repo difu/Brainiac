@@ -70,7 +70,6 @@ Agent::~Agent() {
     m_agentManager->removeAgent(this);
     m_agentManager->getGroup()->removeAgent(this);
     delete m_body;
-    delete m_brain;
     foreach(Channel *chan,m_inputs) {
         chan->deleteLater();
     }

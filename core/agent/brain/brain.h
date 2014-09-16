@@ -147,7 +147,6 @@ public:
     ~Brain();
 
 protected:
-    Agent *m_agent; //!< This brain´s agent
     QList <FuzzyBase *> m_fuzzies;
 signals:
 

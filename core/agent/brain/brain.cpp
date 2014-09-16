@@ -26,7 +26,7 @@
 #include "core/brainiaclogger.h"
 
 Brain::Brain(Agent *agent, Brain *brain) :
-    QObject(),m_agent(agent)
+    QObject(agent)
 {
     if(brain) {
         foreach(FuzzyBase *fuzz,brain->getFuzzies()) {
@@ -206,7 +206,7 @@ void Brain::disconnectFuzzies(quint32 childId, quint32 parentId)
 
 Agent* Brain::getAgent() const
 {
-    return m_agent;
+    return qobject_cast<Agent *>(parent());
 }
 
 FuzzyBase* Brain::getFuzzy(quint32 id) const
