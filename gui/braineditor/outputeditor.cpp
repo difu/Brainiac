@@ -20,6 +20,7 @@
 #include "ui_outputeditor.h"
 #include "gui/brainiacslider.h"
 #include "core/agent/agentmanager.h"
+#include "core/agent/brain/brainmanager.h"
 #include "core/agent/agent.h"
 #include "core/agent/brain/brain.h"
 #include "core/agent/brain/output.h"
@@ -101,8 +102,9 @@ void OutputEditor::setOutputConfig(AgentManager *manager,quint32 id)
 
 void OutputEditor::updateEditor()
 {
+    BrainManager *bm=m_agentManager->getBrainManager();
     ui->channelName->setText(m_output->getChannelName());
-    ui->outputName->setText(m_output->getName());
+    ui->outputName->setText(bm->getFuzzyName(m_output->getId()));
     ui->rangeMax->setText(QString::number(m_output->getMaxValue()));
     ui->rangeMin->setText(QString::number(m_output->getMinValue()));
     m_slider->setRange(m_output->getMinValue(),m_output->getMaxValue());

@@ -201,7 +201,6 @@ public:
     qint32 getEditorTranslationX() { return m_editX; }
     qint32 getEditorTranslationY() { return m_editY; }
     QHash<quint32, QPoint> getEditorSegmentNodeLocations();
-    QHash<quint32, QPoint> getEditorFuzzyLocations();
     Group* getGroup() { return m_group; }
 
     FuzzyBase::LogicType getFuzzType( quint32 fuzzId);
@@ -237,6 +236,8 @@ public:
      * @return Agent
      */
     Agent* getActionAgent() {return m_spActionAgent;}
+
+    BrainManager* getBrainManager() const { return m_brainManager; }
 
     /**
      * @brief returns a pointer to the BvhManager
@@ -309,7 +310,6 @@ public:
      */
     void setActiveMotionTreeEditor(quint32 id) { m_activeMotionTreeEditor=id; }
     void setEditorTranslation(qint32 x, qint32 y);
-    void setFuzzyEditorTranslation(quint32 id, qint32 x, qint32 y);
     void setBodyEditorTranslation(quint32 id, qint32 x, qint32 y);
 
     /**
@@ -490,7 +490,6 @@ private:
     quint32 m_editX, m_editY;
     Group *m_group;
     Scene *m_scene;
-    QHash<quint32, QPoint> m_editorFuzzyLocations;
     QHash<quint32, QPoint> m_editorSegmentNodeLocations;
     IdGenerator m_brainIdGenerator;
     IdGenerator m_animationIdGenerator;
@@ -503,14 +502,14 @@ private:
     BrainManager *m_brainManager; /**< manages all brain related stuff */
 
     // Brain stuff
-    void addAndFuzz(quint32 id, QString name, QString mode, quint32 editorX, quint32 editorY);
-    void addFuzzFuzz(quint32 id, QString name, QString mode, QString intMode, qreal p1, qreal p2, qreal p3, qreal p4, quint32 editorX, quint32 editorY);
-    void addDefuzz(quint32 id, QString name, qreal defuzzValue, bool isElse, quint32 editorX, quint32 editorY);
-    void addOrFuzz(quint32 id, QString name, QString mode, quint32 editorX, quint32 editorY);
-    void addOutputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY);
-    void addInputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY);
-    void addNoiseFuzz(quint32 id, QString name, qreal rate, quint32 editorX, quint32 editorY);
-    void addTimerFuzz(quint32 id, QString name, qreal rate, QString mode, quint32 editorX, quint32 editorY);
+    void addAndFuzz(quint32 id, const QString &name, QString mode, quint32 editorX, quint32 editorY);
+    void addFuzzFuzz(quint32 id, const QString &name, QString mode, QString intMode, qreal p1, qreal p2, qreal p3, qreal p4, quint32 editorX, quint32 editorY);
+    void addDefuzz(quint32 id, const QString &name, qreal defuzzValue, bool isElse, quint32 editorX, quint32 editorY);
+    void addOrFuzz(quint32 id, const QString &name, QString mode, quint32 editorX, quint32 editorY);
+    void addOutputFuzz(quint32 id, const QString &name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY);
+    void addInputFuzz(quint32 id, const QString &name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY);
+    void addNoiseFuzz(quint32 id, const QString &name, qreal rate, quint32 editorX, quint32 editorY);
+    void addTimerFuzz(quint32 id, const QString &name, qreal rate, QString mode, quint32 editorX, quint32 editorY);
 
     // Body stuff
     void addSegmentFromConfig( QXmlStreamReader *reader, quint32 id, QString name, quint32 parent, quint32 editorX, quint32 editorY );

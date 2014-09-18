@@ -19,12 +19,34 @@
 #define BRAINMANAGER_H
 
 #include <QObject>
+#include <QPoint>
+#include <QHash>
+#include <core/brainiacglobals.h>
+
+class AgentManager;
 
 class BrainManager : public QObject
 {
     Q_OBJECT
 public:
+    struct FuzzyProperties {
+        QString name;
+        QPoint editorLocation;
+        qreal min;
+        qreal max;
+    };
+
     explicit BrainManager(QObject *parent);
+    AgentManager *getAgentManager() const;
+    const QPoint& getEditorFuzzyLocation( BrainiacGlobals::BrainiacId id) const;
+    BrainiacGlobals::BrainiacId getFuzzyId(const QString& name) const;
+    const QString& getFuzzyName(BrainiacGlobals::BrainiacId id) const;
+    void setFuzzyEditorTranslation(BrainiacGlobals::BrainiacId, qint32 x, qint32 y);
+    void setFuzzyName(BrainiacGlobals::BrainiacId id, const QString& name);
+private:
+    void insertNewFuzzy(BrainiacGlobals::BrainiacId id);
+    QHash<BrainiacGlobals::BrainiacId, FuzzyProperties *> m_fuzzyProperties;
+
 
 signals:
 

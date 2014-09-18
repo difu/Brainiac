@@ -207,7 +207,7 @@ quint32 AgentManager::addAndFuzz(QString name, QString mode, quint32 editorX, qu
     return id;
 }
 
-void AgentManager::addAndFuzz(quint32 id, QString name, QString mode, quint32 editorX, quint32 editorY)
+void AgentManager::addAndFuzz(quint32 id, const QString &name, QString mode, quint32 editorX, quint32 editorY)
 {
     FuzzyAnd::Mode andMode;
     if(QString::compare(BrainiacGlobals::FuzzAndModeMin,mode,Qt::CaseInsensitive)==0) {
@@ -217,10 +217,11 @@ void AgentManager::addAndFuzz(quint32 id, QString name, QString mode, quint32 ed
     }
     //m_masterAgent->addAndFuzz(id,name,andMode);
     foreach(Agent* agent,m_agents) {
-        agent->addAndFuzz(id,name,andMode);
+        agent->addAndFuzz(id,andMode);
     }
     m_brainIdGenerator.registerId(id);
-    m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
+    m_brainManager->setFuzzyEditorTranslation(id, editorX,editorY);
+    m_brainManager->setFuzzyName(id,name);
     m_brainEditor->addFuzzyItem(id);
 }
 
@@ -238,7 +239,7 @@ quint32 AgentManager::addFuzzFuzz(QString name, QString mode, QString intMode, q
     return id;
 }
 
-void AgentManager::addFuzzFuzz(quint32 id, QString name, QString mode, QString intMode, qreal p1, qreal p2, qreal p3, qreal p4, quint32 editorX, quint32 editorY)
+void AgentManager::addFuzzFuzz(quint32 id, const QString &name, QString mode, QString intMode, qreal p1, qreal p2, qreal p3, qreal p4, quint32 editorX, quint32 editorY)
 {
     FuzzyFuzz::Mode fuzzMode=FuzzyFuzz::TRAPEZOID;;
     FuzzyFuzz::InterpolationMode interMode=FuzzyFuzz::LINEAR;
@@ -266,10 +267,11 @@ void AgentManager::addFuzzFuzz(quint32 id, QString name, QString mode, QString i
 
     //m_masterAgent->addFuzzFuzz(id,name,fuzzMode,interMode,p1,p2,p3,p4);
     foreach(Agent* agent,m_agents) {
-        agent->addFuzzFuzz(id,name,fuzzMode,interMode,p1,p2,p3,p4);
+        agent->addFuzzFuzz(id,fuzzMode,interMode,p1,p2,p3,p4);
     }
     m_brainIdGenerator.registerId(id);
-    m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
+    m_brainManager->setFuzzyEditorTranslation(id, editorX,editorY);
+    m_brainManager->setFuzzyName(id,name);
     m_brainEditor->addFuzzyItem(id);
 }
 
@@ -287,14 +289,15 @@ quint32 AgentManager::addDefuzz(QString name, qreal defuzzValue, bool isElse, qu
     return id;
 }
 
-void AgentManager::addDefuzz(quint32 id, QString name, qreal defuzzValue, bool isElse, quint32 editorX, quint32 editorY)
+void AgentManager::addDefuzz(quint32 id, const QString &name, qreal defuzzValue, bool isElse, quint32 editorX, quint32 editorY)
 {
     //m_masterAgent->addDefuzz(id,name,defuzzValue,isElse);
     foreach(Agent* agent,m_agents) {
-        agent->addDefuzz(id,name,defuzzValue,isElse);
+        agent->addDefuzz(id,defuzzValue,isElse);
     }
     m_brainIdGenerator.registerId(id);
-    m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
+    m_brainManager->setFuzzyEditorTranslation(id, editorX,editorY);
+    m_brainManager->setFuzzyName(id,name);
     m_brainEditor->addFuzzyItem(id);
 }
 
@@ -310,7 +313,7 @@ quint32 AgentManager::addOrFuzz(QString name, QString mode, quint32 editorX, qui
     return id;
 }
 
-void AgentManager::addOrFuzz(quint32 id, QString name, QString mode, quint32 editorX, quint32 editorY)
+void AgentManager::addOrFuzz(quint32 id, const QString &name, QString mode, quint32 editorX, quint32 editorY)
 {
     FuzzyOr::Mode orMode;
     if(QString::compare(BrainiacGlobals::FuzzOrModeMax,mode,Qt::CaseInsensitive)==0) {
@@ -320,10 +323,11 @@ void AgentManager::addOrFuzz(quint32 id, QString name, QString mode, quint32 edi
     }
     //m_masterAgent->addOrFuzz(id,name,orMode);
     foreach(Agent* agent,m_agents) {
-        agent->addOrFuzz(id,name,orMode);
+        agent->addOrFuzz(id,orMode);
     }
     m_brainIdGenerator.registerId(id);
-    m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
+    m_brainManager->setFuzzyEditorTranslation(id, editorX,editorY);
+    m_brainManager->setFuzzyName(id,name);
     m_brainEditor->addFuzzyItem(id);
 }
 
@@ -341,16 +345,17 @@ quint32 AgentManager::addOutputFuzz(QString name, QString channel, qreal min, qr
     return id;
 }
 
-void AgentManager::addOutputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY)
+void AgentManager::addOutputFuzz(quint32 id, const QString &name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY)
 {
     //m_masterAgent->addOutputFuzz(id, name, channel, min, max);
     //Output *out=(Output*)m_masterAgent->getBrain()->getFuzzy(id);
     foreach(Agent* agent,m_agents) {
-        agent->addOutputFuzz(id, name, channel, min, max);
+        agent->addOutputFuzz(id, channel, min, max);
         //Output *out=(Output*)agent->getBrain()->getFuzzy(id);
     }
     m_brainIdGenerator.registerId(id);
-    m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
+    m_brainManager->setFuzzyEditorTranslation(id, editorX,editorY);
+    m_brainManager->setFuzzyName(id,name);
     m_brainEditor->addFuzzyItem(id);
 }
 
@@ -368,21 +373,22 @@ quint32 AgentManager::addInputFuzz(QString name, QString channel, qreal min, qre
     return id;
 }
 
-void AgentManager::addInputFuzz(quint32 id, QString name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY)
+void AgentManager::addInputFuzz(quint32 id, const QString &name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY)
 {
     foreach(Agent* agent,m_agents) {
-        agent->addInputFuzz(id, name, channel, min, max);
+        agent->addInputFuzz(id, channel, min, max);
     }
     setFuzzyChannelName(id,channel); //!< @bug @todo Channel name must be set here to determine if an input is a sound input node...
     m_brainIdGenerator.registerId(id);
-    m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
+    m_brainManager->setFuzzyEditorTranslation(id, editorX,editorY);
+    m_brainManager->setFuzzyName(id,name);
     m_brainEditor->addFuzzyItem(id);
 }
 
 quint32 AgentManager::addNoiseFuzz(quint32 editorX, quint32 editorY)
 {
     quint32 id=m_brainIdGenerator.getNewId();
-    addNoiseFuzz(id,"Noise",1.0f,editorX,editorY);
+    addNoiseFuzz(id,"Noise", 1.0f,editorX,editorY);
     return id;
 }
 
@@ -393,13 +399,14 @@ quint32 AgentManager::addNoiseFuzz(QString name, qreal rate, quint32 editorX, qu
     return id;
 }
 
-void AgentManager::addNoiseFuzz(quint32 id, QString name, qreal rate, quint32 editorX, quint32 editorY)
+void AgentManager::addNoiseFuzz(quint32 id, const QString &name, qreal rate, quint32 editorX, quint32 editorY)
 {
     foreach(Agent* agent,m_agents) {
-        agent->addNoiseFuzz(id, name, rate);
+        agent->addNoiseFuzz(id, rate);
     }
     m_brainIdGenerator.registerId(id);
-    m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
+    m_brainManager->setFuzzyEditorTranslation(id, editorX,editorY);
+    m_brainManager->setFuzzyName(id,name);
     m_brainEditor->addFuzzyItem(id);
 }
 
@@ -417,16 +424,17 @@ quint32 AgentManager::addTimerFuzz(QString name, qreal rate, QString mode, quint
     return id;
 }
 
-void AgentManager::addTimerFuzz(quint32 id, QString name, qreal rate, QString mode, quint32 editorX, quint32 editorY)
+void AgentManager::addTimerFuzz(quint32 id, const QString& name, qreal rate, QString mode, quint32 editorX, quint32 editorY)
 {
     if(QString::compare(BrainiacGlobals::FuzzTimerModeIfStopped,mode,Qt::CaseInsensitive)==0) {
         //m_masterAgent->addTimerFuzz(id,name,rate,Timer::IFSTOPPED);
         foreach(Agent* agent,m_agents) {
-            agent->addTimerFuzz(id,name,rate,Timer::IFSTOPPED);
+            agent->addTimerFuzz(id,rate,Timer::IFSTOPPED);
         }
     }
     m_brainIdGenerator.registerId(id);
-    m_editorFuzzyLocations.insert(id,QPoint(editorX,editorY));
+    m_brainManager->setFuzzyEditorTranslation(id, editorX,editorY);
+    m_brainManager->setFuzzyName(id,name);
     m_brainEditor->addFuzzyItem(id);
 }
 
@@ -501,11 +509,6 @@ void AgentManager::deleteFuzz(quint32 fuzzId)
 QHash<quint32, QPoint> AgentManager::getEditorSegmentNodeLocations()
 {
     return m_editorSegmentNodeLocations;
-}
-
-QHash<quint32, QPoint> AgentManager::getEditorFuzzyLocations()
-{
-    return m_editorFuzzyLocations;
 }
 
 FuzzyBase::LogicType AgentManager::getFuzzType(quint32 fuzzId)
@@ -1138,9 +1141,9 @@ bool AgentManager::saveConfig()
             qDebug() << __PRETTY_FUNCTION__ << "Could not save fuzz with type" << fuzz->getType();
         }
         stream.writeAttribute("id",QString::number(fuzz->getId()));
-        stream.writeAttribute("name",fuzz->getName());
-        stream.writeAttribute("editorx",QString::number(m_editorFuzzyLocations.value(fuzz->getId()).x()));
-        stream.writeAttribute("editory",QString::number(m_editorFuzzyLocations.value(fuzz->getId()).y()));
+        stream.writeAttribute("name",m_brainManager->getFuzzyName(fuzz->getId()));
+        stream.writeAttribute("editorx",QString::number(m_brainManager->getEditorFuzzyLocation(fuzz->getId()).x()));
+        stream.writeAttribute("editory",QString::number(m_brainManager->getEditorFuzzyLocation(fuzz->getId()).y()));
         stream.writeEndElement(); //FuzzyFuzz
     }
     foreach(FuzzyBase *fuzz,m_masterAgent->getBrain()->getFuzzies()) {
@@ -1190,15 +1193,6 @@ void AgentManager::setEditorTranslation(qint32 x, qint32 y)
     m_editX=x;
     m_editY=y;
 }
-
-void AgentManager::setFuzzyEditorTranslation(quint32 id, qint32 x, qint32 y)
-{
-    QPoint point;//=m_editorFuzzyLocations.value(id);
-    point.setX(x);
-    point.setY(y);
-    m_editorFuzzyLocations.insert(id,point);
-}
-
 
 void AgentManager::setBodyEditorTranslation(quint32 id, qint32 x, qint32 y)
 {
@@ -1381,9 +1375,10 @@ void AgentManager::setFuzzyMinMax(quint32 id, qreal min, qreal max)
 void AgentManager::setFuzzyName(quint32 id, QString name)
 {
 //    m_masterAgent->getBrain()->getFuzzy(id)->setName(name);
-    foreach(Agent *agent, m_agents) {
-        agent->getBrain()->getFuzzy(id)->setName(name);
-    }
+//    foreach(Agent *agent, m_agents) {
+//        agent->getBrain()->getFuzzy(id)->setName(name);
+//    }
+    m_brainManager->setFuzzyName(id,name);
 }
 
 void AgentManager::setFuzzyResult(quint32 id, qreal result)

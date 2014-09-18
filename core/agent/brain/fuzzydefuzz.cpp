@@ -19,8 +19,8 @@
 #include "fuzzydefuzz.h"
 #include "output.h"
 
-FuzzyDefuzz::FuzzyDefuzz(quint32 id, Brain *brain, QString name, qreal defuzzVal) :
-    FuzzyBase(FuzzyBase::DEFUZZ, brain, id, name, 0.0, 1.0)
+FuzzyDefuzz::FuzzyDefuzz(quint32 id, Brain *brain, qreal defuzzVal) :
+    FuzzyBase(FuzzyBase::DEFUZZ, brain, id, 0.0, 1.0)
 {
     setDefuzzVal(defuzzVal);
     m_isElse=false;

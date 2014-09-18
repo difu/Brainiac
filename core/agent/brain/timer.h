@@ -30,7 +30,7 @@ class Timer : public FuzzyBase
 {
 public:
     enum TimerMode {ALWAYS, IFSTOPPED};
-    Timer(quint32 id, Brain *brain, QString name, qreal rate, TimerMode mode);
+    Timer(quint32 id, Brain *brain, qreal rate, TimerMode mode);
     void advance();
     TimerMode getMode();
     qreal getRate();

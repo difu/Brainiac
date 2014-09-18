@@ -19,6 +19,7 @@
 #include "inputeditor.h"
 #include "gui/brainiacslider.h"
 #include "core/agent/agentmanager.h"
+#include "core/agent/brain/brainmanager.h"
 #include "core/agent/agent.h"
 #include "core/agent/brain/brain.h"
 #include "core/agent/brain/input.h"
@@ -87,8 +88,9 @@ void InputEditor::setInputConfig(AgentManager *manager, quint32 id)
 
 void InputEditor::updateEditor()
 {
+    BrainManager *bm=m_agentManager->getBrainManager();
     ui->channelName->setText(m_input->getChannelName());
-    ui->inputName->setText(m_input->getName());
+    ui->inputName->setText(bm->getFuzzyName(m_input->getId()));
     ui->rangeMax->setText(QString::number(m_input->getMaxValue()));
     ui->rangeMin->setText(QString::number(m_input->getMinValue()));
     m_slider->setRange(m_input->getMinValue(),m_input->getMaxValue());

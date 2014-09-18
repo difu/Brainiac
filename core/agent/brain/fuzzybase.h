@@ -37,7 +37,7 @@ class FuzzyBase : public QObject
     Q_OBJECT
 public:
     enum LogicType{AND=BrainiacGlobals::AND,OR=BrainiacGlobals::OR,OUTPUT=BrainiacGlobals::OUTPUT,INPUT=BrainiacGlobals::INPUT,DEFUZZ=BrainiacGlobals::DEFUZZ,FUZZ=BrainiacGlobals::FUZZ,NOISE=BrainiacGlobals::NOISE,TIMER=BrainiacGlobals::TIMER};
-    explicit FuzzyBase(LogicType logicType, Brain *brain, quint32 id, const QString &name, qreal min, qreal max);
+    explicit FuzzyBase(LogicType logicType, Brain *brain, quint32 id, qreal min, qreal max);
     virtual ~FuzzyBase();
 
     /** \brief adds a child to this fuzz node
@@ -68,7 +68,6 @@ public:
     quint32 getId() const { return m_id; }
     qreal getMinValue() const {return m_minValue;}
     qreal getMaxValue() const {return m_maxValue;}
-    QString getName() const {return m_name;}
     QList<FuzzyBase *> getParents() const;
 
     /** \brief returns the calculated result of this fuzz
@@ -93,10 +92,9 @@ public:
             @returns true if connection is inverted
     **/
     bool isConnectionInverted( quint32 parentId ) const;
-    void setId(quint32 id) { m_id=id; }
     void setMax(qreal max);
     void setMin(qreal min);
-    void setName( const QString &name );
+
     /** \brief sets the result of this node
 
                     sets the result
@@ -120,9 +118,6 @@ protected:
     QList<Parent> m_parents;
     QList<FuzzyBase *> m_children;
 
-
-
-    QString m_name;
 signals:
     void resultChanged(); //!< This signal is emitted whenever result changes
 public slots:

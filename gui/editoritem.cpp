@@ -25,6 +25,7 @@
 #include "gui/editoritemconnector.h"
 #include "core/group/group.h"
 #include "core/agent/agentmanager.h"
+#include "core/agent/brain/brainmanager.h"
 #include "core/agent/agent.h"
 #include "core/agent/brain/brain.h"
 #include "core/agent/brain/output.h"
@@ -124,28 +125,36 @@ void EditorItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
         painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,myManager->getName());
     } else if(m_type==BrainiacGlobals::OUTPUT) {
         AgentManager *myManager=(AgentManager*)m_object;
-        painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,myManager->getMasterAgent()->getBrain()->getFuzzy(m_id)->getName());
+        BrainManager *bm=myManager->getBrainManager();
+        painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,bm->getFuzzyName(m_id));
     } else if(m_type==BrainiacGlobals::INPUT) {
         AgentManager *myManager=(AgentManager*)m_object;
-        painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,myManager->getMasterAgent()->getBrain()->getFuzzy(m_id)->getName());
+        BrainManager *bm=myManager->getBrainManager();
+        painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,bm->getFuzzyName(m_id));
     } else if(m_type==BrainiacGlobals::NOISE) {
         AgentManager *myManager=(AgentManager*)m_object;
-        painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,myManager->getMasterAgent()->getBrain()->getFuzzy(m_id)->getName());
+        BrainManager *bm=myManager->getBrainManager();
+        painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,bm->getFuzzyName(m_id));
     } else if(m_type==BrainiacGlobals::AND) {
         AgentManager *myManager=(AgentManager*)m_object;
-        painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,myManager->getMasterAgent()->getBrain()->getFuzzy(m_id)->getName());
+        BrainManager *bm=myManager->getBrainManager();
+        painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,bm->getFuzzyName(m_id));
     } else if(m_type==BrainiacGlobals::OR) {
         AgentManager *myManager=(AgentManager*)m_object;
-        painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,myManager->getMasterAgent()->getBrain()->getFuzzy(m_id)->getName());
+        BrainManager *bm=myManager->getBrainManager();
+        painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,bm->getFuzzyName(m_id));
     } else if(m_type==BrainiacGlobals::DEFUZZ) {
         AgentManager *myManager=(AgentManager*)m_object;
-        painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,myManager->getMasterAgent()->getBrain()->getFuzzy(m_id)->getName());
+        BrainManager *bm=myManager->getBrainManager();
+        painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,bm->getFuzzyName(m_id));
     } else if(m_type==BrainiacGlobals::FUZZ) {
         AgentManager *myManager=(AgentManager*)m_object;
-        painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,myManager->getMasterAgent()->getBrain()->getFuzzy(m_id)->getName());
+        BrainManager *bm=myManager->getBrainManager();
+        painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,bm->getFuzzyName(m_id));
     } else if(m_type==BrainiacGlobals::TIMER) {
         AgentManager *myManager=(AgentManager*)m_object;
-        painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,myManager->getMasterAgent()->getBrain()->getFuzzy(m_id)->getName());
+        BrainManager *bm=myManager->getBrainManager();
+        painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,bm->getFuzzyName(m_id));
     } else if(m_type==BrainiacGlobals::CUBE) {
         AgentManager *myManager=(AgentManager*)m_object;
         painter->drawText(relxPos - adjust+40,relyPos - adjust+10,75,50,Qt::TextWordWrap|Qt::AlignHCenter,myManager->getBodyManager()->getSegment(m_id).getName());

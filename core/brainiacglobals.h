@@ -46,6 +46,7 @@ public:
     enum SegmentType {SPHERESEGMENT=BrainiacGlobals::SPHERE, BOXSEGMENT=BrainiacGlobals::CUBE, TUBESEGMENT=BrainiacGlobals::TUBE, NOPRIMITIVE};
     enum RotTrans {RX, RY, RZ, TX, TY, TZ };
     enum AnimationType{ STATIC, LOCOMOTION, RAMP, TURNING, NOTYPE };
+    typedef quint32 BrainiacId;
     static QColor getColorFromBrainiacColorValue(qreal colVal);
     static const QList<QColor> EditorColors;
     static void normalizeAngle(qreal *angle)

@@ -22,8 +22,8 @@
 #include "core/agent/agent.h"
 #include "core/agent/channel.h"
 
-Output::Output(quint32 id, Brain *brain, const QString &name, const QString &channel, qreal min, qreal max) :
-    FuzzyChannel(FuzzyBase::OUTPUT, id, brain, name, channel,  min, max),
+Output::Output(quint32 id, Brain *brain, const QString &channel, qreal min, qreal max) :
+    FuzzyChannel(FuzzyBase::OUTPUT, id, brain,channel,  min, max),
     m_defuzzMode(AVERAGE)
 {
     setChannelName(channel);

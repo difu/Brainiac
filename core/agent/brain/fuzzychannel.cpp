@@ -4,8 +4,8 @@
 #include "core/agent/brain/brain.h"
 #include "core/brainiaclogger.h"
 
-FuzzyChannel::FuzzyChannel(LogicType logicType, quint32 id, Brain *brain, const QString& name, const QString& channelName, qreal min, qreal max):
-    FuzzyBase(logicType, brain, id, name, min, max),
+FuzzyChannel::FuzzyChannel(LogicType logicType, quint32 id, Brain *brain, const QString& channelName, qreal min, qreal max):
+    FuzzyBase(logicType, brain, id, min, max),
     m_channel(0)
 {
     setChannelName(channelName);

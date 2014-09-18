@@ -34,7 +34,7 @@ class Output : public FuzzyChannel
     Q_OBJECT
 public:
     enum DefuzzMode {AVERAGE, MAX};
-    Output(quint32 id, Brain *brain, const QString &name, const QString &channel, qreal min, qreal max);
+    Output(quint32 id, Brain *brain, const QString &channel, qreal min, qreal max);
 //    QString getChannelName();
     void calculate();
     Output::DefuzzMode getDefuzzMode();

@@ -21,6 +21,7 @@
 #include "core/agent/brain/fuzzydefuzz.h"
 #include "core/agent/brain/output.h"
 #include "core/agent/agentmanager.h"
+#include "core/agent/brain/brainmanager.h"
 #include "core/agent/agent.h"
 #include "core/agent/brain/brain.h"
 #include "gui/brainiacslider.h"
@@ -79,7 +80,8 @@ void DefuzzEditor::setDefuzzConfig(AgentManager *manager, quint32 id)
 
 void DefuzzEditor::updateEditor()
 {
-    ui->defuzzName->setText(m_defuzz->getName());
+    BrainManager *bm=m_agentManager->getBrainManager();
+    ui->defuzzName->setText(bm->getFuzzyName(m_defuzz->getId()));
     if(m_defuzz->hasChildren()) {
         FuzzyBase *base=m_defuzz->getChildren().at(0);
         if(base->getType()==FuzzyBase::OUTPUT) {

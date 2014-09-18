@@ -20,7 +20,7 @@
 
 #include "core/agent/brain/brain.h"
 
-FuzzyBase::FuzzyBase(LogicType logicType, Brain *brain, quint32 id, const QString &name, qreal min=0.0f, qreal max=1.0f) :
+FuzzyBase::FuzzyBase(LogicType logicType, Brain *brain, quint32 id, qreal min=0.0f, qreal max=1.0f) :
     QObject()
 {
     m_brain=brain;
@@ -29,7 +29,6 @@ FuzzyBase::FuzzyBase(LogicType logicType, Brain *brain, quint32 id, const QStrin
     m_maxValue=max;
     m_minValue=min;
     m_result=0.0;
-    m_name=name;
 }
 
 void FuzzyBase::addChild(FuzzyBase *child)
@@ -139,11 +138,6 @@ void FuzzyBase::setMin(qreal min)
 {
     m_minValue=min;
     setResult(m_result); // Crop the current result and emit changes
-}
-
-void FuzzyBase::setName(const QString &name)
-{
-    m_name=name;
 }
 
 bool FuzzyBase::setResult(qreal result,bool emitChange)

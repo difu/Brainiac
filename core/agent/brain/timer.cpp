@@ -22,7 +22,7 @@
 #include "core/scene.h"
 #include "core/simulation.h"
 
-Timer::Timer(quint32 id, Brain *brain, QString name, qreal rate, TimerMode mode):FuzzyBase(FuzzyBase::TIMER,brain,id,name,0,1),m_mode(mode)
+Timer::Timer(quint32 id, Brain *brain, qreal rate, TimerMode mode):FuzzyBase(FuzzyBase::TIMER,brain,id,0,1),m_mode(mode)
 {
     m_running=false;
     m_startFrame=0;

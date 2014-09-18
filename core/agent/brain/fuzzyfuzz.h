@@ -38,7 +38,7 @@ public:
                TRAPEZOID //!< return value depends on trapezoid p1, p2, p3, p4
               };
     enum InterpolationMode {LINEAR, SINE, QUAD };
-    FuzzyFuzz( quint32 id, Brain *brain, QString name, Mode mode, InterpolationMode iMode);
+    FuzzyFuzz(quint32 id, Brain *brain, Mode mode, InterpolationMode iMode);
     void calculate();
 
     /** \brief  triggers calculation but emitting the resultChanged() Signal is selectable

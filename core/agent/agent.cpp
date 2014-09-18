@@ -119,44 +119,44 @@ void Agent::addConnection(quint32 childId, quint32 parentId, bool inverted)
     m_brain->connectFuzzies(childId, parentId,inverted);
 }
 
-void Agent::addAndFuzz(quint32 id, const QString &name, FuzzyAnd::Mode mode)
+void Agent::addAndFuzz(quint32 id, FuzzyAnd::Mode mode)
 {
-    m_brain->addAndFuzz(id, name, mode);
+    m_brain->addAndFuzz(id, mode);
 }
 
-void Agent::addDefuzz(quint32 id, const QString &name, qreal defuzzValue, bool isElse)
+void Agent::addDefuzz(quint32 id, qreal defuzzValue, bool isElse)
 {
-    m_brain->addDefuzz(id,name,defuzzValue,isElse);
+    m_brain->addDefuzz(id,defuzzValue,isElse);
 }
 
-void Agent::addFuzzFuzz(quint32 id, const QString &name, FuzzyFuzz::Mode mode, FuzzyFuzz::InterpolationMode intMode, qreal p1, qreal p2, qreal p3, qreal p4)
+void Agent::addFuzzFuzz(quint32 id, FuzzyFuzz::Mode mode, FuzzyFuzz::InterpolationMode intMode, qreal p1, qreal p2, qreal p3, qreal p4)
 {
-    m_brain->addFuzzFuzz(id,name,mode,intMode,p1,p2,p3,p4);
+    m_brain->addFuzzFuzz(id,mode,intMode,p1,p2,p3,p4);
 }
 
-void Agent::addOrFuzz(quint32 id, const QString &name, FuzzyOr::Mode mode)
+void Agent::addOrFuzz(quint32 id, FuzzyOr::Mode mode)
 {
-    m_brain->addOrFuzz(id, name, mode);
+    m_brain->addOrFuzz(id, mode);
 }
 
-void Agent::addOutputFuzz(quint32 id, const QString &name, const QString &channel, qreal min, qreal max)
+void Agent::addOutputFuzz(quint32 id, const QString &channel, qreal min, qreal max)
 {
-    m_brain->addOutputFuzz(id, name, channel, min,  max);
+    m_brain->addOutputFuzz(id, channel, min,  max);
 }
 
-void Agent::addInputFuzz(quint32 id, const QString &name, const QString &channel, qreal min, qreal max)
+void Agent::addInputFuzz(quint32 id, const QString &channel, qreal min, qreal max)
 {
-    m_brain->addInputFuzz(id, name, channel,  min,  max);
+    m_brain->addInputFuzz(id, channel,  min,  max);
 }
 
-void Agent::addNoiseFuzz(quint32 id, const QString &name, qreal rate)
+void Agent::addNoiseFuzz(quint32 id, qreal rate)
 {
-    m_brain->addNoiseFuzz(id, name,rate);
+    m_brain->addNoiseFuzz(id,rate);
 }
 
-void Agent::addTimerFuzz(quint32 id, const QString &name, qreal rate, Timer::TimerMode mode)
+void Agent::addTimerFuzz(quint32 id, qreal rate, Timer::TimerMode mode)
 {
-    m_brain->addTimerFuzz(id, name, rate, mode);
+    m_brain->addTimerFuzz(id, rate, mode);
 }
 
 void Agent::advance(AdvanceMode mode)

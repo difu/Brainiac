@@ -18,8 +18,8 @@
 
 #include "fuzzyfuzz.h"
 
-FuzzyFuzz::FuzzyFuzz( quint32 id, Brain *brain, QString name, Mode mode, InterpolationMode iMode) :
-    FuzzyBase(FuzzyBase::FUZZ, brain, id, name, 0.0, 1.0)
+FuzzyFuzz::FuzzyFuzz( quint32 id, Brain *brain, Mode mode, InterpolationMode iMode) :
+    FuzzyBase(FuzzyBase::FUZZ, brain, id, 0.0, 1.0)
 {
     setInterpolationMode(iMode);
     setMode(mode);

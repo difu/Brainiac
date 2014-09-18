@@ -27,7 +27,7 @@ public:
     enum Mode { MAX,    //!< take the max input as resutl
                 SUM     //!< tale the sum of all inputs as result
               };
-    FuzzyOr( quint32 id, Brain *brain, QString name, Mode mode);
+    FuzzyOr(quint32 id, Brain *brain, Mode mode);
     void calculate();
     Mode getMode();
     void setMode(Mode mode);

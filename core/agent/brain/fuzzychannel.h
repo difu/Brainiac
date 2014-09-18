@@ -10,7 +10,7 @@ class FuzzyChannel : public FuzzyBase
 {
     Q_OBJECT
 public:
-    FuzzyChannel(LogicType logicType, quint32 id, Brain *brain, const QString &name, const QString& channelName, qreal min, qreal max);
+    FuzzyChannel(LogicType logicType, quint32 id, Brain *brain, const QString& channelName, qreal min, qreal max);
 
     /** \brief  @return the channel name
      *  a look up is made, if the channel is already registered in the agents brain. If so, the name is read out of the brain of the agent.

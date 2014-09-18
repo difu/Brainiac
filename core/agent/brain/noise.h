@@ -38,7 +38,7 @@ public:
             @param rate the rate of this noise node
 
     **/
-    Noise(quint32 id, Brain *brain, QString name, qreal rate);
+    Noise(quint32 id, Brain *brain, qreal rate);
     /** \brief returns the current rate
                     @returns rate of this noise fuzz
     **/

@@ -29,7 +29,7 @@
 class FuzzyDefuzz : public FuzzyBase
 {
 public:
-    FuzzyDefuzz( quint32 id, Brain *brain, QString name, qreal defuzzVal);
+    FuzzyDefuzz( quint32 id, Brain *brain, qreal defuzzVal);
     void calculate();
 
     /** \brief  returns the defuzzyfication value

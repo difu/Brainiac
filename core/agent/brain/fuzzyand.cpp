@@ -25,7 +25,7 @@
 #include "core/agent/channel.h"
 #include "core/simulation.h"
 
-FuzzyAnd::FuzzyAnd( quint32 id, Brain *brain, QString name, Mode mode) : FuzzyBase(FuzzyBase::AND, brain, id, name, 0, 1), m_mode(mode)
+FuzzyAnd::FuzzyAnd(quint32 id, Brain *brain, Mode mode) : FuzzyBase(FuzzyBase::AND, brain, id, 0, 1), m_mode(mode)
 {
     m_isSoundRule=false;
 }
@@ -100,7 +100,7 @@ void FuzzyAnd::calculateSound()
                        input->setResult(thisAgent->getOtherAgentRelativeOrientation(otherAgent),false); // do not emit change, it would result in infinite loop!
                     }
                 } else {
-                    qWarning() << __PRETTY_FUNCTION__ << "Input" << input->getId() << "is not a sound input "<< input->getName() << input->getChannelName();
+                    qWarning() << __PRETTY_FUNCTION__ << "Input" << input->getId() << "is not a sound input " << input->getChannelName();
                 }
             } else {
                 qCritical() << __PRETTY_FUNCTION__ << "Expected Input node! ";

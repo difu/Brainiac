@@ -29,7 +29,7 @@ public:
     enum Mode { MIN,        //!< take the minimum input as result
                 PRODUCT     //!< take the product of all inputs as result
               };
-    FuzzyAnd( quint32 id, Brain *brain, QString name, Mode mode);
+    FuzzyAnd( quint32 id, Brain *brain, Mode mode);
     /** \brief triggers calculation of result
 
             Calculates the result depending on the mode

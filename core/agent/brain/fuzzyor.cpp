@@ -18,7 +18,7 @@
 
 #include "fuzzyor.h"
 
-FuzzyOr::FuzzyOr( quint32 id, Brain *brain, QString name, Mode mode) : FuzzyBase(FuzzyBase::OR, brain, id, name, 0, 1),m_mode(mode)
+FuzzyOr::FuzzyOr( quint32 id, Brain *brain, Mode mode) : FuzzyBase(FuzzyBase::OR, brain, id, 0, 1),m_mode(mode)
 {
 }
 

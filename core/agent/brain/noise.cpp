@@ -22,7 +22,7 @@
 #include "core/scene.h"
 #include "core/simulation.h"
 
-Noise::Noise(quint32 id, Brain *brain, QString name, qreal rate):FuzzyBase(FuzzyBase::NOISE,brain,id,name,0,1),m_rate(rate)
+Noise::Noise(quint32 id, Brain *brain, qreal rate):FuzzyBase(FuzzyBase::NOISE,brain,id,0,1),m_rate(rate)
 {
     m_pseudoSalt=id*(m_brain->getAgent()->getId()+1)*13; // +1 because of master agent which has id =0
     setResult(BrainiacGlobals::getRand(m_pseudoSalt));

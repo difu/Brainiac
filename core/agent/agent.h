@@ -117,14 +117,14 @@ public:
     **/
     void addConnection(quint32 child, quint32 parentId, bool inverted);
     // Fuzz Stuff
-    void addAndFuzz(quint32 id, const QString &name, FuzzyAnd::Mode mode);
-    void addDefuzz(quint32 id, const QString &name, qreal defuzzValue, bool isElse);
-    void addFuzzFuzz(quint32 id, const QString &name, FuzzyFuzz::Mode mode, FuzzyFuzz::InterpolationMode intMode, qreal p1, qreal p2, qreal p3, qreal p4);
-    void addInputFuzz(quint32 id, const QString &name, const QString &channel, qreal min, qreal max);
-    void addOrFuzz(quint32 id, const QString &name, FuzzyOr::Mode mode);
-    void addOutputFuzz(quint32 id, const QString &name, const QString &channel, qreal min, qreal max);
-    void addNoiseFuzz(quint32 id, const QString &name, qreal rate);
-    void addTimerFuzz(quint32 id, const QString &name, qreal rate, Timer::TimerMode mode);
+    void addAndFuzz(quint32 id, FuzzyAnd::Mode mode);
+    void addDefuzz(quint32 id, qreal defuzzValue, bool isElse);
+    void addFuzzFuzz(quint32 id, FuzzyFuzz::Mode mode, FuzzyFuzz::InterpolationMode intMode, qreal p1, qreal p2, qreal p3, qreal p4);
+    void addInputFuzz(quint32 id, const QString &channel, qreal min, qreal max);
+    void addOrFuzz(quint32 id, FuzzyOr::Mode mode);
+    void addOutputFuzz(quint32 id, const QString &channel, qreal min, qreal max);
+    void addNoiseFuzz(quint32 id, qreal rate);
+    void addTimerFuzz(quint32 id, qreal rate, Timer::TimerMode mode);
     /** \brief advances this agent
 
                     calling this function makes the agent go one step further in time

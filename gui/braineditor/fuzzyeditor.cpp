@@ -20,6 +20,7 @@
 #include "ui_fuzzyeditor.h"
 #include "gui/braineditor/fuzzyeditorcurveeditor.h"
 #include "core/agent/agentmanager.h"
+#include "core/agent/brain/brainmanager.h"
 #include "core/agent/agent.h"
 #include "core/agent/brain/brain.h"
 #include "core/agent/brain/fuzzyfuzz.h"
@@ -135,7 +136,8 @@ void FuzzyEditor::setFuzzConfig(AgentManager *manager, quint32 id)
 void FuzzyEditor::updateEditor()
 {
     m_editor->updateEditor();
-    ui->fuzzyName->setText(m_fuzz->getName());
+    BrainManager *bm=m_agentManager->getBrainManager();
+    ui->fuzzyName->setText(bm->getFuzzyName(m_fuzz->getId()));
     ui->buttonLinearMode->setChecked(m_fuzz->getInterpolationMode()==FuzzyFuzz::LINEAR);
     ui->buttonQuadMode->setChecked(m_fuzz->getInterpolationMode()==FuzzyFuzz::QUAD);
     ui->buttonSineMode->setChecked(m_fuzz->getInterpolationMode()==FuzzyFuzz::SINE);

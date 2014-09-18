@@ -20,6 +20,7 @@
 #include "ui_noiseeditor.h"
 #include "gui/brainiacslider.h"
 #include "core/agent/agentmanager.h"
+#include "core/agent/brain/brainmanager.h"
 #include "core/agent/agent.h"
 #include "core/agent/brain/brain.h"
 #include "core/agent/brain/noise.h"
@@ -73,7 +74,8 @@ void NoiseEditor::setNoiseConfig(AgentManager *manager, quint32 id)
 
 void NoiseEditor::updateEditor()
 {
-    ui->noiseName->setText(m_noise->getName());
+    BrainManager *bm=m_agentManager->getBrainManager();
+    ui->noiseName->setText(bm->getFuzzyName(m_noise->getId()));
     m_sliderRate->setRange(0,m_noise->getMaxRate());
     m_sliderRate->setValue(m_noise->getRate());
     m_sliderResult->setValue(m_noise->getResult());

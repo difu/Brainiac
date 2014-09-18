@@ -34,7 +34,7 @@ class Input : public FuzzyChannel
 {
     Q_OBJECT
 public:
-    Input(quint32 id, Brain *brain, const QString& name, const QString& channel, qreal min, qreal max);
+    Input(quint32 id, Brain *brain, const QString& channel, qreal min, qreal max);
 
     void calculate();
 

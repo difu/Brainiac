@@ -19,6 +19,7 @@
 #include "braineditor.h"
 #include "core/agent/agent.h"
 #include "core/agent/agentmanager.h"
+#include "core/agent/brain/brainmanager.h"
 #include "core/agent/brain/brain.h"
 #include "core/agent/brain/output.h"
 #include "core/brainiaclogger.h"
@@ -40,7 +41,7 @@ void BrainEditor::addFuzzyItem(quint32 id)
 {
     if(m_agentManager->getMasterAgent()->getBrain()->getFuzzy(id)) {
         BrainEditorItem *item=new BrainEditorItem((BrainiacGlobals::ItemType)m_agentManager->getFuzzType(id),m_agentManager,id);
-        item->setPos(m_agentManager->getEditorFuzzyLocations().value(id).x()+BrainEditorItem::WIDTH,m_agentManager->getEditorFuzzyLocations().value(id).y());
+        item->setPos(m_agentManager->getBrainManager()->getEditorFuzzyLocation(id).x()+BrainEditorItem::WIDTH,m_agentManager->getBrainManager()->getEditorFuzzyLocation(id).y());
         addItem(item);
     } else {
         qCritical() << __PRETTY_FUNCTION__ << "No item with id"  << id;
@@ -210,7 +211,7 @@ void BrainEditor::updateItemLocations()
     foreach (QGraphicsItem *item, items()) {
         if (item->type() == BrainEditorItem::Type) {
             BrainEditorItem* bItem=(BrainEditorItem *) item;
-            m_agentManager->setFuzzyEditorTranslation(bItem->getId(),(qint32)item->pos().x(),(qint32)item->pos().y());
+            m_agentManager->getBrainManager()->setFuzzyEditorTranslation(bItem->getId(),(qint32)item->pos().x(),(qint32)item->pos().y());
         }
     }
 }
