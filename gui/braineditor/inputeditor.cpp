@@ -89,7 +89,7 @@ void InputEditor::setInputConfig(AgentManager *manager, quint32 id)
 void InputEditor::updateEditor()
 {
     BrainManager *bm=m_agentManager->getBrainManager();
-    ui->channelName->setText(m_input->getChannelName());
+    ui->channelName->setText(bm->getFuzzyChannelName(m_input->getId()));
     ui->inputName->setText(bm->getFuzzyName(m_input->getId()));
     ui->rangeMax->setText(QString::number(m_input->getMaxValue()));
     ui->rangeMin->setText(QString::number(m_input->getMinValue()));

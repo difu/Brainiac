@@ -33,13 +33,20 @@ AgentManager* BrainManager::getAgentManager() const
 const QPoint& BrainManager::getEditorFuzzyLocation(BrainiacGlobals::BrainiacId id) const
 {
     Q_ASSERT(m_fuzzyProperties.contains(id));
-    return m_fuzzyProperties.value(id)->editorLocation;
+    return m_fuzzyProperties.value(id)->getEditorLocation();
+}
+
+const QString& BrainManager::getFuzzyChannelName(BrainiacGlobals::BrainiacId id) const
+{
+    Q_ASSERT(m_fuzzyProperties.contains(id));
+    return m_fuzzyProperties.value(id)->getChannelName();
+
 }
 
 const QString& BrainManager::getFuzzyName(BrainiacGlobals::BrainiacId id) const
 {
     Q_ASSERT(m_fuzzyProperties.contains(id));
-    return m_fuzzyProperties.value(id)->name;
+    return m_fuzzyProperties.value(id)->getName();
 }
 
 BrainiacGlobals::BrainiacId BrainManager::getFuzzyId(const QString &name) const
@@ -47,7 +54,7 @@ BrainiacGlobals::BrainiacId BrainManager::getFuzzyId(const QString &name) const
     QHash<BrainiacGlobals::BrainiacId, FuzzyProperties *>::const_iterator i;
     for (i = m_fuzzyProperties.constBegin(); i != m_fuzzyProperties.constEnd(); ++i) {
         FuzzyProperties *fp=i.value();
-        if(fp->name==name) {
+        if(fp->getName()==name) {
             return i.key();
         }
     }
@@ -67,7 +74,16 @@ void BrainManager::setFuzzyEditorTranslation(BrainiacGlobals::BrainiacId id, qin
         insertNewFuzzy(id);
     }
     FuzzyProperties *props=m_fuzzyProperties.value(id);
-    props->editorLocation=QPoint(x,y);
+    props->setEditorLocation(QPoint(x,y));
+}
+
+void BrainManager::setFuzzyChannelName(BrainiacGlobals::BrainiacId id, const QString &channelName)
+{
+    if(!m_fuzzyProperties.contains(id)) {
+        insertNewFuzzy(id);
+    }
+    FuzzyProperties *props=m_fuzzyProperties.value(id);
+    props->setChannelName(channelName);
 }
 
 void BrainManager::setFuzzyName(BrainiacGlobals::BrainiacId id, const QString &name)
@@ -76,5 +92,5 @@ void BrainManager::setFuzzyName(BrainiacGlobals::BrainiacId id, const QString &n
         insertNewFuzzy(id);
     }
     FuzzyProperties *props=m_fuzzyProperties.value(id);
-    props->name=name;
+    props->setName(name);
 }

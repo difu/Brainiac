@@ -103,7 +103,7 @@ void OutputEditor::setOutputConfig(AgentManager *manager,quint32 id)
 void OutputEditor::updateEditor()
 {
     BrainManager *bm=m_agentManager->getBrainManager();
-    ui->channelName->setText(m_output->getChannelName());
+    ui->channelName->setText(bm->getFuzzyChannelName(m_output->getId()));
     ui->outputName->setText(bm->getFuzzyName(m_output->getId()));
     ui->rangeMax->setText(QString::number(m_output->getMaxValue()));
     ui->rangeMin->setText(QString::number(m_output->getMinValue()));

@@ -22,6 +22,7 @@
 #include <QPoint>
 #include <QHash>
 #include <core/brainiacglobals.h>
+#include "core/agent/brain/fuzzyproperties.h"
 
 class AgentManager;
 
@@ -29,20 +30,16 @@ class BrainManager : public QObject
 {
     Q_OBJECT
 public:
-    struct FuzzyProperties {
-        QString name;
-        QPoint editorLocation;
-        qreal min;
-        qreal max;
-    };
 
     explicit BrainManager(QObject *parent);
     AgentManager *getAgentManager() const;
     const QPoint& getEditorFuzzyLocation( BrainiacGlobals::BrainiacId id) const;
     BrainiacGlobals::BrainiacId getFuzzyId(const QString& name) const;
     const QString& getFuzzyName(BrainiacGlobals::BrainiacId id) const;
+    const QString& getFuzzyChannelName(BrainiacGlobals::BrainiacId id) const;
     void setFuzzyEditorTranslation(BrainiacGlobals::BrainiacId, qint32 x, qint32 y);
     void setFuzzyName(BrainiacGlobals::BrainiacId id, const QString& name);
+    void setFuzzyChannelName(BrainiacGlobals::BrainiacId id, const QString& channelName);
 private:
     void insertNewFuzzy(BrainiacGlobals::BrainiacId id);
     QHash<BrainiacGlobals::BrainiacId, FuzzyProperties *> m_fuzzyProperties;

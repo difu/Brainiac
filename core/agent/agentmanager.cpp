@@ -347,16 +347,15 @@ quint32 AgentManager::addOutputFuzz(QString name, QString channel, qreal min, qr
 
 void AgentManager::addOutputFuzz(quint32 id, const QString &name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY)
 {
-    //m_masterAgent->addOutputFuzz(id, name, channel, min, max);
-    //Output *out=(Output*)m_masterAgent->getBrain()->getFuzzy(id);
-    foreach(Agent* agent,m_agents) {
-        agent->addOutputFuzz(id, channel, min, max);
-        //Output *out=(Output*)agent->getBrain()->getFuzzy(id);
-    }
     m_brainIdGenerator.registerId(id);
     m_brainManager->setFuzzyEditorTranslation(id, editorX,editorY);
     m_brainManager->setFuzzyName(id,name);
-    m_brainEditor->addFuzzyItem(id);
+    m_brainManager->setFuzzyChannelName(id,channel);
+
+    foreach(Agent* agent,m_agents) {
+        agent->addOutputFuzz(id, channel, min, max);
+    }
+    m_brainEditor->addFuzzyItem(id); // Must be called AFTER BrainManager calls, because channels, fuzzes did not exist before
 }
 
 quint32 AgentManager::addInputFuzz(quint32 editorX, quint32 editorY)
@@ -375,13 +374,15 @@ quint32 AgentManager::addInputFuzz(QString name, QString channel, qreal min, qre
 
 void AgentManager::addInputFuzz(quint32 id, const QString &name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY)
 {
+    m_brainIdGenerator.registerId(id);
+    m_brainManager->setFuzzyEditorTranslation(id, editorX,editorY);
+    m_brainManager->setFuzzyName(id,name);
+    m_brainManager->setFuzzyChannelName(id,name);
     foreach(Agent* agent,m_agents) {
         agent->addInputFuzz(id, channel, min, max);
     }
     setFuzzyChannelName(id,channel); //!< @bug @todo Channel name must be set here to determine if an input is a sound input node...
-    m_brainIdGenerator.registerId(id);
-    m_brainManager->setFuzzyEditorTranslation(id, editorX,editorY);
-    m_brainManager->setFuzzyName(id,name);
+
     m_brainEditor->addFuzzyItem(id);
 }
 
@@ -1061,7 +1062,7 @@ bool AgentManager::saveConfig()
         } else if(fuzz->getType()==FuzzyBase::INPUT) {
             stream.writeStartElement("Input");
             Input *inp=(Input *)fuzz;
-            stream.writeAttribute("channel", inp->getChannelName());
+            stream.writeAttribute("channel", m_brainManager->getFuzzyChannelName(fuzz->getId()));
             stream.writeAttribute("min",  QString::number(inp->getMinValue(),'f'));
             stream.writeAttribute("max",  QString::number(inp->getMaxValue(),'f'));
         }  else if(fuzz->getType()==FuzzyBase::DEFUZZ) {
@@ -1076,7 +1077,7 @@ bool AgentManager::saveConfig()
         } else if(fuzz->getType()==FuzzyBase::OUTPUT) {
             stream.writeStartElement("Output");
             Output *out=(Output *)fuzz;
-            stream.writeAttribute("channel", out->getChannelName());
+            stream.writeAttribute("channel", m_brainManager->getFuzzyChannelName(fuzz->getId()));
             stream.writeAttribute("min",  QString::number(out->getMinValue(),'f'));
             stream.writeAttribute("max",  QString::number(out->getMaxValue(),'f'));
         } else if(fuzz->getType()==FuzzyBase::NOISE) {
@@ -1333,7 +1334,7 @@ void AgentManager::setFuzzyFuzzInterpolationMode(quint32 id, FuzzyFuzz::Interpol
 void AgentManager::setFuzzyChannelName(quint32 id, QString name)
 {
     FuzzyBase *fuzz=m_masterAgent->getBrain()->getFuzzy(id);
-
+    m_brainManager->setFuzzyChannelName(id,name);
     switch(fuzz->getType()) {
 //    Input *inp;
 //    Output *out;

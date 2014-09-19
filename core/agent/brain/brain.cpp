@@ -31,15 +31,15 @@ Brain::Brain(Agent *agent, Brain *brain) :
     QObject(agent)
 {
     if(brain) {
-//        BrainManager *bm=agent->getAgentManager()->getBrainManager();
+        BrainManager *bm=agent->getAgentManager()->getBrainManager();
         foreach(FuzzyBase *fuzz,brain->getFuzzies()) {
 //            BrainiacGlobals::BrainiacId fuzzyId=fuzz->getId();
             if(fuzz->getType()==FuzzyBase::OUTPUT) {
                 Output *origOut=(Output *)fuzz;
-                addOutputFuzz(origOut->getId(),origOut->getChannelName(),origOut->getMinValue(),origOut->getMaxValue());
+                addOutputFuzz(origOut->getId(),bm->getFuzzyChannelName(origOut->getId()),origOut->getMinValue(),origOut->getMaxValue());
             } else if(fuzz->getType()==FuzzyBase::INPUT) {
                 Input *origInput=(Input *)fuzz;
-                addInputFuzz(origInput->getId(),origInput->getChannelName(),origInput->getMinValue(),origInput->getMaxValue());
+                addInputFuzz(origInput->getId(),bm->getFuzzyChannelName(origInput->getId()),origInput->getMinValue(),origInput->getMaxValue());
             } else if(fuzz->getType()==FuzzyBase::NOISE) {
                 Noise *origNoise=(Noise *)fuzz;
                 addNoiseFuzz(origNoise->getId(),origNoise->getRate());

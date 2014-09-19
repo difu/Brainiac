@@ -1,7 +1,26 @@
+// Brainiac is a free and open source tool for the creation of crowd simulation
+
+// Copyright (C) 2014  Dirk Fuchs dirkfux@googlemail.com
+
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #include "fuzzychannel.h"
 #include "core/agent/channel.h"
 #include "core/agent/agent.h"
+#include "core/agent/agentmanager.h"
 #include "core/agent/brain/brain.h"
+#include "core/agent/brain/brainmanager.h"
 #include "core/brainiaclogger.h"
 
 FuzzyChannel::FuzzyChannel(LogicType logicType, quint32 id, Brain *brain, const QString& channelName, qreal min, qreal max):
@@ -14,28 +33,6 @@ FuzzyChannel::FuzzyChannel(LogicType logicType, quint32 id, Brain *brain, const 
 void FuzzyChannel::channelDelete()
 {
     m_channel=0;
-}
-QString FuzzyChannel::getChannelName() const
-{
-    QString tmpName;
-    switch(m_logicType) {
-    case INPUT:
-        tmpName=m_brain->getAgent()->getInputChannelName(m_channel);
-        break;
-    case OUTPUT:
-        tmpName=m_brain->getAgent()->getOutputChannelName(m_channel);
-        break;
-    default:
-        qCritical() << __PRETTY_FUNCTION__ << "Unknown FuzzType " << m_logicType;
-    }
-    if(tmpName.size()==0) {
-        qCDebug(bChannel) << __PRETTY_FUNCTION__ << "Bad, did not find channel in agent list, returning cached value " << m_channelName  << "agentName " << m_brain->getAgent()->objectName();
-        return m_channelName;
-    } else {
-        return tmpName;
-    }
-//    qCDebug(bChannel) << __PRETTY_FUNCTION__ << "Channel with fuzz type " << m_logicType <<" not found.";
-//    return QString();
 }
 
 void FuzzyChannel::setChannelName(const QString& channelName)
@@ -53,7 +50,8 @@ void FuzzyChannel::setChannelName(const QString& channelName)
         qCritical() << __PRETTY_FUNCTION__ << "Unknown FuzzType " << m_logicType;
     }
     if(!newChannel) {
-        qCDebug(bChannel) << __PRETTY_FUNCTION__ << "Channel with fuzz type " << m_logicType <<", id "<< m_id << " and channel name " << channelName << " does not exist";
+        BrainManager *bm=m_brain->getAgent()->getAgentManager()->getBrainManager();
+        qCDebug(bChannel) << __PRETTY_FUNCTION__ << "Channel of fuzz "<< bm->getFuzzyName(m_id) <<" type " << m_logicType <<", id "<< m_id << " and channel name " << channelName << " does not exist";
     }
     // if nothing changed, return
     if(newChannel==m_channel) {

@@ -20,7 +20,9 @@
 #include "fuzzyfuzz.h"
 #include "input.h"
 #include "core/agent/brain/brain.h"
+#include "core/agent/brain/brainmanager.h"
 #include "core/agent/agent.h"
+#include "core/agent/agentmanager.h"
 #include "core/scene.h"
 #include "core/agent/channel.h"
 #include "core/simulation.h"
@@ -64,6 +66,7 @@ void FuzzyAnd::calculateSound()
 {
     Q_ASSERT(m_parents.count()>0 && m_isSoundRule); // there must be at least one fuzzy node as a parent
     Agent *thisAgent=m_brain->getAgent();
+    BrainManager *brainManager=thisAgent->getAgentManager()->getBrainManager();
     Agent *bestAgent=0;
     qreal bestMatch=0;
     foreach(Agent *otherAgent, thisAgent->getScene()->getAgents()) {
@@ -88,19 +91,19 @@ void FuzzyAnd::calculateSound()
                 // Check input channel type of this agent (sound.x, sound.f etc.)
                 Input *input=(Input *)fuzzy;
                 if(input->isSoundInput()) {
-                    if(QString::compare(input->getChannelName(),BrainiacGlobals::ChannelName_Sound_x,Qt::CaseInsensitive)==0 ) {
+                    if(QString::compare(brainManager->getFuzzyChannelName(input->getId()),BrainiacGlobals::ChannelName_Sound_x,Qt::CaseInsensitive)==0 ) {
                         qreal angle=thisAgent->getOtherAgentRelativeAngle(otherAgent);
                        input->setResult(angle,false); // do not emit change, it would result in infinite loop!
-                    } else if(QString::compare(input->getChannelName(),BrainiacGlobals::ChannelName_Sound_f,Qt::CaseInsensitive)==0 ) {
+                    } else if(QString::compare(brainManager->getFuzzyChannelName(input->getId()),BrainiacGlobals::ChannelName_Sound_f,Qt::CaseInsensitive)==0 ) {
                        input->setResult(otherAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_f)->getValue(),false); // do not emit change, it would result in infinite loop!
-                    } else if(QString::compare(input->getChannelName(),BrainiacGlobals::ChannelName_Sound_d,Qt::CaseInsensitive)==0 ) {
+                    } else if(QString::compare(brainManager->getFuzzyChannelName(input->getId()),BrainiacGlobals::ChannelName_Sound_d,Qt::CaseInsensitive)==0 ) {
                        qreal tmpReception=thisAgent->getOtherAgentSoundReception(otherAgent)/otherAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_a)->getOldValue();
                        input->setResult(tmpReception,false); // do not emit change, it would result in infinite loop!
-                    } else if(QString::compare(input->getChannelName(),BrainiacGlobals::ChannelName_Sound_ox,Qt::CaseInsensitive)==0 ) {
+                    } else if(QString::compare(brainManager->getFuzzyChannelName(input->getId()),BrainiacGlobals::ChannelName_Sound_ox,Qt::CaseInsensitive)==0 ) {
                        input->setResult(thisAgent->getOtherAgentRelativeOrientation(otherAgent),false); // do not emit change, it would result in infinite loop!
                     }
                 } else {
-                    qWarning() << __PRETTY_FUNCTION__ << "Input" << input->getId() << "is not a sound input " << input->getChannelName();
+                    qWarning() << __PRETTY_FUNCTION__ << "Input" << input->getId() << "is not a sound input " << brainManager->getFuzzyChannelName(input->getId());
                 }
             } else {
                 qCritical() << __PRETTY_FUNCTION__ << "Expected Input node! ";

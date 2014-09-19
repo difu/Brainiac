@@ -15,30 +15,38 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef FUZZYCHANNEL_H
-#define FUZZYCHANNEL_H
 
-#include "core/agent/brain/fuzzybase.h"
-#include "core/agent/brain/fuzzychannel.h"
+#ifndef FUZZYPROPERTIES_H
+#define FUZZYPROPERTIES_H
 
-class Channel;
+#include <QString>
+#include <QPoint>
 
-class FuzzyChannel : public FuzzyBase
+class FuzzyProperties
 {
-    Q_OBJECT
 public:
-    FuzzyChannel(LogicType logicType, quint32 id, Brain *brain, const QString& channelName, qreal min, qreal max);
+    FuzzyProperties();
+    const QString& getName() const { return m_name; }
+    void setName( const QString &name) { m_name=name; }
 
-    /** \brief  set the channel of this fuzzy
-      @param channel the name of the channel
-    **/
-    virtual void setChannelName(const QString &channelName);
+    qreal getMin() const;
+    void setMin(const qreal &getMin);
 
-protected:
-    QString m_channelName; //!< name of this channel
-    Channel *m_channel; //!< a pointer to the channel, null if no channel is assigned
-protected slots:
-    void channelDelete();
+    qreal getMax() const;
+    void setMax(const qreal &getMax);
+
+    const QPoint &getEditorLocation() const;
+    void setEditorLocation(const QPoint &getEditorLocation);
+
+    const QString& getChannelName() const;
+    void setChannelName(const QString &getChannelName);
+
+private:
+    QString m_channelName;
+    QString m_name;
+    QPoint m_editorLocation;
+    qreal m_min;
+    qreal m_max;
 };
 
-#endif // FUZZYCHANNEL_H
+#endif // FUZZYPROPERTIES_H
