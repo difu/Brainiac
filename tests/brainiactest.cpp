@@ -507,8 +507,8 @@ void BrainiacTest::fuzzyAnd()
     Scene testScene1;
     Group *grp=new Group(&testScene1);
     grp->setId(1);
-    createBody(grp->getAgentManager(),1);
-    createBrain(grp->getAgentManager());
+    createSimpleTestBody(grp->getAgentManager(),1);
+    createAndOrTestBrain(grp->getAgentManager());
 
     QVERIFY(testScene1.getAgents().count()==0);
     QVERIFY2(testScene1.getGroups().count()>0,"No group in scene!");
@@ -580,8 +580,8 @@ void BrainiacTest::fuzzyOr()
     Scene testScene1;
     Group *grp=new Group(&testScene1);
     grp->setId(1);
-    createBody(grp->getAgentManager(),1);
-    createBrain(grp->getAgentManager());
+    createSimpleTestBody(grp->getAgentManager(),1);
+    createAndOrTestBrain(grp->getAgentManager());
 
     QVERIFY(testScene1.getAgents().count()==0);
     QVERIFY2(testScene1.getGroups().count()>0,"No group in scene!");
@@ -656,8 +656,8 @@ void BrainiacTest::sceneCreateLoadSave()
         grp->setId(id);
         grp->setName(grpName);
         scene1Groups.insert(id,grp);
-        createBody(grp->getAgentManager(),id);
-        createBrain(grp->getAgentManager());
+        createSimpleTestBody(grp->getAgentManager(),id);
+        createAndOrTestBrain(grp->getAgentManager());
     }
 
     QVERIFY(testScene1->getAgents().count()==0);
@@ -871,7 +871,7 @@ void BrainiacTest::simulation1()
 //    }
 }
 
-void BrainiacTest::createBody(AgentManager *am, int var)
+void BrainiacTest::createSimpleTestBody(AgentManager *am, int var)
 {
         //!< @bug @todo rewrite with statical data
     QVector3D testVec=QVector3D(1,2,3);
@@ -932,7 +932,7 @@ void BrainiacTest::createBody(AgentManager *am, int var)
     m_numOfTestSegments=4;
 }
 
-void BrainiacTest::createBrain(AgentManager *am)
+void BrainiacTest::createAndOrTestBrain(AgentManager *am)
 {
     quint32 testAndId,testOrId,testInput1Id,testInput2Id,testInput3Id;
     testAndId=am->addAndFuzz(50,50);

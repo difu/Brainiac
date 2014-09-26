@@ -103,8 +103,8 @@ private:
     static const QString testAndName;
     static const QString testOrName;
     static int m_numOfTestSegments;
-    void createBody(AgentManager *am, int var);
-    void createBrain(AgentManager *am);
+    void createSimpleTestBody(AgentManager *am, int var);
+    void createAndOrTestBrain(AgentManager *am);
 
 };
 
