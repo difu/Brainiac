@@ -188,7 +188,7 @@ void Body::updatePosition() {
     if(m_agent) {
        osg::PositionAttitudeTransform *posTrans=m_bodyRoot.get();
        osg::Quat q;
-       q.set(0,1,0,BrainiacGlobals::grad2rad(m_agent->getRotation().y()));//!< @todo Rotation order and other axis
+       q.makeRotate(BrainiacGlobals::grad2rad(m_agent->getRotation().y()),osg::Vec3d(0.0,1.0,0.0));//!< @todo Rotation order and other axis
        posTrans->setPosition(osg::Vec3d(m_agent->getPosition().x(),m_agent->getPosition().y(),m_agent->getPosition().z()));
        posTrans->setAttitude(q);
     }
