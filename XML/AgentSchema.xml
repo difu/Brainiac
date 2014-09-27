@@ -258,6 +258,40 @@
                         </xs:simpleContent>
                       </xs:complexType>
                     </xs:element>
+                    <xs:element name="Fuzz" maxOccurs="unbounded" minOccurs="0">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute type="xs:unsignedInt" name="id" />
+                            <xs:attribute type="xs:string" name="name" />
+                            <xs:attribute type="xs:integer" name="editorx" />
+                            <xs:attribute type="xs:integer" name="editory" />
+                            <xs:attribute type="xs:string" name="channel" />
+            	            <xs:attribute type="xs:double" name="p1" />
+                     		<xs:attribute type="xs:double" name="p2" />
+                            <xs:attribute type="xs:double" name="p3" />
+                            <xs:attribute type="xs:double" name="p4" />
+                            <xs:attribute type="xs:string" name="mode" />
+                            <xs:attribute type="xs:string" name="interpolation" />            
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Defuzz" maxOccurs="unbounded" minOccurs="0">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute type="xs:unsignedInt" name="id" />
+                            <xs:attribute type="xs:string" name="name" />
+                            <xs:attribute type="xs:integer" name="editorx" />
+                            <xs:attribute type="xs:integer" name="editory" />
+                            <xs:attribute type="xs:string" name="iselse" />
+							<xs:attribute type="xs:double" name="defuzzvalue" />       
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                    
                     <xs:element name="Connector" maxOccurs="unbounded" minOccurs="0">
                       <xs:complexType>
                         <xs:simpleContent>
