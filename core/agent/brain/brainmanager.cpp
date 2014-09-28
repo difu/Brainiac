@@ -62,6 +62,11 @@ BrainiacGlobals::BrainiacId BrainManager::getFuzzyId(const QString &name) const
     return 0;
 }
 
+const FuzzyProperties* BrainManager::getFuzzyProperties( BrainiacGlobals::BrainiacId id ) const
+{
+    return m_fuzzyProperties.value(id,0);
+}
+
 void BrainManager::insertNewFuzzy(BrainiacGlobals::BrainiacId id)
 {
     FuzzyProperties *props=new FuzzyProperties;

@@ -90,17 +90,31 @@ void FuzzyAnd::calculateSound()
             if(fuzzy->getType()==FuzzyBase::INPUT) {
                 // Check input channel type of this agent (sound.x, sound.f etc.)
                 Input *input=(Input *)fuzzy;
+                const FuzzyProperties *fuzzyProps=brainManager->getFuzzyProperties(input->getId());
+#ifdef QT_DEBUG
+                if(!fuzzyProps) {
+                    qCritical() << __PRETTY_FUNCTION__ << "No FuzzyProperties for fuzz with id " << fuzzy->getId();
+                }
+#endif
                 if(input->isSoundInput()) {
-                    if(QString::compare(brainManager->getFuzzyChannelName(input->getId()),BrainiacGlobals::ChannelName_Sound_x,Qt::CaseInsensitive)==0 ) {
-                        qreal angle=thisAgent->getOtherAgentRelativeAngle(otherAgent);
-                       input->setResult(angle,false); // do not emit change, it would result in infinite loop!
-                    } else if(QString::compare(brainManager->getFuzzyChannelName(input->getId()),BrainiacGlobals::ChannelName_Sound_f,Qt::CaseInsensitive)==0 ) {
-                       input->setResult(otherAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_f)->getValue(),false); // do not emit change, it would result in infinite loop!
-                    } else if(QString::compare(brainManager->getFuzzyChannelName(input->getId()),BrainiacGlobals::ChannelName_Sound_d,Qt::CaseInsensitive)==0 ) {
-                       qreal tmpReception=thisAgent->getOtherAgentSoundReception(otherAgent)/otherAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_a)->getOldValue();
-                       input->setResult(tmpReception,false); // do not emit change, it would result in infinite loop!
-                    } else if(QString::compare(brainManager->getFuzzyChannelName(input->getId()),BrainiacGlobals::ChannelName_Sound_ox,Qt::CaseInsensitive)==0 ) {
-                       input->setResult(thisAgent->getOtherAgentRelativeOrientation(otherAgent),false); // do not emit change, it would result in infinite loop!
+                    qreal angle,tmpReception;
+                    switch(fuzzyProps->getSoundChannelType()) {
+                    case FuzzyProperties::SOUND_X:
+                        angle=thisAgent->getOtherAgentRelativeAngle(otherAgent);
+                        input->setResult(angle,false); // do not emit change, it would result in infinite loop!
+                        break;
+                    case FuzzyProperties::SOUND_D:
+                        tmpReception=thisAgent->getOtherAgentSoundReception(otherAgent)/otherAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_a)->getOldValue();
+                        input->setResult(tmpReception,false); // do not emit change, it would result in infinite loop!
+                        break;
+                    case FuzzyProperties::SOUND_F:
+                        input->setResult(otherAgent->getOutputChannel(BrainiacGlobals::ChannelName_Sound_f)->getValue(),false); // do not emit change, it would result in infinite loop!
+                        break;
+                    case FuzzyProperties::SOUND_OX:
+                        input->setResult(thisAgent->getOtherAgentRelativeOrientation(otherAgent),false); // do not emit change, it would result in infinite loop!
+                        break;
+                    default:
+                        qWarning() << __PRETTY_FUNCTION__ << "Input" << input->getId() << "is not a sound input " << brainManager->getFuzzyChannelName(input->getId());
                     }
                 } else {
                     qWarning() << __PRETTY_FUNCTION__ << "Input" << input->getId() << "is not a sound input " << brainManager->getFuzzyChannelName(input->getId());

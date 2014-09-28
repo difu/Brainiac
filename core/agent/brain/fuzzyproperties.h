@@ -25,6 +25,14 @@
 class FuzzyProperties
 {
 public:
+    enum SoundChannelType {
+        NOSOUNDCHANNEL,
+        SOUND_X,
+        SOUND_F,
+        SOUND_D,
+        SOUND_OX
+    };
+
     FuzzyProperties();
     const QString& getName() const { return m_name; }
     void setName( const QString &name) { m_name=name; }
@@ -41,12 +49,20 @@ public:
     const QString& getChannelName() const;
     void setChannelName(const QString &getChannelName);
 
+    SoundChannelType getSoundChannelType() const;
+
+    bool isChannelSoundX() const;
+    bool isChannelSoundF() const;
+    bool isChannelSoundD() const;
+    bool isChannelSoundOx() const;
+
 private:
     QString m_channelName;
     QString m_name;
     QPoint m_editorLocation;
     qreal m_min;
     qreal m_max;
+    SoundChannelType m_soundType;
 };
 
 #endif // FUZZYPROPERTIES_H

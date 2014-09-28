@@ -40,6 +40,7 @@ public:
     void setFuzzyEditorTranslation(BrainiacGlobals::BrainiacId, qint32 x, qint32 y);
     void setFuzzyName(BrainiacGlobals::BrainiacId id, const QString& name);
     void setFuzzyChannelName(BrainiacGlobals::BrainiacId id, const QString& channelName);
+    const FuzzyProperties* getFuzzyProperties(BrainiacGlobals::BrainiacId id) const;
 private:
     void insertNewFuzzy(BrainiacGlobals::BrainiacId id);
     QHash<BrainiacGlobals::BrainiacId, FuzzyProperties *> m_fuzzyProperties;

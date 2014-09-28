@@ -16,10 +16,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "fuzzyproperties.h"
+#include "core/brainiacglobals.h"
 
 FuzzyProperties::FuzzyProperties():
     m_min(0.0),
-    m_max(1.0)
+    m_max(1.0),
+    m_soundType(NOSOUNDCHANNEL)
 {
 }
 qreal FuzzyProperties::getMin() const
@@ -56,9 +58,40 @@ const QString &FuzzyProperties::getChannelName() const
 
 void FuzzyProperties::setChannelName(const QString &channelName)
 {
+    m_soundType=NOSOUNDCHANNEL;
     m_channelName = channelName;
+    if(QString::compare(m_channelName,BrainiacGlobals::ChannelName_Sound_x,Qt::CaseInsensitive)==0 ) {
+        m_soundType=SOUND_X;
+    } else if(QString::compare(m_channelName,BrainiacGlobals::ChannelName_Sound_f,Qt::CaseInsensitive)==0 ) {
+        m_soundType=SOUND_F;
+    } else if(QString::compare(m_channelName,BrainiacGlobals::ChannelName_Sound_d,Qt::CaseInsensitive)==0 ) {
+        m_soundType=SOUND_D;
+    } else if(QString::compare(m_channelName,BrainiacGlobals::ChannelName_Sound_ox,Qt::CaseInsensitive)==0 ) {
+        m_soundType=SOUND_OX;
+    }
 }
 
+FuzzyProperties::SoundChannelType FuzzyProperties::getSoundChannelType() const
+{
+    return m_soundType;
+}
 
+bool FuzzyProperties::isChannelSoundD() const
+{
+    return m_soundType==SOUND_D;
+}
 
+bool FuzzyProperties::isChannelSoundF() const
+{
+    return m_soundType==SOUND_F;
+}
 
+bool FuzzyProperties::isChannelSoundX() const
+{
+    return m_soundType==SOUND_X;
+}
+
+bool FuzzyProperties::isChannelSoundOx() const
+{
+    return m_soundType==SOUND_OX;
+}
