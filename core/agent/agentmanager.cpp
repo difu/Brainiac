@@ -507,7 +507,7 @@ void AgentManager::deleteFuzz(quint32 fuzzId)
 }
 
 
-QHash<quint32, QPoint> AgentManager::getEditorSegmentNodeLocations()
+const QHash<quint32, QPoint> AgentManager::getEditorSegmentNodeLocations() const
 {
     return m_editorSegmentNodeLocations;
 }

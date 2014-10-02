@@ -105,7 +105,6 @@ QString BvhManager::getBvhRotTransFromBrainiacRotTrans(const QList<BrainiacGloba
 
 const QString& BvhManager::getBVHSkeleton() const
 {
-    AgentManager *am=(AgentManager *) parent();
     if(m_bvhSkeletonDirty) {
         AgentManager *am=(AgentManager *) parent();
         m_bvhSkeleton.clear();

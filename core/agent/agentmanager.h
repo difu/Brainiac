@@ -180,7 +180,7 @@ public:
      * @fn getAllManagedAgents
      * @return QList<Agents *>
      */
-    QList<Agent *> getAllManagedAgents() {return m_agents;}
+    const QList<Agent *> getAllManagedAgents() const {return m_agents;}
 
     /** \brief deletes a fuzz from all agent´s brains managed
 
@@ -200,7 +200,7 @@ public:
     quint32 getId() { return m_id; }
     qint32 getEditorTranslationX() { return m_editX; }
     qint32 getEditorTranslationY() { return m_editY; }
-    QHash<quint32, QPoint> getEditorSegmentNodeLocations();
+    const QHash<quint32, QPoint> getEditorSegmentNodeLocations() const;
     Group* getGroup() { return m_group; }
 
     FuzzyBase::LogicType getFuzzType( quint32 fuzzId);

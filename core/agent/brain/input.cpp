@@ -32,7 +32,7 @@ void Input::calculate()
     if(m_channel) {
         setResult(m_channel->getOldValue());
     } else {
-        qDebug() << __PRETTY_FUNCTION__ << "channel " << m_channelName<< "does not exist!";
+        qDebug() << __PRETTY_FUNCTION__ << "channel does not exist!";
     }
 }
 
