@@ -18,6 +18,8 @@
 
 #include "brainmanager.h"
 #include "core/agent/agentmanager.h"
+#include "core/agent/agent.h"
+#include "core/agent/brain/brain.h"
 #include "core/brainiaclogger.h"
 
 BrainManager::BrainManager(QObject *parent) :
@@ -89,6 +91,15 @@ void BrainManager::setFuzzyChannelName(BrainiacGlobals::BrainiacId id, const QSt
     }
     FuzzyProperties *props=m_fuzzyProperties.value(id);
     props->setChannelName(channelName);
+    foreach(Agent *agent, getAgentManager()->getAllManagedAgents() ) {
+        FuzzyBase *fuzz=agent->getBrain()->getFuzzy(id);
+        FuzzyChannel *agentFuzzyChannel=dynamic_cast<FuzzyChannel *>(fuzz);
+        if(agentFuzzyChannel) {
+            agentFuzzyChannel->setChannelName(channelName);
+        } else {
+            qCWarning(bAgentManager)  << __PRETTY_FUNCTION__ << "Fuzz with id" << id << "is neither input nor output!";
+        }
+    }
 }
 
 void BrainManager::setFuzzyName(BrainiacGlobals::BrainiacId id, const QString &name)

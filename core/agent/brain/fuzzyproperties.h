@@ -55,6 +55,7 @@ public:
     bool isChannelSoundF() const;
     bool isChannelSoundD() const;
     bool isChannelSoundOx() const;
+    bool isChannelSound() const;
 
 private:
     QString m_channelName;

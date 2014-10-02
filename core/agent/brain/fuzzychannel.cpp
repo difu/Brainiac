@@ -37,7 +37,6 @@ void FuzzyChannel::channelDelete()
 
 void FuzzyChannel::setChannelName(const QString& channelName)
 {
-    m_channelName=channelName;
     Channel *newChannel=0;
     switch(m_logicType) {
     case INPUT:

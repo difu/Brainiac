@@ -1333,34 +1333,7 @@ void AgentManager::setFuzzyFuzzInterpolationMode(quint32 id, FuzzyFuzz::Interpol
 
 void AgentManager::setFuzzyChannelName(quint32 id, QString name)
 {
-    FuzzyBase *fuzz=m_masterAgent->getBrain()->getFuzzy(id);
     m_brainManager->setFuzzyChannelName(id,name);
-    switch(fuzz->getType()) {
-//    Input *inp;
-//    Output *out;
-
-    case(FuzzyBase::INPUT):
-//        inp=(Input *) fuzz;
-//        inp->setChannelName(name);
-
-        foreach(Agent *agent, m_agents) {
-            Input *agentInput=(Input *) agent->getBrain()->getFuzzy(id);
-            Q_ASSERT(agentInput->getType()==FuzzyBase::INPUT);
-            agentInput->setChannelName(name);
-        }
-        break;
-    case(FuzzyBase::OUTPUT):
-//        out=(Output *)fuzz;
-//        out->setChannelName(name);
-        foreach(Agent *agent, m_agents) {
-            Output *agentOut=(Output *) agent->getBrain()->getFuzzy(id);
-            Q_ASSERT(agentOut->getType()==FuzzyBase::OUTPUT);
-            agentOut->setChannelName(name);
-        }
-        break;
-    default:
-        qDebug()  << __PRETTY_FUNCTION__ << "Fuzz with id" << id << "is neither input nor output!";
-    }
 }
 
 void AgentManager::setFuzzyMinMax(quint32 id, qreal min, qreal max)

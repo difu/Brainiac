@@ -95,3 +95,12 @@ bool FuzzyProperties::isChannelSoundOx() const
 {
     return m_soundType==SOUND_OX;
 }
+
+bool FuzzyProperties::isChannelSound() const
+{
+    bool isSound=isChannelSoundD() ||
+            isChannelSoundF() ||
+            isChannelSoundOx() ||
+            isChannelSoundX();
+    return isSound;
+}

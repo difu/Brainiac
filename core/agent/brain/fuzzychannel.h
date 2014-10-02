@@ -35,7 +35,6 @@ public:
     virtual void setChannelName(const QString &channelName);
 
 protected:
-    QString m_channelName; //!< name of this channel
     Channel *m_channel; //!< a pointer to the channel, null if no channel is assigned
 protected slots:
     void channelDelete();
