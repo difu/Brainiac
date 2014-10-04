@@ -101,6 +101,7 @@ protected:
 
 class OsgMultithreadedViewerWidget : public QWidget
 {
+    Q_OBJECT
 public:
     enum Manipulator {TRACKBALL,SPHERICAL};
     OsgMultithreadedViewerWidget( osg::Camera* camera=0, osg::Node* scene=0, bool fixVerticalAxis=true );
@@ -109,6 +110,7 @@ public:
     }
 
     osg::Camera* createCamera( int x, int y, int w, int h );
+    osgGA::CameraManipulator* getCameraManipulator();
     BrainiacGlWindow *getGlWindow();
 
     /**
@@ -128,7 +130,8 @@ public slots:
      */
     void toggleOriginCoordCross();
 
-    osgGA::CameraManipulator* getCameraManipulator();
+    void needGlUpdate();
+
 
 private:
     osg::Group *m_rootNode;
@@ -142,6 +145,7 @@ private:
     BrainiacGlWindow *m_glWindow;
     QTimer m_timer;
     BrainiacCameraManipulator *m_cameraManipulator;
+    bool m_needGlUpdate;
 
 
 protected:

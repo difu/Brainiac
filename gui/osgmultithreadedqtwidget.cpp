@@ -33,7 +33,8 @@ OsgMultithreadedViewerWidget::OsgMultithreadedViewerWidget( osg::Camera* camera,
     m_showOriginCoordCross(false),
     m_camera(camera),
     m_cameraManipulator(new BrainiacCameraManipulator),
-    m_sceneNode(new osg::Group)
+    m_sceneNode(new osg::Group),
+    m_needGlUpdate(false)
 {
     m_osgFileName=QDir::tempPath()%"/osgOut.osg";
 
@@ -152,10 +153,18 @@ osgGA::CameraManipulator *OsgMultithreadedViewerWidget::getCameraManipulator() {
     return m_viewer.getCameraManipulator();
 }
 
+void OsgMultithreadedViewerWidget::needGlUpdate()
+{
+    m_needGlUpdate=true;
+}
+
 void OsgMultithreadedViewerWidget::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
-    m_viewer.frame();
+    if(m_viewer.checkNeedToDoFrame() || m_needGlUpdate) {
+        m_viewer.frame();
+        m_needGlUpdate=false;
+    }
 }
 
 void OsgMultithreadedViewerWidget::showOriginCoordCross(bool show)

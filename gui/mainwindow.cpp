@@ -83,6 +83,7 @@ MainWindow::MainWindow(Scene *scene, QWidget *parent) :
 
     m_bodyDisplayOSG=new BodyDisplay();
     m_sceneDisplayOSG=new SceneDisplay(this->m_scene);
+    connect(m_scene->getSimulation(),SIGNAL(frameDone()),m_sceneDisplayOSG,SLOT(needGlUpdate()));
     setEditMode(m_editMode);
 
     connect(m_sceneEditor,SIGNAL(selectionChanged()),this,SLOT(sceneEditorItemClicked()));
