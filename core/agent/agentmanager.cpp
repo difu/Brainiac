@@ -350,12 +350,12 @@ void AgentManager::addOutputFuzz(quint32 id, const QString &name, QString channe
     m_brainIdGenerator.registerId(id);
     m_brainManager->setFuzzyEditorTranslation(id, editorX,editorY);
     m_brainManager->setFuzzyName(id,name);
-    m_brainManager->setFuzzyChannelName(id,channel);
 
     foreach(Agent* agent,m_agents) {
         agent->addOutputFuzz(id, channel, min, max);
     }
     m_brainEditor->addFuzzyItem(id); // Must be called AFTER BrainManager calls, because channels, fuzzes did not exist before
+    m_brainManager->setFuzzyChannelName(id,channel);
 }
 
 quint32 AgentManager::addInputFuzz(quint32 editorX, quint32 editorY)
@@ -377,7 +377,6 @@ void AgentManager::addInputFuzz(quint32 id, const QString &name, QString channel
     m_brainIdGenerator.registerId(id);
     m_brainManager->setFuzzyEditorTranslation(id, editorX,editorY);
     m_brainManager->setFuzzyName(id,name);
-    m_brainManager->setFuzzyChannelName(id,name);
     foreach(Agent* agent,m_agents) {
         agent->addInputFuzz(id, channel, min, max);
     }
@@ -1440,6 +1439,13 @@ void AgentManager::updateSoundConfigs()
                             foreach(FuzzyBase *parentOfFuzz, parentOfAndOr->getParents()) {
 
                                 if(parentOfFuzz->getType()==FuzzyFuzz::INPUT && !parentOfFuzz->hasParents()  && currentTest) {
+                                    Input *input=dynamic_cast<Input *>(parentOfFuzz);
+                                    if(input) {
+                                        if(!input->isSoundInput()) {
+                                            currentTest=false;
+                                            break;
+                                        }
+                                    }
                                     //qDebug() << "Found Sound config!" << parentOfFuzz->getName() << parentOfAndOr->getName();
                                 } else {
                                     currentTest=false;

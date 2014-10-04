@@ -66,7 +66,10 @@ void FuzzyAnd::calculateSound()
 {
     Q_ASSERT(m_parents.count()>0 && m_isSoundRule); // there must be at least one fuzzy node as a parent
     Agent *thisAgent=m_brain->getAgent();
-    BrainManager *brainManager=thisAgent->getAgentManager()->getBrainManager();
+
+    AgentManager *agentManager=thisAgent->getAgentManager();
+    BrainManager *brainManager=agentManager->getBrainManager();
+
     Agent *bestAgent=0;
     qreal bestMatch=0;
     foreach(Agent *otherAgent, thisAgent->getScene()->getAgents()) {

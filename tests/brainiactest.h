@@ -78,6 +78,8 @@ private Q_SLOTS:
     void animation_data();
     void animation();
 
+    void fuzzyAndSound_data();
+    void fuzzyAndSound();
     void fuzzyAnd_data();
     void fuzzyAnd();
     void fuzzyOr_data();

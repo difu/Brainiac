@@ -30,7 +30,8 @@ public:
         SOUND_X,
         SOUND_F,
         SOUND_D,
-        SOUND_OX
+        SOUND_OX,
+        SOUND_A
     };
 
     FuzzyProperties();
@@ -64,6 +65,7 @@ private:
     qreal m_min;
     qreal m_max;
     SoundChannelType m_soundType;
+    bool m_isSoundChannel;
 };
 
 #endif // FUZZYPROPERTIES_H

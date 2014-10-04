@@ -218,6 +218,7 @@ FuzzyBase* Brain::getFuzzy(quint32 id) const
             return fuzzy;
         }
     }
+    qWarning() << __PRETTY_FUNCTION__ << "Fuzzy not found! id:" << id;
     return 0;
 }
 

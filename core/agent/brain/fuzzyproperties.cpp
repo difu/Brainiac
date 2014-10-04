@@ -21,7 +21,8 @@
 FuzzyProperties::FuzzyProperties():
     m_min(0.0),
     m_max(1.0),
-    m_soundType(NOSOUNDCHANNEL)
+    m_soundType(NOSOUNDCHANNEL),
+    m_isSoundChannel(false)
 {
 }
 qreal FuzzyProperties::getMin() const
@@ -68,6 +69,13 @@ void FuzzyProperties::setChannelName(const QString &channelName)
         m_soundType=SOUND_D;
     } else if(QString::compare(m_channelName,BrainiacGlobals::ChannelName_Sound_ox,Qt::CaseInsensitive)==0 ) {
         m_soundType=SOUND_OX;
+    } else if(QString::compare(m_channelName,BrainiacGlobals::ChannelName_Sound_a,Qt::CaseInsensitive)==0 ) {
+        m_soundType=SOUND_A;
+    }
+    if(m_soundType==NOSOUNDCHANNEL) {
+        m_isSoundChannel=false;
+    } else {
+        m_isSoundChannel=true;
     }
 }
 
@@ -98,9 +106,5 @@ bool FuzzyProperties::isChannelSoundOx() const
 
 bool FuzzyProperties::isChannelSound() const
 {
-    bool isSound=isChannelSoundD() ||
-            isChannelSoundF() ||
-            isChannelSoundOx() ||
-            isChannelSoundX();
-    return isSound;
+    return m_isSoundChannel;
 }

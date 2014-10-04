@@ -93,13 +93,14 @@ void BrainManager::setFuzzyChannelName(BrainiacGlobals::BrainiacId id, const QSt
     props->setChannelName(channelName);
     foreach(Agent *agent, getAgentManager()->getAllManagedAgents() ) {
         FuzzyBase *fuzz=agent->getBrain()->getFuzzy(id);
-        FuzzyChannel *agentFuzzyChannel=dynamic_cast<FuzzyChannel *>(fuzz);
+        FuzzyChannel *agentFuzzyChannel=qobject_cast<FuzzyChannel *>(fuzz);
         if(agentFuzzyChannel) {
             agentFuzzyChannel->setChannelName(channelName);
         } else {
-            qCWarning(bAgentManager)  << __PRETTY_FUNCTION__ << "Fuzz with id" << id << "is neither input nor output!";
+            qCWarning(bAgentManager)  << __PRETTY_FUNCTION__ << "Fuzz with id" << id << "name" << props->getName() << "type" << fuzz->getType() << "is neither input nor output!";
         }
     }
+    getAgentManager()->updateSoundConfigs();
 }
 
 void BrainManager::setFuzzyName(BrainiacGlobals::BrainiacId id, const QString &name)

@@ -19,6 +19,9 @@
 #include "input.h"
 #include "core/agent/brain/brain.h"
 #include "core/agent/agent.h"
+#include "core/agent/agentmanager.h"
+#include "core/agent/brain/brainmanager.h"
+#include "core/agent/brain/fuzzyproperties.h"
 #include "core/agent/channel.h"
 
 Input::Input(quint32 id, Brain *brain, const QString &channel, qreal min, qreal max) :
@@ -38,11 +41,7 @@ void Input::calculate()
 
 void Input::setChannelName(const QString& channel)
 {
-    if(     QString::compare(channel,BrainiacGlobals::ChannelName_Sound_a,Qt::CaseInsensitive)==0 ||
-            QString::compare(channel,BrainiacGlobals::ChannelName_Sound_d,Qt::CaseInsensitive)==0 ||
-            QString::compare(channel,BrainiacGlobals::ChannelName_Sound_f,Qt::CaseInsensitive)==0 ||
-            QString::compare(channel,BrainiacGlobals::ChannelName_Sound_ox,Qt::CaseInsensitive)==0 ||
-            QString::compare(channel,BrainiacGlobals::ChannelName_Sound_x,Qt::CaseInsensitive)==0 ) {
+    if(m_brain->getAgent()->getAgentManager()->getBrainManager()->getFuzzyProperties(m_id)->isChannelSound()) {
         m_isSoundInput=true;
     } else {
         m_isSoundInput=false;

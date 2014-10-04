@@ -485,6 +485,74 @@ qDebug() << "got " << testAnim.getLength()<< "Exp: " << maxTime;
     delete(loadedAnimation);
 }
 
+void BrainiacTest::fuzzyAndSound_data()
+{
+    QTest::addColumn<QStringList>("inputChannelList");
+    QTest::addColumn<bool>("andIsSoundFuzz");
+    QStringList inputChannelsTc1;
+    inputChannelsTc1<< BrainiacGlobals::ChannelName_Sound_a
+                    << BrainiacGlobals::ChannelName_Sound_d
+                    << BrainiacGlobals::ChannelName_Sound_f;
+    QStringList inputChannelsTc2;
+    inputChannelsTc2<< BrainiacGlobals::ChannelName_Sound_a
+                    << BrainiacGlobals::ChannelName_Sound_d
+                    << BrainiacGlobals::ChannelName_Sound_f
+                    << BrainiacGlobals::ChannelName_Sound_ox
+                    << BrainiacGlobals::ChannelName_Sound_x;
+    QStringList inputChannelsTc3;
+    inputChannelsTc3<< BrainiacGlobals::ChannelName_Sound_a
+                    << BrainiacGlobals::ChannelName_Sound_d
+                    << QString("channel_not_exists")
+                    << BrainiacGlobals::ChannelName_Sound_ox
+                    << BrainiacGlobals::ChannelName_Sound_x;
+
+    QTest::newRow("All inputs have sound channels 1") << inputChannelsTc1 << true;
+    QTest::newRow("All inputs have sound channels 2") << inputChannelsTc2 << true;
+    QTest::newRow("Not all inputs have sound channels 3") << inputChannelsTc3 << false;
+}
+
+void BrainiacTest::fuzzyAndSound()
+{
+    Scene testScene;
+    Group *grp=new Group(&testScene);
+    grp->setId(1);
+    AgentManager *am=grp->getAgentManager();
+    QFETCH(QStringList, inputChannelList);
+    QFETCH(bool, andIsSoundFuzz);
+    QHash<BrainiacGlobals::BrainiacId, QString> inputs;
+
+    BrainiacGlobals::BrainiacId fuzzyId=am->addFuzzFuzz(10,10);
+    BrainiacGlobals::BrainiacId andId=am->addAndFuzz(20,20);
+    am->addConnector(andId,fuzzyId,false);
+    int numberOfInput=0;
+    foreach(QString channelName, inputChannelList) {
+        BrainiacGlobals::BrainiacId inputId=am->addInputFuzz(QString("input").append(QString::number(numberOfInput++)),channelName,0.0,1.0,0,0);
+        inputs.insert(inputId,channelName);
+        am->addConnector(fuzzyId,inputId,false);
+    }
+    FuzzyAnd *fuzzy=dynamic_cast<FuzzyAnd*>(am->getMasterAgent()->getBrain()->getFuzzy(andId));
+
+    if(!fuzzy) {
+        QFAIL("Fuzzy is not a FuzzyAnd");
+    }
+    QVERIFY2(andIsSoundFuzz==fuzzy->isSoundRule(),"AndFuzz sound rule incorrect");
+
+    // Check, if renaming the channel works
+    QHashIterator<BrainiacGlobals::BrainiacId, QString> i(inputs);
+    while (i.hasNext()) {
+        i.next();
+        am->setFuzzyChannelName(i.key(),QString("renaming_dummy_channel").append(QString::number(i.key())));
+    }
+    QVERIFY2(false==fuzzy->isSoundRule(),"AndFuzz should not be a sound rule anymore after renaming");
+    QHashIterator<BrainiacGlobals::BrainiacId, QString> j(inputs);
+    while (j.hasNext()) {
+        j.next();
+        am->setFuzzyChannelName(j.key(),j.value());
+    }
+    QVERIFY2(andIsSoundFuzz==fuzzy->isSoundRule(),"AndFuzz sound rule incorrect after renaming");
+
+}
+
 void BrainiacTest::fuzzyAnd_data()
 {
     QTest::addColumn<qreal>("in1");
