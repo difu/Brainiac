@@ -92,7 +92,7 @@ void ModifiableAnimation::createAgentCurve(AnimationCurve *rootCurve, AnimationC
     qreal valBefore=rootCurve->keyFrames().first().y();
     int i=0;
     foreach(QVector2D kf,rootCurve->keyFrames()) {
-        agentCurve->addKeyFrame(kf.x(),-kf.y()+valBefore); //!< @bug Since when has signum changed???
+        agentCurve->addKeyFrame(kf.x(),kf.y()-valBefore);
         valBefore=kf.y();
         i++;
     }
