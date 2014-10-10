@@ -54,6 +54,13 @@ public:
     QString getActiveAnimationName() const;
     ~ActionEditor();
 
+signals:
+    /**
+     * @brief emitted if gl window needs update
+     *
+     * @fn updateGlWindow
+     */
+    void updateGlWindow();
 public slots:
     void hide();
     void show();

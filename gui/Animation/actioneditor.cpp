@@ -60,6 +60,7 @@ ActionEditor::ActionEditor(Scene *scene, QWidget *parent) :
     connect(m_actionDisplay_,SIGNAL(animationOneFrameBackward()),this,SLOT(animationOneFrameBackward()));
     connect(m_actionDisplay_,SIGNAL(animationOneFrameForward()),this,SLOT(animationOneFrameForward()));
     connect(m_actionDisplay_,SIGNAL(animationRunningToggled()),this,SLOT(animationRunningToggle()));
+    connect(this, SIGNAL(updateGlWindow()), m_actionDisplay_, SLOT(needGlUpdate()));
 
     connect(ui->lineEditAnimationName,SIGNAL(returnPressed()),this,SLOT(animationNameChanged()));
     connect(ui->tabWidgetMain,SIGNAL(currentChanged(int)),this,SLOT(uiTabChanged(int)));
@@ -278,11 +279,13 @@ void ActionEditor::show()
 void ActionEditor::animationOneFrameBackward()
 {
     m_animationTime=m_animationTime-1.0f/(qreal)m_scene->getSimulation()->getFps();
+    emit updateGlWindow();
 }
 
 void ActionEditor::animationOneFrameForward()
 {
     m_animationTime=m_animationTime+1.0f/(qreal)m_scene->getSimulation()->getFps();
+    emit updateGlWindow();
 }
 
 void ActionEditor::animationStart()
