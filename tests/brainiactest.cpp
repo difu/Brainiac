@@ -4,7 +4,7 @@
 
 BrainiacTest::BrainiacTest()
 {
-    QLoggingCategory::setFilterRules("*.debug=true");
+    QLoggingCategory::setFilterRules("*.debug=false");
 }
 
 const QString BrainiacTest::testInput1Name=QString("TESTINPUT1");
@@ -37,8 +37,8 @@ void BrainiacTest::parseBVH()
         }
     }
     file.close();
-    Scene *testScene1=new Scene();
-    Group *grp=new Group(testScene1);
+    Scene testScene1;
+    Group *grp=new Group(&testScene1);
     grp->setId(1);
     AgentManager *am=grp->getAgentManager();
     QVERIFY2(am->loadSkeleton(bvhFileName),"Error loading skeleton");
@@ -53,7 +53,6 @@ void BrainiacTest::parseBVH()
         }
     }
     QVERIFY2(foundNonZeroTranslation==true,"BVH only has zero length segments!");
-    testScene1->deleteLater();
 }
 
 void BrainiacTest::agentManager_data()
@@ -442,7 +441,6 @@ void BrainiacTest::animation()
 
     Animation* loadedAnimation;
     loadedAnimation=Animation::loadAnimation(animFile.fileName());
-qDebug() << "got " << testAnim.getLength()<< "Exp: " << maxTime;
     QVERIFY2(qFuzzyCompare(testAnim.getLength(),maxTime),"Wrong length calculation!");
 
     QVERIFY2(loadedAnimation->name().compare(animationName)==0,"wrong animation name in loaded animation");
@@ -696,7 +694,7 @@ void BrainiacTest::cleanupTestCase()
 
 void BrainiacTest::sceneCreateLoadSave()
 {
-    Scene *testScene1;
+    Scene testScene1;
     QTemporaryFile scene1File;
 
     QHash <quint32, Group *> scene1Groups;
@@ -705,21 +703,13 @@ void BrainiacTest::sceneCreateLoadSave()
     QHash <quint32, Group *> scene2Groups;
     QHash <quint32,QTemporaryFile *> scene2GroupFiles;
 
-    Scene *testScene2;
+    Scene testScene2;
     //QTemporaryFile m_scene2File;
 
     static const int numberOfTestGroups=5;
-//
 
-//    quint32 m_testAndId;
-//    quint32 m_testOrId;
-//    quint32 m_testInput1Id;
-//    quint32 m_testInput2Id;
-//    quint32 m_testInput3Id;
-//
-    testScene1=new Scene();
     for(int id=1;id<=numberOfTestGroups;id++) {
-        Group *grp=new Group(testScene1);
+        Group *grp=new Group(&testScene1);
         QString grpName=QString("Group")%QString::number(id);
         grp->setId(id);
         grp->setName(grpName);
@@ -728,8 +718,8 @@ void BrainiacTest::sceneCreateLoadSave()
         createAndOrTestBrain(grp->getAgentManager());
     }
 
-    QVERIFY(testScene1->getAgents().count()==0);
-    QVERIFY(testScene1->getGroups().count()==numberOfTestGroups);
+    QVERIFY(testScene1.getAgents().count()==0);
+    QVERIFY(testScene1.getGroups().count()==numberOfTestGroups);
 
     // Save scene 1 agents
     QString sceneFileNameTemplate=QDir::toNativeSeparators(QDir::tempPath()%"/BrainiacTestScene1XXXXXX.xml");
@@ -752,12 +742,12 @@ void BrainiacTest::sceneCreateLoadSave()
     }
 
     // Save scene 1
-    QVERIFY2(testScene1->saveConfig(scene1File.fileName()),"Error saving Scene 1");
+    QVERIFY2(testScene1.saveConfig(scene1File.fileName()),"Error saving Scene 1");
 
     // Load scene 2
-    testScene2=new Scene();
-    QVERIFY2(testScene2->openConfig(testScene1->getFileName()),"Error loading scene 2 from scene 1 file");
-    QVERIFY2(testScene2->getGroups().count()==numberOfTestGroups,"Number of groups in scene 2 is not equal");
+
+    QVERIFY2(testScene2.openConfig(testScene1.getFileName()),"Error loading scene 2 from scene 1 file");
+    QVERIFY2(testScene2.getGroups().count()==numberOfTestGroups,"Number of groups in scene 2 is not equal");
 
     // Save agents of scene 2
     for( int id=1; id <= numberOfTestGroups; id++) {
@@ -800,7 +790,7 @@ void BrainiacTest::sceneCreateLoadSave()
     while (i.hasNext()) {
         i.next();
         QHash<quint32, SegmentShape *> agent1Segs=i.value()->getAgentManager()->getBodyManager()->getSegments();
-        Group *scene2grp=testScene2->getGroup(i.key());
+        Group *scene2grp=testScene2.getGroup(i.key());
         scene2Groups.insert(scene2grp->getId(),scene2grp);
         QHash<quint32, SegmentShape *> agent2Segs=scene2grp->getAgentManager()->getBodyManager()->getSegments();
         QVERIFY2(agent1Segs.count()==agent2Segs.count(),"Number of segments differs");
@@ -823,8 +813,7 @@ void BrainiacTest::sceneCreateLoadSave()
         QVERIFY2(file->remove(),"Scene 2 files could not be removed");
         file->deleteLater();
     }
-    testScene1->deleteLater();
-    testScene2->deleteLater();
+
 }
 
 void BrainiacTest::simulation_data()
