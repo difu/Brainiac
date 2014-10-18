@@ -92,6 +92,16 @@
         <attribute name="title">
          <string>Edit</string>
         </attribute>
+        <widget class="QGraphicsView" name="curveEditGraphicsView">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>611</width>
+           <height>201</height>
+          </rect>
+         </property>
+        </widget>
        </widget>
        <widget class="QWidget" name="tab_3">
         <attribute name="title">

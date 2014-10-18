@@ -86,7 +86,8 @@ HEADERS  += gui/mainwindow.h \
     gui/brainiaccameramanipulator.h \
     core/agent/brain/fuzzychannel.h \
     core/agent/brain/brainmanager.h \
-    core/agent/brain/fuzzyproperties.h
+    core/agent/brain/fuzzyproperties.h \
+    gui/Animation/latchcurveeditoritem.h
 
 
 
@@ -178,5 +179,6 @@ SOURCES += gui/mainwindow.cpp \
     gui/brainiaccameramanipulator.cpp \
     core/agent/brain/fuzzychannel.cpp \
     core/agent/brain/brainmanager.cpp \
-    core/agent/brain/fuzzyproperties.cpp
+    core/agent/brain/fuzzyproperties.cpp \
+    gui/Animation/latchcurveeditoritem.cpp
 

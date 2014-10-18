@@ -2,16 +2,23 @@
 #define LATCHCURVEEDITORITEM_H
 
 #include <QObject>
+#include <QGraphicsRectItem>
 
-class LatchCurveEditorItem : public QObject
+class LatchCurveEditorItem : public QObject, public QGraphicsRectItem
 {
     Q_OBJECT
 public:
-    explicit LatchCurveEditorItem(QObject *parent = 0);
+    enum { Type = UserType + 1 };
+
+    int type() const;
+    explicit LatchCurveEditorItem(qreal x, qreal y, qreal width, qreal height);
 
 signals:
 
 public slots:
+
+private:
+    qreal m_yPos;
 
 };
 

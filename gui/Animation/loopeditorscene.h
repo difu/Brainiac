@@ -39,6 +39,16 @@ class LoopEditorScene : public QGraphicsScene
 {
     Q_OBJECT
 public:
+    /**
+     * @brief the mode of the editor
+     *
+     * @enum Mode
+     */
+    enum Mode {
+        CURVE, /**< Curve edit mode */
+        LOOP /**< Loop mode */
+    };
+
 /**
  * @brief Constructs a new LoopEditorScene
  *
@@ -83,6 +93,10 @@ public:
      * @fn updateCurves
      */
     void updateCurves();
+
+    Mode mode() const;
+    void setMode(const Mode &mode);
+
 public slots:
     /**
      * @brief
@@ -92,7 +106,7 @@ public slots:
      */
     void updateTime(qreal time);
 
-protected:
+private:
     /**
      * @brief maps the range of a curve to the height of the editor
      *
@@ -129,6 +143,7 @@ protected:
     EditorLineItem *m_endCurserItem; /**< TODO */
     EditorLineItem *m_crossFadeEndItem; /**< TODO */
     EditorLineItem *m_crossFadeStartItem; /**< TODO */
+    Mode m_mode;
 };
 
 #endif // LOOPEDITORSCENE_H

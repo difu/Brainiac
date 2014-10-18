@@ -75,6 +75,8 @@ ActionEditor::ActionEditor(Scene *scene, QWidget *parent) :
     // Loop Tab UI
     m_loopEditorScene=new LoopEditorScene();
     ui->loopGraphicsView->setScene(m_loopEditorScene);
+    ui->curveEditGraphicsView->setScene(m_loopEditorScene);
+    ui->curveEditGraphicsView->setDragMode(QGraphicsView::RubberBandDrag);
     ui->loopGraphicsView->show();
     m_doubleValidator=new QDoubleValidator();
     ui->le_crossFadeTime->setValidator(m_doubleValidator);
@@ -445,6 +447,11 @@ void ActionEditor::uiTabChanged(int tabIndex)
             QString curveName=item->data(Qt::UserRole).toString();
             qDebug() << __PRETTY_FUNCTION__ << curveName;
             selectedCurveNames.append(curveName);
+        }
+        if(tabIndex==LOOP) {
+            m_loopEditorScene->setMode(LoopEditorScene::LOOP);
+        } else {
+            m_loopEditorScene->setMode(LoopEditorScene::CURVE);
         }
         m_loopEditorScene->setAnimationCurveNames(selectedCurveNames);
 

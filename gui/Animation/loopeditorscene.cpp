@@ -23,9 +23,10 @@
 #include "core/agent/body/animation/animationcurve.h"
 #include "core/agent/body/animation/latchcurve.h"
 #include "gui/Animation/editorlineitem.h"
+#include "gui/Animation/latchcurveeditoritem.h"
 #include "core/brainiaclogger.h"
 
-LoopEditorScene::LoopEditorScene() : QGraphicsScene(0),m_animation(0)
+LoopEditorScene::LoopEditorScene() : QGraphicsScene(0),m_animation(0), m_mode(LOOP)
 {
     QPen pen;
     m_timeCurserItem=new EditorLineItem(this);
@@ -67,6 +68,16 @@ qreal LoopEditorScene::mapTimeToWidth(qreal time) const
 {
     return sceneRect().width()*(time/m_animation->getLength(true));
 }
+LoopEditorScene::Mode LoopEditorScene::mode() const
+{
+    return m_mode;
+}
+
+void LoopEditorScene::setMode(const Mode &mode)
+{
+    m_mode = mode;
+}
+
 
 qreal LoopEditorScene::mapWidthToTime(qreal width) const
 {
@@ -179,28 +190,23 @@ void LoopEditorScene::updateCurves()
     }
     foreach(LatchCurve *latch, m_animation->latches()) {
         if( m_curveItemNames.contains(BrainiacGlobals::DefaultLatchName)) {
+            QPen myPen(BrainiacGlobals::DefaultLatchColor);
             foreach(QVector2D l,latch->latches()) {
                 qreal startXPos=mapTimeToWidth(l.x());
                 qreal xPosLength=mapTimeToWidth(l.y());
-                qreal endXPos=startXPos+xPosLength;
-                QPen myPen(BrainiacGlobals::DefaultLatchColor);
-                QGraphicsLineItem *horizLineItem=new QGraphicsLineItem(0.0,0.0,xPosLength,0.0);
-                horizLineItem->setPen(myPen);
-                horizLineItem->setPos(startXPos,__height/2.0);
-                horizLineItem->setZValue(__zValueLatchCuve);
-                this->addItem(horizLineItem);
-
-                QGraphicsLineItem *startLine=new QGraphicsLineItem(startXPos,__height/2.0,startXPos,__height);
-                startLine->setPen(myPen);
-                startLine->setZValue(__zValueLatchCuve);
-                this->addItem(startLine);
-
-                QGraphicsLineItem *endLine=new QGraphicsLineItem(endXPos,__height/2.0,endXPos,__height);
-                endLine->setPen(myPen);
-                endLine->setZValue(__zValueLatchCuve);
-                this->addItem(endLine);
-
-                m_curveItems.insert(BrainiacGlobals::DefaultLatchName,QList<QGraphicsItem *>() << horizLineItem << startLine << endLine);
+                QColor col=BrainiacGlobals::DefaultLatchColor;
+                col.setAlpha(100);
+                myPen.setColor(col);
+                QBrush brush(col);
+                brush.setStyle(Qt::SolidPattern);
+                QGraphicsRectItem *latchRect=new LatchCurveEditorItem(startXPos,__height/2.0,xPosLength,__height);
+                latchRect->setBrush(brush);
+                this->addItem(latchRect);
+                if(m_mode==CURVE) {
+                    latchRect->setFlag(QGraphicsItem::ItemIsSelectable,true);
+                    latchRect->setFlag(QGraphicsItem::ItemIsMovable,true);
+                }
+                m_curveItems.insert(BrainiacGlobals::DefaultLatchName,QList<QGraphicsItem *>() << latchRect);
                 qCDebug(bGuiAnimation) << __PRETTY_FUNCTION__ << "latch curve created ";
             }
         }
