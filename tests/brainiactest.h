@@ -75,6 +75,7 @@ private Q_SLOTS:
     void motionTree();
 
     void curves();
+    void latchCurve();
     void animation_data();
     void animation();
 

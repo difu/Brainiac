@@ -316,11 +316,23 @@ void BrainiacTest::curves()
     qreal max=curve.getMaxValue();
     qreal min=curve.getMinValue();
     qreal length=curve.length();
-    QVERIFY2(qFuzzyCompare(length,ModifiableAnimation::TransitionCurveLengthMs),"wrong ength of Transitioncurve");
+    QVERIFY2(qFuzzyCompare(length,ModifiableAnimation::TransitionCurveLengthMs),"wrong length of Transitioncurve");
     QVERIFY2(qFuzzyCompare(max,1.0),"max value too high");
     QVERIFY2(qFuzzyCompare(min+1.0,1.0),"min value too low");
 }
 
+void BrainiacTest::latchCurve()
+{
+    LatchCurve latchCurve;
+    latchCurve.addLatch(0.0,10.);
+    latchCurve.addLatch(0.5,5.);
+    latchCurve.addLatch(12.0,5.);
+    QVERIFY2(latchCurve.isLatch(1.0),"Latch at 1.0 not found");
+    QVERIFY2(!latchCurve.isLatch(11.0),"Latch at 11.0 found, but should not be");
+    QVERIFY2(latchCurve.latches().count()==3,"Latch at 11.0 found, but should not be");
+    latchCurve.deleteLatch(2.0);
+    QVERIFY2(latchCurve.latches().count()==1,"not all latches deleted");
+}
 
 void BrainiacTest::animation_data()
 {
