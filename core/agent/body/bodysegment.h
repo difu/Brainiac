@@ -185,9 +185,9 @@ protected:
     bool m_highlghtedStructuresCreated;
     osg::ref_ptr<osg::ShapeDrawable> m_shapeDrawable; /**< the node that holds the geometry */
     osg::ref_ptr<osg::Geode> m_geode; /**< the geometry node that holds the ShapeDrawable */
-    osg::ref_ptr<osg::MatrixTransform> m_transformNode; /**< transformation node rthat offsets the Segmet´s geometry */
-    osg::ref_ptr<osg::Switch> m_switchPivotCross; /**< toogles the coordinate cross */
-    osg::ref_ptr<osg::Switch> m_switchHighlight; /**< toogles the highlighting */
+    osg::ref_ptr<osg::MatrixTransform> m_transformNode; /**< transformation node that offsets the Segmet´s geometry */
+    osg::ref_ptr<osg::Switch> m_switchPivotCross; /**< toggles the coordinate cross */
+    osg::ref_ptr<osg::Switch> m_switchHighlight; /**< toggles the highlighting */
     osg::ref_ptr<osgFX::Outline> m_highlightOutline; /**< Outline effect for highlighting this BodySegment */
     Channel *m_oColor; //!< segement´s color Channel
     Channel *m_oTx; //!< x translation channel (output)
