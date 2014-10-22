@@ -55,6 +55,29 @@ public:
  * @fn LoopEditorScene
  */
     LoopEditorScene();
+
+    /**
+     * @brief maps the widgets width to a time value
+     *
+     * The maximum time is the length of the animation
+     *
+     * @fn mapWidthToTime
+     * @param width the width from which the time is calculated
+     * @return qreal the time in ms
+     */
+    qreal mapWidthToTime(qreal width) const;
+
+    /**
+     * @brief maps a time to the widgets width (x position)
+     *
+     * The maximum time is the length of the animation
+     *
+     * @fn mapTimeToWidth
+     * @param time time in ms
+     * @return qreal the width (x position
+     */
+    qreal mapTimeToWidth(qreal time) const;
+
     /**
      * @brief sets the to be edited Animation
      *
@@ -118,22 +141,6 @@ private:
      */
     qreal mapCurveRangeToHeight(qreal max, qreal min, qreal value) const;
 
-    /**
-     * @brief maps the widgets width to a time value
-     *
-     * @fn mapWidthToTime
-     * @param width the width from which the time is calculated
-     * @return qreal the time in ms
-     */
-    qreal mapWidthToTime(qreal width) const;
-    /**
-     * @brief maps a time to the widgets width (x position)
-     *
-     * @fn mapTimeToWidth
-     * @param time time in ms
-     * @return qreal the width (x position
-     */
-    qreal mapTimeToWidth(qreal time) const;
     QHash<QString, QList<QGraphicsItem *> > m_curveItems;
     QList<QString> m_curveItemNames;
     ModifiableAnimation *m_animation; /**< the Animation in this editor */

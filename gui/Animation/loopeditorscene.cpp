@@ -78,7 +78,6 @@ void LoopEditorScene::setMode(const Mode &mode)
     m_mode = mode;
 }
 
-
 qreal LoopEditorScene::mapWidthToTime(qreal width) const
 {
     return (width/sceneRect().width()*m_animation->getLength(true));
@@ -139,7 +138,6 @@ void LoopEditorScene::update()
 void LoopEditorScene::updateCurves()
 {
     static qreal __zValueLatchCuve=-1.0; // to prevent that the cursors will be overdrawn
-    static const qreal __height=sceneRect().height();
     foreach(QList< QGraphicsItem *> gItems,m_curveItems)
     {
         foreach(QGraphicsItem *item,gItems) {
@@ -190,18 +188,10 @@ void LoopEditorScene::updateCurves()
     }
     foreach(LatchCurve *latch, m_animation->latches()) {
         if( m_curveItemNames.contains(BrainiacGlobals::DefaultLatchName)) {
-            QPen myPen(BrainiacGlobals::DefaultLatchColor);
-            foreach(QVector2D l,latch->latches()) {
-                qreal startXPos=mapTimeToWidth(l.x());
-                qreal xPosLength=mapTimeToWidth(l.y());
-                QColor col=BrainiacGlobals::DefaultLatchColor;
-                col.setAlpha(100);
-                myPen.setColor(col);
-                QBrush brush(col);
-                brush.setStyle(Qt::SolidPattern);
-                QGraphicsRectItem *latchRect=new LatchCurveEditorItem(startXPos,__height/2.0,xPosLength,__height);
-                latchRect->setBrush(brush);
-                this->addItem(latchRect);
+            for(int latchIndex=0; latchIndex<latch->latches().count() ; latchIndex++) {
+//                QVector2D l=latch->latches().at(latchIndex)//
+                QGraphicsRectItem *latchRect=new LatchCurveEditorItem(this,latch,latchIndex);
+                latchRect->setZValue(__zValueLatchCuve);
                 if(m_mode==CURVE) {
                     latchRect->setFlag(QGraphicsItem::ItemIsSelectable,true);
                     latchRect->setFlag(QGraphicsItem::ItemIsMovable,true);

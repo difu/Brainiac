@@ -30,7 +30,7 @@
 class LatchCurve
 {
 public:
-
+    typedef QVector2D LatchType;
 /**
  * @brief
  *
@@ -66,15 +66,28 @@ public:
     bool isLatch(qreal time) const;
 
     /**
-     * @brief deletes a latch at given time
+     * @brief deletes all latches at given time
      *
      * @fn deleteLatch
      * @param time
      */
     void deleteLatch(qreal time);
-    QList<QVector2D> latches() const;
+
+    /**
+     * @brief deletes a latch at given index
+     *
+     * @fn deleteLatch
+     * @param latchIndex the index of the latch to delete
+     */
+    void deleteLatch(int latchIndex);
+
+    void setStart(int latchIndex, qreal startTime);
+
+    void setDuration(int latchIndex, qreal duration);
+
+    QList<LatchType> latches() const;
 protected:
-    QList<QVector2D> m_latches; /**< all latches */
+    QList<LatchType> m_latches; /**< all latches */
 };
 
 #endif // TRANSITIONCURVE_H

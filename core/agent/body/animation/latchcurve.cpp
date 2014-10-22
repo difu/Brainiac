@@ -17,6 +17,7 @@
 
 
 #include "latchcurve.h"
+#include <QDebug>
 
 LatchCurve::LatchCurve()
 {
@@ -53,6 +54,15 @@ void LatchCurve::deleteLatch(qreal time)
     }
 }
 
+void LatchCurve::deleteLatch(int latchIndex)
+{
+    if(m_latches.count()>latchIndex) {
+        m_latches.removeAt(latchIndex);
+    } else {
+        qWarning() << __PRETTY_FUNCTION__ << "Latch with id " << latchIndex << " does not exist";
+    }
+}
+
 bool LatchCurve::isLatch(qreal time) const
 {
     for(int i=0;i<m_latches.count();i++) {
@@ -65,7 +75,7 @@ bool LatchCurve::isLatch(qreal time) const
     return false;
 }
 
-QList<QVector2D> LatchCurve::latches() const
+QList<LatchCurve::LatchType> LatchCurve::latches() const
 {
  return m_latches;
 }
