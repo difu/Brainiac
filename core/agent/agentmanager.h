@@ -22,8 +22,12 @@
 #include <QtCore>
 #include <QObject>
 #include "core/agent/brain/output.h"
-#include "core/idgenerator.h"
 #include "core/agent/brain/fuzzyfuzz.h"
+#include "core/agent/brain/fuzzyand.h"
+#include "core/agent/brain/fuzzyor.h"
+#include "core/agent/brain/timer.h"
+#include "core/idgenerator.h"
+
 
 class Agent;
 class Group;
@@ -503,13 +507,24 @@ private:
 
     // Brain stuff
     void addAndFuzz(quint32 id, const QString &name, QString mode, quint32 editorX, quint32 editorY);
+    void addAndFuzz(quint32 id, const QString &name, FuzzyAnd::Mode mode, quint32 editorX, quint32 editorY);
+
     void addFuzzFuzz(quint32 id, const QString &name, QString mode, QString intMode, qreal p1, qreal p2, qreal p3, qreal p4, quint32 editorX, quint32 editorY);
+    void addFuzzFuzz(quint32 id, const QString &name, FuzzyFuzz::Mode mode, FuzzyFuzz::InterpolationMode intMode, qreal p1, qreal p2, qreal p3, qreal p4, quint32 editorX, quint32 editorY);
+
     void addDefuzz(quint32 id, const QString &name, qreal defuzzValue, bool isElse, quint32 editorX, quint32 editorY);
+
+    void addOrFuzz(quint32 id, const QString &name, FuzzyOr::Mode mode, quint32 editorX, quint32 editorY);
     void addOrFuzz(quint32 id, const QString &name, QString mode, quint32 editorX, quint32 editorY);
+
     void addOutputFuzz(quint32 id, const QString &name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY);
+
     void addInputFuzz(quint32 id, const QString &name, QString channel, qreal min, qreal max, quint32 editorX, quint32 editorY);
+
     void addNoiseFuzz(quint32 id, const QString &name, qreal rate, quint32 editorX, quint32 editorY);
+
     void addTimerFuzz(quint32 id, const QString &name, qreal rate, QString mode, quint32 editorX, quint32 editorY);
+    void addTimerFuzz(quint32 id, const QString &name, qreal rate, Timer::TimerMode mode, quint32 editorX, quint32 editorY);
 
     // Body stuff
     void addSegmentFromConfig( QXmlStreamReader *reader, quint32 id, QString name, quint32 parent, quint32 editorX, quint32 editorY );
