@@ -60,6 +60,25 @@ Body::Body(Agent *agent)
     osg::Geode *geo=new osg::Geode;
     geo->addDrawable(BrainiacGlobals::CoordCross.get());
 
+    // LOD
+    m_lodBody=new osg::LOD;
+    m_lodBody->setRangeMode( osg::LOD::DISTANCE_FROM_EYE_POINT );
+    static float _LodDistance1=10000.f;
+
+    // Proxy
+    m_proxyBody=new osg::Group;
+    m_realBody=new osg::Group;
+    m_switchProxy=new osg::Switch;
+    m_bodyRoot->addChild(m_switchProxy);
+    m_lodBody->addChild(m_realBody,0.0f, _LodDistance1);
+    {
+        osg::Geode *geo2=new osg::Geode;
+        geo2->addDrawable(BrainiacGlobals::CoordCross.get());
+        m_lodBody->addChild(geo2,_LodDistance1, 100000000.0f);
+    }
+    m_switchProxy->addChild(m_lodBody,true);
+    m_switchProxy->addChild(m_proxyBody,false);
+
     m_switchSkeleton=new osg::Switch;
     m_bodyRoot->addChild(m_switchSkeleton);
 
@@ -95,9 +114,9 @@ void Body::addBodySegment(osg::ref_ptr<BodySegment> bodySegment, quint32 parentI
     //BodySegment *bs=bodySegment.get();
     m_bodySegments.insert(bodySegment.get()->getId(),bodySegment.get());
     if(parentId==0) {
-        osg::PositionAttitudeTransform *trans=m_bodyRoot.get();
-        trans->addChild(bodySegment);
-        m_bodyRoot.get()->addChild(bodySegment.get());
+        //osg::PositionAttitudeTransform *trans=m_bodyRoot.get();
+        //trans->addChild(bodySegment);
+        m_realBody.get()->addChild(bodySegment.get());
         return;
     }
     BodySegment *bs=m_bodySegments.value(parentId,0);

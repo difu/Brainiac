@@ -156,6 +156,8 @@ public slots:
 
 signals:
     void groupAdded(Group *group); //!< emitted when a group is added
+    void groupAdded();
+    void sceneContentChanged();
 
 public slots:
 

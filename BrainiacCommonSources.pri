@@ -87,7 +87,9 @@ HEADERS  += gui/mainwindow.h \
     core/agent/brain/fuzzychannel.h \
     core/agent/brain/brainmanager.h \
     core/agent/brain/fuzzyproperties.h \
-    gui/Animation/latchcurveeditoritem.h
+    gui/Animation/latchcurveeditoritem.h \
+    gui/sceneproxygenerator.h \
+    core/agent/body/bodysegmenttransformationvisitor.h
 
 
 
@@ -180,5 +182,7 @@ SOURCES += gui/mainwindow.cpp \
     core/agent/brain/fuzzychannel.cpp \
     core/agent/brain/brainmanager.cpp \
     core/agent/brain/fuzzyproperties.cpp \
-    gui/Animation/latchcurveeditoritem.cpp
+    gui/Animation/latchcurveeditoritem.cpp \
+    gui/sceneproxygenerator.cpp \
+    core/agent/body/bodysegmenttransformationvisitor.cpp
 

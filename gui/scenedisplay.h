@@ -23,6 +23,8 @@
 #include <osgDB/WriteFile>
 
 class Scene;
+class SceneProxyGenerator;
+
 /**
  * @brief The SceneDisplay class
  */
@@ -32,8 +34,11 @@ class SceneDisplay : public OsgMultithreadedViewerWidget
 public:
     SceneDisplay(Scene *scene);
     virtual ~SceneDisplay();
-protected:
+    Scene *scene() const;
+
+private:
     Scene *m_scene;
+    SceneProxyGenerator *m_sceneProxy;
 protected slots:
     void keyPressed(Qt::Key key);
 };
