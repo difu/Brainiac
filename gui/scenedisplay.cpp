@@ -17,13 +17,15 @@
 
 #include "scenedisplay.h"
 #include "core/scene.h"
+#include "gui/sceneproxygenerator.h"
 
-SceneDisplay::SceneDisplay(Scene *scene): OsgMultithreadedViewerWidget(0,scene->getRootSceneNode())
+SceneDisplay::SceneDisplay(Scene *scene): OsgMultithreadedViewerWidget(0,scene->getRootSceneNode()),
+    m_scene(scene)
 {
     setWindowTitle("Scene");
     m_osgFileName=QDir::tempPath()%"/Scene.osg";
     connect(getGlWindow()->getKeyMouseEater(),SIGNAL(keyPressed(Qt::Key)),this,SLOT(keyPressed(Qt::Key)));
-
+    m_sceneProxy=new SceneProxyGenerator(this);
 }
 
 void SceneDisplay::keyPressed(Qt::Key key)
@@ -41,4 +43,8 @@ void SceneDisplay::keyPressed(Qt::Key key)
 SceneDisplay::~SceneDisplay()
 {
     //osgDB::writeNodeFile(*m_rootNode,"/tmp/scene.osgt");
+}
+Scene *SceneDisplay::scene() const
+{
+    return m_scene;
 }

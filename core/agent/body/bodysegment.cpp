@@ -21,7 +21,7 @@
 #include "core/agent/channel.h"
 #include "core/agent/agent.h"
 #include "core/agent/body/body.h"
-
+#include "core/brainiaclogger.h"
 #include <osgUtil/UpdateVisitor>
 #include <QObject>
 

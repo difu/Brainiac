@@ -51,6 +51,8 @@ void Scene::addGroup(Group *group)
     m_groupIdGenerator.registerId(group->getId());
     m_groups.append(group);
     emit groupAdded(group);
+    emit groupAdded();
+    emit sceneContentChanged();
 }
 
 void Scene::clear()
@@ -65,6 +67,7 @@ void Scene::clear()
     }
     m_groups.clear();
     m_agents.clear();
+    emit sceneContentChanged();
 }
 
 void Scene::createAgents()
@@ -72,6 +75,7 @@ void Scene::createAgents()
     foreach(Generator *gen, m_generators) {
         this->createAgents(gen);
     }
+    emit sceneContentChanged();
 }
 
 void Scene::createAgents(Generator *gen)
@@ -108,6 +112,7 @@ void Scene::removeAgentFromScene(Agent *agent)
     if(removedAgents>=1 && !removedFromSceneGraph) {
         qCWarning(bScene) << __PRETTY_FUNCTION__ << "could not delete/find agent from scene graph!";
     }
+    emit sceneContentChanged();
 }
 
 QString Scene::getAbsoluteFileDir() const {

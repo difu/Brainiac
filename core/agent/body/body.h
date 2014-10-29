@@ -24,6 +24,7 @@
 
 #include <osg/PositionAttitudeTransform>
 #include <osg/Switch>
+#include <osg/LOD>
 
 class Agent;
 class AnimationPlayer;
@@ -84,7 +85,7 @@ public:
     Agent* getAgent();
     void updatePosition();
     ~Body();
-protected:
+private:
     Agent *m_agent;
 
     AnimationPlayer *m_animationPlayer;
@@ -92,9 +93,14 @@ protected:
 
     QHash<quint32, BodySegment* > m_bodySegments;
 
-    osg::ref_ptr<osg::PositionAttitudeTransform> m_bodyRoot;
+    osg::ref_ptr<osg::Group> m_realBody; /** the root of the real body, child of @sa m_switchProxy */
+    osg::ref_ptr<osg::Group> m_proxyBody; /** the root of the proxy body, child of @sa m_switchProxy */
+    osg::ref_ptr<osg::PositionAttitudeTransform> m_bodyRoot; /** the root of the body. holds position and rotation, but NOT the body  */
     osg::ref_ptr<osg::Switch> m_switchPositionMarker; /**< Switch to toggle coord cross at agents position */
-    osg::ref_ptr<osg::Switch> m_switchSkeleton; /**< Switch to toggle coord cross at agents position */
+    osg::ref_ptr<osg::Switch> m_switchSkeleton; /**< Switch to toggle to show the skeleton of the agent */
+    osg::ref_ptr<osg::Switch> m_switchProxy; /**< Switch to toggle real body and proxy */
+    osg::ref_ptr<osg::LOD> m_lodBody; /**< LOD node that draws different agent bodies with respect to distance */
+
     bool m_showPositionMarker; /**< property to toggle position marker */
     bool m_showAllCoordCrosses; /**< property to toggle to show all coord crosses of all segments */
     bool m_showSkeleton; /**< property to toggle to show the skeleton */
