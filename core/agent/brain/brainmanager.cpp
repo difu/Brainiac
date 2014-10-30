@@ -29,7 +29,9 @@ BrainManager::BrainManager(QObject *parent) :
 
 AgentManager* BrainManager::getAgentManager() const
 {
-    return qobject_cast<AgentManager *>(parent());
+    AgentManager *am=qobject_cast<AgentManager *>(parent());
+    Q_ASSERT(am);
+    return am;
 }
 
 const QPoint& BrainManager::getEditorFuzzyLocation(BrainiacGlobals::BrainiacId id) const
